@@ -1,0 +1,289 @@
+{
+  "system_config": {
+    "name": "QuickBooks Anomaly Detection System",
+    "version": "1.0.0",
+    "description": "Multi-agent anomaly detection system for QuickBooks data",
+    "log_level": "INFO",
+    "max_alert_history": 1000,
+    "export_format": "json"
+  },
+  "fraud_detection": {
+    "enabled": true,
+    "enabled_rules": [
+      "excessive_vendor_addition",
+      "rapid_vendor_turnover",
+      "suspicious_vendor_names",
+      "high_value_new_vendor",
+      "multiple_vendors_same_industry"
+    ],
+    "thresholds": {
+      "excessive_vendor_addition": 2,
+      "high_value_new_vendor": 1000,
+      "multiple_vendors_same_industry": 2
+    },
+    "suspicious_keywords": [
+      "loan",
+      "finance",
+      "credit",
+      "cash",
+      "money",
+      "payday",
+      "quick",
+      "instant",
+      "urgent"
+    ],
+    "confidence_threshold": 0.7
+  },
+  "statistical_anomaly": {
+    "enabled": true,
+    "thresholds": {
+      "z_score_threshold": 3.0,
+      "frequency_threshold": 2.0,
+      "coefficient_of_variation_threshold": 2.0,
+      "min_data_points": 10
+    },
+    "detection_methods": [
+      "z_score_analysis",
+      "frequency_analysis",
+      "pattern_analysis",
+      "outlier_detection"
+    ],
+    "confidence_calculation": {
+      "z_score_weight": 0.4,
+      "frequency_weight": 0.3,
+      "pattern_weight": 0.3
+    }
+  },
+  "behavioral_anomaly": {
+    "enabled": true,
+    "business_hours": {
+      "start": 6,
+      "end": 20,
+      "timezone": "UTC"
+    },
+    "activity_thresholds": {
+      "high_volume": 50,
+      "rapid_sequence": 10,
+      "unusual_pattern": 5
+    },
+    "user_behavior_tracking": {
+      "session_timeout": 3600,
+      "max_sessions_per_user": 5,
+      "suspicious_actions": [
+        "bulk_delete",
+        "mass_export",
+        "permission_change"
+      ]
+    },
+    "access_pattern_analysis": {
+      "geographic_anomaly": true,
+      "device_fingerprinting": true,
+      "time_pattern_analysis": true
+    }
+  },
+  "data_quality": {
+    "enabled": true,
+    "quality_rules": {
+      "required_fields": {
+        "transactions": ["id", "amount", "date", "vendor_id"],
+        "vendors": ["id", "name"],
+        "customers": ["id", "name", "email"]
+      },
+      "amount_validation": {
+        "min": 0.01,
+        "max": 1000000,
+        "currency": "USD"
+      },
+      "date_validation": {
+        "future_dates_allowed": false,
+        "max_age_days": 3650
+      },
+      "email_validation": {
+        "format_check": true,
+        "domain_check": true
+      },
+      "phone_validation": {
+        "format_check": true,
+        "country_codes": ["+1", "+44", "+61"]
+      }
+    },
+    "duplicate_detection": {
+      "enabled": true,
+      "fields_to_check": {
+        "vendors": ["name", "email", "phone"],
+        "customers": ["email", "phone"],
+        "transactions": ["amount", "date", "vendor_id"]
+      },
+      "similarity_threshold": 0.9
+    }
+  },
+  "temporal_anomaly": {
+    "enabled": true,
+    "time_analysis": {
+      "seasonal_patterns": true,
+      "trend_analysis": true,
+      "cyclical_patterns": true
+    },
+    "periods": {
+      "hourly": true,
+      "daily": true,
+      "weekly": true,
+      "monthly": true
+    },
+    "thresholds": {
+      "peak_hourly_volume": 20,
+      "unusual_daily_pattern": 0.3,
+      "seasonal_deviation": 2.0
+    }
+  },
+  "relationship_anomaly": {
+    "enabled": true,
+    "relationship_types": [
+      "vendor_customer",
+      "transaction_patterns",
+      "payment_cycles",
+      "contact_networks"
+    ],
+    "analysis_methods": {
+      "network_analysis": true,
+      "correlation_analysis": true,
+      "cluster_analysis": true
+    },
+    "thresholds": {
+      "unusual_relationship_strength": 0.8,
+      "network_density_anomaly": 0.3,
+      "cluster_size_anomaly": 5
+    }
+  },
+  "alerting": {
+    "notification_channels": {
+      "email": {
+        "enabled": true,
+        "recipients": ["admin@company.com", "security@company.com"],
+        "severity_threshold": "medium"
+      },
+      "slack": {
+        "enabled": false,
+        "webhook_url": "",
+        "channel": "#anomaly-alerts",
+        "severity_threshold": "high"
+      },
+      "webhook": {
+        "enabled": false,
+        "url": "",
+        "headers": {}
+      }
+    },
+    "alert_grouping": {
+      "enabled": true,
+      "time_window_minutes": 15,
+      "max_alerts_per_group": 10
+    },
+    "escalation": {
+      "enabled": true,
+      "levels": [
+        {
+          "level": 1,
+          "severity": "low",
+          "timeout_minutes": 60,
+          "actions": ["log", "email"]
+        },
+        {
+          "level": 2,
+          "severity": "medium",
+          "timeout_minutes": 30,
+          "actions": ["log", "email", "slack"]
+        },
+        {
+          "level": 3,
+          "severity": "high",
+          "timeout_minutes": 15,
+          "actions": ["log", "email", "slack", "webhook"]
+        },
+        {
+          "level": 4,
+          "severity": "critical",
+          "timeout_minutes": 5,
+          "actions": ["log", "email", "slack", "webhook", "sms"]
+        }
+      ]
+    }
+  },
+  "reporting": {
+    "reports": {
+      "daily_summary": {
+        "enabled": true,
+        "schedule": "0 9 * * *",
+        "recipients": ["management@company.com"]
+      },
+      "weekly_analysis": {
+        "enabled": true,
+        "schedule": "0 9 * * 1",
+        "recipients": ["management@company.com", "security@company.com"]
+      },
+      "monthly_trends": {
+        "enabled": true,
+        "schedule": "0 9 1 * *",
+        "recipients": ["executives@company.com"]
+      }
+    },
+    "export_formats": ["json", "csv", "pdf"],
+    "retention_days": 90
+  },
+  "integration": {
+    "quickbooks": {
+      "enabled": true,
+      "sync_interval_minutes": 15,
+      "entities": [
+        "vendors",
+        "customers",
+        "transactions",
+        "invoices",
+        "payments"
+      ]
+    },
+    "external_systems": {
+      "risk_scoring": {
+        "enabled": false,
+        "api_endpoint": "",
+        "api_key": ""
+      },
+      "threat_intelligence": {
+        "enabled": false,
+        "providers": []
+      }
+    }
+  },
+  "performance": {
+    "processing": {
+      "max_concurrent_agents": 4,
+      "batch_size": 1000,
+      "timeout_seconds": 300
+    },
+    "memory": {
+      "max_cache_size_mb": 512,
+      "cleanup_interval_minutes": 60
+    },
+    "database": {
+      "connection_pool_size": 10,
+      "query_timeout_seconds": 30
+    }
+  },
+  "security": {
+    "authentication": {
+      "required": true,
+      "method": "api_key",
+      "key_rotation_days": 90
+    },
+    "encryption": {
+      "data_at_rest": true,
+      "data_in_transit": true,
+      "algorithm": "AES-256"
+    },
+    "audit_logging": {
+      "enabled": true,
+      "retention_days": 365,
+      "sensitive_fields": ["api_key", "password", "token"]
+    }
+  }
+} 

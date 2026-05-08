@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGAME — SME Technical Reference</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: #24292f;
+      background: #ffffff;
+      padding: 48px 24px 80px;
+    }
+
+    article {
+      max-width: 940px;
+      margin: 0 auto;
+    }
+
+    /* ── Headings ── */
+    h1 {
+      font-size: 2em;
+      font-weight: 700;
+      border-bottom: 1px solid #d0d7de;
+      padding-bottom: 12px;
+      margin-bottom: 8px;
+      color: #1f2328;
+    }
+    .subtitle {
+      color: #57606a;
+      font-size: 15px;
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-size: 1.4em;
+      font-weight: 600;
+      border-bottom: 1px solid #d0d7de;
+      padding-bottom: 8px;
+      margin-top: 44px;
+      margin-bottom: 16px;
+      color: #1f2328;
+    }
+    h3 {
+      font-size: 1.05em;
+      font-weight: 600;
+      margin-top: 28px;
+      margin-bottom: 10px;
+      color: #1f2328;
+    }
+
+    /* ── Body text ── */
+    p { margin-bottom: 14px; color: #24292f; }
+    .text-sm { font-size: 14px; }
+    .text-secondary { color: #57606a; }
+    strong { font-weight: 600; }
+
+    /* ── Divider ── */
+    hr {
+      border: none;
+      border-top: 1px solid #d0d7de;
+      margin: 36px 0;
+    }
+
+    /* ── Stat grid ── */
+    .stat-grid { display: grid; gap: 14px; margin-bottom: 32px; }
+    .stat-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .stat-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .stat-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .stat {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-value { font-size: 1.75em; font-weight: 700; color: #1f2328; line-height: 1.2; }
+    .stat-label { font-size: 12px; color: #57606a; margin-top: 6px; }
+
+    /* ── Callouts ── */
+    .callout {
+      border-left: 4px solid #d0d7de;
+      background: #f6f8fa;
+      border-radius: 0 6px 6px 0;
+      padding: 14px 18px;
+      margin: 20px 0 24px;
+    }
+    .callout.info    { border-left-color: #0550ae; background: #ddf4ff; }
+    .callout.success { border-left-color: #1a7f37; background: #dafbe1; }
+    .callout.neutral { border-left-color: #6e7781; background: #f6f8fa; }
+    .callout-title   { font-weight: 600; margin-bottom: 6px; font-size: 15px; color: #1f2328; }
+    .callout.info    .callout-title { color: #0550ae; }
+    .callout.success .callout-title { color: #1a7f37; }
+    .callout p { margin-bottom: 0; font-size: 15px; }
+
+    /* ── Formula box ── */
+    .formula-box {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      background: #f6f8fa;
+      padding: 18px 20px;
+      margin: 12px 0 20px;
+    }
+    .formula {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2328;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    /* ── Card grid ── */
+    .card-grid { display: grid; gap: 14px; margin: 16px 0 24px; }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+    .card {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .card-header {
+      background: #f6f8fa;
+      padding: 10px 16px;
+      font-weight: 600;
+      font-size: 14px;
+      border-bottom: 1px solid #d0d7de;
+    }
+    .card-body {
+      padding: 14px 16px;
+      font-size: 14px;
+      color: #24292f;
+      line-height: 1.6;
+    }
+    .card-body hr { margin: 10px 0; }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin: 16px 0 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th {
+      background: #f6f8fa;
+      font-weight: 600;
+      text-align: left;
+      padding: 10px 14px;
+      border: 1px solid #d0d7de;
+      white-space: nowrap;
+    }
+    td { padding: 10px 14px; border: 1px solid #d0d7de; vertical-align: top; }
+    tr:nth-child(even) td { background: #f6f8fa; }
+
+    /* Row tones */
+    tr.row-danger td { background: #fff0f0 !important; }
+    tr.row-warning td { background: #fff8e1 !important; }
+
+    /* Centered column helper */
+    .center { text-align: center; }
+
+    /* ── Alert pill ── */
+    .pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid currentColor;
+      white-space: nowrap;
+    }
+    .pill.danger  { color: #cf222e; background: #fff0f0; border-color: #cf222e55; }
+    .pill.warning { color: #9a6700; background: #fff8e1; border-color: #d4a72c55; }
+    .pill.neutral { color: #57606a; background: #f6f8fa; border-color: #d0d7de; }
+
+    /* ── Two-column prose ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin: 16px 0 24px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 760px) {
+      .stat-grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .stat-grid-3 { grid-template-columns: 1fr 1fr; }
+      .card-grid-3 { grid-template-columns: 1fr; }
+      .card-grid-2 { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    /* ── Footer ── */
+    .doc-footer {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid #d0d7de;
+      font-size: 12px;
+      color: #57606a;
+    }
+  </style>
+</head>
+<body>
+<article>
+
+  <!-- ── Header ── -->
+  <h1>NGAME — SME Technical Reference</h1>
+  <p class="subtitle">Phase I (Training) and Phase II (Analysis): mechanism-level documentation for the accounting domain expert. Audience — an accounting professor who is the primary subject-matter expert for fraud detection logic and operational validation.</p>
+
+  <div class="stat-grid stat-grid-4">
+    <div class="stat"><div class="stat-value">18</div><div class="stat-label">Transaction types tracked</div></div>
+    <div class="stat"><div class="stat-value">30</div><div class="stat-label">Minimum training days</div></div>
+    <div class="stat"><div class="stat-value">Daily</div><div class="stat-label">Analysis cadence (post-training)</div></div>
+    <div class="stat"><div class="stat-value">3σ / 2σ</div><div class="stat-label">HIGH / MEDIUM thresholds</div></div>
+  </div>
+
+  <hr>
+
+  <!-- ── Core Idea ── -->
+  <h2>The Core Idea in Plain English</h2>
+  <div class="callout info">
+    <div class="callout-title">NGAME monitors the population of financial records — not just dollar amounts.</div>
+    <p>Every morning, NGAME asks QuickBooks: what records of each type existed yesterday, and what records exist today? For each of the 18 transaction categories it computes a score — the Churn Persistence Index (CPI) — measuring how stable the record population was overnight. During a 30-day training period NGAME learns what a normal day looks like for this specific organization. After training, every new day is compared against that baseline. A day that looks dramatically different — too many new vendors, a wave of deleted invoices, a sudden spike in bill payments — triggers an alert ranked by statistical severity.</p>
+  </div>
+
+  <hr>
+
+  <!-- ── Two-Phase Architecture ── -->
+  <h2>Two-Phase Architecture</h2>
+  <p class="text-sm text-secondary">Phase I runs daily for 30 days and builds the statistical baseline. Phase II runs daily thereafter and compares today's behavior to that baseline. The Training Matrix is the bridge: it carries the learned mean (μ) and standard deviation (σ) for each transaction type forward into Phase II comparison.</p>
+
+  <!-- SVG Architecture Diagram -->
+  <div style="margin: 16px 0 24px;">
+    <svg viewBox="0 0 650 210" style="display:block;width:100%;height:auto;max-height:220px;">
+      <defs>
+        <marker id="arr"  markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L7,3.5 z" fill="#8b949e"/>
+        </marker>
+        <marker id="acc" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L7,3.5 z" fill="#0969da"/>
+        </marker>
+      </defs>
+
+      <!-- Phase I label -->
+      <text x="2" y="17" font-size="9" fill="#57606a" font-family="system-ui,sans-serif" font-style="italic">Phase I — Training (Days 1–30): builds the baseline</text>
+
+      <!-- Phase I boxes -->
+      <rect x="0"   y="22" width="58" height="32" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="3"/>
+      <text x="29"  y="34" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">QBO</text>
+      <text x="29"  y="45" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">API</text>
+
+      <rect x="72"  y="22" width="82" height="32" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="3"/>
+      <text x="113" y="34" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">Daily</text>
+      <text x="113" y="45" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">Snapshot</text>
+
+      <rect x="168" y="22" width="82" height="32" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="3"/>
+      <text x="209" y="34" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">Y/T</text>
+      <text x="209" y="45" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">Compare</text>
+
+      <rect x="264" y="22" width="65" height="32" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="3"/>
+      <text x="296" y="34" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">CPI</text>
+      <text x="296" y="45" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">Array</text>
+
+      <rect x="343" y="22" width="92" height="32" fill="#f6f8fa" stroke="#0969da" stroke-width="1.5" rx="3"/>
+      <text x="389" y="34" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0969da" font-family="system-ui,sans-serif" font-weight="500">Training</text>
+      <text x="389" y="45" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0969da" font-family="system-ui,sans-serif" font-weight="500">Matrix</text>
+
+      <!-- Phase I arrows -->
+      <line x1="58"  y1="38" x2="71"  y2="38" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="154" y1="38" x2="167" y2="38" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="250" y1="38" x2="263" y2="38" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="329" y1="38" x2="342" y2="38" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- "×30 days → μ, σ" annotation -->
+      <text x="389" y="65" text-anchor="middle" font-size="7.5" fill="#57606a" font-family="system-ui,sans-serif">×30 days → stores μ, σ</text>
+
+      <!-- Phase II label -->
+      <text x="2" y="134" font-size="9" fill="#0969da" font-family="system-ui,sans-serif" font-style="italic">Phase II — Analysis (Day 31+): compares today against the baseline</text>
+
+      <!-- Phase II boxes -->
+      <rect x="0"   y="141" width="58" height="32" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="3"/>
+      <text x="29"  y="153" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">QBO</text>
+      <text x="29"  y="164" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">API</text>
+
+      <rect x="72"  y="141" width="82" height="32" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="3"/>
+      <text x="113" y="153" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">Daily</text>
+      <text x="113" y="164" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">Snapshot</text>
+
+      <rect x="168" y="141" width="82" height="32" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="3"/>
+      <text x="209" y="153" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">Y/T</text>
+      <text x="209" y="164" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">Compare</text>
+
+      <rect x="264" y="141" width="65" height="32" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="3"/>
+      <text x="296" y="153" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">CPI</text>
+      <text x="296" y="164" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#1f2328" font-family="system-ui,sans-serif">Array</text>
+
+      <rect x="343" y="141" width="92" height="32" fill="#f6f8fa" stroke="#0969da" stroke-width="1.5" rx="3"/>
+      <text x="389" y="153" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0969da" font-family="system-ui,sans-serif" font-weight="500">Z-Score</text>
+      <text x="389" y="164" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0969da" font-family="system-ui,sans-serif" font-weight="500">Compare</text>
+
+      <rect x="449" y="141" width="86" height="32" fill="#f6f8fa" stroke="#0969da" stroke-width="1.5" rx="3"/>
+      <text x="492" y="153" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0969da" font-family="system-ui,sans-serif" font-weight="500">Rank</text>
+      <text x="492" y="164" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0969da" font-family="system-ui,sans-serif" font-weight="500">Anomalies</text>
+
+      <rect x="549" y="141" width="82" height="32" fill="#f6f8fa" stroke="#0969da" stroke-width="1.5" rx="3"/>
+      <text x="590" y="153" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0969da" font-family="system-ui,sans-serif" font-weight="500">Mgmt</text>
+      <text x="590" y="164" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0969da" font-family="system-ui,sans-serif" font-weight="500">Warning</text>
+
+      <!-- Phase II arrows -->
+      <line x1="58"  y1="157" x2="71"  y2="157" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="154" y1="157" x2="167" y2="157" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="250" y1="157" x2="263" y2="157" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="329" y1="157" x2="342" y2="157" stroke="#0969da" stroke-width="1.5" marker-end="url(#acc)"/>
+      <line x1="435" y1="157" x2="448" y2="157" stroke="#0969da" stroke-width="1.5" marker-end="url(#acc)"/>
+      <line x1="535" y1="157" x2="548" y2="157" stroke="#0969da" stroke-width="1.5" marker-end="url(#acc)"/>
+
+      <!-- Vertical μ, σ connector from Training Matrix down -->
+      <path d="M 389 54 L 389 141" stroke="#0969da" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#acc)"/>
+      <text x="395" y="99" font-size="8" fill="#0969da" font-family="system-ui,sans-serif">μ, σ</text>
+    </svg>
+  </div>
+
+  <hr>
+
+  <!-- ── Monitoring Perimeter ── -->
+  <h2>The Monitoring Perimeter: 18 Transaction Types</h2>
+  <p>NGAME extracts and monitors every transaction category QuickBooks recognizes. Each type receives its own CPI score each day, its own trained baseline, and its own independent z-score. The Greek letter φ (phi) is used to index types by position. φ18 — Vendors — carries special analytical weight because vendor manipulation is the most common vehicle for fraudulent disbursements.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="center">φ</th>
+          <th>Transaction Type</th>
+          <th>Primary Fraud Risk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="center">1</td><td>Customers</td><td>Ghost customer creation; fictitious receivables</td></tr>
+        <tr><td class="center">2</td><td>Recurring Payments</td><td>Unauthorized scheduled disbursements hidden in auto-pay</td></tr>
+        <tr><td class="center">3</td><td>Invoices</td><td>Fictitious invoicing; duplicate billings to cover theft</td></tr>
+        <tr><td class="center">4</td><td>Payments</td><td>Payments redirected to unauthorized parties</td></tr>
+        <tr><td class="center">5</td><td>Time Activities</td><td>Phantom hours; unauthorized labor charges</td></tr>
+        <tr><td class="center">6</td><td>Bills</td><td>Shell-vendor bills; inflated invoices from related parties</td></tr>
+        <tr><td class="center">7</td><td>Bill Payments</td><td>Unauthorized check or ACH disbursements</td></tr>
+        <tr><td class="center">8</td><td>Expenses</td><td>Personal expense misclassification as business costs</td></tr>
+        <tr><td class="center">9</td><td>Bank Transactions</td><td>Concealed withdrawals; unauthorized transfers</td></tr>
+        <tr><td class="center">10</td><td>Sales Transactions</td><td>Skimming; unrecorded cash sales</td></tr>
+        <tr><td class="center">11</td><td>Products</td><td>Inventory manipulation; phantom product records</td></tr>
+        <tr><td class="center">12</td><td>Purchase Orders</td><td>Unauthorized procurement; fictitious POs to support fake bills</td></tr>
+        <tr><td class="center">13</td><td>Recurring Transactions</td><td>Unauthorized auto-payments added or amounts altered</td></tr>
+        <tr><td class="center">14</td><td>Contractors</td><td>Ghost contractors; inflated 1099 payments</td></tr>
+        <tr><td class="center">15</td><td>Mileage</td><td>Phantom mileage claims; personal travel as business</td></tr>
+        <tr><td class="center">16</td><td>Chart of Accounts</td><td>Unauthorized account creation; reclassification to obscure fraud</td></tr>
+        <tr><td class="center">17</td><td>Employee Payroll</td><td>Ghost employees; unauthorized pay rate changes</td></tr>
+        <tr class="row-warning"><td class="center">18</td><td><strong>Vendors</strong></td><td>Shell vendors; bulk creation to support fraudulent disbursements — <strong>highest-risk category</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- ── Snapshot Pair ── -->
+  <h2>Daily Data Foundation: The Snapshot Pair</h2>
+  <p>Before NGAME computes anything each day, the Data Extraction Agent connects to QuickBooks via its secure read-only API and downloads a complete structured record of every active transaction of all 18 types. This is serialized into a machine-readable file called <strong>Today.ttl</strong> (the daily ontology snapshot). The previous day's snapshot is automatically renamed <strong>Yesterday.ttl</strong>.</p>
+  <div class="card-grid card-grid-2">
+    <div class="card">
+      <div class="card-header">Yesterday.ttl</div>
+      <div class="card-body">The prior day's complete snapshot — every Customer record, Invoice, Bill, Vendor, etc., each identified by a unique record URI and carrying all its QuickBooks properties (amounts, dates, account codes, memos). This file is read-only once today's analysis begins.</div>
+    </div>
+    <div class="card">
+      <div class="card-header">Today.ttl</div>
+      <div class="card-body">Today's freshly extracted snapshot from QuickBooks. Identical structure to Yesterday.ttl. The set-comparison between these two files is the computational engine of all NGAME analysis.</div>
+    </div>
+  </div>
+  <div class="callout neutral">
+    <p>NGAME requires read-only API access to QuickBooks. It never writes to, modifies, or deletes any QBO record. Its role is strictly observational: extract, compare, and report.</p>
+  </div>
+
+  <hr>
+
+  <!-- ── CPI ── -->
+  <h2>The Core Measurement: CPI (Churn Persistence Index)</h2>
+  <p>For each transaction type, NGAME compares the set of record identifiers present in Yesterday.ttl to those in Today.ttl. This produces three counts — the contingency partition:</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="center">Symbol</th>
+          <th>Name</th>
+          <th>Set Operation</th>
+          <th>Plain-English Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="center">a</td><td>Retained</td><td>Yesterday ∩ Today</td><td>Records present in both snapshots — survived overnight unchanged</td></tr>
+        <tr><td class="center">b</td><td>Removed</td><td>Yesterday \ Today</td><td>Records in yesterday but gone today — deleted or voided</td></tr>
+        <tr><td class="center">c</td><td>Added</td><td>Today \ Yesterday</td><td>Records in today but absent yesterday — newly created</td></tr>
+        <tr><td class="center">n</td><td>Universe</td><td>a + b + c</td><td>All unique records seen across both days — the comparison universe</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The CPI for transaction type k on day t is then the Jaccard similarity of the two record sets:</p>
+  <div class="formula-box">
+    <div class="formula">CPI_k = a / n  =  (Retained) / (Retained + Removed + Added)   ∈ [0, 1]</div>
+    <hr>
+    <div class="stat-grid stat-grid-3" style="margin-top:14px;margin-bottom:0;">
+      <div>
+        <p class="text-sm"><strong>CPI = 1.0</strong></p>
+        <p class="text-sm text-secondary">Every record persisted and nothing new appeared — perfect stability, zero churn. A healthy routine bookkeeping day for most transaction types.</p>
+      </div>
+      <div>
+        <p class="text-sm"><strong>CPI near 0</strong></p>
+        <p class="text-sm text-secondary">Almost no records survived and/or many new ones appeared — complete population turnover. Deeply anomalous for any type that should be stable.</p>
+      </div>
+      <div>
+        <p class="text-sm"><strong>CPI + α + δ = 1</strong></p>
+        <p class="text-sm text-secondary">CPI, Addition Rate (α = c/n), and Deletion Rate (δ = b/n) always sum to exactly 1. They partition the universe of records — a useful cross-check.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout neutral">
+    <div class="callout-title">Why Jaccard similarity rather than simple count comparison?</div>
+    <p>Comparing record counts alone cannot distinguish between a day where 10 new vendors were created and 10 old ones deleted (count unchanged, but CPI is low — high churn and probable fraud) versus a stable day where 10 new vendors were legitimately onboarded and none deleted (count rises by 10, CPI stays near 1). Count-only analysis would miss the churn signal. CPI correctly weighs both new additions and deletions as signs of instability — detecting the pattern, not just the number.</p>
+  </div>
+
+  <hr>
+
+  <!-- ── Phase I ── -->
+  <h2>Phase I: Training (Days 1–30)</h2>
+  <p>The purpose of Phase I is to establish what <strong>normal looks like for this specific organization</strong>. A small nonprofit with stable vendor relationships has very different normal CPI patterns than a retail business with high invoice turnover. NGAME learns the organization's own baseline — not an industry average. This self-calibration is why the training period is essential.</p>
+
+  <div class="stat-grid stat-grid-4">
+    <div class="stat"><div class="stat-value" style="font-size:1.2em;">Day 1</div><div class="stat-label">Initialize Training Matrix structure</div></div>
+    <div class="stat"><div class="stat-value" style="font-size:1.2em;">Days 2–30</div><div class="stat-label">Append one CPI array per day</div></div>
+    <div class="stat"><div class="stat-value" style="font-size:1.2em;">Day 30</div><div class="stat-label">Finalize μ and σ per type</div></div>
+    <div class="stat"><div class="stat-value" style="font-size:1.2em;">Day 31</div><div class="stat-label">Phase II analysis begins</div></div>
+  </div>
+
+  <h3>Step-by-Step: What Happens Each Training Day</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="center">Step</th>
+          <th>Agent</th>
+          <th>Action</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="center">1</td>
+          <td>Data Extraction Agent</td>
+          <td>Rename Today.ttl → Yesterday.ttl; call QBO API; write new Today.ttl</td>
+          <td>Snapshot pair for the day is ready</td>
+        </tr>
+        <tr>
+          <td class="center">2</td>
+          <td>CPI Analysis Agent</td>
+          <td>Parse both TTL files; compute a, b, c, n for each of 18 types; compute CPI, α (Addition Rate), δ (Deletion Rate), and dollar-weighted wCPI</td>
+          <td>18-element CPI array (and wCPI array) for this day</td>
+        </tr>
+        <tr>
+          <td class="center">3</td>
+          <td>Matrix Management Agent</td>
+          <td>Append CPI array as a new day column in the Training Matrix Excel file; recalculate μ (running mean) and σ (running std dev) for all 18 rows using all columns accumulated so far</td>
+          <td>Training Matrix grows by one column; μ and σ updated to reflect all days through today</td>
+        </tr>
+        <tr>
+          <td class="center">4</td>
+          <td>Rolling Buffer</td>
+          <td>Append today's CPI arrays to the rolling buffer file (NGAME_CPI_Rolling_Buffer.json) for later multi-day sequence analysis</td>
+          <td>Buffer grows by one record; oldest records pruned if buffer exceeds 30 days</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout neutral">
+    <p>Day 1 is a special case: only Today.ttl exists (Yesterday.ttl has not yet been generated), so no CPI can be computed. The matrix is initialized with its column structure on Day 1; the first actual CPI column is written on Day 2. The 30-day target therefore yields 29 CPI observations (days 2–30) — statistically sufficient for reliable μ and σ estimates.</p>
+  </div>
+
+  <h3>The Training Matrix: Structure and Evolution</h3>
+  <p>The Training Matrix is an Excel workbook managed entirely by NGAME. It starts with three fixed columns and grows by one CPI column per day. A second worksheet ("wCPI_Baseline") carries the same structure for the dollar-weighted CPI.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Column</th><th>Contents</th><th>When Updated</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A — Transaction Type</td>
+          <td>18 rows: Customers (φ1) through Vendors (φ18) in fixed order</td>
+          <td>Once, at initialization — never changes</td>
+        </tr>
+        <tr>
+          <td>B — μ (Mean CPI)</td>
+          <td>Running mean CPI for each type across all training days recorded so far</td>
+          <td>Recalculated each training day as a new column is added</td>
+        </tr>
+        <tr>
+          <td>C — σ (Std Dev CPI)</td>
+          <td>Running standard deviation of CPI for each type</td>
+          <td>Recalculated each training day alongside μ</td>
+        </tr>
+        <tr>
+          <td>D, E, F … (Day columns)</td>
+          <td>Raw CPI value for each type on that specific training day</td>
+          <td>One column appended per day; never overwritten</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-secondary">After 30 training days the matrix contains 33 columns: Transaction Type (A) + μ (B) + σ (C) + 30 daily CPI values (D through AG). The μ and σ columns in that final state constitute the trained baseline that Phase II compares against every subsequent day.</p>
+
+  <h3>What μ and σ Mean in This Context</h3>
+  <div class="two-col">
+    <div>
+      <p><strong>μ_k — Mean CPI for Transaction Type k</strong></p>
+      <p class="text-sm text-secondary">The average fraction of records of type k that persisted unchanged from one day to the next, across all training days. A Vendor μ of 0.995 means that on a typical day 99.5% of yesterday's vendor records still exist today — an extremely stable type. A Vendor μ of 0.85 means 15% of the vendor population turns over each day on average — already volatile, requiring a larger single-day deviation before NGAME classifies it as anomalous.</p>
+    </div>
+    <div>
+      <p><strong>σ_k — Standard Deviation of CPI for Transaction Type k</strong></p>
+      <p class="text-sm text-secondary">How much the daily CPI for type k varies around its mean during training. A small σ means the organization's record-keeping for this type is very consistent — outliers stand out sharply even if they are small in absolute terms. A large σ means normal operations already include considerable day-to-day fluctuation — a larger deviation is needed before NGAME flags an anomaly. This is how NGAME self-calibrates to each organization without requiring an external benchmark.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ── Phase II ── -->
+  <h2>Phase II: Analysis (Day 31 Onward)</h2>
+  <p>Phase II runs every business day after training completes. The Data Extraction and CPI Analysis steps are identical to Phase I. What differs is what happens next: instead of appending to the Training Matrix, NGAME compares today's CPI array against the trained μ and σ to compute a z-score for each of the 18 transaction types, then ranks and escalates any anomalies through the rest of the pipeline.</p>
+
+  <h3>Step 3: Z-Score Comparison</h3>
+  <p>For each transaction type k, the Churn Comparison Agent loads μ_k and σ_k from the Training Matrix and computes the z-score:</p>
+  <div class="formula-box">
+    <div class="formula">z_k = ( CPI_k(today) − μ_k ) / σ_k</div>
+    <hr>
+    <p class="text-sm text-secondary" style="margin-top:10px;">If σ_k = 0 (the type was perfectly stable on every training day — zero variation), z_k is set to 0 to avoid division by zero. The z-score is signed: a negative z means today's CPI is below normal (more churn than expected — a deletion-heavy or bulk-addition day); a positive z means today's CPI is above normal (less churn than expected — an unusually quiet day). Both directions are suspicious if extreme.</p>
+    <p class="text-sm text-secondary" style="margin-top:8px;">Alert thresholds apply to the absolute value |z_k| because both excessive stability and excessive instability relative to the baseline can signal manipulation. A day where every vendor was replaced is just as alarming as a day where none were, if neither pattern resembles the trained norm.</p>
+  </div>
+
+  <h3>Alert Levels</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="center">Level</th>
+          <th class="center">Criterion</th>
+          <th>Statistical Meaning</th>
+          <th>Typical Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-danger">
+          <td class="center"><span class="pill danger">HIGH</span></td>
+          <td class="center">|z_k| &gt; 3.0</td>
+          <td>More than 3 standard deviations from the trained mean. A random day this extreme occurs fewer than 0.3% of the time under a normal distribution — a genuine statistical outlier.</td>
+          <td>Immediate FRP review; escalate to management per engagement protocol</td>
+        </tr>
+        <tr class="row-warning">
+          <td class="center"><span class="pill warning">MEDIUM</span></td>
+          <td class="center">|z_k| &gt; 2.0</td>
+          <td>More than 2 standard deviations from the trained mean. Affects roughly 5% of normal days — unusual but not extreme. Warrants investigation.</td>
+          <td>Investigate and document; watch same type the following day</td>
+        </tr>
+        <tr>
+          <td class="center"><span class="pill neutral">LOW</span></td>
+          <td class="center">|z_k| ≤ 2.0</td>
+          <td>Within the organization's normal range of variation.</td>
+          <td>No action required; logged for completeness</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Dollar-Weighted CPI (wCPI) — Secondary Signal</h3>
+  <p>The standard CPI treats every record equally regardless of dollar amount — a $50,000 vendor payment counts the same as a $25 supply purchase. To make NGAME sensitive to disproportionate dollar values, a dollar-weighted variant (wCPI) is computed alongside the standard CPI. Instead of counting records, it weights each by its transaction dollar amount.</p>
+  <div class="formula-box">
+    <div class="formula">wCPI_k = (Dollar value of retained records) / (Dollar value of all records in the union)</div>
+    <hr>
+    <div class="two-col" style="margin:14px 0 0;">
+      <div>
+        <p class="text-sm"><strong>wCPI much lower than CPI</strong></p>
+        <p class="text-sm text-secondary">New additions carry outsized dollar amounts relative to retained records. A single new vendor record representing a $40,000 payment barely moves the count-based CPI but sharply reduces the dollar-weighted wCPI. This compound signal surfaces high-value fraud that looks routine by record count alone.</p>
+      </div>
+      <div>
+        <p class="text-sm"><strong>wCPI much higher than CPI</strong></p>
+        <p class="text-sm text-secondary">Retained records dominate in dollar value while additions or deletions are high in count but small in amount — the organization's high-value records are stable, but there is churn in small-dollar records. Less alarming but still worth reviewing.</p>
+      </div>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="center">|wCPI − CPI| Divergence</th>
+          <th class="center">Dollar Signal Level</th>
+          <th>Interpretation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-danger">
+          <td class="center">&gt; 0.30</td>
+          <td class="center"><span class="pill danger">HIGH</span></td>
+          <td>New or removed records carry grossly disproportionate dollar value — a high-value transaction hiding behind count-level normalcy</td>
+        </tr>
+        <tr class="row-warning">
+          <td class="center">&gt; 0.15</td>
+          <td class="center"><span class="pill warning">MEDIUM</span></td>
+          <td>Noticeable dollar imbalance; warrants examination of the specific records involved</td>
+        </tr>
+        <tr>
+          <td class="center">≤ 0.15</td>
+          <td class="center"><span class="pill neutral">LOW</span></td>
+          <td>Dollar weighting consistent with record weighting — proportionate activity</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-secondary">Once sufficient wCPI training days have accumulated, the dollar signal shifts from a raw divergence threshold to a fully trained z-score (z_dollar = (wCPI − μ_w) / σ_w) using the same HIGH / MEDIUM / LOW bands. A composite alarm fires when EITHER the count-based OR the dollar signal reaches MEDIUM or HIGH — whichever is more sensitive on a given day.</p>
+
+  <h3>Step 4: Anomaly Identification and Ranking</h3>
+  <p>The Anomaly Identification Agent collects all 18 z-scores and ranks them from highest |z| to lowest. The Account Mapping Agent then resolves the φ index to specific QuickBooks account names and record identifiers, producing a human-readable anomaly list. A representative output might look like:</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="center">Rank</th>
+          <th>Type (φ)</th>
+          <th class="center">CPI Today</th>
+          <th class="center">μ (Baseline)</th>
+          <th class="center">σ</th>
+          <th class="center">z-Score</th>
+          <th class="center">Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-danger">
+          <td class="center">1</td>
+          <td>φ18 — Vendors</td>
+          <td class="center">0.720</td>
+          <td class="center">0.995</td>
+          <td class="center">0.005</td>
+          <td class="center">−55.0</td>
+          <td class="center"><span class="pill danger">HIGH</span></td>
+        </tr>
+        <tr class="row-danger">
+          <td class="center">2</td>
+          <td>φ6 — Bills</td>
+          <td class="center">0.880</td>
+          <td class="center">0.970</td>
+          <td class="center">0.015</td>
+          <td class="center">−6.0</td>
+          <td class="center"><span class="pill danger">HIGH</span></td>
+        </tr>
+        <tr class="row-danger">
+          <td class="center">3</td>
+          <td>φ7 — Bill Payments</td>
+          <td class="center">0.940</td>
+          <td class="center">0.985</td>
+          <td class="center">0.010</td>
+          <td class="center">−4.5</td>
+          <td class="center"><span class="pill danger">HIGH</span></td>
+        </tr>
+        <tr>
+          <td class="center">4</td>
+          <td>φ3 — Invoices</td>
+          <td class="center">0.958</td>
+          <td class="center">0.960</td>
+          <td class="center">0.008</td>
+          <td class="center">−0.3</td>
+          <td class="center"><span class="pill neutral">LOW</span></td>
+        </tr>
+        <tr>
+          <td class="center">5</td>
+          <td>φ1 — Customers</td>
+          <td class="center">0.995</td>
+          <td class="center">0.994</td>
+          <td class="center">0.003</td>
+          <td class="center">+0.3</td>
+          <td class="center"><span class="pill neutral">LOW</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-secondary">The example above shows a shell-vendor fraud pattern: φ18 shows a massive CPI drop (many new vendors created, many old ones deleted simultaneously), accompanied by elevated Bill and Bill Payment activity — the classic vendor-manipulation signature where new vendors are created and immediately paid. This combination across three related types is more probative than any single type in isolation.</p>
+
+  <h3>Step 5: LLM Analysis</h3>
+  <p>The top-ranked anomalies are passed to the LLM Analysis Agent, which constructs a natural-language interpretation of each anomaly in the context of the organization's known transaction patterns.</p>
+  <div class="card-grid card-grid-3">
+    <div class="card">
+      <div class="card-header">Contextual Narrative</div>
+      <div class="card-body">Translates z-score rankings into plain English: "Vendor type showed 28 new records created against a baseline of 0–2 per day, with 15 simultaneous deletions. This pattern is consistent with rapid shell-vendor insertion and suppression of audit trail."</div>
+    </div>
+    <div class="card">
+      <div class="card-header">Coordinated-Fraud Assessment</div>
+      <div class="card-body">Evaluates whether anomalies across multiple types suggest a coordinated scheme (Vendor + Bill + Bill Payment anomalies co-occurring) versus an isolated data entry anomaly that affects only one type. Co-occurrence significantly increases the fraud probability assessment.</div>
+    </div>
+    <div class="card">
+      <div class="card-header">Recommended Actions</div>
+      <div class="card-body">Generates specific follow-up steps calibrated to the detected pattern: "Review vendor creation logs for the 72-hour window, cross-reference with payment runs, verify authorization signatures on all new vendor approvals, confirm banking detail changes with source documents."</div>
+    </div>
+  </div>
+
+  <h3>Step 6: Management Warning Report</h3>
+  <p>The Management Warning Agent synthesizes all findings into a structured JSON report — NGAME's daily deliverable to the Fraud Risk Professional (FRP). The report includes: overall risk level (HIGH / MEDIUM / LOW), ranked anomaly list with supporting statistics, LLM narrative interpretation, and recommended actions.</p>
+  <div class="callout neutral">
+    <div class="callout-title">The FRP receives this report each morning before any other action.</div>
+    <p>No alerts are sent automatically to management, the board, or the bookkeeper during initial deployment. The FRP reviews the report, exercises professional judgment, and decides what — if any — action to take. NGAME provides the statistical evidence; the FRP owns the response. This design preserves the engagement framework and avoids false-alarm fatigue.</p>
+  </div>
+
+  <hr>
+
+  <!-- ── Sequence Analysis ── -->
+  <h2>Slow-Burn Detection: Multi-Day Sequence Analysis (SCPI)</h2>
+  <p>A sophisticated perpetrator may spread fraudulent activity across many days — creating two or three shell vendors per day rather than thirty in one day. Each individual day produces only a MEDIUM alert; no single day crosses the HIGH threshold. Without sequence analysis this pattern evades detection.</p>
+
+  <div class="callout info">
+    <div class="callout-title">Sequence amplification: |z_seq| ≈ |z_daily| × √L</div>
+    <p>When a transaction type consistently deviates from its training baseline by the same daily amount for L consecutive days, the sequence z-score (z_seq) grows by a factor of √L. A sustained MEDIUM deviation of −2σ per day over 5 days yields z_seq ≈ −2 × √5 ≈ −4.47 — solidly into HIGH territory. The √L amplification is the mathematical foundation for detecting slow-burn fraud that single-day analysis cannot see.</p>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>SCPI Formula</h3>
+      <div class="formula-box">
+        <div class="formula">SCPI_k(t, L) = geometric mean of CPI_k over the last L days</div>
+        <p class="text-sm text-secondary" style="margin-top:8px;">= ( CPI_k(t) × CPI_k(t−1) × … × CPI_k(t−L+1) ) ^ (1/L)</p>
+        <hr style="margin:10px 0;">
+        <div class="formula">z_seq_k = ( SCPI_k − μ_k ) / ( σ_k / √L )</div>
+        <p class="text-sm text-secondary" style="margin-top:8px;">The denominator σ_k / √L is the standard error of the geometric mean — it accounts for the fact that averaging over more days reduces random noise, making a sustained deviation more statistically decisive even when each individual day was only mildly anomalous. No retraining is required to enable sequence analysis; the same μ_k and σ_k from the Training Matrix are reused.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Window Length vs. Detection Speed</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Window L</th>
+              <th class="center">Factor √L</th>
+              <th>MEDIUM −2σ/day escalates to</th>
+              <th>HIGH detected by</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>3 days</td><td class="center">×1.73</td><td>HIGH (−3.46σ)</td><td>Day 3</td></tr>
+            <tr><td>5 days</td><td class="center">×2.24</td><td>HIGH (−4.47σ)</td><td>Day 5</td></tr>
+            <tr><td>7 days</td><td class="center">×2.65</td><td>HIGH (−5.30σ)</td><td>Day 7</td></tr>
+            <tr><td>10 days</td><td class="center">×3.16</td><td>HIGH (−6.32σ)</td><td>Day 10</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-secondary">Default window: L = 5. Configurable at runtime via the --window flag. Larger windows suit noisier operating environments; smaller windows give earlier detection for faster-moving fraud. No retraining is required when L is changed.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ── Property Mutations ── -->
+  <h2>Property Mutation Detection</h2>
+  <p>Beyond counting which records were added or deleted, NGAME also inspects every record that persisted from Yesterday to Today and checks whether any of its properties changed. This catches a distinct fraud class: modification of existing records rather than creation of new ones.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Mutation Type</th><th>Example</th><th>Fraud Scenario</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Added property</td>
+          <td>A vendor record gains a new bank account number</td>
+          <td>Unauthorized payment redirect — funds rerouted to a fraudster-controlled account</td>
+        </tr>
+        <tr>
+          <td>Removed property</td>
+          <td>An invoice loses its "approved by" field</td>
+          <td>Audit trail destruction — removal of authorization evidence before review</td>
+        </tr>
+        <tr>
+          <td>Modified property</td>
+          <td>A bill's total amount changes from $1,200 to $12,000</td>
+          <td>Dollar amount inflation — escalating a legitimate bill to extract excess funds</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-secondary">Property mutations are reported separately from the CPI-based anomaly ranking and do not currently feed into the z-score vector. They are surfaced as a supplementary finding in the daily report for the FRP's review — especially valuable when the count-based CPI shows no anomaly but an existing record's critical fields have been altered.</p>
+
+  <hr>
+
+  <!-- ── Phase Summary ── -->
+  <h2>Phase-by-Phase Reference Summary</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Phase I (Training, Days 1–30)</th>
+          <th>Phase II (Analysis, Day 31+)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Duration</td><td>30 days minimum; operator-configurable</td><td>Every business day thereafter</td></tr>
+        <tr><td>Data extraction</td><td>Identical: QBO API → Today.ttl</td><td>Identical: QBO API → Today.ttl</td></tr>
+        <tr><td>CPI computation</td><td>Identical: 18-element Jaccard array</td><td>Identical: 18-element Jaccard array</td></tr>
+        <tr><td>What diverges</td><td>CPI array appended to Training Matrix</td><td>CPI array compared against μ, σ → z-score</td></tr>
+        <tr><td>Dollar weighting</td><td>wCPI recorded; wCPI baseline (μ_w, σ_w) accumulates</td><td>Dollar z-score or divergence signal computed; composite alarm if elevated</td></tr>
+        <tr><td>Sequence analysis</td><td>Rolling buffer populated daily</td><td>SCPI and z_seq computed when L days available in buffer</td></tr>
+        <tr><td>Anomaly ranking</td><td>Not performed</td><td>All 18 z-scores sorted; top anomalies escalated</td></tr>
+        <tr><td>LLM analysis</td><td>Not performed</td><td>LLM interprets top anomalies in plain English</td></tr>
+        <tr><td>Management report</td><td>No external output; matrix grows silently</td><td>FRP receives structured warning report each morning</td></tr>
+        <tr><td>Property mutations</td><td>Detected and logged; no baseline yet</td><td>Detected and included as supplementary findings</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- ── Full Derivation Chain ── -->
+  <h2>The Full Derivation Chain at a Glance</h2>
+  <p class="text-sm text-secondary">This summary traces a single transaction type k from raw QBO data to the management warning.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="center">Layer</th>
+          <th>Object</th>
+          <th>Formula / Operation</th>
+          <th>Produced By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="center">1</td>
+          <td>Daily snapshot</td>
+          <td>S_k(t) = { all record URIs of type k in Today.ttl }</td>
+          <td>Data Extraction Agent</td>
+        </tr>
+        <tr>
+          <td class="center">2</td>
+          <td>State vector</td>
+          <td>S(t) = ( S_1(t), S_2(t), …, S_18(t) )</td>
+          <td>Data Extraction Agent</td>
+        </tr>
+        <tr>
+          <td class="center">3</td>
+          <td>Contingency</td>
+          <td>a = |S_k(t−1) ∩ S_k(t)| ; b = |S_k(t−1) \ S_k(t)| ; c = |S_k(t) \ S_k(t−1)| ; n = a+b+c</td>
+          <td>CPI Analysis Agent</td>
+        </tr>
+        <tr>
+          <td class="center">4</td>
+          <td>CPI scalar</td>
+          <td>CPI_k = a / n  (Jaccard similarity)</td>
+          <td>CPI Analysis Agent</td>
+        </tr>
+        <tr>
+          <td class="center">5</td>
+          <td>Training stats</td>
+          <td>μ_k = mean(CPI_k over training days) ; σ_k = std dev(CPI_k over training days)</td>
+          <td>Matrix Management Agent (Phase I)</td>
+        </tr>
+        <tr>
+          <td class="center">6</td>
+          <td>Z-score</td>
+          <td>z_k = ( CPI_k(today) − μ_k ) / σ_k</td>
+          <td>Churn Comparison Agent (Phase II)</td>
+        </tr>
+        <tr>
+          <td class="center">7</td>
+          <td>Alert level</td>
+          <td>|z_k| &gt; 3 → HIGH ; |z_k| &gt; 2 → MEDIUM ; else LOW</td>
+          <td>Churn Comparison Agent</td>
+        </tr>
+        <tr>
+          <td class="center">8</td>
+          <td>Ranking</td>
+          <td>Sort all 18 z_k by |z_k| descending</td>
+          <td>Anomaly Identification Agent</td>
+        </tr>
+        <tr>
+          <td class="center">9</td>
+          <td>Narrative</td>
+          <td>LLM interprets ranked anomalies with context</td>
+          <td>LLM Analysis Agent</td>
+        </tr>
+        <tr>
+          <td class="center">10</td>
+          <td>Report</td>
+          <td>Structured JSON: risk level + anomaly list + narrative + recommendations</td>
+          <td>Management Warning Agent</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="doc-footer">
+    NGAME SME Technical Reference · May 2026 ·
+    Matches implementation as of NGAME_FREEZE_v1 (2026-05-05) ·
+    Source agents: ngame_cpi_analysis_agent.py · ngame_churn_comparison_agent.py ·
+    ngame_training_flow_manager.py · ngame_matrix_management_agent.py ·
+    phase2_director_agent.py · ngame_sequence_cpi_agent.py
+  </div>
+
+</article>
+</body>
+</html>

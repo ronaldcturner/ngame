@@ -1,0 +1,424 @@
+{
+  "system_config": {
+    "name": "NGAME Ontology-Based Anomaly Detection System",
+    "version": "1.0.0",
+    "description": "Comprehensive anomaly detection system using OWL ontologies and SWRL rules as primary data structure",
+    "log_level": "INFO",
+    "max_alert_history": 1000,
+    "export_format": "json"
+  },
+  "ontology": {
+    "primary_ontology": "quickbooks_ontology_14Aug-03_with_swrl_rules.ttl",
+    "swrl_rules_file": "fraud_detection_rules.swrl",
+    "reasoner": "hermit",
+    "enable_reasoning": true,
+    "ontology_namespace": "http://ngame.org/quickbooks#",
+    "data_compatibility": {
+      "owl_format": true,
+      "rdf_format": true,
+      "swrl_support": true,
+      "sparql_queries": true
+    },
+    "reasoning_config": {
+      "inference_engine": "pellet",
+      "consistency_checking": true,
+      "classification": true,
+      "realization": true
+    }
+  },
+  "ontology_agents": {
+    "swrl_violation": {
+      "enabled": true,
+      "violation_patterns": {
+        "suspicious_vendor": true,
+        "high_value_transaction": true,
+        "incomplete_customer": true,
+        "rapid_vendor_addition": true,
+        "unusual_payment_pattern": true,
+        "after_hours_activity": true
+      },
+      "rule_categories": {
+        "fraud_detection": true,
+        "data_quality": true,
+        "behavioral_analysis": true,
+        "temporal_analysis": true
+      },
+      "confidence_threshold": 0.7
+    },
+    "ontology_consistency": {
+      "enabled": true,
+      "consistency_checks": {
+        "circular_dependencies": true,
+        "required_properties": true,
+        "property_values": true,
+        "class_hierarchy": true,
+        "instance_consistency": true,
+        "data_type_validation": true
+      },
+      "validation_rules": {
+        "strict_mode": false,
+        "auto_correction": false,
+        "report_inconsistencies": true
+      }
+    },
+    "temporal_ontology": {
+      "enabled": true,
+      "temporal_patterns": {
+        "after_hours": true,
+        "peak_volume": true,
+        "seasonal_patterns": true,
+        "trend_analysis": true,
+        "cyclical_patterns": true
+      },
+      "time_analysis": {
+        "business_hours": {
+          "start": 6,
+          "end": 20,
+          "timezone": "UTC"
+        },
+        "periods": {
+          "hourly": true,
+          "daily": true,
+          "weekly": true,
+          "monthly": true
+        }
+      }
+    }
+  },
+  "ngame_integration": {
+    "cpi_analysis": {
+      "enabled": true,
+      "correlation_threshold": 0.5,
+      "feature_extraction": {
+        "classes": true,
+        "properties": true,
+        "instances": true,
+        "relationships": true
+      },
+      "comparison_methods": {
+        "cpi_coefficient": true,
+        "jaccard_similarity": true,
+        "cosine_similarity": true
+      }
+    },
+    "change_tracking": {
+      "enabled": true,
+      "tracking_methods": {
+        "entity_changes": true,
+        "property_changes": true,
+        "relationship_changes": true,
+        "ontology_evolution": true
+      },
+      "change_detection": {
+        "added_entities": true,
+        "removed_entities": true,
+        "modified_entities": true,
+        "structural_changes": true
+      }
+    },
+    "fraud_detection": {
+      "enabled": true,
+      "rule_integration": {
+        "swrl_rules": true,
+        "custom_rules": true,
+        "external_rules": false
+      },
+      "detection_methods": {
+        "rule_based": true,
+        "pattern_based": true,
+        "statistical": true,
+        "behavioral": true
+      }
+    }
+  },
+  "swrl_rules": {
+    "fraud_detection_rules": {
+      "excessive_vendor_addition": {
+        "rule": "ExcessiveVendorAddition(?v) <- Vendor(?v) ^ addedInPeriod(?v, ?period) ^ countVendorsInPeriod(?period, ?count) ^ greaterThan(?count, 2)",
+        "severity": "high",
+        "category": "fraud_detection",
+        "description": "Alert when more than 2 vendors are added in a single period"
+      },
+      "suspicious_vendor_name": {
+        "rule": "SuspiciousVendor(?v) <- Vendor(?v) ^ hasName(?v, ?name) ^ contains(?name, 'loan')",
+        "severity": "medium",
+        "category": "fraud_detection",
+        "description": "Alert for vendors with suspicious name patterns"
+      },
+      "high_value_new_vendor": {
+        "rule": "HighValueNewVendorTransaction(?t) <- Transaction(?t) ^ hasAmount(?t, ?a) ^ greaterThan(?a, 10000) ^ hasVendor(?t, ?v) ^ NewVendor(?v)",
+        "severity": "high",
+        "category": "fraud_detection",
+        "description": "Alert for high-value transactions with new vendors"
+      },
+      "rapid_vendor_turnover": {
+        "rule": "RapidVendorTurnover(?v1, ?v2) <- Vendor(?v1) ^ Vendor(?v2) ^ removedVendor(?v1, ?t1) ^ addedVendor(?v2, ?t2) ^ timeDifference(?t1, ?t2, ?diff) ^ lessThan(?diff, 86400)",
+        "severity": "medium",
+        "category": "fraud_detection",
+        "description": "Alert when vendors are removed and immediately replaced"
+      }
+    },
+    "data_quality_rules": {
+      "missing_vendor_info": {
+        "rule": "IncompleteVendor(?v) <- Vendor(?v) ^ not(hasEmail(?v, ?e)) ^ not(hasPhone(?v, ?p))",
+        "severity": "low",
+        "category": "data_quality",
+        "description": "Alert for vendors missing contact information"
+      },
+      "invalid_transaction_amount": {
+        "rule": "InvalidTransactionAmount(?t) <- Transaction(?t) ^ hasAmount(?t, ?a) ^ lessThan(?a, 0)",
+        "severity": "medium",
+        "category": "data_quality",
+        "description": "Alert for transactions with negative amounts"
+      },
+      "duplicate_vendor_email": {
+        "rule": "DuplicateVendorEmail(?v1, ?v2) <- Vendor(?v1) ^ Vendor(?v2) ^ hasEmail(?v1, ?e) ^ hasEmail(?v2, ?e) ^ notEqual(?v1, ?v2)",
+        "severity": "medium",
+        "category": "data_quality",
+        "description": "Alert for vendors with duplicate email addresses"
+      }
+    },
+    "behavioral_rules": {
+      "after_hours_activity": {
+        "rule": "AfterHoursActivity(?a) <- Activity(?a) ^ hasTimestamp(?a, ?t) ^ hourOfDay(?t, ?h) ^ (lessThan(?h, 6) ^ greaterThan(?h, 20))",
+        "severity": "low",
+        "category": "behavioral_analysis",
+        "description": "Alert for activities outside business hours"
+      },
+      "unusual_activity_volume": {
+        "rule": "UnusualActivityVolume(?u, ?period) <- User(?u) ^ activityInPeriod(?u, ?period, ?count) ^ greaterThan(?count, 50)",
+        "severity": "medium",
+        "category": "behavioral_analysis",
+        "description": "Alert for users with unusually high activity volume"
+      }
+    },
+    "temporal_rules": {
+      "peak_transaction_volume": {
+        "rule": "PeakTransactionVolume(?period) <- TimePeriod(?period) ^ transactionCountInPeriod(?period, ?count) ^ greaterThan(?count, 20)",
+        "severity": "medium",
+        "category": "temporal_analysis",
+        "description": "Alert for periods with unusually high transaction volume"
+      },
+      "seasonal_anomaly": {
+        "rule": "SeasonalAnomaly(?t) <- Transaction(?t) ^ hasTimestamp(?t, ?ts) ^ monthOfYear(?ts, ?m) ^ expectedMonthlyAverage(?m, ?avg) ^ hasAmount(?t, ?a) ^ greaterThan(?a, ?avg * 3)",
+        "severity": "medium",
+        "category": "temporal_analysis",
+        "description": "Alert for transactions that deviate significantly from seasonal patterns"
+      }
+    }
+  },
+  "ontology_entities": {
+    "classes": {
+      "Vendor": {
+        "properties": ["hasName", "hasEmail", "hasPhone", "hasIndustry", "hasCreationDate"],
+        "required_properties": ["hasName", "hasEmail"],
+        "subclasses": ["SuspiciousVendor", "NewVendor", "IncompleteVendor"]
+      },
+      "Customer": {
+        "properties": ["hasName", "hasEmail", "hasPhone", "hasIndustry"],
+        "required_properties": ["hasName", "hasEmail"],
+        "subclasses": ["IncompleteCustomer"]
+      },
+      "Transaction": {
+        "properties": ["hasAmount", "hasDate", "hasVendor", "hasCustomer", "hasDescription"],
+        "required_properties": ["hasAmount", "hasDate", "hasVendor"],
+        "subclasses": ["HighValueTransaction", "SuspiciousTransaction", "AfterHoursTransaction"]
+      },
+      "Activity": {
+        "properties": ["hasUser", "hasTimestamp", "hasType", "hasIPAddress"],
+        "required_properties": ["hasUser", "hasTimestamp", "hasType"],
+        "subclasses": ["AfterHoursActivity", "UnusualActivity"]
+      }
+    },
+    "properties": {
+      "hasName": {
+        "domain": ["Vendor", "Customer"],
+        "range": "string",
+        "cardinality": "1"
+      },
+      "hasEmail": {
+        "domain": ["Vendor", "Customer"],
+        "range": "string",
+        "cardinality": "1"
+      },
+      "hasAmount": {
+        "domain": ["Transaction"],
+        "range": "decimal",
+        "cardinality": "1"
+      },
+      "hasDate": {
+        "domain": ["Transaction", "Activity"],
+        "range": "datetime",
+        "cardinality": "1"
+      },
+      "hasVendor": {
+        "domain": ["Transaction"],
+        "range": "Vendor",
+        "cardinality": "1"
+      },
+      "hasCustomer": {
+        "domain": ["Transaction"],
+        "range": "Customer",
+        "cardinality": "1"
+      }
+    }
+  },
+  "reasoning_config": {
+    "inference_rules": {
+      "transitive_properties": true,
+      "symmetric_properties": true,
+      "inverse_properties": true,
+      "property_chains": true
+    },
+    "classification": {
+      "automatic_classification": true,
+      "class_hierarchy_inference": true,
+      "property_inference": true
+    },
+    "consistency_checking": {
+      "class_consistency": true,
+      "property_consistency": true,
+      "instance_consistency": true,
+      "rule_consistency": true
+    }
+  },
+  "data_integration": {
+    "quickbooks": {
+      "enabled": true,
+      "sync_interval_minutes": 15,
+      "entities": [
+        "vendors",
+        "customers", 
+        "transactions",
+        "invoices",
+        "payments"
+      ],
+      "ontology_mapping": {
+        "vendor_to_owl": "Vendor",
+        "customer_to_owl": "Customer",
+        "transaction_to_owl": "Transaction",
+        "invoice_to_owl": "Invoice",
+        "payment_to_owl": "Payment"
+      }
+    },
+    "external_systems": {
+      "risk_scoring": {
+        "enabled": false,
+        "api_endpoint": "",
+        "api_key": ""
+      },
+      "threat_intelligence": {
+        "enabled": false,
+        "providers": []
+      }
+    }
+  },
+  "alerting": {
+    "notification_channels": {
+      "email": {
+        "enabled": true,
+        "recipients": ["admin@company.com", "security@company.com"],
+        "severity_threshold": "medium"
+      },
+      "slack": {
+        "enabled": false,
+        "webhook_url": "",
+        "channel": "#ontology-alerts",
+        "severity_threshold": "high"
+      },
+      "webhook": {
+        "enabled": false,
+        "url": "",
+        "headers": {}
+      }
+    },
+    "alert_grouping": {
+      "enabled": true,
+      "time_window_minutes": 15,
+      "max_alerts_per_group": 10
+    },
+    "escalation": {
+      "enabled": true,
+      "levels": [
+        {
+          "level": 1,
+          "severity": "low",
+          "timeout_minutes": 60,
+          "actions": ["log", "email"]
+        },
+        {
+          "level": 2,
+          "severity": "medium",
+          "timeout_minutes": 30,
+          "actions": ["log", "email", "slack"]
+        },
+        {
+          "level": 3,
+          "severity": "high",
+          "timeout_minutes": 15,
+          "actions": ["log", "email", "slack", "webhook"]
+        },
+        {
+          "level": 4,
+          "severity": "critical",
+          "timeout_minutes": 5,
+          "actions": ["log", "email", "slack", "webhook", "sms"]
+        }
+      ]
+    }
+  },
+  "reporting": {
+    "reports": {
+      "ontology_summary": {
+        "enabled": true,
+        "schedule": "0 9 * * *",
+        "recipients": ["management@company.com"]
+      },
+      "swrl_violations": {
+        "enabled": true,
+        "schedule": "0 9 * * 1",
+        "recipients": ["management@company.com", "security@company.com"]
+      },
+      "ontology_evolution": {
+        "enabled": true,
+        "schedule": "0 9 1 * *",
+        "recipients": ["executives@company.com"]
+      }
+    },
+    "export_formats": ["json", "rdf", "owl", "ttl"],
+    "retention_days": 90
+  },
+  "performance": {
+    "processing": {
+      "max_concurrent_agents": 4,
+      "batch_size": 1000,
+      "timeout_seconds": 300
+    },
+    "memory": {
+      "max_cache_size_mb": 512,
+      "cleanup_interval_minutes": 60
+    },
+    "reasoning": {
+      "reasoner_timeout_seconds": 60,
+      "max_inference_steps": 1000,
+      "cache_reasoning_results": true
+    }
+  },
+  "security": {
+    "authentication": {
+      "required": true,
+      "method": "api_key",
+      "key_rotation_days": 90
+    },
+    "encryption": {
+      "data_at_rest": true,
+      "data_in_transit": true,
+      "algorithm": "AES-256"
+    },
+    "audit_logging": {
+      "enabled": true,
+      "retention_days": 365,
+      "sensitive_fields": ["api_key", "password", "token"]
+    }
+  }
+} 

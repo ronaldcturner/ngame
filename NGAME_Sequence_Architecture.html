@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NGAME: Multi-Day Sequence Analysis — Architecture</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:        #f8f9fb;
+    --surface:   #ffffff;
+    --border:    #e2e6ea;
+    --text:      #1a1e26;
+    --muted:     #6b7280;
+    --accent:    #3b6ef6;
+    --danger:    #dc2626;
+    --warning:   #d97706;
+    --success:   #16a34a;
+    --info:      #0891b2;
+    --neutral:   #6b7280;
+    --stripe:    #f1f4f8;
+    --pill-h-bg:  #fef3c7;
+    --pill-h-tx:  #92400e;
+    --pill-m-bg:  #fff7ed;
+    --pill-m-tx:  #c2410c;
+    --pill-1-bg:  #dcfce7;
+    --pill-1-tx:  #166534;
+    --pill-2-bg:  #dbeafe;
+    --pill-2-tx:  #1e40af;
+    --pill-3-bg:  #fef9c3;
+    --pill-3-tx:  #854d0e;
+    --row-danger: #fef2f2;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 40px 28px 64px;
+  }
+
+  /* ── Typography ── */
+  h1 { font-size: 1.75rem; font-weight: 700; line-height: 1.2; margin-bottom: 6px; }
+  h2 { font-size: 1.2rem;  font-weight: 700; margin-bottom: 10px; }
+  h3 { font-size: 1rem;    font-weight: 600; margin-bottom: 8px; }
+  p  { color: var(--muted); margin-bottom: 0; }
+
+  .subtitle { color: var(--muted); font-size: 0.9rem; max-width: 700px; }
+
+  /* ── Layout helpers ── */
+  .stack-4  { display: flex; flex-direction: column; gap: 4px;  }
+  .stack-6  { display: flex; flex-direction: column; gap: 6px;  }
+  .stack-8  { display: flex; flex-direction: column; gap: 8px;  }
+  .stack-10 { display: flex; flex-direction: column; gap: 10px; }
+  .stack-12 { display: flex; flex-direction: column; gap: 12px; }
+  .stack-20 { display: flex; flex-direction: column; gap: 20px; }
+  .stack-24 { display: flex; flex-direction: column; gap: 24px; }
+
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  @media (max-width: 680px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  hr.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 4px 0;
+  }
+
+  /* ── Stat tiles ── */
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .stat-value { font-size: 2rem; font-weight: 700; color: var(--text); }
+  .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+  /* ── Callout ── */
+  .callout {
+    border-left: 4px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    padding: 14px 16px;
+    font-size: 0.87rem;
+  }
+  .callout.info    { border-left-color: var(--info);    background: #ecfeff; }
+  .callout.neutral { border-left-color: var(--neutral);  background: #f9fafb; }
+  .callout-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-family: "Menlo", "Courier New", monospace;
+  }
+  .callout p { color: var(--text); }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+  }
+  .card-body { padding: 16px; }
+
+  /* ── Pills ── */
+  .pill {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+  }
+  .pill-high    { background: var(--pill-h-bg); color: var(--pill-h-tx); }
+  .pill-medium  { background: var(--pill-m-bg); color: var(--pill-m-tx); }
+  .pill-phase1  { background: var(--pill-1-bg); color: var(--pill-1-tx); }
+  .pill-phase2  { background: var(--pill-2-bg); color: var(--pill-2-tx); }
+  .pill-phase3  { background: var(--pill-3-bg); color: var(--pill-3-tx); }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+  }
+  thead th {
+    background: var(--bg);
+    border-bottom: 2px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  tbody td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:nth-child(even) td { background: var(--stripe); }
+  tbody tr.danger-row td { background: var(--row-danger) !important; }
+
+  .ta-right  { text-align: right; }
+  .ta-center { text-align: center; }
+
+  .muted-dash { color: var(--muted); }
+
+  /* ── Formula card ── */
+  .formula-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .formula {
+    font-family: "Menlo", "Courier New", monospace;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--bg);
+    border-radius: 4px;
+    padding: 6px 10px;
+    display: block;
+    margin-bottom: 2px;
+    word-break: break-all;
+  }
+  .formula-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ── Pipeline SVG wrapper ── */
+  .pipeline-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 16px 12px;
+    overflow-x: auto;
+  }
+
+  /* ── Chart canvas ── */
+  .chart-wrap {
+    position: relative;
+    height: 220px;
+  }
+
+  code {
+    font-family: "Menlo", "Courier New", monospace;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.82em;
+  }
+
+  .section { display: flex; flex-direction: column; gap: 14px; }
+
+  .text-sm    { font-size: 0.84rem; }
+  .text-muted { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="page stack-24">
+
+  <!-- ── Header ── -->
+  <div class="stack-4">
+    <h1>NGAME: Multi-Day Sequence Analysis</h1>
+    <p class="subtitle">
+      Architecture and revised pipeline for sequence-aware churn detection — targeting slow-burn
+      behavioral anomalies that evade single-day z-score thresholds. No code changes yet.
+    </p>
+  </div>
+
+  <!-- ── Stats ── -->
+  <div class="grid-4">
+    <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">New agents</div></div>
+    <div class="stat-card"><div class="stat-value">1</div><div class="stat-label">New storage artifact</div></div>
+    <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">New entry scripts</div></div>
+    <div class="stat-card"><div class="stat-value">1</div><div class="stat-label">Modified agent</div></div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Core Insight ── -->
+  <div class="section">
+    <h2>Core Statistical Insight</h2>
+    <div class="callout info">
+      <div class="callout-title">Sequence amplification: |z_seq| ≈ |z_daily| × √L</div>
+      <p>
+        When a transaction type consistently deviates from its training baseline by k standard deviations
+        per day, a window of L days produces a sequence z-score magnitude of approximately k√L.
+        A sustained MEDIUM alert (−2σ/day) escalates to HIGH after just 3 consecutive days
+        (√3 × 2 = 3.46σ). This class of slow-burn attack is structurally invisible to single-day
+        z-score analysis alone.
+      </p>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Pipeline Architecture ── -->
+  <div class="section">
+    <h2>Revised Pipeline Architecture</h2>
+    <p class="text-sm text-muted">
+      The sequence path runs in parallel with the existing single-day path and merges at Anomaly
+      Identification. It activates only after L days have accumulated in the rolling buffer;
+      below that threshold it is silently skipped, leaving the existing pipeline unaffected.
+    </p>
+
+    <div class="pipeline-wrap">
+      <!-- SVG rendered from PipelineDiagram() -->
+      <svg viewBox="0 0 840 180" style="display:block;width:100%;height:auto;min-width:600px;">
+        <defs>
+          <marker id="ngame-a"  markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L0,7 L7,3.5 z" fill="#94a3b8"/>
+          </marker>
+          <marker id="ngame-an" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L0,7 L7,3.5 z" fill="#3b6ef6"/>
+          </marker>
+        </defs>
+
+        <!-- Row labels -->
+        <text x="5"  y="14"  font-size="9" fill="#94a3b8" font-family="system-ui,sans-serif" font-style="italic">Existing pipeline</text>
+        <text x="5"  y="128" font-size="9" fill="#3b6ef6" font-family="system-ui,sans-serif" font-style="italic">New sequence path</text>
+
+        <!-- Top row: existing boxes -->
+        <!-- Data Extraction x=5 w=100 -->
+        <rect x="5"   y="24" width="100" height="34" fill="#f1f4f8" stroke="#cbd5e1" stroke-width="1" rx="3"/>
+        <text x="55"  y="37" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Data</text>
+        <text x="55"  y="49" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Extraction</text>
+
+        <!-- CPI Analysis x=125 w=90 -->
+        <rect x="125" y="24" width="90"  height="34" fill="#f1f4f8" stroke="#cbd5e1" stroke-width="1" rx="3"/>
+        <text x="170" y="37" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">CPI</text>
+        <text x="170" y="49" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Analysis</text>
+
+        <!-- Single-Day Compare x=235 w=110 -->
+        <rect x="235" y="24" width="110" height="34" fill="#f1f4f8" stroke="#cbd5e1" stroke-width="1" rx="3"/>
+        <text x="290" y="37" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Single-Day</text>
+        <text x="290" y="49" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Compare</text>
+
+        <!-- Anomaly ID x=375 w=90 -->
+        <rect x="375" y="24" width="90"  height="34" fill="#f1f4f8" stroke="#cbd5e1" stroke-width="1" rx="3"/>
+        <text x="420" y="37" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Anomaly</text>
+        <text x="420" y="49" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">ID</text>
+
+        <!-- Account Mapping x=485 w=100 -->
+        <rect x="485" y="24" width="100" height="34" fill="#f1f4f8" stroke="#cbd5e1" stroke-width="1" rx="3"/>
+        <text x="535" y="37" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Account</text>
+        <text x="535" y="49" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Mapping</text>
+
+        <!-- LLM Analysis x=605 w=85 -->
+        <rect x="605" y="24" width="85"  height="34" fill="#f1f4f8" stroke="#cbd5e1" stroke-width="1" rx="3"/>
+        <text x="647" y="37" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">LLM</text>
+        <text x="647" y="49" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Analysis</text>
+
+        <!-- Management Warnings x=710 w=120 -->
+        <rect x="710" y="24" width="120" height="34" fill="#f1f4f8" stroke="#cbd5e1" stroke-width="1" rx="3"/>
+        <text x="770" y="37" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Management</text>
+        <text x="770" y="49" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#1a1e26" font-family="system-ui,sans-serif">Warnings</text>
+
+        <!-- Top horizontal arrows -->
+        <line x1="105" y1="41" x2="124" y2="41" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ngame-a)"/>
+        <line x1="215" y1="41" x2="234" y2="41" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ngame-a)"/>
+        <line x1="345" y1="41" x2="374" y2="41" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ngame-a)"/>
+        <line x1="465" y1="41" x2="484" y2="41" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ngame-a)"/>
+        <line x1="585" y1="41" x2="604" y2="41" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ngame-a)"/>
+        <line x1="690" y1="41" x2="709" y2="41" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ngame-a)"/>
+
+        <!-- Bottom row: new sequence boxes -->
+        <!-- CPI Rolling Buffer x=125 w=115 -->
+        <rect x="125" y="138" width="115" height="34" fill="#f1f4f8" stroke="#3b6ef6" stroke-width="1.5" rx="3"/>
+        <text x="182" y="151" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#3b6ef6" font-family="system-ui,sans-serif" font-weight="500">CPI Rolling</text>
+        <text x="182" y="163" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#3b6ef6" font-family="system-ui,sans-serif" font-weight="500">Buffer</text>
+
+        <!-- Sequence CPI Agent x=280 w=115 -->
+        <rect x="280" y="138" width="115" height="34" fill="#f1f4f8" stroke="#3b6ef6" stroke-width="1.5" rx="3"/>
+        <text x="337" y="151" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#3b6ef6" font-family="system-ui,sans-serif" font-weight="500">Sequence</text>
+        <text x="337" y="163" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#3b6ef6" font-family="system-ui,sans-serif" font-weight="500">CPI Agent</text>
+
+        <!-- Sequence Compare x=435 w=105 -->
+        <rect x="435" y="138" width="105" height="34" fill="#f1f4f8" stroke="#3b6ef6" stroke-width="1.5" rx="3"/>
+        <text x="487" y="151" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#3b6ef6" font-family="system-ui,sans-serif" font-weight="500">Sequence</text>
+        <text x="487" y="163" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#3b6ef6" font-family="system-ui,sans-serif" font-weight="500">Compare</text>
+
+        <!-- Bottom horizontal arrows -->
+        <line x1="240" y1="155" x2="279" y2="155" stroke="#3b6ef6" stroke-width="1.5" marker-end="url(#ngame-an)"/>
+        <line x1="395" y1="155" x2="434" y2="155" stroke="#3b6ef6" stroke-width="1.5" marker-end="url(#ngame-an)"/>
+
+        <!-- Branch: CPI Analysis bottom → Rolling Buffer top (dashed) -->
+        <!-- cpiCX = 170, bufCX = 182.5 -->
+        <path d="M 170 58 L 170 98 L 182.5 98 L 182.5 137"
+          stroke="#3b6ef6" stroke-width="1.5" fill="none" stroke-dasharray="5,3"
+          marker-end="url(#ngame-an)"/>
+
+        <!-- Merge: Sequence Compare top → Anomaly ID bottom (dashed) -->
+        <!-- seqComCX = 487.5, anomalyCX = 420 -->
+        <path d="M 487.5 138 L 487.5 88 L 420 88 L 420 59"
+          stroke="#3b6ef6" stroke-width="1.5" fill="none" stroke-dasharray="5,3"
+          marker-end="url(#ngame-an)"/>
+
+        <text x="454" y="80" text-anchor="middle" font-size="8" fill="#3b6ef6" font-family="system-ui,sans-serif">dual-mode merge</text>
+      </svg>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── SCPI Mathematics ── -->
+  <div class="section">
+    <h2>SCPI Mathematics</h2>
+    <div class="grid-2">
+
+      <!-- Left: formulas -->
+      <div class="stack-12">
+        <h3>Sequence CPI Definition</h3>
+        <p class="text-sm text-muted">
+          For transaction type k, the Sequence Churn Proximity Index over a window of L days
+          ending at day t is the geometric mean of those daily CPIs:
+        </p>
+        <div class="formula-card stack-10">
+          <div>
+            <span class="formula">SCPI_k(t, L) = ( ∏ CPI_k(t−i+1) )^(1/L)</span>
+            <span class="formula-note">for i = 1 … L · computed in log space for numerical stability</span>
+          </div>
+          <hr class="divider" />
+          <div>
+            <span class="formula">z_k^seq = ( SCPI_k − μ_k ) / σ_k^seq</span>
+            <span class="formula">σ_k^seq = σ_k / √L</span>
+          </div>
+          <hr class="divider" />
+          <p class="text-sm text-muted">
+            The σ/√L adjustment follows from the delta-method standard error of the geometric mean,
+            valid when σ ≪ μ — which holds for any stable QBO training baseline.
+            The same HIGH / MEDIUM / LOW band thresholds (|z|&nbsp;&gt;&nbsp;3, &gt;&nbsp;2) apply unchanged.
+            No Training Matrix schema changes are required.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: amplification table -->
+      <div class="stack-12">
+        <h3>Amplification by Window Length</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Window L</th>
+              <th>Factor √L</th>
+              <th>MEDIUM −2σ/day →</th>
+              <th>LOW −1σ/day →</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>3 days</td><td>×1.73</td><td>HIGH (−3.46σ)</td><td>LOW (−1.73σ)</td></tr>
+            <tr><td>5 days</td><td>×2.24</td><td>HIGH (−4.47σ)</td><td>MEDIUM (−2.24σ)</td></tr>
+            <tr><td>7 days</td><td>×2.65</td><td>HIGH (−5.29σ)</td><td>MEDIUM (−2.65σ)</td></tr>
+            <tr><td>10 days</td><td>×3.16</td><td>HIGH (−6.32σ)</td><td>HIGH (−3.16σ)</td></tr>
+          </tbody>
+        </table>
+        <div class="callout neutral">
+          <p class="text-sm">
+            Recommended default: L = 5. Configurable via <code>--window</code> flag.
+            Larger windows suit noisier environments; smaller windows give earlier
+            detection on faster-moving attacks. No retraining required to change L.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Slow-Burn Scenario ── -->
+  <div class="section">
+    <h2>Slow-Burn Vendor Scenario (QBO Case Study)</h2>
+    <p class="text-sm text-muted">
+      Baseline: Vendor CPI μ = 0.995, σ = 0.005 (stable company, ~200 vendors, ~1–2 new per month).
+      Attack: 3 new shell vendors created each day for 7 days. Each day individually produces a MEDIUM
+      alert at most; no single day reaches HIGH. The 5-day SCPI crosses HIGH from day 5. The amplification
+      factor √5 ≈ 2.24 turns a sustained −2.6σ peak into a −4.9σ sequence signal.
+    </p>
+
+    <div class="grid-2">
+
+      <!-- Left: line chart -->
+      <div class="stack-8">
+        <h3>|z| Trajectory — Vendor Type (φ18)</h3>
+        <div class="chart-wrap">
+          <canvas id="zChart"></canvas>
+        </div>
+        <p class="text-sm text-muted">
+          HIGH threshold at |z| = 3.0. The single-day line never exceeds 2.60 (MEDIUM).
+          The sequence line crosses 4.7 at day 5. Zero values days 1–4 indicate
+          the buffer has not yet accumulated L = 5 days.
+        </p>
+      </div>
+
+      <!-- Right: detection table -->
+      <div class="stack-8">
+        <h3>Detection Comparison by Day</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th class="ta-right">CPI</th>
+              <th class="ta-right">Day z</th>
+              <th class="ta-center">Day Alert</th>
+              <th class="ta-right">5d SCPI</th>
+              <th class="ta-right">Seq z</th>
+              <th class="ta-center">Seq Alert</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Day 1</td><td class="ta-right">0.987</td><td class="ta-right">−1.60</td>
+              <td class="ta-center">LOW</td>
+              <td class="ta-right muted-dash">—</td><td class="ta-right muted-dash">—</td>
+              <td class="ta-center muted-dash">—</td>
+            </tr>
+            <tr>
+              <td>Day 2</td><td class="ta-right">0.983</td><td class="ta-right">−2.40</td>
+              <td class="ta-center"><span class="pill pill-medium">MEDIUM</span></td>
+              <td class="ta-right muted-dash">—</td><td class="ta-right muted-dash">—</td>
+              <td class="ta-center muted-dash">—</td>
+            </tr>
+            <tr>
+              <td>Day 3</td><td class="ta-right">0.986</td><td class="ta-right">−1.80</td>
+              <td class="ta-center">LOW</td>
+              <td class="ta-right muted-dash">—</td><td class="ta-right muted-dash">—</td>
+              <td class="ta-center muted-dash">—</td>
+            </tr>
+            <tr>
+              <td>Day 4</td><td class="ta-right">0.984</td><td class="ta-right">−2.20</td>
+              <td class="ta-center"><span class="pill pill-medium">MEDIUM</span></td>
+              <td class="ta-right muted-dash">—</td><td class="ta-right muted-dash">—</td>
+              <td class="ta-center muted-dash">—</td>
+            </tr>
+            <tr class="danger-row">
+              <td>Day 5</td><td class="ta-right">0.982</td><td class="ta-right">−2.60</td>
+              <td class="ta-center"><span class="pill pill-medium">MEDIUM</span></td>
+              <td class="ta-right">0.9844</td><td class="ta-right">−4.74</td>
+              <td class="ta-center"><span class="pill pill-high">HIGH</span></td>
+            </tr>
+            <tr class="danger-row">
+              <td>Day 6</td><td class="ta-right">0.985</td><td class="ta-right">−2.00</td>
+              <td class="ta-center"><span class="pill pill-medium">MEDIUM</span></td>
+              <td class="ta-right">0.9840</td><td class="ta-right">−4.92</td>
+              <td class="ta-center"><span class="pill pill-high">HIGH</span></td>
+            </tr>
+            <tr class="danger-row">
+              <td>Day 7</td><td class="ta-right">0.983</td><td class="ta-right">−2.40</td>
+              <td class="ta-center"><span class="pill pill-medium">MEDIUM</span></td>
+              <td class="ta-right">0.9840</td><td class="ta-right">−4.92</td>
+              <td class="ta-center"><span class="pill pill-high">HIGH</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Components ── -->
+  <div class="section">
+    <h2>New and Modified Components</h2>
+    <table>
+      <thead>
+        <tr><th>Component</th><th>Type</th><th>Responsibilities</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>NGAME_CPI_Rolling_Buffer.json</code></td>
+          <td>New file</td>
+          <td>JSON array of day records: <code>{date, day_number, cpi_array[18], addition_rate_array[18], deletion_rate_array[18]}</code>.
+              Configurable max depth (default 30 days). Appended by CPI Analysis Agent after every extraction.</td>
+        </tr>
+        <tr>
+          <td><code>NGameSequenceCpiAgent</code></td>
+          <td>New agent</td>
+          <td><code>load_rolling_buffer()</code> · <code>append_daily_cpi(record)</code> · <code>compute_scpi(L)</code> via geometric mean in log space ·
+              <code>compute_sequence_sigma(σ_k[], L)</code> returning σ/√L · <code>get_window_days(L)</code> for audit display.</td>
+        </tr>
+        <tr>
+          <td><code>NGameChurnComparisonAgent</code></td>
+          <td>Modified</td>
+          <td>Add <code>compare_sequence_profiles(scpi_array, window_length, matrix_file)</code>. Loads existing μ/σ columns (B, C);
+              computes σ_seq = σ/√L; applies same HIGH / MEDIUM / LOW bands and ranking as single-day path.</td>
+        </tr>
+        <tr>
+          <td><code>run_sequence_analysis.py</code></td>
+          <td>New script</td>
+          <td>Entry point with <code>--window L</code> (default 5). Loads buffer → Sequence CPI Agent → Sequence Comparison →
+              Anomaly ID → Account Map → LLM → Warnings. Saves <code>NGAME_Sequence_Analysis_{date}.json</code>.</td>
+        </tr>
+        <tr>
+          <td><code>run_demo_sequence_scenario.py</code></td>
+          <td>New script</td>
+          <td>7 synthetic CPI vectors with gradually decreasing vendor CPI (3 new vendors/day). Runs both single-day and 5-day
+              sequence pipelines side-by-side to demonstrate the alert divergence.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Implementation Phases ── -->
+  <div class="section">
+    <h2>Implementation Phases</h2>
+    <div class="grid-3">
+
+      <div class="card">
+        <div class="card-header">
+          Rolling Buffer
+          <span class="pill pill-phase1">Phase 1</span>
+        </div>
+        <div class="card-body stack-6">
+          <p class="text-sm">
+            Modify <strong>NGameCpiAnalysisAgent</strong> to append each day's CPI and rate arrays
+            to the rolling buffer JSON after extraction.
+          </p>
+          <p class="text-sm text-muted">
+            No other agents change. Buffer is write-once per day and read-only from the sequence path.
+            Existing pipeline is unaffected.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          Sequence CPI Agent
+          <span class="pill pill-phase2">Phase 2</span>
+        </div>
+        <div class="card-body stack-6">
+          <p class="text-sm">
+            New <strong>NGameSequenceCpiAgent</strong> with geometric mean computation and σ/√L adjustment.
+            Fully unit-testable with mock buffer data; no API calls required.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          Pipeline Integration
+          <span class="pill pill-phase3">Phase 3</span>
+        </div>
+        <div class="card-body stack-6">
+          <p class="text-sm">
+            Extend <strong>NGameChurnComparisonAgent</strong>, wire <strong>run_sequence_analysis.py</strong>
+            and the demo script. Optionally surface sequence results in the management dashboard JSON
+            alongside existing single-day results.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout neutral" style="margin-top:4px;">
+      <p class="text-sm">
+        The Training Matrix schema is unchanged throughout all phases. The sequence path is fully
+        additive — existing single-day analysis, training flows, and demo scenarios remain intact.
+        Window length L is configurable at runtime with no retraining required.
+      </p>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+(function () {
+  const ctx = document.getElementById('zChart').getContext('2d');
+  const labels = ['Day 1','Day 2','Day 3','Day 4','Day 5','Day 6','Day 7'];
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Single-Day |z|',
+          data: [1.60, 2.40, 1.80, 2.20, 2.60, 2.00, 2.40],
+          borderColor: '#64748b',
+          backgroundColor: 'rgba(100,116,139,0.08)',
+          pointBackgroundColor: '#64748b',
+          tension: 0.3,
+          fill: false,
+          borderWidth: 2,
+          pointRadius: 4,
+        },
+        {
+          label: '5-Day Sequence |z|',
+          data: [0, 0, 0, 0, 4.74, 4.92, 4.92],
+          borderColor: '#dc2626',
+          backgroundColor: 'rgba(220,38,38,0.08)',
+          pointBackgroundColor: '#dc2626',
+          tension: 0.3,
+          fill: false,
+          borderWidth: 2,
+          pointRadius: 4,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { size: 11 }, boxWidth: 18, padding: 12 }
+        },
+        annotation: { annotations: {} },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: {
+          grid: { color: '#e2e6ea' },
+          ticks: { font: { size: 11 } }
+        },
+        y: {
+          min: 0,
+          max: 6,
+          grid: { color: '#e2e6ea' },
+          ticks: { font: { size: 11 }, stepSize: 1 },
+          title: { display: true, text: '|z| score', font: { size: 11 }, color: '#6b7280' }
+        }
+      }
+    },
+    plugins: [{
+      id: 'threshold',
+      afterDraw(chart) {
+        const { ctx, chartArea: { left, right }, scales: { y } } = chart;
+        const yPx = y.getPixelForValue(3.0);
+        ctx.save();
+        ctx.setLineDash([5, 4]);
+        ctx.strokeStyle = '#dc2626';
+        ctx.lineWidth = 1.2;
+        ctx.globalAlpha = 0.55;
+        ctx.beginPath();
+        ctx.moveTo(left, yPx);
+        ctx.lineTo(right, yPx);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#dc2626';
+        ctx.font = '10px system-ui,sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText('HIGH threshold |z|=3.0', right - 4, yPx - 4);
+        ctx.restore();
+      }
+    }]
+  });
+})();
+</script>
+</body>
+</html>

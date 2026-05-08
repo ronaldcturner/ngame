@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jaccard Similarity — A Plain-English Guide</title>
+  <style>
+    /* ── Reset & base ───────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background: #f5f5f5;
+    }
+
+    /* ── Page shell ─────────────────────────────────────────────────────── */
+    .page {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Typography ─────────────────────────────────────────────────────── */
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 10px;
+    }
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    p { margin-bottom: 10px; color: #333; }
+    p:last-child { margin-bottom: 0; }
+    .muted { color: #666; }
+    .small { font-size: 13px; }
+    .mono { font-family: "SF Mono", "Fira Code", Consolas, monospace; }
+    .bold { font-weight: 700; }
+    .center { text-align: center; }
+
+    /* ── Layout ─────────────────────────────────────────────────────────── */
+    .stack { display: flex; flex-direction: column; }
+    .gap-4  { gap: 4px; }
+    .gap-8  { gap: 8px; }
+    .gap-12 { gap: 12px; }
+    .gap-16 { gap: 16px; }
+    .gap-20 { gap: 20px; }
+    .gap-28 { gap: 28px; }
+    .gap-32 { gap: 32px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+    .row { display: flex; flex-direction: row; align-items: center; gap: 10px; }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 0;
+    }
+
+    /* ── Cards ──────────────────────────────────────────────────────────── */
+    .card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      background: #fafafa;
+      border-bottom: 1px solid #e0e0e0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .card-body { padding: 14px; }
+
+    /* ── Callouts ───────────────────────────────────────────────────────── */
+    .callout {
+      border-radius: 6px;
+      padding: 12px 16px;
+      border-left: 3px solid;
+    }
+    .callout-title {
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .callout p { font-size: 14px; }
+
+    .callout-info    { background: #eff6ff; border-color: #3b82f6; }
+    .callout-info    .callout-title { color: #1d4ed8; }
+
+    .callout-warning { background: #fffbeb; border-color: #f59e0b; }
+    .callout-warning .callout-title { color: #92400e; }
+
+    .callout-danger  { background: #fff1f2; border-color: #f43f5e; }
+    .callout-danger  .callout-title { color: #be123c; }
+
+    /* ── Stats ──────────────────────────────────────────────────────────── */
+    .stat {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .stat-label { font-size: 12px; color: #666; }
+    .stat-danger .stat-value { color: #e11d48; }
+    .stat-neutral .stat-value { color: #111; }
+
+    /* ── Table ──────────────────────────────────────────────────────────── */
+    .table-wrap {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: #fafafa;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      padding: 9px 14px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    td {
+      padding: 10px 14px;
+      font-size: 14px;
+      color: #333;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr.row-warning td { background: #fffbeb; }
+    tr.row-danger  td { background: #fff1f2; }
+
+    /* ── Formula box ────────────────────────────────────────────────────── */
+    .formula-box {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      text-align: center;
+    }
+    .formula-main {
+      font-family: "SF Mono", "Fira Code", Consolas, monospace;
+      font-size: 20px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    .formula-alt {
+      font-family: "SF Mono", "Fira Code", Consolas, monospace;
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .formula-note { font-size: 13px; color: #888; }
+
+    /* ── Calc box ───────────────────────────────────────────────────────── */
+    .calc-box {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 18px 22px;
+    }
+
+    /* ── Confusion matrix ───────────────────────────────────────────────── */
+    .matrix-wrap {
+      display: grid;
+      grid-template-columns: 140px 1fr 1fr;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .matrix-col-header {
+      font-size: 13px;
+      font-weight: 700;
+      color: #555;
+      text-align: center;
+      padding: 6px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .matrix-row-header {
+      font-size: 13px;
+      font-weight: 700;
+      color: #555;
+      display: flex;
+      align-items: center;
+      padding-right: 8px;
+    }
+    .matrix-cell {
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .matrix-cell-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #555;
+      margin-bottom: 4px;
+    }
+    .matrix-cell-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 6px;
+    }
+    .matrix-cell-body { font-size: 13px; color: #555; }
+
+    .cell-retained {
+      background: #d1fae5;
+      border: 1px solid #6ee7b7;
+    }
+    .cell-warning  {
+      background: #ffe4e6;
+      border: 1px solid #fda4af;
+    }
+    .cell-muted {
+      background: #f3f4f6;
+      border: 1px dashed #d1d5db;
+      opacity: 0.7;
+    }
+
+    /* ── Vendor dot indicator ───────────────────────────────────────────── */
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-green { background: #10b981; }
+    .dot-red   { background: #f43f5e; }
+    .vendor-id { font-family: "SF Mono","Fira Code",Consolas,monospace; font-size: 13px; flex: 1; }
+    .vendor-status { font-size: 12px; color: #888; }
+
+    /* ── Section spacing ────────────────────────────────────────────────── */
+    .section { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── Print / presentation mode ──────────────────────────────────────── */
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="page stack gap-32">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <div class="stack gap-4">
+    <h1>Jaccard Similarity &mdash; A Plain-English Guide</h1>
+    <p class="muted">For accounting professionals. Illustrated with a real NGAME fraud-detection example.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Section 1: Core Idea ────────────────────────────────────────────── -->
+  <div class="section">
+    <h2>What is Jaccard Similarity?</h2>
+
+    <p>
+      Jaccard similarity answers one plain question: <strong>out of everything we saw across
+      two days, how much of it stayed the same?</strong>
+    </p>
+    <p class="muted">
+      You get a number between 0 and 1. A score of 1.0 means nothing changed overnight.
+      A score of 0 means everything was replaced. In between, the number tells you exactly
+      what fraction stayed stable.
+    </p>
+
+    <div class="callout callout-info">
+      <div class="callout-title">NGAME Connection</div>
+      <p>
+        In NGAME, Jaccard similarity is calculated for each of the 18 QuickBooks transaction
+        types &mdash; Vendors, Invoices, Expenses, and so on &mdash; and stored as the
+        <strong>Churn Persistence Index (CPI)</strong>. A suspiciously low CPI for Vendors
+        triggers a fraud investigation.
+      </p>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Section 2: The Four-Compartment Box ─────────────────────────────── -->
+  <div class="section">
+    <div class="stack gap-4">
+      <h2>The Four-Compartment Box</h2>
+      <p class="muted">
+        Every record &mdash; an invoice ID, a vendor ID, etc. &mdash; falls into exactly one
+        of four buckets depending on whether it appeared yesterday, today, or both.
+        The rows ask about yesterday; the columns ask about today.
+      </p>
+    </div>
+
+    <!-- 2×2 matrix -->
+    <div class="matrix-wrap">
+      <!-- Row 0: column headers -->
+      <div></div>
+      <div class="matrix-col-header">In TODAY&rsquo;s books</div>
+      <div class="matrix-col-header">NOT in TODAY&rsquo;s books</div>
+
+      <!-- Row 1: present yesterday -->
+      <div class="matrix-row-header">In YESTERDAY&rsquo;s books</div>
+      <div class="matrix-cell cell-retained">
+        <div class="matrix-cell-label">TP &mdash; True Positive</div>
+        <div class="matrix-cell-title">Retained</div>
+        <div class="matrix-cell-body">
+          Record existed yesterday and is still there today. Normal business continuity.
+          This is what we expect.
+        </div>
+      </div>
+      <div class="matrix-cell cell-warning">
+        <div class="matrix-cell-label">FN &mdash; False Negative</div>
+        <div class="matrix-cell-title">Deleted / Vanished</div>
+        <div class="matrix-cell-body">
+          Record existed yesterday but is gone today. Should have persisted but did not.
+          Could signal deletion or concealment.
+        </div>
+      </div>
+
+      <!-- Row 2: absent yesterday -->
+      <div class="matrix-row-header">NOT in YESTERDAY&rsquo;s books</div>
+      <div class="matrix-cell cell-warning">
+        <div class="matrix-cell-label">FP &mdash; False Positive</div>
+        <div class="matrix-cell-title">Added / Appeared</div>
+        <div class="matrix-cell-body">
+          Record did not exist yesterday but appeared today. An unexpected new entry.
+          In a vendor context, could be a ghost vendor inserted for fraudulent payments.
+        </div>
+      </div>
+      <div class="matrix-cell cell-muted">
+        <div class="matrix-cell-label">TN &mdash; True Negative</div>
+        <div class="matrix-cell-title">Excluded</div>
+        <div class="matrix-cell-body">
+          Record absent from both days. NGAME deliberately excludes this cell &mdash;
+          you cannot count all the invoices that were never created.
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-warning">
+      <div class="callout-title">Why is TN excluded from Jaccard?</div>
+      <p>
+        The universe of things that never appeared in the books is boundless. There is no
+        practical limit to the number of invoices, vendors, or expenses that could have
+        existed but did not. Including that infinite denominator would collapse every score
+        toward zero and make it meaningless. Jaccard wisely ignores TN entirely.
+      </p>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Section 3: The Formula ──────────────────────────────────────────── -->
+  <div class="section">
+    <h2>The Formula</h2>
+    <p class="muted">Once you have your four buckets, the Jaccard score is just one division:</p>
+
+    <div class="formula-box">
+      <div class="formula-main">Jaccard (CPI) &nbsp;=&nbsp; TP &divide; (TP + FP + FN)</div>
+      <div class="formula-alt">= Retained &divide; (Retained + Added + Deleted)</div>
+      <div class="formula-note">TN does not appear anywhere in the formula &mdash; it plays no role.</div>
+    </div>
+
+    <div class="grid-3">
+      <div class="stat stat-neutral">
+        <div class="stat-value">1.00</div>
+        <div class="stat-label">CPI = 1.0 &mdash; No change at all</div>
+      </div>
+      <div class="stat stat-neutral">
+        <div class="stat-value">0.50</div>
+        <div class="stat-label">CPI = 0.5 &mdash; Half the records turned over</div>
+      </div>
+      <div class="stat stat-neutral">
+        <div class="stat-value">0.00</div>
+        <div class="stat-label">CPI = 0.0 &mdash; Total replacement</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Section 4: NGAME Vendors Example ────────────────────────────────── -->
+  <div class="section">
+    <div class="stack gap-4">
+      <h2>Real NGAME Example &mdash; Vendors (&phi;18)</h2>
+      <p class="muted">
+        Vendors is the highest-risk transaction type in NGAME. Ghost vendor schemes &mdash;
+        where a fraudster inserts a fictitious supplier and routes payments to themselves
+        &mdash; are the most common form of accounts-payable fraud. Watch what happens overnight.
+      </p>
+    </div>
+
+    <!-- Snapshot cards -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">Yesterday&rsquo;s Vendor Snapshot</div>
+        <div class="card-body stack gap-8">
+          <div class="row">
+            <div class="dot dot-green"></div>
+            <span class="vendor-id">Vendor_001</span>
+            <span class="vendor-status">carried forward</span>
+          </div>
+          <div class="row">
+            <div class="dot dot-green"></div>
+            <span class="vendor-id">Vendor_002</span>
+            <span class="vendor-status">carried forward</span>
+          </div>
+          <div class="row">
+            <div class="dot dot-green"></div>
+            <span class="vendor-id">Vendor_003</span>
+            <span class="vendor-status">carried forward</span>
+          </div>
+          <div class="row">
+            <div class="dot dot-red"></div>
+            <span class="vendor-id">Vendor_004</span>
+            <span class="vendor-status">DELETED overnight</span>
+          </div>
+          <div class="row">
+            <div class="dot dot-red"></div>
+            <span class="vendor-id">Vendor_005</span>
+            <span class="vendor-status">DELETED overnight</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Today&rsquo;s Vendor Snapshot</div>
+        <div class="card-body stack gap-8">
+          <div class="row">
+            <div class="dot dot-green"></div>
+            <span class="vendor-id">Vendor_001</span>
+            <span class="vendor-status">carried forward</span>
+          </div>
+          <div class="row">
+            <div class="dot dot-green"></div>
+            <span class="vendor-id">Vendor_002</span>
+            <span class="vendor-status">carried forward</span>
+          </div>
+          <div class="row">
+            <div class="dot dot-green"></div>
+            <span class="vendor-id">Vendor_003</span>
+            <span class="vendor-status">carried forward</span>
+          </div>
+          <div class="row">
+            <div class="dot dot-red"></div>
+            <span class="vendor-id">Vendor_006</span>
+            <span class="vendor-status">ADDED overnight</span>
+          </div>
+          <div class="row">
+            <div class="dot dot-red"></div>
+            <span class="vendor-id">Vendor_007</span>
+            <span class="vendor-status">ADDED overnight</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filled-in 2×2 -->
+    <h3>Filling in the Four-Compartment Box</h3>
+
+    <div class="matrix-wrap">
+      <div></div>
+      <div class="matrix-col-header">In TODAY&rsquo;s books</div>
+      <div class="matrix-col-header">NOT in TODAY&rsquo;s books</div>
+
+      <div class="matrix-row-header">In YESTERDAY&rsquo;s books</div>
+      <div class="matrix-cell cell-retained">
+        <div class="matrix-cell-label">TP &mdash; Retained &nbsp;(a = 3)</div>
+        <div class="stack gap-4" style="margin-top:8px;margin-bottom:8px;">
+          <span class="mono small">Vendor_001</span>
+          <span class="mono small">Vendor_002</span>
+          <span class="mono small">Vendor_003</span>
+        </div>
+        <div class="matrix-cell-body">n = 3</div>
+      </div>
+      <div class="matrix-cell cell-warning">
+        <div class="matrix-cell-label">FN &mdash; Deleted &nbsp;(b = 2)</div>
+        <div class="stack gap-4" style="margin-top:8px;margin-bottom:8px;">
+          <span class="mono small">Vendor_004</span>
+          <span class="mono small">Vendor_005</span>
+        </div>
+        <div class="matrix-cell-body">n = 2 &mdash; vanished overnight</div>
+      </div>
+
+      <div class="matrix-row-header">NOT in YESTERDAY&rsquo;s books</div>
+      <div class="matrix-cell cell-warning">
+        <div class="matrix-cell-label">FP &mdash; Added &nbsp;(c = 2)</div>
+        <div class="stack gap-4" style="margin-top:8px;margin-bottom:8px;">
+          <span class="mono small">Vendor_006</span>
+          <span class="mono small">Vendor_007</span>
+        </div>
+        <div class="matrix-cell-body">n = 2 &mdash; appeared overnight</div>
+      </div>
+      <div class="matrix-cell cell-muted">
+        <div class="matrix-cell-label">TN &mdash; Excluded &nbsp;(d)</div>
+        <div class="matrix-cell-body" style="margin-top:8px;">
+          All vendors absent from both days. Infinite and unmeasurable &mdash;
+          excluded from the formula.
+        </div>
+      </div>
+    </div>
+
+    <!-- Calculation -->
+    <div class="calc-box stack gap-8">
+      <p class="bold">Calculating the CPI</p>
+      <p class="mono">CPI = TP &divide; (TP + FP + FN)</p>
+      <p class="mono">CPI = 3 &divide; (3 + 2 + 2) = 3 &divide; 7 = <strong>0.43</strong></p>
+      <p class="muted small">
+        Only 43% of the combined vendor pool persisted unchanged overnight.
+        Two established vendors vanished; two unknown vendors appeared from nowhere.
+      </p>
+    </div>
+
+    <div class="grid-3">
+      <div class="stat stat-danger">
+        <div class="stat-value">0.43</div>
+        <div class="stat-label">Today&rsquo;s Vendor CPI</div>
+      </div>
+      <div class="stat stat-neutral">
+        <div class="stat-value">0.92</div>
+        <div class="stat-label">Trained Baseline &mdash; normal days</div>
+      </div>
+      <div class="stat stat-danger">
+        <div class="stat-value">HIGH</div>
+        <div class="stat-label">Anomaly Level</div>
+      </div>
+    </div>
+
+    <div class="callout callout-danger">
+      <div class="callout-title">Fraud Interpretation</div>
+      <p>
+        The baseline (trained over 30 normal business days) shows vendors almost never
+        change &mdash; a CPI of 0.92 is typical. Today&rsquo;s score of 0.43 is far below
+        that. The z-score would be large and negative, placing Vendors at the top of
+        NGAME&rsquo;s anomaly ranking. The system maps the flagged Vendor accounts against
+        the Asset Misappropriation taxonomy and issues a management-level warning for
+        immediate review.
+      </p>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Section 5: Ghost-Vendor Story ───────────────────────────────────── -->
+  <div class="section">
+    <h2>Why This Pattern Signals Fraud</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>What happened</th>
+            <th>Box cell</th>
+            <th>Fraud relevance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Vendor_001&ndash;003 stayed in the books</td>
+            <td>TP &mdash; Retained</td>
+            <td>Normal &mdash; long-standing suppliers. No concern.</td>
+          </tr>
+          <tr class="row-warning">
+            <td>Vendor_004&ndash;005 disappeared overnight</td>
+            <td>FN &mdash; Deleted</td>
+            <td>Possible concealment &mdash; removing legitimate supplier records to cover tracks.</td>
+          </tr>
+          <tr class="row-warning">
+            <td>Vendor_006&ndash;007 appeared overnight</td>
+            <td>FP &mdash; Added</td>
+            <td>Ghost vendors &mdash; fictitious suppliers inserted so fraudulent payments can be routed to them.</td>
+          </tr>
+          <tr>
+            <td>All other vendors in the universe</td>
+            <td>TN &mdash; Excluded</td>
+            <td>Not counted. Jaccard ignores this infinite category.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="muted small">
+      In a classic ghost-vendor scheme, a fraudster with QuickBooks access adds a vendor
+      record under their control, approves a payment to it, then deletes the record to erase
+      the evidence. NGAME&rsquo;s daily CPI comparison detects both the addition and the
+      deletion as deviations from the trained baseline &mdash; even if the record was deleted
+      before the next morning&rsquo;s manual review.
+    </p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── Section 6: Score Interpretation ─────────────────────────────────── -->
+  <div class="section">
+    <h2>Reading Any CPI Score</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>CPI Score</th>
+            <th>What it means in plain terms</th>
+            <th>NGAME response</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">0.90 &ndash; 1.00</td>
+            <td>Almost nothing changed. Records are stable.</td>
+            <td>No alert &mdash; normal operation</td>
+          </tr>
+          <tr>
+            <td class="mono">0.70 &ndash; 0.89</td>
+            <td>Some churn. A few adds or deletes.</td>
+            <td>Low &mdash; monitor</td>
+          </tr>
+          <tr class="row-warning">
+            <td class="mono">0.43 &ndash; 0.69</td>
+            <td>Significant turnover. Many records changed.</td>
+            <td>Medium &mdash; review accounts</td>
+          </tr>
+          <tr class="row-danger">
+            <td class="mono">0.00 &ndash; 0.42</td>
+            <td>Wholesale replacement. Records almost entirely replaced.</td>
+            <td>HIGH &mdash; immediate investigation</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title">The Z-Score Refinement</div>
+      <p>
+        The raw CPI score alone does not trigger an alert. NGAME converts it to a
+        <strong>z-score</strong> &mdash; how many standard deviations away from the 30-day
+        trained average. This means NGAME adapts to each transaction type&rsquo;s natural
+        volatility. Some types churn more by nature; the z-score accounts for that and only
+        flags deviations that are genuinely unusual for that specific account category.
+      </p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

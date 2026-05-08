@@ -1,0 +1,75 @@
+# ── Secrets (NEVER commit these) ──────────────────────────────────────
+quickbooks_config.json
+wave_config.json
+.env
+.env.local
+.env.*.local
+
+# ── Python ─────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ── Virtual environments ────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── macOS ───────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ── Windows ─────────────────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ── IDE / editor ────────────────────────────────────────────────────────
+.cursor/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Generated runtime outputs ────────────────────────────────────────────
+NGAME_Fraud_Analysis*.json
+management_dashboard.json
+phase1_extraction_summary.json
+churn_comparison_results.json
+Today_Churn*.json
+agent_driven_*.json
+anomaly_injection_*.json
+anomaly_injection_management_report.json
+baseline_churn_matrix.json
+phi_*.json
+ngame_misappropriation_risk_ranking.json
+quickbooks_ontology_*.ttl
+wave_ontology_*.ttl
+NGAME_Training_Matrix*.xlsx
+Today_Churn_Analysis.xlsx
+Training_Agent_Matrix*.xlsx
+logs/
+output/
+uploads/
+ngame_ui/logs/
+ngame_ui/output/
+ngame_ui/uploads/
+
+# ── Internal dev artefacts (not for public repo) ─────────────────────────
+SCRAP/
+Recovered SCRAP/
+NGAME_FREEZE_*/
+*.tar.gz
+ESSENTIAL_FILES/
+GENERATED_FILES/
+ESSENTIAL_FILES_LIST.txt
+GENERATED_FILES_LIST.txt
+ESSENTIAL_FILES.md
+GENERATED_FILES.md
+canvases/
+
+# ── Cursor canvas build status ────────────────────────────────────────────
+*.canvas.status.json

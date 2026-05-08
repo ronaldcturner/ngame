@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGAME - Ontology-Based Anomaly Detection</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Socket.IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2CA01C;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-color: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #2CA01C 0%, #0f6f14 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-color) !important;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .main-container {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 0.75rem 0.5rem;
+        }
+
+        .stat-icon {
+            font-size: 1.35rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .stat-number {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+
+        /* Captions use Bootstrap .small .text-muted — same as warning message body */
+        .stat-label {
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .status-online {
+            background-color: var(--success-color);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        }
+
+        .status-offline {
+            background-color: var(--danger-color);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .alert-card {
+            border-left: 4px solid var(--warning-color);
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+        }
+
+        .success-card {
+            border-left: 4px solid var(--success-color);
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        }
+
+        .analysis-progress {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            height: 4px;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .recent-activity {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(99, 102, 241, 0.1);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-brain me-2"></i>NGAME
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/dashboard">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analysis">
+                            <i class="fas fa-search me-1"></i>Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ontology">
+                            <i class="fas fa-project-diagram me-1"></i>Ontology
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/quickbooks">
+                            <i class="fas fa-chart-line me-1"></i>QuickBooks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/alerts">
+                            <i class="fas fa-bell me-1"></i>Alerts
+                            <span class="notification-badge" id="alertCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reports">
+                            <i class="fas fa-chart-bar me-1"></i>Reports
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings">
+                            <i class="fas fa-cog me-1"></i>Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h1 class="text-white mb-2">Dashboard</h1>
+                    <p class="text-white-50">Ontology-based anomaly detection system overview</p>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h5 class="card-title mb-3">
+                                        <i class="fas fa-server me-2"></i>System Status
+                                    </h5>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="status-indicator status-online" id="systemStatus"></span>
+                                        <span class="fw-semibold">NGAME System</span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="status-indicator" id="ontologyStatus"></span>
+                                        <span class="fw-semibold">Ontology Loaded</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span class="status-indicator" id="quickbooksStatus"></span>
+                                        <span class="fw-semibold">QuickBooks Connected</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <button class="btn btn-primary" onclick="initializeSystem()">
+                                        <i class="fas fa-play me-2"></i>Initialize System
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NGAME Operations -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card" style="border-left:4px solid var(--primary-color);">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">
+                                <i class="fas fa-play-circle me-2 text-success"></i>NGAME Operations
+                                <span id="opRunningBadge" class="badge bg-warning ms-2 d-none">
+                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>Running…
+                                </span>
+                            </h5>
+                            <p class="text-muted small mb-3">Launch pipeline operations directly from the dashboard.</p>
+
+                            <div class="row g-2 mb-3">
+                                <!-- Training -->
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded-3" style="background:#f0fdf4;border:1px solid #bbf7d0;">
+                                        <div class="fw-semibold mb-1">
+                                            <i class="fas fa-graduation-cap text-success me-2"></i>Training Mode
+                                        </div>
+                                        <div class="text-muted small mb-2">
+                                            Appends one day of CPI data to the training matrix.
+                                            Run daily until 30 days are recorded.
+                                        </div>
+                                        <button id="btnTrain" class="btn btn-success w-100"
+                                                onclick="launchOperation('training')">
+                                            <i class="fas fa-play me-1"></i>Run Training Day
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Fraud / Churn -->
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded-3" style="background:#eff6ff;border:1px solid #bfdbfe;">
+                                        <div class="fw-semibold mb-1">
+                                            <i class="fas fa-shield-alt text-primary me-2"></i>Daily Churn Analysis
+                                        </div>
+                                        <div class="text-muted small mb-2">
+                                            Compares today's CPI-array against the baseline, flags
+                                            anomalies, and generates management warnings.
+                                        </div>
+                                        <button id="btnFraud" class="btn btn-primary w-100"
+                                                onclick="launchOperation('fraud')">
+                                            <i class="fas fa-search me-1"></i>Run Churn Analysis
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Demo scenario row -->
+                            <div class="row g-2 mb-3">
+                                <div class="col-12">
+                                    <div class="p-3 rounded-3" style="background:#fdf4ff;border:1px solid #e9d5ff;">
+                                        <div class="fw-semibold mb-1">
+                                            <i class="fas fa-flask text-purple me-2" style="color:#7c3aed;"></i>Demo Scenario
+                                            <span class="badge ms-2" style="background:#7c3aed;font-size:0.7rem;">DEMO</span>
+                                        </div>
+                                        <div class="text-muted small mb-2">
+                                            Injects controlled HIGH anomalies into
+                                            <strong>φ18&nbsp;Vendors</strong> (z&nbsp;≈&nbsp;5.0σ),
+                                            <strong>φ3&nbsp;Invoices</strong> (z&nbsp;≈&nbsp;4.0σ), and
+                                            <strong>φ4&nbsp;Payments</strong> (z&nbsp;≈&nbsp;3.5σ),
+                                            then runs the full pipeline — no live data required.
+                                            Refresh the Dashboard after it completes to see results.
+                                        </div>
+                                        <button id="btnDemo" class="btn w-100 text-white"
+                                                style="background:#7c3aed;"
+                                                onclick="launchOperation('demo')">
+                                            <i class="fas fa-flask me-1"></i>Run Demo Scenario
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Live log -->
+                            <div id="opLogWrap" class="d-none">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="text-muted small fw-semibold" id="opLogTitle">Output</span>
+                                    <button class="btn btn-outline-secondary btn-sm py-0 px-2"
+                                            onclick="clearOpLog()">Clear</button>
+                                </div>
+                                <textarea id="opLog" readonly rows="10"
+                                    style="width:100%;font-family:monospace;font-size:0.78rem;
+                                           background:#1e2330;color:#a6e22e;border-radius:8px;
+                                           border:none;padding:0.75rem;resize:vertical;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-3 g-2">
+                <div class="col-md-3 mb-2">
+                    <div class="card stat-card">
+                        <div class="stat-icon text-primary">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-number text-primary" id="totalAnalyses">0</div>
+                        <div class="stat-label text-muted small">Total Analyses</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="card stat-card">
+                        <div class="stat-icon text-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-number text-warning" id="activeAlerts">0</div>
+                        <div class="stat-label text-muted small">Active Alerts</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="card stat-card">
+                        <div class="stat-icon text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-number text-success" id="overallRisk">UNKNOWN</div>
+                        <div class="stat-label text-muted small">Overall Risk</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="card stat-card">
+                        <div class="stat-icon text-info">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-number text-info" id="lastUpdated">—</div>
+                        <div class="stat-label text-muted small">Last Updated</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consolidated NGAME Insights -->
+            <div class="row mb-4">
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-shield-alt me-2"></i>Management Warnings
+                                <span class="badge bg-secondary ms-2" id="warningsCountBadge">0</span>
+                            </h5>
+                            <div id="managementWarnings">
+                                <div class="text-muted">No data loaded yet.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-bolt me-2"></i>Top Anomalies
+                                <span class="badge bg-secondary ms-2" id="anomaliesCountBadge">0</span>
+                            </h5>
+                            <div id="topAnomalies">
+                                <div class="text-muted">No data loaded yet.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Activity -->
+            <div class="row">
+                <!-- Analysis Chart -->
+                <div class="col-lg-8 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-chart-area me-2"></i>Analysis Trends
+                            </h5>
+                            <canvas id="analysisChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-history me-2"></i>Recent Activity
+                            </h5>
+                            <div class="recent-activity" id="recentActivity">
+                                <!-- Activity items will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-bolt me-2"></i>Quick Actions
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-primary w-100" onclick="runQuickAnalysis()">
+                                        <i class="fas fa-search me-2"></i>Quick Analysis
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-success w-100" onclick="extractChartOfAccounts()">
+                                        <i class="fas fa-download me-2"></i>Extract Chart
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-warning w-100" onclick="viewAlerts()">
+                                        <i class="fas fa-bell me-2"></i>View Alerts
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-info w-100" onclick="generateReport()">
+                                        <i class="fas fa-file-alt me-2"></i>Generate Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="floating-action">
+        <button class="btn btn-primary btn-lg rounded-circle" onclick="runAnalysis()" title="Run Analysis">
+            <i class="fas fa-play"></i>
+        </button>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Initialize Socket.IO only when server supports it.
+        // app-simple.py does not implement /socket.io, so connecting would spam 404s.
+        let socket = null;
+        async function initSocketIfEnabled() {
+            try {
+                const resp = await fetch('/api/socketio-enabled');
+                const data = await resp.json();
+                if (data && data.enabled && typeof io === 'function') {
+                    socket = io();
+                    setupSocketListeners();
+                }
+            } catch (e) {
+                // Ignore socket init failures (server may not support it).
+            }
+        }
+        
+        // Global variables
+        let analysisChart;
+        let isAnalysisRunning = false;
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            initSocketIfEnabled();
+            loadDashboardStats();
+        });
+        
+        function initializeDashboard() {
+            // Initialize chart
+            const ctx = document.getElementById('analysisChart').getContext('2d');
+            analysisChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Analyses',
+                        data: [],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        function setupSocketListeners() {
+            if (!socket) return;
+            socket.on('connected', function(data) {
+                console.log('Connected to NGAME system:', data.message);
+                updateSystemStatus(true);
+            });
+            
+            socket.on('analysis_complete', function(data) {
+                if (data.success) {
+                    showNotification('Analysis completed successfully!', 'success');
+                    updateDashboardStats();
+                    addActivityItem('Analysis completed', 'success');
+                } else {
+                    showNotification('Analysis failed: ' + data.message, 'error');
+                    addActivityItem('Analysis failed', 'error');
+                }
+                isAnalysisRunning = false;
+            });
+            
+            socket.on('analysis_status', function(data) {
+                if (data.status === 'started') {
+                    isAnalysisRunning = true;
+                    showNotification('Analysis started...', 'info');
+                    addActivityItem('Analysis started', 'info');
+                } else if (data.status === 'stopped') {
+                    isAnalysisRunning = false;
+                    showNotification('Analysis stopped', 'warning');
+                }
+            });
+        }
+        
+        function loadDashboardStats() {
+            fetch('/api/dashboard-stats')
+                .then(response => response.json())
+                .then(data => {
+                    updateDashboardStats(data);
+                })
+                .catch(error => {
+                    console.error('Error loading dashboard stats:', error);
+                });
+
+            fetch('/api/consolidated-dashboard')
+                .then(response => response.json())
+                .then(data => {
+                    updateConsolidatedDashboard(data);
+                })
+                .catch(error => {
+                    console.error('Error loading consolidated dashboard:', error);
+                });
+        }
+        
+        function updateDashboardStats(data) {
+            document.getElementById('totalAnalyses').textContent = data.total_analyses || 0;
+            document.getElementById('activeAlerts').textContent = data.active_alerts || 0;
+            
+            // Update status indicators
+            // "NGAME System" here means "UI backend reachable", not pipeline health.
+            updateSystemStatus(true);
+            updateOntologyStatus(!!data.ontology_loaded);
+            updateQuickBooksStatus(data.quickbooks_connected);
+            
+            // Update recent activity
+            updateRecentActivity(data.recent_analyses || []);
+        }
+
+        function updateConsolidatedDashboard(data) {
+            const summary = (data && data.summary) ? data.summary : {};
+            const sources = (data && data.sources) ? data.sources : {};
+
+            const risk = (summary.overall_risk_level || 'UNKNOWN').toString().toUpperCase();
+            const lastUpdated = summary.last_updated || summary.execution_time || '—';
+
+            document.getElementById('overallRisk').textContent = risk;
+            document.getElementById('lastUpdated').textContent = formatTimestamp(lastUpdated);
+
+            // Risk styling
+            const riskEl = document.getElementById('overallRisk');
+            riskEl.classList.remove('text-success', 'text-warning', 'text-danger', 'text-info');
+            if (risk === 'HIGH') riskEl.classList.add('text-danger');
+            else if (risk === 'MEDIUM') riskEl.classList.add('text-warning');
+            else if (risk === 'LOW') riskEl.classList.add('text-success');
+            else riskEl.classList.add('text-info');
+
+            // Warnings
+            const warnings = (data.management_dashboard && data.management_dashboard.warnings) ? data.management_dashboard.warnings : [];
+            document.getElementById('warningsCountBadge').textContent = warnings.length;
+            renderWarnings(warnings);
+
+            // Anomalies
+            const anomalies = (data.fraud_analysis && data.fraud_analysis.anomaly_result && data.fraud_analysis.anomaly_result.top_anomalies)
+                ? data.fraud_analysis.anomaly_result.top_anomalies
+                : [];
+            document.getElementById('anomaliesCountBadge').textContent = anomalies.length;
+            renderAnomalies(anomalies);
+
+            // In consolidated mode, consider "Ontology Loaded" as "fraud/pipeline artifacts present".
+            const hasArtifacts = !!(sources.management_dashboard || sources.fraud_analysis);
+            updateOntologyStatus(hasArtifacts);
+        }
+
+        function formatTimestamp(value) {
+            if (!value || value === '—') return '—';
+            const d = new Date(value);
+            if (isNaN(d.getTime())) return value;
+            return d.toLocaleString();
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function renderWarnings(warnings) {
+            const container = document.getElementById('managementWarnings');
+            if (!warnings || warnings.length === 0) {
+                container.innerHTML = '<div class="text-muted">No management warnings.</div>';
+                return;
+            }
+
+            const items = warnings.slice(0, 10).map(w => {
+                const risk = (w.risk_level || 'UNKNOWN').toString().toUpperCase();
+                const badge = risk === 'HIGH' ? 'danger' : (risk === 'MEDIUM' ? 'warning' : (risk === 'LOW' ? 'success' : 'secondary'));
+                const title = escapeHtml(w.title || w.warning_type || 'Warning');
+                const msg = escapeHtml(w.message || '');
+                const account = escapeHtml(w.account_name || '');
+                return `
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="me-3">
+                                <div class="fw-semibold">${title}</div>
+                                ${account ? `<div class="text-muted small">${account}</div>` : ''}
+                                ${msg ? `<div class="text-muted small mt-1">${msg}</div>` : ''}
+                            </div>
+                            <span class="badge bg-${badge}">${risk}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = items;
+        }
+
+        function renderAnomalies(anomalies) {
+            const container = document.getElementById('topAnomalies');
+            if (!anomalies || anomalies.length === 0) {
+                container.innerHTML = '<div class="text-muted">No anomalies available.</div>';
+                return;
+            }
+
+            const items = anomalies.slice(0, 10).map(a => {
+                const level = (a.deviation_level || 'UNKNOWN').toString().toUpperCase();
+                const badge = level === 'HIGH' ? 'danger' : (level === 'MEDIUM' ? 'warning' : (level === 'LOW' ? 'success' : 'secondary'));
+                const tx = escapeHtml(a.transaction_type || 'Unknown');
+                const phi = escapeHtml(a.phi_index || '');
+                const diff = (typeof a.absolute_difference === 'number') ? a.absolute_difference.toFixed(6) : escapeHtml(a.absolute_difference || '');
+                const pct = (typeof a.percent_deviation === 'number') ? a.percent_deviation.toFixed(2) : escapeHtml(a.percent_deviation || '');
+                return `
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="me-3">
+                                <div class="fw-semibold">${tx} ${phi ? `<span class="text-muted">(${phi})</span>` : ''}</div>
+                                <div class="text-muted small">Δ ${diff} • ${pct}%</div>
+                            </div>
+                            <span class="badge bg-${badge}">${level}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = items;
+        }
+        
+        function updateSystemStatus(online) {
+            const statusElement = document.getElementById('systemStatus');
+            if (online) {
+                statusElement.className = 'status-indicator status-online';
+            } else {
+                statusElement.className = 'status-indicator status-offline';
+            }
+        }
+
+        function updateOntologyStatus(loaded) {
+            const statusElement = document.getElementById('ontologyStatus');
+            if (loaded) {
+                statusElement.className = 'status-indicator status-online';
+            } else {
+                statusElement.className = 'status-indicator status-offline';
+            }
+        }
+        
+        function updateQuickBooksStatus(connected) {
+            const statusElement = document.getElementById('quickbooksStatus');
+            if (connected) {
+                statusElement.className = 'status-indicator status-online';
+            } else {
+                statusElement.className = 'status-indicator status-offline';
+            }
+        }
+        
+        function updateRecentActivity(activities) {
+            const container = document.getElementById('recentActivity');
+            container.innerHTML = '';
+            
+            activities.forEach(activity => {
+                addActivityItem(activity.type || 'Analysis', 'info', activity.timestamp);
+            });
+        }
+        
+        function addActivityItem(type, status, timestamp) {
+            const container = document.getElementById('recentActivity');
+            const item = document.createElement('div');
+            item.className = 'activity-item d-flex align-items-center';
+            
+            const iconClass = status === 'success' ? 'fas fa-check-circle text-success' :
+                            status === 'error' ? 'fas fa-times-circle text-danger' :
+                            'fas fa-info-circle text-info';
+            
+            item.innerHTML = `
+                <div class="activity-icon bg-light">
+                    <i class="${iconClass}"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="fw-semibold">${type}</div>
+                    <div class="text-muted small">${timestamp || new Date().toLocaleTimeString()}</div>
+                </div>
+            `;
+            
+            container.insertBefore(item, container.firstChild);
+            
+            // Keep only last 10 items
+            if (container.children.length > 10) {
+                container.removeChild(container.lastChild);
+            }
+        }
+        
+        function initializeSystem() {
+            fetch('/api/initialize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('System initialized successfully!', 'success');
+                    updateSystemStatus(true);
+                } else {
+                    showNotification('Failed to initialize system: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error initializing system: ' + error.message, 'error');
+            });
+        }
+        
+        function runAnalysis() {
+            if (isAnalysisRunning) {
+                showNotification('Analysis already running', 'warning');
+                return;
+            }
+            
+            socket.emit('start_analysis', { type: 'comprehensive' });
+        }
+        
+        function runQuickAnalysis() {
+            fetch('/api/run-analysis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ type: 'quick' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Quick analysis started', 'info');
+                } else {
+                    showNotification('Failed to start analysis: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error starting analysis: ' + error.message, 'error');
+            });
+        }
+        
+        function extractChartOfAccounts() {
+            showNotification('Extracting chart of accounts...', 'info');
+            // Implementation would go here
+        }
+        
+        function viewAlerts() {
+            window.location.href = '/alerts';
+        }
+        
+        function generateReport() {
+            showNotification('Generating report...', 'info');
+            // Implementation would go here
+        }
+        
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+        
+        // Auto-refresh dashboard stats every 30 seconds
+        setInterval(loadDashboardStats, 30000);
+
+        // ── NGAME Operations ──────────────────────────────────────────
+        let opPollTimer = null;
+
+        function launchOperation(type) {
+            const url   = type === 'training' ? '/api/run-training'
+                        : type === 'demo'     ? '/api/run-demo-scenario'
+                        :                       '/api/run-fraud-analysis';
+            const label = type === 'training' ? 'Training Day'
+                        : type === 'demo'     ? 'Demo Scenario'
+                        :                       'Churn Analysis';
+
+            fetch(url, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.success) {
+                        showNotification(data.message, 'warning');
+                        return;
+                    }
+                    document.getElementById('opLogWrap').classList.remove('d-none');
+                    document.getElementById('opLogTitle').textContent = label + ' — live output';
+                    document.getElementById('opLog').value = '';
+                    setOpButtons(true);
+                    startOpPolling();
+                })
+                .catch(e => showNotification('Failed to start: ' + e.message, 'error'));
+        }
+
+        function startOpPolling() {
+            if (opPollTimer) clearInterval(opPollTimer);
+            opPollTimer = setInterval(pollOpStatus, 1500);
+        }
+
+        function pollOpStatus() {
+            fetch('/api/operation-status')
+                .then(r => r.json())
+                .then(data => {
+                    const logEl = document.getElementById('opLog');
+                    if (data.log_tail && data.log_tail.length) {
+                        logEl.value = data.log_tail.join('\n');
+                        logEl.scrollTop = logEl.scrollHeight;
+                    }
+                    document.getElementById('opLogTitle').textContent =
+                        (data.name || 'Operation') + (data.running ? ' — running…' : ' — finished');
+                    if (!data.running) {
+                        setOpButtons(false);
+                        clearInterval(opPollTimer);
+                        opPollTimer = null;
+                        // Refresh dashboard data after operation finishes
+                        loadDashboardStats();
+                    }
+                })
+                .catch(() => {});
+        }
+
+        function setOpButtons(running) {
+            document.getElementById('btnTrain').disabled  = running;
+            document.getElementById('btnFraud').disabled  = running;
+            document.getElementById('btnDemo').disabled   = running;
+            const badge = document.getElementById('opRunningBadge');
+            running ? badge.classList.remove('d-none') : badge.classList.add('d-none');
+        }
+
+        function clearOpLog() {
+            document.getElementById('opLog').value = '';
+            document.getElementById('opLogWrap').classList.add('d-none');
+        }
+
+        // Resume polling if a run was already in progress when page loaded
+        fetch('/api/operation-status')
+            .then(r => r.json())
+            .then(data => {
+                if (data.running) {
+                    document.getElementById('opLogWrap').classList.remove('d-none');
+                    setOpButtons(true);
+                    startOpPolling();
+                }
+            })
+            .catch(() => {});
+    </script>
+</body>
+</html> 

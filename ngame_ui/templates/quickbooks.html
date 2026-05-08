@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickBooks Integration - NGAME</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Socket.IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2CA01C;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-color: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #2CA01C 0%, #0f6f14 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-color) !important;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .main-container {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .connection-status.connected {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: var(--success-color);
+        }
+
+        .connection-status.disconnected {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: var(--danger-color);
+        }
+
+        .account-card {
+            border-left: 4px solid var(--primary-color);
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .account-type-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(99, 102, 241, 0.1);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--primary-color);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(99, 102, 241, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .file-upload-area.dragover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--secondary-color);
+            transform: scale(1.02);
+        }
+
+        .metric-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .step-number.completed {
+            background: var(--success-color);
+        }
+
+        .step-number.current {
+            background: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-brain me-2"></i>NGAME
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analysis">
+                            <i class="fas fa-search me-1"></i>Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ontology">
+                            <i class="fas fa-project-diagram me-1"></i>Ontology
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/quickbooks">
+                            <i class="fas fa-chart-line me-1"></i>QuickBooks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/alerts">
+                            <i class="fas fa-bell me-1"></i>Alerts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reports">
+                            <i class="fas fa-chart-bar me-1"></i>Reports
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h1 class="text-white mb-2">QuickBooks Integration</h1>
+                    <p class="text-white-50">Extract and create chart of accounts with ontology conversion</p>
+                </div>
+            </div>
+
+            <!-- Connection Status -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h5 class="card-title mb-3">
+                                        <i class="fas fa-plug me-2"></i>QuickBooks Connection
+                                    </h5>
+                                    <div class="connection-status" id="connectionStatus">
+                                        <i class="fas fa-circle me-2"></i>
+                                        <span>Disconnected</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <button class="btn btn-primary" onclick="connectQuickBooks()">
+                                        <i class="fas fa-link me-2"></i>Connect to QuickBooks
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Actions -->
+            <div class="row mb-4">
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">
+                                <i class="fas fa-download me-2"></i>Extract Chart of Accounts
+                            </h5>
+                            <p class="text-muted mb-4">
+                                Extract chart of accounts from QuickBooks and convert to ontology format for analysis.
+                            </p>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Company Selection</label>
+                                <select class="form-select" id="companySelect">
+                                    <option value="">Select a company...</option>
+                                    <option value="company1">Sample Company Inc.</option>
+                                    <option value="company2">Test Business LLC</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Extraction Options</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="includeInactive" checked>
+                                    <label class="form-check-label" for="includeInactive">
+                                        Include inactive accounts
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="includeBalances" checked>
+                                    <label class="form-check-label" for="includeBalances">
+                                        Include account balances
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="includeHierarchy" checked>
+                                    <label class="form-check-label" for="includeHierarchy">
+                                        Include account hierarchy
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100" onclick="extractChartOfAccounts()">
+                                <i class="fas fa-download me-2"></i>Extract Chart of Accounts
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">
+                                <i class="fas fa-upload me-2"></i>Create Chart of Accounts
+                            </h5>
+                            <p class="text-muted mb-4">
+                                Create chart of accounts in QuickBooks from ontology template.
+                            </p>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Ontology Template</label>
+                                <div class="file-upload-area" onclick="document.getElementById('ontologyFile').click()" id="uploadArea">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                                    <h6>Click to upload ontology file</h6>
+                                    <p class="text-muted">or drag and drop .ttl file here</p>
+                                    <input type="file" id="ontologyFile" accept=".ttl,.owl,.rdf" style="display: none;">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Target Company</label>
+                                <select class="form-select" id="targetCompany">
+                                    <option value="">Select target company...</option>
+                                    <option value="target1">New Company Inc.</option>
+                                    <option value="target2">Migration Target LLC</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Creation Options</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="dryRun" checked>
+                                    <label class="form-check-label" for="dryRun">
+                                        Dry run (preview only)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="skipExisting">
+                                    <label class="form-check-label" for="skipExisting">
+                                        Skip existing accounts
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-outline-primary w-100" onclick="createChartOfAccounts()">
+                                <i class="fas fa-upload me-2"></i>Create Chart of Accounts
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="row mb-4" id="progressSection" style="display: none;">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-tasks me-2"></i>Operation Progress
+                            </h5>
+                            <div class="progress mb-3" style="height: 8px;">
+                                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span id="progressText">Initializing...</span>
+                                <span id="progressPercent">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="row" id="resultsSection" style="display: none;">
+                <!-- Summary Metrics -->
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-chart-pie me-2"></i>Operation Summary
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <div class="card metric-card">
+                                        <div class="metric-value text-primary" id="totalAccounts">0</div>
+                                        <div class="metric-label">Total Accounts</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card metric-card">
+                                        <div class="metric-value text-success" id="processedAccounts">0</div>
+                                        <div class="metric-label">Processed</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card metric-card">
+                                        <div class="metric-value text-warning" id="skippedAccounts">0</div>
+                                        <div class="metric-label">Skipped</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card metric-card">
+                                        <div class="metric-value text-danger" id="failedAccounts">0</div>
+                                        <div class="metric-label">Failed</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Details -->
+                <div class="col-lg-8 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-list me-2"></i>Account Details
+                            </h5>
+                            <div id="accountList">
+                                <!-- Account items will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Operation Details -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-info-circle me-2"></i>Operation Details
+                            </h5>
+                            <div id="operationDetails">
+                                <!-- Operation details will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Initialize Socket.IO only when server supports it.
+        let socket = null;
+        async function initSocketIfEnabled() {
+            try {
+                const resp = await fetch('/api/socketio-enabled');
+                const data = await resp.json();
+                if (data && data.enabled && typeof io === 'function') {
+                    socket = io();
+                    setupSocketListeners();
+                }
+            } catch (e) {
+                // Ignore socket init failures.
+            }
+        }
+        
+        // Global variables
+        let isOperationRunning = false;
+        let progressInterval;
+        let selectedFile = null;
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            initSocketIfEnabled();
+        });
+        
+        function setupEventListeners() {
+            // File upload handling
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('ontologyFile');
+            
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileSelect({ target: { files: files } });
+                }
+            });
+        }
+        
+        function setupSocketListeners() {
+            if (!socket) return;
+            socket.on('operation_complete', function(data) {
+                if (data.success) {
+                    showResults(data.results);
+                    showNotification('Operation completed successfully!', 'success');
+                } else {
+                    showNotification('Operation failed: ' + data.message, 'error');
+                }
+                stopProgress();
+            });
+        }
+        
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFile = file;
+                const uploadArea = document.getElementById('uploadArea');
+                uploadArea.innerHTML = `
+                    <i class="fas fa-file-alt fa-3x text-success mb-3"></i>
+                    <h6>${file.name}</h6>
+                    <p class="text-muted">${(file.size / 1024).toFixed(1)} KB</p>
+                `;
+            }
+        }
+        
+        function connectQuickBooks() {
+            const statusElement = document.getElementById('connectionStatus');
+            statusElement.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i><span>Connecting...</span>';
+            
+            // Simulate connection process
+            setTimeout(() => {
+                statusElement.className = 'connection-status connected';
+                statusElement.innerHTML = '<i class="fas fa-check-circle me-2"></i><span>Connected</span>';
+                showNotification('Successfully connected to QuickBooks!', 'success');
+            }, 2000);
+        }
+        
+        function extractChartOfAccounts() {
+            if (isOperationRunning) {
+                showNotification('Operation already running', 'warning');
+                return;
+            }
+            
+            const company = document.getElementById('companySelect').value;
+            if (!company) {
+                showNotification('Please select a company', 'warning');
+                return;
+            }
+            
+            const config = {
+                company: company,
+                include_inactive: document.getElementById('includeInactive').checked,
+                include_balances: document.getElementById('includeBalances').checked,
+                include_hierarchy: document.getElementById('includeHierarchy').checked
+            };
+            
+            fetch('/api/extract-chart-of-accounts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(config)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    isOperationRunning = true;
+                    showNotification('Extraction started', 'info');
+                    startProgress('extracting');
+                } else {
+                    showNotification('Failed to start extraction: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error starting extraction: ' + error.message, 'error');
+            });
+        }
+        
+        function createChartOfAccounts() {
+            if (isOperationRunning) {
+                showNotification('Operation already running', 'warning');
+                return;
+            }
+            
+            if (!selectedFile) {
+                showNotification('Please select an ontology file', 'warning');
+                return;
+            }
+            
+            const targetCompany = document.getElementById('targetCompany').value;
+            if (!targetCompany) {
+                showNotification('Please select a target company', 'warning');
+                return;
+            }
+            
+            const config = {
+                target_company: targetCompany,
+                dry_run: document.getElementById('dryRun').checked,
+                skip_existing: document.getElementById('skipExisting').checked
+            };
+            
+            // Simulate file upload and processing
+            isOperationRunning = true;
+            showNotification('Creation started', 'info');
+            startProgress('creating');
+        }
+        
+        function startProgress(operation) {
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+            
+            let progress = 0;
+            progressInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90;
+                
+                updateProgress(progress, operation);
+            }, 1000);
+        }
+        
+        function stopProgress() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+            
+            updateProgress(100);
+            isOperationRunning = false;
+            
+            setTimeout(() => {
+                document.getElementById('progressSection').style.display = 'none';
+            }, 2000);
+        }
+        
+        function updateProgress(percent, operation = '') {
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = Math.round(percent) + '%';
+            
+            let progressText = 'Initializing...';
+            if (operation === 'extracting') {
+                if (percent < 25) progressText = 'Connecting to QuickBooks...';
+                else if (percent < 50) progressText = 'Extracting account data...';
+                else if (percent < 75) progressText = 'Converting to ontology...';
+                else if (percent < 100) progressText = 'Saving files...';
+                else progressText = 'Extraction complete!';
+            } else if (operation === 'creating') {
+                if (percent < 25) progressText = 'Loading ontology...';
+                else if (percent < 50) progressText = 'Validating accounts...';
+                else if (percent < 75) progressText = 'Creating accounts...';
+                else if (percent < 100) progressText = 'Building hierarchy...';
+                else progressText = 'Creation complete!';
+            }
+            
+            document.getElementById('progressText').textContent = progressText;
+        }
+        
+        function showResults(results) {
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Update summary metrics
+            const accounts = results.accounts || [];
+            const processed = results.processed || 0;
+            const skipped = results.skipped || 0;
+            const failed = results.failed || 0;
+            
+            document.getElementById('totalAccounts').textContent = accounts.length;
+            document.getElementById('processedAccounts').textContent = processed;
+            document.getElementById('skippedAccounts').textContent = skipped;
+            document.getElementById('failedAccounts').textContent = failed;
+            
+            // Populate account list
+            const accountList = document.getElementById('accountList');
+            accountList.innerHTML = '';
+            
+            accounts.slice(0, 10).forEach(account => {
+                const accountItem = document.createElement('div');
+                accountItem.className = 'account-card';
+                accountItem.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">${account.name}</h6>
+                            <p class="mb-2 text-muted">${account.description || 'No description'}</p>
+                            <small class="text-muted">
+                                <i class="fas fa-hashtag me-1"></i>${account.account_number || 'N/A'}
+                                <i class="fas fa-dollar-sign ms-3 me-1"></i>${account.balance || '0.00'}
+                            </small>
+                        </div>
+                        <span class="account-type-badge">${account.type}</span>
+                    </div>
+                `;
+                accountList.appendChild(accountItem);
+            });
+            
+            if (accounts.length > 10) {
+                const moreItem = document.createElement('div');
+                moreItem.className = 'text-center text-muted mt-3';
+                moreItem.textContent = `... and ${accounts.length - 10} more accounts`;
+                accountList.appendChild(moreItem);
+            }
+            
+            // Populate operation details
+            const operationDetails = document.getElementById('operationDetails');
+            operationDetails.innerHTML = `
+                <div class="mb-3">
+                    <strong>Operation Type:</strong><br>
+                    <span class="text-muted">${results.operation_type || 'Extraction'}</span>
+                </div>
+                <div class="mb-3">
+                    <strong>Duration:</strong><br>
+                    <span class="text-muted">${results.duration || '3.2 seconds'}</span>
+                </div>
+                <div class="mb-3">
+                    <strong>Output File:</strong><br>
+                    <span class="text-muted">${results.output_file || 'chart_of_accounts.ttl'}</span>
+                </div>
+                <div class="mb-3">
+                    <strong>Success Rate:</strong><br>
+                    <span class="text-muted">${results.success_rate || '95%'}</span>
+                </div>
+            `;
+        }
+        
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html> 

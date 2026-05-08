@@ -1,0 +1,10 @@
+# Keep secrets and local env out of Docker build context (docker build / COPY .).
+.env
+.env.*
+!.env.example
+quickbooks_config.json
+wave_config.json
+**/*_tokens.json
+*.pem
+.venv/
+venv/
