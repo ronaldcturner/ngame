@@ -73,3 +73,9 @@ canvases/
 
 # ── Cursor canvas build status ────────────────────────────────────────────
 *.canvas.status.json
+
+# ── Internal / accidental HTML files (not part of the application) ─────────
+NGAME_GitHub_Release_Guide.html
+Canvas_Workflow_Guide.html
+markdown.html
+.html
