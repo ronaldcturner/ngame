@@ -113,12 +113,14 @@ sequenceDiagram
 
 ---
 
-## Installation
+## Installation and operations
 
-See **[INSTALL.md](INSTALL.md)** for full step-by-step instructions for macOS and Windows.
+| Document | Audience |
+|----------|----------|
+| **[INSTALL.md](INSTALL.md)** | Technical consultant — install, credentials, dashboard service, handoff |
+| **[FRP_OPERATIONS_GUIDE.md](FRP_OPERATIONS_GUIDE.md)** / **[FRP_OPERATIONS_GUIDE.html](FRP_OPERATIONS_GUIDE.html)** | Financially Responsible Person — **dashboard only** (print/PDF from HTML) |
 
-> Installation is intended for a systems administrator or technical consultant.
-> End-user operation of the dashboard requires no technical expertise after installation is complete.
+> The FRP runs daily training and fraud checks from the web dashboard (**Run Training Day** / **Run Churn Analysis**). The consultant installs NGAME, keeps the dashboard service running, and gives the FRP the operations guide plus a browser bookmark.
 
 ---
 
