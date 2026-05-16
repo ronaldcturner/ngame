@@ -1,6 +1,6 @@
-# NGAME-POC
+# NGAME
 
-NGAME is a two-phase, agent-driven fraud analytics pipeline for accounting data.
+NGAME (Next-Generation Accounting Monitoring Engine) is a two-phase, agent-driven fraud analytics pipeline for accounting data.
 It supports both **Training Mode** (build behavioral baseline) and **Fraud Analysis Mode** (detect deviations and generate management warnings).
 
 ---
