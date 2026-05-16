@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGAME — Page Launcher</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --green-dark:  #0f6f14;
+      --green-main:  #2CA01C;
+      --green-light: #3fc92d;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-main) 60%, var(--green-light) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .launcher-card {
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      max-width: 680px;
+      width: 100%;
+      padding: 2.5rem 2.5rem 2rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--green-main), var(--green-dark));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.4rem;
+    }
+
+    .brand h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--green-dark);
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 0.92rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin: 1.5rem 0 0.6rem;
+    }
+
+    .btn-page {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.75rem 1.1rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      border: 2px solid transparent;
+      margin-bottom: 0.55rem;
+      color: #1f2937;
+      background: #f9fafb;
+    }
+
+    .btn-page:hover {
+      background: #fff;
+      border-color: var(--green-main);
+      color: var(--green-dark);
+      transform: translateX(4px);
+      box-shadow: 0 4px 16px rgba(44,160,28,0.15);
+    }
+
+    .btn-page .page-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .btn-page .page-desc {
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: #9ca3af;
+      line-height: 1.2;
+    }
+
+    .btn-page .page-title { line-height: 1.2; }
+
+    /* Icon colour themes */
+    .ic-green  { background: #d1fae5; color: #065f46; }
+    .ic-blue   { background: #dbeafe; color: #1e3a8a; }
+    .ic-violet { background: #ede9fe; color: #5b21b6; }
+    .ic-amber  { background: #fef3c7; color: #92400e; }
+    .ic-red    { background: #fee2e2; color: #991b1b; }
+    .ic-sky    { background: #e0f2fe; color: #0c4a6e; }
+    .ic-slate  { background: #f1f5f9; color: #334155; }
+    .ic-gray   { background: #f3f4f6; color: #374151; }
+
+    .server-note {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 1.8rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .server-note code {
+      background: #f3f4f6;
+      padding: 0.2em 0.45em;
+      border-radius: 4px;
+      color: var(--green-dark);
+      font-size: 0.82rem;
+    }
+
+    .port-input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 0.6rem;
+    }
+
+    .port-input-row label { font-size: 0.82rem; color: #6b7280; }
+
+    #portInput {
+      width: 80px;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      text-align: center;
+      color: #1f2937;
+    }
+
+    #applyPort {
+      padding: 0.25rem 0.7rem;
+      font-size: 0.82rem;
+      border-radius: 6px;
+      background: var(--green-main);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    #applyPort:hover { background: var(--green-dark); }
+  </style>
+</head>
+<body>
+
+<div class="launcher-card">
+
+  <!-- Brand -->
+  <div class="brand">
+    <div class="brand-icon"><i class="fas fa-brain"></i></div>
+    <h1>NGAME</h1>
+  </div>
+  <p class="subtitle">Ontology-Based Fraud Analytics Pipeline — Page Launcher</p>
+
+  <!-- Primary pages -->
+  <div class="section-label">Main Pages</div>
+
+  <a class="btn-page" href="http://localhost:5000/dashboard" target="_blank">
+    <div class="page-icon ic-green"><i class="fas fa-tachometer-alt"></i></div>
+    <div>
+      <div class="page-title">Dashboard</div>
+      <div class="page-desc">System overview · live stats · management warnings</div>
+    </div>
+  </a>
+
+  <a class="btn-page" href="http://localhost:5000/analysis" target="_blank">
+    <div class="page-icon ic-blue"><i class="fas fa-search"></i></div>
+    <div>
+      <div class="page-title">Analysis</div>
+      <div class="page-desc">Run anomaly detection · churn comparison · phi-array results</div>
+    </div>
+  </a>
+
+  <a class="btn-page" href="http://localhost:5000/alerts" target="_blank">
+    <div class="page-icon ic-red"><i class="fas fa-bell"></i></div>
+    <div>
+      <div class="page-title">Alerts</div>
+      <div class="page-desc">Active fraud alerts · HIGH / MEDIUM / LOW deviation bands</div>
+    </div>
+  </a>
+
+  <a class="btn-page" href="http://localhost:5000/reports" target="_blank">
+    <div class="page-icon ic-sky"><i class="fas fa-chart-bar"></i></div>
+    <div>
+      <div class="page-title">Reports</div>
+      <div class="page-desc">Historical analysis runs · exportable audit artifacts</div>
+    </div>
+  </a>
+
+  <!-- Data / integration pages -->
+  <div class="section-label">Data &amp; Integration</div>
+
+  <a class="btn-page" href="http://localhost:5000/ontology" target="_blank">
+    <div class="page-icon ic-violet"><i class="fas fa-project-diagram"></i></div>
+    <div>
+      <div class="page-title">Ontology</div>
+      <div class="page-desc">TTL snapshot viewer · Today / Yesterday diff · RDF graph</div>
+    </div>
+  </a>
+
+  <a class="btn-page" href="http://localhost:5000/quickbooks" target="_blank">
+    <div class="page-icon ic-amber"><i class="fas fa-chart-line"></i></div>
+    <div>
+      <div class="page-title">QuickBooks</div>
+      <div class="page-desc">QB connection status · chart of accounts · data extraction</div>
+    </div>
+  </a>
+
+  <!-- Config / debug -->
+  <div class="section-label">Config &amp; Debug</div>
+
+  <a class="btn-page" href="http://localhost:5000/settings" target="_blank">
+    <div class="page-icon ic-slate"><i class="fas fa-cog"></i></div>
+    <div>
+      <div class="page-title">Settings</div>
+      <div class="page-desc">Pipeline config · API credentials · mode selection</div>
+    </div>
+  </a>
+
+  <a class="btn-page" href="http://localhost:5000/dashboard-debug" target="_blank">
+    <div class="page-icon ic-gray"><i class="fas fa-bug"></i></div>
+    <div>
+      <div class="page-title">Dashboard Debug</div>
+      <div class="page-desc">Raw consolidated JSON payload · artifact source paths</div>
+    </div>
+  </a>
+
+  <!-- Footer note -->
+  <div class="server-note">
+    Start the Flask UI with <code>cd ngame_ui &amp;&amp; python app-simple.py</code>
+    then click any button above.
+    <div class="port-input-row">
+      <label for="portInput">Port:</label>
+      <input id="portInput" type="number" value="5000" min="1" max="65535" />
+      <button id="applyPort" onclick="applyPort()">Apply</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function applyPort() {
+    const port = document.getElementById('portInput').value.trim();
+    if (!port) return;
+    document.querySelectorAll('a.btn-page').forEach(a => {
+      a.href = a.href.replace(/localhost:\d+/, 'localhost:' + port);
+    });
+  }
+</script>
+
+</body>
+</html>
