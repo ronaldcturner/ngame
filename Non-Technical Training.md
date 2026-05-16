@@ -1,5 +1,7 @@
 # NGAME — Non-Technical Curriculum
 
+> **Superseded for new deployments.** Use **[INSTALL.md](INSTALL.md)** and **[FRP_OPERATIONS_GUIDE.md](FRP_OPERATIONS_GUIDE.md)** instead.
+
 ---
 
 ## DOCUMENT 1: Consultant Setup Guide

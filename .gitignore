@@ -78,6 +78,13 @@ canvases/
 NGAME_GitHub_Release_Guide.html
 Canvas_Workflow_Guide.html
 markdown.html
+README.html
+README (Print).html
+NGAME_Launcher.html
+NGAME_DSRM_Paper_Outline.html
+COMPONENT_MAP_PRINT.md
+COMPONENT_MAP_PRINT.md.pdf
+# Generic HTML exports (FRP_OPERATIONS_GUIDE.html is tracked intentionally)
 .html
 
 # ── Exported Cursor chat logs and internal working notes ────────────────────
@@ -88,6 +95,11 @@ cursor_ngame_project_report_and_design copy.md
 cursor_ngame_rolling_buffer_enhancement.md
 cursor_readme_validity_confirmation.md
 MISAPPROPRIATION_BEHAVIOR_ANALYSIS_CHAT.md
+
+# ── Local reference materials (not for the public repo) ─────────────────────
+IJAIS+DSRM+PAPER--Guido_2011.pdf
+How to capture and place an MD graphic.odt
+Training, Marketing, and Documentation/*.zip
 
 # ── Internal research, draft, and working documents ─────────────────────────
 ANOMALY_INJECTION_EXECUTIVE_SUMMARY.md
