@@ -38,6 +38,46 @@ logger = logging.getLogger(__name__)
 def _repo_root() -> Path:
     return Path(__file__).resolve().parent.parent
 
+TRAINING_MATRIX_FILE = "NGAME_Training_Matrix.xlsx"
+TRAINING_TARGET_DAYS = 30
+FRP_MODE = os.environ.get("NGAME_UI_FRP_MODE", "1").lower() not in ("0", "false", "no")
+
+
+def _count_training_days(matrix_path: Path) -> int:
+    """Day columns start at column 4 (A=type, B=μ, C=σ)."""
+    try:
+        from openpyxl import load_workbook
+        wb = load_workbook(matrix_path, read_only=True)
+        ws = wb.active
+        days = max(ws.max_column - 3, 0)
+        wb.close()
+        return days
+    except Exception:
+        return 0
+
+
+def _get_training_status() -> Dict[str, Any]:
+    matrix_path = _repo_root() / TRAINING_MATRIX_FILE
+    if not matrix_path.exists():
+        return {
+            "matrix_exists": False,
+            "days_recorded": 0,
+            "target_days": TRAINING_TARGET_DAYS,
+            "days_remaining": TRAINING_TARGET_DAYS,
+            "training_complete": False,
+            "phase": "training",
+        }
+    days = _count_training_days(matrix_path)
+    complete = days >= TRAINING_TARGET_DAYS
+    return {
+        "matrix_exists": True,
+        "days_recorded": days,
+        "target_days": TRAINING_TARGET_DAYS,
+        "days_remaining": max(0, TRAINING_TARGET_DAYS - days),
+        "training_complete": complete,
+        "phase": "fraud_analysis" if complete else "training",
+    }
+
 def _try_load_json(path: Path) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
     try:
         if not path.exists():
@@ -100,6 +140,26 @@ def _load_latest_artifacts() -> Dict[str, Any]:
                     "UNKNOWN")
 
     top_anomalies = (fraud.get("anomaly_result", {}) or {}).get("top_anomalies") or []
+    fraud_summary = fraud.get("summary") or {}
+    sequence_result = fraud.get("sequence_result")
+    cc_watch_result = fraud.get("cc_watch_result") or {}
+
+    sequence_active = bool(fraud_summary.get("sequence_active"))
+    sequence_window = fraud_summary.get("sequence_window")
+    sequence_high = int(fraud_summary.get("sequence_high_count") or 0)
+    sequence_medium = int(fraud_summary.get("sequence_medium_count") or 0)
+    sequence_top: List[Dict[str, Any]] = []
+    if sequence_result and sequence_result.get("comparison", {}).get("success"):
+        comp = sequence_result["comparison"]
+        ranked = comp.get("ranked_differences") or comp.get("differences") or []
+        sequence_top = sorted(
+            ranked,
+            key=lambda x: float(x.get("abs_z_score") or x.get("z_score") or 0),
+            reverse=True,
+        )[:5]
+
+    cc_summary = cc_watch_result.get("summary") or {}
+    cc_flagged = cc_watch_result.get("flagged_transactions") or []
 
     # Last-updated timestamps (best effort)
     last_updated = management_dashboard.get("last_updated") or management_dashboard.get("management_summary", {}).get("summary_timestamp")
@@ -109,12 +169,19 @@ def _load_latest_artifacts() -> Dict[str, Any]:
         "success": True,
         "sources": sources,
         "errors": errors[-10:],  # keep response small
+        "training_status": _get_training_status(),
         "summary": {
             "overall_risk_level": overall_risk,
             "warnings_count": len(warnings),
             "top_anomalies_count": len(top_anomalies),
             "last_updated": last_updated,
             "execution_time": execution_time,
+            "sequence_active": sequence_active,
+            "sequence_window": sequence_window,
+            "sequence_high_count": sequence_high,
+            "sequence_medium_count": sequence_medium,
+            "cc_watch_flagged": int(cc_summary.get("total_flagged") or 0),
+            "cc_watch_highest_risk": cc_summary.get("highest_risk_level", "CLEAR"),
         },
         "management_dashboard": {
             "management_summary": management_summary,
@@ -128,7 +195,11 @@ def _load_latest_artifacts() -> Dict[str, Any]:
                 "top_anomalies": top_anomalies[:10],
             },
             "llm_result": fraud.get("llm_result", {}),
-            "summary": fraud.get("summary", {}),
+            "summary": fraud_summary,
+            "sequence_result": sequence_result,
+            "sequence_top": sequence_top,
+            "cc_watch_result": cc_watch_result,
+            "cc_flagged": cc_flagged[:10],
         },
     }
 
@@ -183,6 +254,15 @@ class NGAMEState:
 
 # Initialize global state
 ngame_state = NGAMEState()
+
+
+@app.context_processor
+def inject_ui_config():
+    return {
+        "frp_mode": FRP_MODE,
+        "training_status": _get_training_status(),
+    }
+
 
 @app.route('/')
 def index():
@@ -489,6 +569,26 @@ def _stream_script(script_name: str, stdin_input: str = "y\n"):
         ngame_state.operation_running = False
 
 
+@app.route('/api/training-status')
+def api_training_status():
+    """Training matrix progress for dashboard phase guidance."""
+    return jsonify(_get_training_status())
+
+
+@app.route('/api/ui-config')
+def api_ui_config():
+    return jsonify({"frp_mode": FRP_MODE, "training_status": _get_training_status()})
+
+
+@app.route('/api/run-daily', methods=['POST'])
+def api_run_daily():
+    """Run training or fraud analysis based on current training matrix state."""
+    status = _get_training_status()
+    if status["phase"] == "training":
+        return api_run_training()
+    return api_run_fraud_analysis()
+
+
 @app.route('/api/run-training', methods=['POST'])
 def api_run_training():
     """Launch one training day (run_training_flow.py) in the background."""
@@ -579,7 +679,8 @@ if __name__ == '__main__':
     
     print("🚀 NGAME UI Starting...")
     print(f"📋 NGAME Components Available: {NGAME_AVAILABLE}")
-    print("🌐 Open your browser to: http://localhost:5001")
+    print(f"👤 FRP mode (hide consultant controls): {FRP_MODE}")
+    print("🌐 Open your browser to: http://localhost:5001/dashboard")
     
     # Run the application
     # Disable the auto-reloader to avoid repeated restarts in terminals.
