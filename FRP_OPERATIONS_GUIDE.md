@@ -1,215 +1,197 @@
 # NGAME — Financially Responsible Person (FRP) Operations Guide
 
-**Audience:** The Financially Responsible Person (owner, board treasurer, nonprofit director) who runs NGAME daily.
+**You are the FRP** if you are the owner, board treasurer, or nonprofit director responsible for daily NGAME checks.
 
-**How you operate NGAME:** Entirely through the **NGAME Dashboard** in your web browser. You do not use Terminal, do not open project folders, and do not run commands.
+**How you use NGAME:** Only through the **NGAME Dashboard** in your web browser — one bookmark, a few buttons, no Terminal and no project folders.
 
-**Who sets things up:** Your NGAME technical contact installs the software, starts the dashboard service, and gives you a browser bookmark. That work is documented in [INSTALL.md](INSTALL.md) — not in this guide.
+**Who sets things up:** Your **NGAME technical contact** (consultant or IT) installs software, keeps the dashboard running, and gives you this guide plus a bookmark. That setup is in **[INSTALL.md](INSTALL.md)** — you do not need that document for daily work.
 
 ---
 
-## What NGAME Does (In Plain Language)
+## Two people you may call
 
-NGAME runs on your **surveillance computer** once per business day. It reads your organization's QuickBooks Online activity over the internet — the same cloud data your bookkeeper uses in a browser. NGAME **never changes** anything in QuickBooks. It only reads.
+| Role | When to call |
+|------|----------------|
+| **Designated contact** | MEDIUM or HIGH warnings — accounting or leadership review |
+| **NGAME technical contact** | Dashboard won't load, errors in live output, QuickBooks login prompts during a run, Ollama problems |
 
-Each day, NGAME compares today's activity to a picture of what is **normal for your organization**. During the first 30 business days, it **learns** that picture (training). After that, it **checks** each new day against it and tells you if something is statistically unusual.
+Fill in names on the [quick-reference card](#quick-reference-card) at the end before you post it by the computer.
+
+---
+
+## What NGAME does (plain language)
+
+NGAME runs on your **surveillance computer** once per business day. It reads QuickBooks Online over the internet — the same cloud data your bookkeeper uses. NGAME **never changes** anything in QuickBooks; it only reads.
+
+- **Days 1–30 (Phase I):** NGAME **learns** what is normal for your organization (training).
+- **Day 31 onward (Phase II):** NGAME **compares** each new day to that baseline and may flag unusual activity.
 
 You are not expected to understand the math. You **are** expected to:
 
-1. Open the NGAME Dashboard each business day and run the correct operation.
-2. Review the results on screen.
-3. Follow the warning procedures when NGAME flags something.
-4. Inspect the QuickBooks **Audit Log** on a regular schedule (in QuickBooks Online — not in NGAME).
+1. Open the dashboard each business day and run the correct check.
+2. Read Overall Risk and warnings on screen.
+3. Follow the warning steps when needed.
+4. Review the QuickBooks **Audit Log** on the schedule below (in QuickBooks Online — not inside NGAME).
 
-Your bookkeeper's computer is **not** involved. NGAME does not install on the bookkeeper's machine.
-
----
-
-## Opening NGAME
-
-Your NGAME contact will give you a **browser bookmark** (for example, labeled **NGAME Dashboard**).
-
-1. Make sure the surveillance computer is **on** and connected to the **internet**.
-2. Click your **NGAME Dashboard** bookmark.
-3. The dashboard opens at a local address (your contact configures this — typically `http://localhost:5001/dashboard`).
-
-If the page says it cannot connect, the dashboard service may not be running. **Call your NGAME technical contact** — do not try to fix it yourself.
+NGAME does **not** install on the bookkeeper's computer.
 
 ---
 
-## Before Each Daily Run
+## Opening the dashboard
+
+1. Surveillance computer **on**, **internet** working.
+2. Click your **NGAME Dashboard** bookmark (your technical contact creates this — usually `http://localhost:5001/dashboard`).
+3. If the page will not load, call your **NGAME technical contact**. Do not open Terminal or reinstall software.
+
+---
+
+## Which button to click
+
+On the dashboard, scroll to **NGAME Operations**.
+
+| Your phase | What you see at the top | Button to use |
+|------------|-------------------------|---------------|
+| **Phase I** (days 1–30) | **Training Progress** and a progress bar | Large green **Run Today's Training Day** — *or* green **Run Training Day** in the Training box |
+| **Phase II** (day 31+) | **Daily Fraud Monitoring** | Large green **Run Today's Fraud Check** — *or* blue **Run Churn Analysis** in the Daily Churn box |
+
+Use **one** button per day — the large top button is enough. The smaller buttons do the same kind of run if your contact prefers them.
+
+When the progress bar shows **30 of 30**, you are in Phase II from the **next** business day onward.
+
+---
+
+## Before each daily run
 
 | Check | What to do |
 |-------|------------|
-| Internet | Open any website. If it loads, you are connected. |
-| Ollama (AI service) | Look for the **Ollama** icon in the menu bar (top right on Mac). If it is missing, open **Ollama** from Applications and wait about 30 seconds. Ollama is required for daily fraud checks after training; your contact will confirm whether it must be running during training. |
-| QuickBooks Audit Log | During the **first 30 business days**, review the Audit Log at least weekly (see [Audit Log protocol](#quickbooks-audit-log-protocol) below). Before running training on a day when the log shows anything suspicious, **call your NGAME contact first** — do not run training that day until they advise. |
+| Internet | Open any website; if it loads, you are connected |
+| Ollama (Phase II) | On Mac: Ollama icon in menu bar, or open **Ollama** from Applications and wait ~30 seconds. Required for fraud checks after training |
+| Audit Log (Phase I) | At least weekly during days 1–30 (see [Audit Log protocol](#quickbooks-audit-log-protocol)). If the log looks suspicious **today**, call your technical contact **before** running training |
 
 ---
 
-## The Two Phases
+## Daily procedure — Phase I (days 1–30)
 
-The dashboard shows your phase at the top in **Training Progress** (Phase I) or **Daily Fraud Monitoring** (Phase II), including a progress bar during training.
+**When:** End of business day, after the bookkeeper posted that day's transactions.
 
-| Phase | When | Dashboard control | What it does |
-|-------|------|-------------------|--------------|
-| **Phase I — Training** | Business days 1 through 30 | **Run Today's NGAME Check** (or **Run Training Day**) | Adds one day of data to NGAME's baseline ("normal") |
-| **Phase II — Daily fraud check** | Day 31 onward, permanently | **Run Today's NGAME Check** (or **Run Churn Analysis**) | Compares today to the baseline; may produce warnings |
-
-The primary button label changes automatically when training is complete. You can also confirm progress in the **live output** panel after each run.
-
-**When the progress bar shows 30 of 30 days**, you are in Phase II permanently.
-
----
-
-## Daily Procedure — Phase I (Training, Days 1–30)
-
-**When:** End of the business day — after your bookkeeper has posted that day's transactions.
-
-1. Open your **NGAME Dashboard** bookmark.
-2. Scroll to the section titled **NGAME Operations**.
-3. Click **Run Training Day** (green button).
-4. A **live output** panel appears. Wait until it shows the run has **finished** (usually 1–3 minutes). Do not close the browser tab while it is running.
-5. Read the last lines of the output:
-   - **Success:** Look for a message that the day was recorded and how many days remain (for example, `Day 8 recorded successfully` / `22 day(s) remaining`).
-   - **Day 30 complete:** Look for a message that all 30 training days are collected and the matrix is ready for fraud analysis. **From the next business day, switch to Phase II.**
-6. Scroll up on the dashboard to review **Overall Risk**, **Management Warnings**, and **Top Anomalies** if they updated.
-7. You are done for today. You may close the browser tab.
-
-### Phase I quick reference
-
-| Step | Action |
-|------|--------|
-| 1 | Open NGAME Dashboard bookmark |
-| 2 | Click **Run Training Day** |
-| 3 | Wait for finished message in live output |
-| 4 | Confirm day count increased |
-| 5 | Close browser |
-
----
-
-## Daily Procedure — Phase II (Fraud Check, Day 31+)
-
-**When:** Same time of day as during training — end of business day.
-
-1. Open your **NGAME Dashboard** bookmark.
+1. Open **NGAME Dashboard** bookmark.
 2. Scroll to **NGAME Operations**.
-3. Click **Run Churn Analysis** (blue button).
-4. Wait in the **live output** panel until the run **finishes** (usually 1–3 minutes).
-5. Read the result:
+3. Click **Run Today's Training Day** (large green) or **Run Training Day**.
+4. Watch the **live output** panel until the run **finishes** (about 1–3 minutes). Do not close the tab while it runs.
+5. Confirm success — e.g. `Day 8 recorded successfully` and days remaining.
+6. On day 30 completion, note that training is complete; **tomorrow** use Phase II buttons.
+7. Glance at **Overall Risk**, **Management Warnings**, and **Top Anomalies** if shown.
+8. Close the browser when done.
+
+---
+
+## Daily procedure — Phase II (day 31+)
+
+**When:** Same time of day as during training.
+
+1. Open **NGAME Dashboard** bookmark.
+2. Scroll to **NGAME Operations**.
+3. Click **Run Today's Fraud Check** (large green) or **Run Churn Analysis** (blue).
+4. Wait until live output shows **finished**.
+5. Use this table:
 
 | What you see | Meaning | What you do |
 |--------------|---------|-------------|
-| Success with **LOW** risk or no warnings | Within normal range | Done for today. Close the browser. |
-| **MEDIUM** warning | Unusual activity — needs attention | Follow [MEDIUM warning](#medium-warning) below |
-| **HIGH** warning | Highly unusual activity | Follow [HIGH warning](#high-warning) below |
-| Error (❌ or "Exited with code" other than success) | Technical problem — **not** a fraud signal | [Technical problems](#when-something-goes-wrong) — call your NGAME contact; do not re-run |
+| Success, **LOW** risk or no warnings | Within normal range | Done for today |
+| **MEDIUM** warning | Unusual — needs review | [MEDIUM warning](#medium-warning) |
+| **HIGH** warning | Highly unusual | [HIGH warning](#high-warning) |
+| Error (❌ or failed exit code) | Technical problem — **not** fraud | [When something goes wrong](#when-something-goes-wrong) — do **not** click again |
 
-6. Review **Management Warnings** and **Top Anomalies** on the dashboard for plain-language detail.
-
-### Phase II quick reference
-
-| Step | Action |
-|------|--------|
-| 1 | Open NGAME Dashboard bookmark |
-| 2 | Click **Run Churn Analysis** |
-| 3 | Wait for finished message |
-| 4 | Read Overall Risk and warnings |
-| 5 | Act on MEDIUM/HIGH per tables below, or close browser if normal |
+6. Read **Management Warnings** and **Top Anomalies** for detail.
 
 ---
 
-## Reading the Dashboard
-
-After each run, review these sections (scroll as needed):
+## Reading the dashboard
 
 | Section | What it tells you |
 |---------|-------------------|
-| **Training Progress** | Current phase, days recorded (e.g. 8 of 30), progress bar |
-| **Overall Risk** | Summary level: LOW, MEDIUM, HIGH, or similar |
-| **Multi-Day Pattern Alert** | **Slow-burn** detection — unusual activity sustained over several business days (not only today) |
-| **Credit Card Watch** | Flags on today's credit card transactions (misuse patterns, structuring, etc.) |
-| **Management Warnings** | Plain-language descriptions of what NGAME found |
-| **Top Anomalies** | Which transaction categories were most unusual **today** |
-| **Last Updated** | When the displayed results were generated |
+| **Training Progress** | Phase, days recorded (e.g. 8 of 30), progress bar |
+| **Overall Risk** | LOW, MEDIUM, HIGH, or similar |
+| **Multi-Day Pattern Alert** | Unusual pattern over several business days (slow-burn schemes) |
+| **Credit Card Watch** | Flags on today's card activity |
+| **Management Warnings** | Plain-language summary |
+| **Top Anomalies** | Most unusual categories **today** |
+| **Last Updated** | When results were generated |
 
-The **live output** panel under **NGAME Operations** shows the log of the run you just started. Use it to confirm the run finished.
+**Multi-day vs. single-day:** **Top Anomalies** is today's snapshot. **Multi-Day Pattern Alert** looks at a rolling window (often ~5 business days) and can flag gradual schemes when today alone looks normal.
 
-> **Multi-day vs. single-day:** **Top Anomalies** reflects today's snapshot. **Multi-Day Pattern Alert** reflects the rolling window (typically 5 business days) and can flag a scheme that builds gradually even when today alone looks normal.
+The **live output** panel confirms the run you just started has finished.
 
 ---
 
-## Warning Response Protocol
+## Warning response protocol
 
-NGAME does **not** accuse anyone of fraud. A warning means:
-
-> Today's activity in one or more categories is statistically far from what NGAME observed during your 30-day training baseline. That may have an innocent explanation. A qualified person should review it.
+NGAME does **not** accuse anyone of fraud. A warning means today's activity is far from the 30-day training baseline — which may have an innocent explanation. A qualified person should review it.
 
 ### MEDIUM warning
 
-1. Note **Overall Risk**, **Management Warnings**, and **Top Anomalies** on the dashboard.
-2. Take **screenshots** of the dashboard (and the live output panel if it still shows the warning).
+1. Note **Overall Risk**, **Management Warnings**, and **Top Anomalies**.
+2. **Screenshot** the dashboard (and live output if it still shows the warning).
 3. Contact your **designated contact** within **one business day**:
 
    **Name:** _______________________________________________
 
    **Phone / email:** _______________________________________________
 
-4. Inspect the QuickBooks **Audit Log** for the flagged date (see below).
-5. Continue running NGAME on the next business day. Note if the same category is flagged again.
+4. Inspect the QuickBooks **Audit Log** for the flagged date.
+5. Continue NGAME on the next business day; note if the same category flags again.
 
 ### HIGH warning
 
-1. Screenshot the dashboard **immediately**.
-2. Contact your **designated contact** **today** — do not wait until the next business day.
-3. Inspect the QuickBooks **Audit Log** for that date **before** other action.
-4. Do **not** tell the bookkeeper or staff who can alter flagged accounts until your designated contact advises you.
+1. Screenshot **immediately**.
+2. Contact your **designated contact** **today**.
+3. Inspect the **Audit Log** for that date **before** other action.
+4. Do **not** tell the bookkeeper or staff who can alter flagged accounts until your designated contact advises.
 
-### The most important rule
+### Remember
 
-NGAME is **read-only**. It cannot change, delete, or post anything in QuickBooks. Whatever it flags was already in your books.
+NGAME is **read-only**. It cannot change QuickBooks. Whatever it flags is already in your books.
 
 ---
 
-## QuickBooks Audit Log Protocol
+## QuickBooks Audit Log protocol
 
-The Audit Log is **not** part of NGAME. NGAME cannot read it. You review it in **QuickBooks Online** in your browser — the same way you would check any QBO report.
+The Audit Log is **not** in NGAME. Review it in **QuickBooks Online** in your browser.
 
-### Why it matters during training
+### Why it matters in training
 
-NGAME's baseline is built from your first **30 business days** of data. If someone hid misappropriation during those days and NGAME trains on it, that activity can become part of "normal." The Audit Log is your independent check that each day's books were legitimate **before** you click **Run Training Day**.
+NGAME's baseline is your first **30 business days**. If misappropriation happened during training and you train on it, that activity can become "normal." The Audit Log checks books were legitimate **before** you click **Run Training Day**.
 
 ### How to open the Audit Log
 
-1. Go to [https://qbo.intuit.com](https://qbo.intuit.com) and sign in with your **administrator** login.
-2. Click the **gear** icon (Settings), upper right.
-3. Under **Tools**, click **Audit Log**.
-4. Use the **Date** filter to focus on the current week or a specific day.
+1. [https://qbo.intuit.com](https://qbo.intuit.com) — administrator login.
+2. **Gear** (Settings) → **Tools** → **Audit Log**.
+3. Filter by **Date** for the week or day you need.
 
 ### Inspection schedule
 
 | When | How often | What to review |
 |------|-----------|----------------|
-| Days 1–30 (training) | At least **once per week** (twice is better) | Current week: deletions, voids, unusual logins, changed amounts |
-| After any MEDIUM or HIGH NGAME warning | **Same day**, before other action | Entries on the date NGAME flagged |
-| Day 30 (end of training) | **Once** — full sweep | All 30 training days |
-| Day 31 onward (Phase II) | **Monthly** minimum | Prior month |
+| Days 1–30 | At least **weekly** (twice is better) | Deletions, voids, odd logins, changed amounts |
+| After MEDIUM or HIGH warning | **Same day** | Entries on the flagged date |
+| End of day 30 | **Once** — full sweep | All 30 training days |
+| Phase II (day 31+) | **Monthly** minimum | Prior month |
 
-### Red flags — call your NGAME contact before running NGAME that day
+### Red flags — call technical contact before running NGAME that day
 
 | What you see | Why it matters |
 |--------------|----------------|
-| Transaction **deleted** or **voided** | NGAME may not see the original amount; the baseline can be skewed |
-| Login from an **unexpected** user | Possible unauthorized access |
-| Login at **odd hours** (nights, weekends, holidays) | May indicate covert changes |
-| **Dollar amount changed** on an existing transaction | Common concealment pattern |
-| **New vendor/payee** created and paid the same day | Possible fictitious vendor scheme |
+| Transaction **deleted** or **voided** | Baseline may be skewed |
+| Login from **unexpected** user | Possible unauthorized access |
+| Login at **odd hours** | Possible covert changes |
+| **Amount changed** on existing transaction | Common concealment |
+| **New vendor** created and paid same day | Possible fictitious vendor |
 
 ---
 
-## When Something Goes Wrong
+## When something goes wrong
 
-Do **not** try to reinstall software, open Terminal, or delete files. Contact your **NGAME technical contact**:
+Do **not** reinstall, use Terminal, or delete files. Call your **NGAME technical contact**:
 
 **Name:** _______________________________________________
 
@@ -217,52 +199,48 @@ Do **not** try to reinstall software, open Terminal, or delete files. Contact yo
 
 | What you see | What to do |
 |--------------|------------|
-| Dashboard will not load | Call technical contact — service may be stopped |
-| Browser asks you to log into QuickBooks during a run | Call technical contact — authorization may need refresh |
-| Run runs more than **10 minutes** without finishing | Note the time; call technical contact |
-| Live output shows **error** or failed exit | Do **not** click the button again; screenshot; call technical contact |
-| **Prerequisites not met** during churn analysis | Training may not be finished — you may still be in Phase I; call technical contact |
-| Ollama error during churn analysis | Open Ollama from Applications; wait 30 seconds; try **one** more run. If it fails again, call technical contact |
-| Overall Risk stays UNKNOWN with empty warnings after Phase II | Call technical contact — Ollama or pipeline may need attention |
+| Dashboard will not load | Call technical contact |
+| QuickBooks login prompt during a run | Call technical contact |
+| Run over **10 minutes** | Note time; call technical contact |
+| Live output **error** | Screenshot; do **not** retry; call technical contact |
+| **Prerequisites not met** on churn run | You may still be in Phase I; call technical contact |
+| Ollama error | Open Ollama; wait 30s; try **once** more; if fail, call technical contact |
+| UNKNOWN risk with empty warnings in Phase II | Call technical contact |
 
 ---
 
-## What You Never Do
+## What you never do
 
-- Use Terminal or command-line windows for NGAME
-- Move, rename, or copy NGAME files or folders (backups are handled by your NGAME contact)
-- Tell the bookkeeper about flagged accounts until your designated contact advises you (especially for HIGH warnings)
-- Use **Demo Scenario** unless your NGAME contact authorized a demonstration
+- Use Terminal or command windows for NGAME
+- Move, rename, or copy NGAME folders (backups are your technical contact's job)
+- Tell the bookkeeper about flagged accounts before your designated contact says to (especially HIGH)
+- Use **Demo Scenario** unless technical contact authorized a demo
 - Install NGAME on the bookkeeper's computer
 
 ---
 
-## Monthly Reminders (Your NGAME Contact Handles Technical Tasks)
+## Monthly reminders
 
-You do **not** perform these; your NGAME technical contact typically:
+**Your technical contact** typically handles: API credential refresh (~90–100 days), dashboard auto-start checks, backup of the training matrix on the surveillance machine.
 
-- Refreshes QuickBooks API credentials before they expire (~90–100 days)
-- Verifies the dashboard service still starts correctly
-- Backs up the training baseline file on the surveillance computer
-
-You **do** continue monthly Audit Log review in Phase II.
+**You** continue monthly Audit Log review in Phase II.
 
 ---
 
-## Quick-Reference Card
+## Quick-reference card
 
 *Print and post near the surveillance computer.*
 
-| Phase | Dashboard button | When |
-|-------|------------------|------|
-| **Phase I** (days 1–30) | **Run Today's NGAME Check** | End of each business day |
-| **Phase II** (day 31+) | **Run Today's NGAME Check** | End of each business day |
+| Phase | Button (either is fine) | When |
+|-------|-------------------------|------|
+| **I** (days 1–30) | **Run Today's Training Day** or **Run Training Day** | End of each business day |
+| **II** (day 31+) | **Run Today's Fraud Check** or **Run Churn Analysis** | End of each business day |
 
-**Open NGAME:** Use your **NGAME Dashboard** bookmark only.
+**Open:** **NGAME Dashboard** bookmark only.
 
 | Result | Action |
 |--------|--------|
-| Success, LOW / normal | Done for today |
+| Success, LOW / normal | Done |
 | MEDIUM | Screenshot → designated contact within 1 business day |
 | HIGH | Screenshot → designated contact **today** |
 | Error | Do not retry → NGAME technical contact |
@@ -273,6 +251,6 @@ You **do** continue monthly Audit Log review in Phase II.
 
 ---
 
-*NGAME FRP Operations Guide · Dashboard-only · Pairs with [INSTALL.md](INSTALL.md) for technical setup*
+*NGAME FRP Operations Guide · Dashboard-only · Technical setup: [INSTALL.md](INSTALL.md)*
 
 **Print / PDF:** Open [FRP_OPERATIONS_GUIDE.html](FRP_OPERATIONS_GUIDE.html) in a browser → Print → Save as PDF.
