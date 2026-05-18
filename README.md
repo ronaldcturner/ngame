@@ -3,6 +3,10 @@
 NGAME (Next-Generation Accounting Monitoring Engine) is a two-phase, agent-driven fraud analytics pipeline for accounting data.
 It supports both **Training Mode** (build behavioral baseline) and **Fraud Analysis Mode** (detect deviations and generate management warnings).
 
+## Developing with Cursor
+
+**Cursor Plan mode:** Press **Shift+Tab** in Agent chat to plan before coding; review the plan, then click **Build** — plans auto-save under `~/.cursor/plans/` (use **Save to workspace** to keep a copy in the repo).
+
 ---
 
 ## What NGAME Does
