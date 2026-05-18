@@ -121,7 +121,7 @@ sequenceDiagram
 
 | Document | Audience |
 |----------|----------|
-| **[INSTALL.md](INSTALL.md)** | Technical consultant — install, credentials, dashboard service, handoff |
+| **[INSTALL.md](INSTALL.md)** | Technical consultant — **start at “Windows surveillance PC — trial install”** for new Windows sites; full install, handoff |
 | **[FRP_OPERATIONS_GUIDE.md](FRP_OPERATIONS_GUIDE.md)** / **[FRP_OPERATIONS_GUIDE.html](FRP_OPERATIONS_GUIDE.html)** | Financially Responsible Person — **dashboard only** (print/PDF from HTML) |
 | **[docs/archive/](docs/archive/)** | Historical guides only — do not use for new deployments |
 

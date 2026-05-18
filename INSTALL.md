@@ -73,6 +73,80 @@ Use this order. Check off each item before handoff.
 
 ---
 
+## Windows surveillance PC — trial install (start here)
+
+**This file is the single installer guide.** You do not need this chat, older root-level guides, or anything under **[docs/archive/](docs/archive/)** for a new Windows trial.
+
+### Before you install on the surveillance PC
+
+On the machine where you develop NGAME (for example your Mac):
+
+1. Commit any doc or code changes.
+2. Run `git push origin main` so **GitHub** has the latest version.
+
+The Windows PC **downloads** the project with `git clone` (below). Pushing updates GitHub; the surveillance machine **pulls** when you need a newer copy later.
+
+### On the Windows PC (fresh machine, no prior NGAME)
+
+Use **PowerShell**. Follow the sections in this order:
+
+| Step | What to do | Section below |
+|------|------------|-----------------|
+| 1 | Python 3.10+, Git, stable internet | [Prerequisites](#prerequisites) |
+| 2 | Clone repo, create `.venv`, `pip install -r requirements.txt` | [Windows installation](#windows-installation) §§ 1–4 |
+| 3 | `quickbooks_config.json` and/or `wave_config.json` | [Credentials and configuration](#credentials-and-configuration) |
+| 4 | Install Ollama, `ollama pull llama3` (needed before Phase II / Day 31) | [Windows installation](#windows-installation) § 6 |
+| 5 | Optional smoke test: `python run_training_flow.py` | [Windows installation](#windows-installation) § 7 |
+| 6 | Start dashboard; confirm **http://localhost:5001/dashboard** | [Dashboard service](#dashboard-service-required-for-frp) |
+| 7 | Task Scheduler auto-start at logon | [Windows — auto-start at login](#windows--auto-start-at-login) |
+| 8 | One **Run Training Day** from dashboard; confirm `NGAME_Training_Matrix.xlsx` | [Verify installation](#verify-installation) |
+| 9 | Print FRP guide, bookmark, supervised handoff | [Hand off to the FRP](#hand-off-to-the-frp) |
+
+Also use the [Consultant checklist](#consultant-checklist-end-to-end) above and check off each box before you leave the site.
+
+**Clone (default path on Windows):**
+
+```powershell
+cd $env:USERPROFILE\Documents
+git clone https://github.com/ronaldcturner/ngame.git
+cd ngame
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+If PowerShell blocks activation, see [Troubleshooting](#troubleshooting). Substitute your actual install path everywhere this guide shows `C:\NGAME\` in the auto-start batch file.
+
+### What the FRP uses (not this file)
+
+| Deliverable | File / URL |
+|-------------|------------|
+| Daily operations (print/PDF) | **[FRP_OPERATIONS_GUIDE.html](FRP_OPERATIONS_GUIDE.html)** |
+| Browser bookmark | `http://localhost:5001/dashboard` |
+
+The FRP does **not** use Terminal, `git`, or `pip` for daily work.
+
+### Updating NGAME on the surveillance PC later
+
+```powershell
+cd C:\path\to\ngame
+git pull origin main
+.venv\Scripts\Activate.ps1
+```
+
+Restart the dashboard (sign out/in if Task Scheduler starts it, or run `app-simple.py` once to test). Do **not** follow archived CLI daily workflows in **docs/archive/**.
+
+### Related docs (installer only)
+
+| Need | Document |
+|------|----------|
+| Dashboard URLs / UI issues | [ngame_ui/README.md](ngame_ui/README.md), [ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md) |
+| Wave API setup | [NGAME_WAVE_GRAPHQL_README.md](NGAME_WAVE_GRAPHQL_README.md) |
+| Architecture / developers | [README.md](README.md) |
+
+---
+
 ## Where to run commands
 
 | Location | Use for |
@@ -96,6 +170,7 @@ Your prompt shows `(.venv)` when active. Dashboard logs (`GET /api/...`) in Term
 
 ## Contents
 
+- [Windows surveillance PC — trial install (start here)](#windows-surveillance-pc--trial-install-start-here)
 - [Surveillance computer architecture](#surveillance-computer-architecture)
 - [Prerequisites](#prerequisites)
 - [macOS installation](#macos-installation)
