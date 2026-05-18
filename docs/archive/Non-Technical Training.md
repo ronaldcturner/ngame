@@ -1,6 +1,8 @@
 # NGAME — Non-Technical Curriculum
 
-> **Superseded for new deployments.** Use **[INSTALL.md](INSTALL.md)** and **[FRP_OPERATIONS_GUIDE.md](FRP_OPERATIONS_GUIDE.md)** instead.
+> **Archived — do not use for new deployments.**  
+> **Current guides:** [INSTALL.md](../../INSTALL.md) · [FRP_OPERATIONS_GUIDE.md](../../FRP_OPERATIONS_GUIDE.md).  
+> See [docs/archive/README.md](README.md) for why this file was retired.
 
 ---
 

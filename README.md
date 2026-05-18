@@ -123,6 +123,7 @@ sequenceDiagram
 |----------|----------|
 | **[INSTALL.md](INSTALL.md)** | Technical consultant — install, credentials, dashboard service, handoff |
 | **[FRP_OPERATIONS_GUIDE.md](FRP_OPERATIONS_GUIDE.md)** / **[FRP_OPERATIONS_GUIDE.html](FRP_OPERATIONS_GUIDE.html)** | Financially Responsible Person — **dashboard only** (print/PDF from HTML) |
+| **[docs/archive/](docs/archive/)** | Historical guides only — do not use for new deployments |
 
 > The FRP runs daily training and fraud checks from the web dashboard (**Run Training Day** / **Run Churn Analysis**). The consultant installs NGAME, keeps the dashboard service running, and gives the FRP the operations guide plus a browser bookmark.
 

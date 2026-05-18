@@ -15,7 +15,30 @@
 | **[README.md](README.md)** | Developers / consultants | Architecture, pipeline modules, CLI reference |
 | **[ngame_ui/README.md](ngame_ui/README.md)** | Consultants | Dashboard URLs, API endpoints, UI troubleshooting |
 
-Older guides (`SURVEILLANCE_COMPUTER_USERS_GUIDE.md`, `Non-Technical Training.md`) are **superseded** by the pair above for new deployments.
+Historical guides (CLI-era FRP workflow) are in **[docs/archive/](docs/archive/)** — not for new deployments.
+
+### Surveillance computer architecture
+
+NGAME runs on **one machine only**: the **surveillance computer**. The bookkeeper's PC, other staff machines, and the QBO user's browser workstation require **no NGAME software**.
+
+QuickBooks Online is cloud-hosted. The bookkeeper uses a browser; NGAME uses Intuit's **read-only** API with credentials stored on the surveillance PC. Both paths read the same company data; they are independent.
+
+```
+Bookkeeper's computer
+  └─ browser → QuickBooks Online (cloud)
+                      ↑
+Surveillance computer
+  └─ NGAME → Intuit API (read-only) → same company data
+```
+
+| Component | Location |
+|-----------|----------|
+| NGAME software, Python, Ollama | Surveillance computer |
+| `quickbooks_config.json` / `wave_config.json` | Surveillance computer |
+| NGAME web dashboard (`localhost:5001`) | Surveillance computer |
+| Bookkeeper / other org PCs | **No NGAME install** |
+
+The bookkeeper does not need to change how they use QuickBooks. NGAME does not write to QBO unless you configure otherwise; the default deployment is read-only surveillance.
 
 ### Who does what
 
@@ -73,6 +96,7 @@ Your prompt shows `(.venv)` when active. Dashboard logs (`GET /api/...`) in Term
 
 ## Contents
 
+- [Surveillance computer architecture](#surveillance-computer-architecture)
 - [Prerequisites](#prerequisites)
 - [macOS installation](#macos-installation)
 - [Windows installation](#windows-installation)

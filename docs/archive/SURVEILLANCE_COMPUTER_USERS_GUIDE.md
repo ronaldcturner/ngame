@@ -1,6 +1,8 @@
 # NGAME — User's Guide for the Surveillance Computer
 
-> **Superseded for new deployments.** Use **[INSTALL.md](INSTALL.md)** (technical consultant) and **[FRP_OPERATIONS_GUIDE.md](FRP_OPERATIONS_GUIDE.md)** (FRP, dashboard-only). This file is retained for reference only.
+> **Archived — do not use for new deployments.**  
+> **Current guides:** [INSTALL.md](../../INSTALL.md) (technical consultant) · [FRP_OPERATIONS_GUIDE.md](../../FRP_OPERATIONS_GUIDE.md) (FRP, dashboard-only).  
+> See [docs/archive/README.md](README.md) for why this file was retired.
 
 *For the Financially Responsible Person and the technical staff who install NGAME*
 
