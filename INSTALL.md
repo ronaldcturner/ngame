@@ -107,7 +107,7 @@ Also use the [Consultant checklist](#consultant-checklist-end-to-end) above and 
 **Clone (default path on Windows):**
 
 ```powershell
-cd $env:USERPROFILE\Documents
+cd "$env:USERPROFILE\Documents"
 git clone https://github.com/ronaldcturner/ngame.git
 cd ngame
 python -m venv .venv
@@ -281,8 +281,10 @@ git --version
 
 ### 3 — Clone
 
+Run these in **PowerShell** (not Command Prompt). Quote the path — without quotes, `\D` in `\Documents` is parsed as an escape and `cd` fails.
+
 ```powershell
-cd $env:USERPROFILE\Documents
+cd "$env:USERPROFILE\Documents"
 git clone https://github.com/ronaldcturner/ngame.git
 cd ngame
 ```
@@ -497,6 +499,7 @@ For **consultant, lab, or unattended** machines — not for dashboard-only FRP o
 
 | Symptom | Resolution |
 |---------|------------|
+| `cd $env:USERPROFILE\Documents` — “filename, directory name, or volume label syntax is incorrect” | Use **PowerShell** and quote the path: `cd "$env:USERPROFILE\Documents"` (or `cd "$env:USERPROFILE/Documents"`) |
 | `python3` / `python` not found | Reinstall Python; on Windows enable **Add to PATH** |
 | `pip install` compiler error (Windows) | Install Microsoft C++ Build Tools; retry |
 | PowerShell blocks venv activation | `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` |
