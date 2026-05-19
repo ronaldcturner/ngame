@@ -198,12 +198,17 @@ python3 ngame_dual_mode.py
 - Mixed 0-based/1-based indexing appears in some anomaly flows.
 - `ngame_cpi_analysis_agent.py` currently references QuickBooks TTL filenames; Wave-mode Phase II should be validated.
 - LLM stage depends on local Ollama service availability.
+- OAuth uses Intuit’s Accounting scope; read-only behavior is enforced by NGAME code, not by a separate read-only OAuth scope.
 
 ---
 
 ## Security and Compliance
 
-- Do not commit live tokens or secrets.
-- Keep credential files out of version control.
-- Archive run artifacts for auditability.
+**NGAME and QuickBooks Online.** NGAME is read-only surveillance: the shipped pipeline only queries QuickBooks and saves results on the surveillance computer (ontology files, training matrices, reports). It does not post, edit, void, or delete QBO records. Bookkeepers change the live books through QuickBooks itself; NGAME reads the same cloud data via Intuit’s API.
+
+**What is true.** It is true that unmodified NGAME cannot alter the organization’s QuickBooks ledger. It is not true that stolen API credentials are harmless: valid tokens on the surveillance machine allow read access (and possibly writes through other tools, depending on how OAuth was authorized). Credentials belong only on the surveillance computer; the QuickBooks Audit Log remains the control for book changes and for training-period integrity.
+
+- Do not share live tokens or secrets.
+- Keep credential files out of any document management system (GitHub, SharePoint, Google Drive, email attachments, and similar).
+- Archive run artifacts for auditability—for example, `NGAME_Fraud_Analysis.json`, `quickbooks_ontology_Today.ttl`, and `NGAME_Training_Matrix.xlsx`.
 
