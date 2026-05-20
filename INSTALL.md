@@ -112,8 +112,8 @@ git clone https://github.com/ronaldcturner/ngame.git
 cd ngame
 python -m venv .venv
 .venv\Scripts\Activate.ps1
-pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
 If PowerShell blocks activation, see [Troubleshooting](#troubleshooting). Substitute your actual install path everywhere this guide shows `C:\NGAME\` in the auto-start batch file.
@@ -261,7 +261,7 @@ No errors → core pipeline is reachable. Full verification is in [Verify instal
 
 ## Windows installation
 
-Tested on Windows 10 (1909+) and Windows 11. Use **PowerShell** unless you prefer Git Bash.
+Tested on Windows 10 (1909+) and Windows 11. Use **PowerShell** unless you prefer Git Bash. Even if you are familiar with "raw" Terminal CLI editing, use **PowerShell** or Git Bash instead. The script below will not work with "raw" CLI.
 
 ### 1 — Python 3.10+
 
@@ -273,7 +273,8 @@ python --version
 
 ### 2 — Git
 
-[git-scm.com/download/win](https://git-scm.com/download/win) — defaults are fine.
+In your browser (not PowerShell), open
+[git-scm.com/download/win](https://git-scm.com/download/win) — This takes you directly to the Git Install page. The defaults are fine.
 
 ```powershell
 git --version
@@ -303,12 +304,14 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 .venv\Scripts\Activate.ps1
 ```
 
+With the venv active (`(.venv)` in the prompt), use **`python -m pip`** — not bare `pip`. On many Windows installs, `pip install` alone fails with *not a valid application for this OS platform*; `python -m pip` uses the correct interpreter.
+
 ```powershell
-pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-If `pip install` fails with compiler errors, install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) and retry.
+If install fails with **compiler** errors, install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) and retry.
 
 ### 5 — Credentials
 
@@ -501,6 +504,7 @@ For **consultant, lab, or unattended** machines — not for dashboard-only FRP o
 |---------|------------|
 | `cd $env:USERPROFILE\Documents` — “filename, directory name, or volume label syntax is incorrect” | Use **PowerShell** and quote the path: `cd "$env:USERPROFILE\Documents"` (or `cd "$env:USERPROFILE/Documents"`) |
 | `python3` / `python` not found | Reinstall Python; on Windows enable **Add to PATH** |
+| `pip install` → *not a valid application for this OS platform* (Windows) | Use `python -m pip install ...` with venv active; see [§ 4 — Virtual environment](#4--virtual-environment) |
 | `pip install` compiler error (Windows) | Install Microsoft C++ Build Tools; retry |
 | PowerShell blocks venv activation | `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` |
 | Dashboard empty | Run one training or churn day from dashboard |
