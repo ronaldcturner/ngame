@@ -12,7 +12,11 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 import logging
 
-from ngame_quickbooks_oauth import default_quickbooks_config_path
+from ngame_quickbooks_oauth import (
+    QuickBooksOAuthError,
+    default_quickbooks_config_path,
+    ensure_quickbooks_auth,
+)
 from ngame_wave_graphql_client import default_wave_config_path
 
 # Configure logging
@@ -201,9 +205,7 @@ class NGameDataExtractionAgent:
         logger.info(f"🔐 {self.name}: Setting up authentication")
         
         try:
-            # Import required modules
             from quickbooks import QuickBooks
-            from ngame_quickbooks_oauth import ensure_quickbooks_auth, QuickBooksOAuthError
 
             bundle = ensure_quickbooks_auth(self.config_file, interactive_on_invalid_grant=True)
             self.auth_client = bundle.auth_client
