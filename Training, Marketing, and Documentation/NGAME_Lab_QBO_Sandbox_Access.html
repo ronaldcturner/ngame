@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGAME — College Lab QBO Sandbox Access</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @page { size: letter; margin: 0.5in; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #1a1a1a;
+      background: #f0f0f0;
+    }
+    .sheet {
+      max-width: 8.5in;
+      margin: 12px auto;
+      padding: 0.5in 0.55in 0.45in;
+      background: #fff;
+      border: 1px solid #ddd;
+    }
+    @media print {
+      body { background: #fff; }
+      .sheet { margin: 0; border: none; max-width: none; }
+      .no-print { display: none; }
+      h2 { break-after: avoid; }
+      table { break-inside: avoid; }
+    }
+    h1 { font-size: 18px; font-weight: 700; margin-bottom: 3px; }
+    .subtitle { font-size: 10.5px; color: #555; margin-bottom: 12px; }
+    h2 {
+      font-size: 12px; font-weight: 700; margin: 14px 0 6px;
+      padding-bottom: 3px; border-bottom: 1px solid #e0e0e0;
+    }
+    h3 { font-size: 11px; font-weight: 600; margin: 8px 0 4px; color: #333; }
+    p { margin-bottom: 6px; color: #333; }
+    ul, ol { margin: 0 0 8px 1.15rem; color: #333; }
+    li { margin-bottom: 3px; }
+    .muted { color: #666; font-size: 10px; }
+    .warn { background: #fff7ed; border: 1px solid #fed7aa; padding: 6px 8px; margin-bottom: 8px; border-radius: 3px; }
+    .ok { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 6px 8px; margin-bottom: 8px; border-radius: 3px; }
+    table {
+      width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 8px;
+    }
+    th, td {
+      border: 1px solid #d8d8d8; padding: 5px 7px; text-align: left; vertical-align: top;
+    }
+    th { background: #f5f5f5; font-weight: 600; color: #444; }
+    pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 9px; background: #f8f8f8; border: 1px solid #e5e5e5;
+      padding: 8px; margin-bottom: 8px; overflow-x: auto; line-height: 1.3;
+    }
+    a { color: #1d4ed8; }
+    .student-box {
+      border: 2px solid #3b82f6; padding: 10px 12px; margin: 10px 0;
+      border-radius: 4px; background: #eff6ff;
+    }
+    .student-box h2 { border: none; margin-top: 0; color: #1e40af; }
+    .footer { margin-top: 14px; font-size: 9.5px; color: #888; border-top: 1px solid #eee; padding-top: 8px; }
+    .no-print { text-align: center; margin-bottom: 8px; font-size: 10px; color: #666; }
+  </style>
+</head>
+<body>
+  <p class="no-print">Open in browser → Print → Save as PDF. Markdown source: <code>NGAME_Lab_QBO_Sandbox_Access.md</code></p>
+
+  <div class="sheet">
+    <h1>NGAME College Lab — QuickBooks Sandbox Access</h1>
+    <p class="subtitle">Instructor setup, student Intuit ID sign-in, and NGAME mirror testing · May 2026</p>
+
+    <div class="ok">
+      <strong>Round-one lab model:</strong> Students post transactions in <strong>one shared QBO sandbox company</strong> (browser only). NGAME runs on <strong>one surveillance PC</strong> (read-only). No paid QBO licenses required for the POC.
+    </div>
+
+    <h2>Three Intuit identities (do not mix up)</h2>
+    <table>
+      <thead>
+        <tr><th>What</th><th>Who</th><th>Cost</th><th>Unlocks</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Intuit Developer account</strong></td>
+          <td>Instructor / technical contact</td>
+          <td>Free</td>
+          <td><a href="https://developer.intuit.com">developer.intuit.com</a> — app keys, sandbox companies</td>
+        </tr>
+        <tr>
+          <td><strong>Paid QBO subscription</strong></td>
+          <td>Real businesses</td>
+          <td>Paid</td>
+          <td>Production <a href="https://qbo.intuit.com">qbo.intuit.com</a></td>
+        </tr>
+        <tr>
+          <td><strong>Intuit ID</strong> (user account)</td>
+          <td><strong>Students</strong></td>
+          <td><strong>Free</strong></td>
+          <td>Accept invite; sign in to sandbox QBO UI</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Students need <strong>only Intuit ID</strong> — not developer enrollment, not lab QBO licenses.</p>
+
+    <h2>Two doors (students use one)</h2>
+    <table>
+      <thead><tr><th>Login</th><th>Purpose</th><th>Students?</th></tr></thead>
+      <tbody>
+        <tr><td>developer.intuit.com</td><td>App keys, all sandboxes</td><td><strong>No</strong></td></tr>
+        <tr><td><a href="https://sandbox.qbo.intuit.com">sandbox.qbo.intuit.com</a></td><td>Ledger work, Audit Log</td><td><strong>Yes</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="warn"><strong>Never</strong> share your developer portal password with the class.</div>
+
+    <h2>Architecture</h2>
+    <pre>Student PCs  →  browser → QBO sandbox company  (writes)
+Surveillance PC  →  NGAME read-only API  →  same company  (reads)
+                   →  dashboard localhost</pre>
+
+    <h2>Instructor checklist (before class)</h2>
+    <ol>
+      <li>One sandbox <code>realm_id</code> in <code>quickbooks_config.json</code> (<code>environment: sandbox</code>).</li>
+      <li>OAuth once on surveillance PC as <strong>Master or Company Admin</strong>.</li>
+      <li>Test <strong>Manage users</strong> invite (your alt email) → post test invoice → one NGAME run.</li>
+      <li>Bookmark sandbox QBO for students.</li>
+      <li>Distribute student section (below) or this PDF.</li>
+    </ol>
+
+    <div class="student-box">
+      <h2>For students — how you get credentials</h2>
+      <p>You are <strong>not</strong> signing up as a developer. You need a <strong>free Intuit account (Intuit ID)</strong> when the instructor invites you to the lab company.</p>
+      <h3>First time</h3>
+      <ol>
+        <li>Open the invitation email from QuickBooks.</li>
+        <li>Click the link (may expire ~48 hours — ask instructor to resend).</li>
+        <li><strong>New:</strong> Create account at <a href="https://accounts.intuit.com">accounts.intuit.com</a>.</li>
+        <li><strong>Existing Intuit user:</strong> Sign in with that account.</li>
+        <li>Accept access to the lab company.</li>
+      </ol>
+      <h3>Every class</h3>
+      <ol>
+        <li>Go to <a href="https://sandbox.qbo.intuit.com">sandbox.qbo.intuit.com</a> (or instructor bookmark).</li>
+        <li>Sign in with <strong>your</strong> Intuit ID.</li>
+        <li>Select the lab company if asked.</li>
+      </ol>
+      <p><strong>You do not need:</strong> developer.intuit.com, NGAME install, or instructor passwords.</p>
+    </div>
+
+    <h2>Instructor: invite a student</h2>
+    <ol>
+      <li>Open lab sandbox in QBO → <strong>Settings → Manage users → Add user</strong>.</li>
+      <li>School email + role <strong>Standard</strong> (typical) → <strong>Send invitation</strong>.</li>
+    </ol>
+
+    <h2>NGAME OAuth vs student UI</h2>
+    <p>Only <strong>Company/Master Admin</strong> authorizes NGAME (you, once). Students with Standard role use the UI only — expected.</p>
+
+    <h2>Mirror testing</h2>
+    <p>Same sandbox company as NGAME → student edits appear on next training/fraud run. See <em>NGAME_Churn_Walkthrough</em> for CPI / wCPI / mutations.</p>
+
+    <h2>If per-student invites fail in sandbox</h2>
+    <table>
+      <thead><tr><th>Option</th><th>Credential</th><th>Audit attribution</th></tr></thead>
+      <tbody>
+        <tr><td><strong>A. Invite each student</strong> (best)</td><td>Personal Intuit ID</td><td>Yes</td></tr>
+        <tr><td><strong>B. One shared lab QBO user</strong></td><td>Login you create</td><td>No</td></tr>
+        <tr><td><strong>C. Developer portal password</strong></td><td>Instructor account</td><td>No — avoid</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Intuit for Education (optional, different goal)</h2>
+    <p class="muted"><a href="https://www.intuit.com/solutions/education/resources/quickbooks/">Intuit for Education</a> — free student QBO Plus trials (separate companies). Good for coursework; not required for one shared NGAME sandbox mirror.</p>
+
+    <h2>Project references</h2>
+    <table>
+      <thead><tr><th>Document</th><th>Path</th></tr></thead>
+      <tbody>
+        <tr><td>This handout (.md)</td><td>Training, Marketing, and Documentation/NGAME_Lab_QBO_Sandbox_Access.md</td></tr>
+        <tr><td>Install (technical contact)</td><td>INSTALL.md</td></tr>
+        <tr><td>FRP operations</td><td>FRP_OPERATIONS_GUIDE.md</td></tr>
+        <tr><td>Churn walkthrough</td><td>Training, Marketing, and Documentation/NGAME_Churn_Walkthrough.md</td></tr>
+      </tbody>
+    </table>
+
+    <p class="footer">NGAME · College lab QBO sandbox access · Printable companion to NGAME_Lab_QBO_Sandbox_Access.md</p>
+  </div>
+</body>
+</html>

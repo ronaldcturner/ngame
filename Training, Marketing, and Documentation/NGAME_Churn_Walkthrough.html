@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGAME — Overnight Churn Walkthrough (One Page)</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page { size: letter; margin: 0.45in; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 10.5px;
+      line-height: 1.35;
+      color: #1a1a1a;
+      background: #f0f0f0;
+    }
+
+    .sheet {
+      max-width: 8.5in;
+      margin: 12px auto;
+      padding: 0.4in 0.45in 0.35in;
+      background: #fff;
+      border: 1px solid #ddd;
+    }
+
+    @media print {
+      body { background: #fff; }
+      .sheet { margin: 0; border: none; max-width: none; padding: 0; }
+      .no-print { display: none; }
+    }
+
+    h1 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 2px;
+      letter-spacing: -0.2px;
+    }
+    .subtitle { font-size: 10px; color: #555; margin-bottom: 10px; }
+
+    h2 {
+      font-size: 11px;
+      font-weight: 700;
+      color: #111;
+      margin: 10px 0 5px;
+      padding-bottom: 2px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    p { margin-bottom: 5px; color: #333; }
+    .muted { color: #666; font-size: 9.5px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5px;
+      margin-bottom: 6px;
+    }
+    th, td {
+      border: 1px solid #d8d8d8;
+      padding: 4px 6px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f5f5f5;
+      font-weight: 600;
+      color: #444;
+    }
+    .num { text-align: center; font-weight: 700; }
+    .hi { background: #fffbeb; }
+    .ok { background: #f0fdf4; }
+    .note { background: #eff6ff; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .callout {
+      border-radius: 4px;
+      padding: 6px 8px;
+      border-left: 3px solid #3b82f6;
+      background: #eff6ff;
+      font-size: 9.5px;
+      margin-bottom: 6px;
+    }
+    .callout strong { color: #1d4ed8; }
+
+    .flow {
+      display: flex;
+      align-items: stretch;
+      gap: 4px;
+      margin: 6px 0;
+      font-size: 8.5px;
+    }
+    .flow-box {
+      flex: 1;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 5px 6px;
+      background: #fafafa;
+      text-align: center;
+    }
+    .flow-box strong { display: block; font-size: 9px; margin-bottom: 2px; }
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      color: #888;
+      font-weight: 700;
+    }
+
+    .summary-box {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-family: "SF Mono", Consolas, monospace;
+      font-size: 8.5px;
+      line-height: 1.45;
+      white-space: pre;
+      margin-bottom: 6px;
+    }
+
+    .footer {
+      margin-top: 8px;
+      padding-top: 5px;
+      border-top: 1px solid #e0e0e0;
+      font-size: 8.5px;
+      color: #888;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .path { font-family: "SF Mono", Consolas, monospace; font-size: 8px; color: #666; }
+  </style>
+</head>
+<body>
+
+  <article class="sheet">
+    <h1>NGAME — Overnight Churn Walkthrough</h1>
+    <p class="subtitle">For accounting reviewers · One example night · CPI, wCPI, and property mutations</p>
+
+    <h2>What happened overnight (example only)</h2>
+    <table>
+      <thead>
+        <tr><th style="width:8%">#</th><th>Change in QuickBooks</th><th style="width:22%">Type</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">1</td>
+          <td><strong>Invoice #1039</strong> — total <strong>$1,200 → $12,000</strong> (same record ID)</td>
+          <td>Edit on existing record</td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td><strong>New vendor</strong> — Acme Office Supply LLC</td>
+          <td>New record ID</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="muted">Everything else unchanged. NGAME runs three parallel checks — not one generic “anything changed” score.</p>
+
+    <div class="grid-2">
+      <div>
+        <h2>Check A — CPI (Jaccard): record IDs</h2>
+        <p class="muted" style="margin-bottom:4px">Question: Which IDs disappeared, appeared, or stayed?</p>
+        <table>
+          <thead><tr><th>Type</th><th>Retained</th><th>Added</th><th>Removed</th><th>CPI</th></tr></thead>
+          <tbody>
+            <tr class="ok">
+              <td>Invoices</td><td>3</td><td>0</td><td>0</td><td><strong>1.00</strong></td>
+            </tr>
+            <tr class="hi">
+              <td>Vendors</td><td>3</td><td>1</td><td>0</td><td><strong>0.75</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="muted">Formula: Retained ÷ (Retained + Added + Removed). Same ID with edited amount still counts as <em>retained</em>.</p>
+      </div>
+      <div>
+        <h2>Check B — wCPI: dollar-weighted churn</h2>
+        <p class="muted" style="margin-bottom:4px">Question: When IDs are added/removed, were dollars unusually large?</p>
+        <table>
+          <thead><tr><th>Type</th><th>Signal this night</th></tr></thead>
+          <tbody>
+            <tr><td>Invoices</td><td>No add/remove → wCPI ≈ 1.0; <strong>edit invisible</strong></td></tr>
+            <tr><td>Vendors</td><td>New vendor often $0 → usually <strong>mild</strong> dollar signal</td></tr>
+          </tbody>
+        </table>
+        <h2 style="margin-top:8px">Check C — Property mutations</h2>
+        <table>
+          <thead><tr><th>Record</th><th>Finding</th></tr></thead>
+          <tbody>
+            <tr class="note"><td>Invoice #1039</td><td><strong>hasTotalAmount</strong> modified: $1,200 → $12,000</td></tr>
+            <tr><td>Acme vendor</td><td>N/A — new ID (no yesterday row to diff)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Why CPI stays 1.0 on Invoices:</strong> Jaccard is attendance (which record IDs exist), not line-item edits.
+      The $10,800 correction is flagged under <strong>property mutations</strong> for human review — not the CPI z-score alarm today.
+    </div>
+
+    <h2>Three questions → three answers</h2>
+    <div class="flow">
+      <div class="flow-box"><strong>Gain/lose records?</strong>CPI (Jaccard)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><strong>Big-dollar adds/removes?</strong>wCPI</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><strong>Fields changed on same ID?</strong>Mutations</div>
+    </div>
+
+    <h2>Phase II alarm (typical)</h2>
+    <table>
+      <thead>
+        <tr><th>Signal</th><th>Invoice #1039 edit</th><th>New vendor Acme</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CPI / z-score</td><td>Usually quiet</td><td>May flag (vendor hot-spot)</td></tr>
+        <tr><td>wCPI</td><td>No effect</td><td>Often small</td></tr>
+        <tr class="note"><td>Property mutations</td><td><strong>FRP should read report</strong></td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <div class="summary-box">OVERNIGHT:  Invoice #1039 amount up  |  New vendor Acme
+NGAME:      Invoices CPI=1.0 "stable"  |  Vendors CPI=0.75  |  Mutation on #1039 amount
+YOU READ:   Mutation section when CPI looks perfect</div>
+
+    <p class="muted no-print" style="margin-top:6px">
+      Print: <kbd>Cmd+P</kbd> → Save as PDF. Related: <span class="path">Jaccard_Presentation.html</span> in this folder.
+    </p>
+
+    <footer class="footer">
+      <span>NGAME · Training handout · May 2026</span>
+      <span class="path">Training, Marketing, and Documentation/NGAME_Churn_Walkthrough.html</span>
+    </footer>
+  </article>
+
+</body>
+</html>
