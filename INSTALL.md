@@ -62,7 +62,7 @@ Use this order. Check off each item before handoff.
 2. [ ] Clone repo and create `.venv` at **repository root**
 3. [ ] `pip install -r requirements.txt`
 4. [ ] Copy and fill `wave_config.json` and/or `quickbooks_config.json` (or `.env`)
-5. [ ] Install Ollama and `ollama pull llama3` (required before Phase II)
+5. [ ] Complete [§ 6 — Ollama](#6--ollama-before-phase-ii--fraud-analysis) (required before Phase II / Day 31)
 6. [ ] Smoke-test CLI: `python3 run_training_flow.py` from repo root (optional if dashboard works)
 7. [ ] Start dashboard; confirm **http://localhost:5001/dashboard** loads
 8. [ ] Configure LaunchAgent (macOS) or Task Scheduler (Windows) so dashboard survives reboot
@@ -95,7 +95,7 @@ Use **PowerShell**. Follow the sections in this order:
 | 1 | Python 3.10+, Git, stable internet | [Prerequisites](#prerequisites) |
 | 2 | Clone repo, create `.venv`, `pip install -r requirements.txt` | [Windows installation](#windows-installation) §§ 1–4 |
 | 3 | `quickbooks_config.json` and/or `wave_config.json` | [Credentials and configuration](#credentials-and-configuration) |
-| 4 | Install Ollama, `ollama pull llama3` (needed before Phase II / Day 31) | [Windows installation](#windows-installation) § 6 |
+| 4 | Complete Ollama setup (needed before Phase II / Day 31) | [Windows installation](#windows-installation) § 6 |
 | 5 | Optional smoke test: `python run_training_flow.py` | [Windows installation](#windows-installation) § 7 |
 | 6 | Start dashboard; confirm **http://localhost:5001/dashboard** | [Dashboard service](#dashboard-service-required-for-frp) |
 | 7 | Task Scheduler auto-start at logon | [Windows — auto-start at login](#windows--auto-start-at-login) |
@@ -240,14 +240,104 @@ Allow 2–5 minutes on first install.
 
 See [Credentials and configuration](#credentials-and-configuration).
 
-### 6 — Ollama (before Phase II)
+### 6 — Ollama (before Phase II / fraud analysis)
 
-Download from [ollama.com/download](https://ollama.com/download):
+Ollama runs **locally** on the surveillance computer. It powers the **LLM step** in fraud analysis (mapping anomalies to the misappropriation taxonomy in `Asset_Misappropriation.ttl`). Data stays on the machine — nothing is sent to a cloud LLM.
+
+| Phase | Ollama required? |
+|-------|------------------|
+| **Training** (Days 1–30, `run_training_flow.py` or dashboard **Run Training Day**) | **No** — you can install Ollama after training works |
+| **Fraud / surveillance** (Day 31+, `run_fraud_analysis.py` or dashboard **Run Churn Analysis**) | **Yes** — without Ollama, churn/z-scores may still run but management warnings lack LLM narrative |
+
+**NGAME defaults** (in `ngame_llm_analysis_agent.py`): service `http://localhost:11434`, model name **`llama3.1:8b`**. The name you `ollama pull` must **exactly match** the `self.model_name = "..."` line in that file.
+
+#### 6.1 — Install the Ollama application
+
+1. In a browser, open [ollama.com/download](https://ollama.com/download).
+2. Download **Ollama for macOS** and install (drag to Applications is typical).
+3. Launch **Ollama** once. Confirm the **menu bar icon** (llama) appears — the app runs in the background.
+4. You do **not** need a separate `ollama serve` command when the macOS app is running.
+
+#### 6.2 — Verify the Ollama CLI
+
+Open **Terminal** (venv not required for these commands):
 
 ```bash
-ollama serve &           # or use the Ollama app
-ollama pull llama3       # ~4 GB
+ollama --version
+ollama list
 ```
+
+`ollama list` may be empty until you pull a model in § 6.4.
+
+#### 6.3 — Choose a model (RAM and disk)
+
+Pick **one** model for this machine. Use `ollama list` on the Mac after pull to see the exact tag.
+
+| Model tag (`ollama pull …`) | Approx. disk | RAM guidance | Notes |
+|-----------------------------|--------------|--------------|--------|
+| **`llama3.1:8b`** | ~4–5 GB | **16 GB+** system RAM recommended | Matches NGAME code default |
+| **`llama2:7b`** | ~3.8 GB | **8 GB+** RAM; close other apps | Good trial on smaller Macs |
+| **`gemma2:2b`** | ~1.6 GB | **8 GB** tight but often workable | Lighter; shorter LLM answers |
+
+If the Mac already has a custom model (e.g. `fraud-analyzer:latest` from `ollama list`), you may use it — set `model_name` to that **exact** tag in § 6.5.
+
+#### 6.4 — Download the model
+
+Replace `<model>` with your choice (example uses `llama2:7b`):
+
+```bash
+ollama pull llama2:7b
+```
+
+Wait until the download completes. Verify:
+
+```bash
+ollama list
+```
+
+#### 6.5 — Align NGAME with the model name
+
+1. Open the repo root in Cursor or an editor.
+2. Edit **`ngame_llm_analysis_agent.py`** near the top of `NGameLLMAnalysisAgent.__init__`:
+
+```python
+self.model_name = "llama2:7b"   # must match `ollama list` exactly
+```
+
+3. Save the file. On the surveillance PC, this same line must match **that** machine’s pulled model (copy the file or repeat this edit after `git pull`).
+
+#### 6.6 — Smoke-test Ollama (not NGAME yet)
+
+```bash
+ollama run llama2:7b "Reply with the single word OK."
+```
+
+Exit the chat with `/bye` or **Ctrl+D**. If this fails, fix Ollama before running fraud analysis.
+
+Optional API check:
+
+```bash
+curl -s http://localhost:11434/api/tags
+```
+
+#### 6.7 — Before the first fraud run (consultant only)
+
+| Prerequisite | Check |
+|--------------|--------|
+| **30 training days** in `NGAME_Training_Matrix.xlsx` | Fraud launcher refuses fewer than 30 day columns — complete training or copy a 30-day matrix from another machine |
+| **`Asset_Misappropriation.ttl`** in repo root | Required for LLM taxonomy |
+| **Ollama running** | Menu bar icon visible |
+| **Model pulled and `model_name` aligned** | § 6.4–6.5 |
+
+Test fraud analysis (repo root, venv active) when ready:
+
+```bash
+python3 run_fraud_analysis.py
+```
+
+Answer **`y`** when prompted. Expect several minutes (QBO extract → CPI → churn → Ollama → warning JSON).
+
+**FRP:** Does not install Ollama or edit `model_name`. The FRP only presses dashboard buttons; the technical contact completes this section.
 
 ### 7 — Quick smoke test (optional)
 
@@ -317,13 +407,108 @@ If install fails with **compiler** errors, install [Microsoft C++ Build Tools](h
 
 See [Credentials and configuration](#credentials-and-configuration).
 
-### 6 — Ollama
+### 6 — Ollama (before Phase II / fraud analysis)
 
-Install from [ollama.com/download](https://ollama.com/download) (runs as a service). Then:
+Ollama runs **locally** on the surveillance computer. It powers the **LLM step** in fraud analysis (mapping anomalies to the misappropriation taxonomy in `Asset_Misappropriation.ttl`). Data stays on the machine — nothing is sent to a cloud LLM.
+
+| Phase | Ollama required? |
+|-------|------------------|
+| **Training** (Days 1–30, `run_training_flow.py` or dashboard **Run Training Day**) | **No** — install Ollama after training works |
+| **Fraud / surveillance** (Day 31+, `run_fraud_analysis.py` or dashboard **Run Churn Analysis**) | **Yes** — without Ollama, churn/z-scores may still run but management warnings lack LLM narrative |
+
+**NGAME defaults** (in `ngame_llm_analysis_agent.py`): service `http://localhost:11434`, model name **`llama3.1:8b`**. The name you `ollama pull` must **exactly match** the `self.model_name = "..."` line in that file.
+
+#### 6.1 — Install the Ollama application
+
+1. In a browser on the surveillance PC, open [ollama.com/download](https://ollama.com/download).
+2. Download **Ollama for Windows** and run the installer (defaults are fine).
+3. After install, Ollama usually runs as a **background service** with a **tray icon** (system tray). Leave it running.
+4. Do **not** run `ollama pull` in the browser — only in **PowerShell** (below).
+
+#### 6.2 — Verify the Ollama CLI
+
+Open **PowerShell** (NGAME venv **not** required for these commands):
 
 ```powershell
-ollama pull llama3
+ollama --version
+ollama list
 ```
+
+`ollama list` may be empty until you pull a model in § 6.4.
+
+#### 6.3 — Choose a model (RAM and disk)
+
+Pick **one** model for this PC. Limited-RAM machines should **not** default to `llama3.1:8b` unless you have roughly **16 GB+** RAM.
+
+| Model tag (`ollama pull …`) | Approx. disk | RAM guidance | Notes |
+|-----------------------------|--------------|--------------|--------|
+| **`llama3.1:8b`** | ~4–5 GB | **16 GB+** system RAM recommended | Matches NGAME code default |
+| **`llama2:7b`** | ~3.8 GB | **8 GB+** RAM; close other apps | **Recommended** starting point for constrained PCs |
+| **`gemma2:2b`** | ~1.6 GB | **8 GB** tight but often workable | Lighter; adequate for taxonomy-style prompts |
+
+#### 6.4 — Download the model
+
+Replace `<model>` with your choice (example uses `llama2:7b`):
+
+```powershell
+ollama pull llama2:7b
+```
+
+Wait until the download completes (may take several minutes). Verify:
+
+```powershell
+ollama list
+```
+
+You should see the model name in the **NAME** column. Copy that string exactly for § 6.5.
+
+#### 6.5 — Align NGAME with the model name
+
+1. Open the repo folder in Cursor or Notepad (e.g. `Documents\ngame`).
+2. Edit **`ngame_llm_analysis_agent.py`** in the **repository root** — find `NGameLLMAnalysisAgent.__init__`:
+
+```python
+self.model_name = "llama2:7b"   # must match `ollama list` exactly
+```
+
+3. Save the file. If you `git pull` later from GitHub, re-check this line — the repo default may differ from what you pulled on this PC.
+
+**Do not** change the model name only in INSTALL.md; NGAME reads **`ngame_llm_analysis_agent.py`**.
+
+#### 6.6 — Smoke-test Ollama (not NGAME yet)
+
+```powershell
+ollama run llama2:7b "Reply with the single word OK."
+```
+
+Exit with `/bye` or **Ctrl+D**. If this hangs or errors, fix Ollama before fraud analysis (RAM, tray icon, re-pull model).
+
+Optional check that the API responds:
+
+```powershell
+Invoke-WebRequest -Uri http://localhost:11434/api/tags -UseBasicParsing | Select-Object -ExpandProperty Content
+```
+
+#### 6.7 — Before the first fraud run (consultant only)
+
+| Prerequisite | Check |
+|--------------|--------|
+| **30 training days** in `NGAME_Training_Matrix.xlsx` | `run_fraud_analysis.py` blocks if fewer than 30 day columns — add training days with **`y`**, or copy a 30-day matrix from the Mac |
+| **`Asset_Misappropriation.ttl`** in repo root | Ships with the repo; confirm present |
+| **Ollama service running** | Tray icon visible |
+| **Model pulled and `model_name` aligned** | § 6.4–6.5 |
+
+Test fraud analysis (repo root, `(.venv)` active) when ready:
+
+```powershell
+python run_fraud_analysis.py
+```
+
+Answer **`y`** when prompted. Or use the dashboard with **`app-simple.py`** running → **Run Churn Analysis**.
+
+Outputs to confirm in repo root: `management_dashboard.json`, `NGAME_Fraud_Analysis_readable*.json`; refresh **http://localhost:5001/dashboard**.
+
+**FRP:** Does not install Ollama, run `ollama pull`, or edit `model_name`. The FRP uses dashboard buttons only.
 
 ### 7 — Quick smoke test (optional)
 
@@ -453,7 +638,7 @@ Complete **before** FRP handoff.
 | 1 | Dashboard loads | Open **http://localhost:5001/dashboard** (empty results OK until first run) |
 | 2 | Training via UI | **NGAME Operations** → **Run Training Day** (or primary green **Run Today's Training Day**) → live output shows success / day recorded |
 | 3 | Matrix file | `NGAME_Training_Matrix.xlsx` exists in repo root |
-| 4 | Ollama (before Day 31) | `ollama` responds; test fraud run when 30 days complete: `python3 run_fraud_analysis.py` |
+| 4 | Ollama (before Day 31) | `ollama list` shows your model; `model_name` aligned in `ngame_llm_analysis_agent.py`; when 30 training days complete, test `python run_training_flow.py` / `python3 run_fraud_analysis.py` or dashboard **Run Churn Analysis** |
 | 5 | CLI fallback (optional) | `python3 run_training_flow.py` only if dashboard run failed — for debugging |
 
 ---
@@ -509,7 +694,11 @@ For **consultant, lab, or unattended** machines — not for dashboard-only FRP o
 | PowerShell blocks venv activation | `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` |
 | Dashboard empty | Run one training or churn day from dashboard |
 | FRP cannot connect | Check LaunchAgent / Task Scheduler; read `logs/dashboard.err.log` |
-| Ollama errors in Phase II | Start Ollama app/service; confirm `llama3` is pulled |
+| `Ollama is not running or not accessible` | Start Ollama (macOS: menu bar app; Windows: tray icon); `ollama list` |
+| `model not found` / LLM error in Phase II | `ollama list` tag must match `self.model_name` in `ngame_llm_analysis_agent.py`; run `ollama pull` for that tag |
+| Ollama very slow or PC freezes | Use a smaller model (`gemma2:2b`); close browsers; see [§ 6 — Ollama](#6--ollama-before-phase-ii--fraud-analysis) |
+| Fraud blocked: training incomplete | Need **30** day columns in `NGAME_Training_Matrix.xlsx` |
+| `No module named 'quickbooks'` (Windows) | `python -m pip install python-quickbooks intuit-oauth` or re-run `python -m pip install -r requirements.txt` |
 | QBO / Wave auth error | Refresh tokens in config JSON or `.env` |
 | Terminal flooded with `GET /api/...` | Normal — dashboard auto-refresh; stop server with Ctrl+C when testing |
 
