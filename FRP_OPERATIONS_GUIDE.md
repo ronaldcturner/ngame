@@ -4,7 +4,7 @@
 
 **How you use NGAME:** Only through the **NGAME Dashboard** in your web browser — one bookmark, a few buttons, no Terminal and no project folders.
 
-**Who sets things up:** Your **NGAME technical contact** (consultant or IT) installs software, keeps the dashboard running, and gives you this guide plus a bookmark. That setup is in **[INSTALL.md](INSTALL.md)** — you do not need that document for daily work.
+**Who sets things up:** Your **NGAME technical contact** (consultant or IT) installs software, keeps the dashboard running, and gives you this guide plus a bookmark. That setup is in **[IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)** — you do not need that document for daily work.
 
 ---
 
@@ -251,6 +251,6 @@ Do **not** reinstall, use Terminal, or delete files. Call your **NGAME technical
 
 ---
 
-*NGAME FRP Operations Guide · Dashboard-only · Technical setup: [INSTALL.md](INSTALL.md)*
+*NGAME FRP Operations Guide · Dashboard-only · Technical setup: [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)*
 
 **Print / PDF:** Open [FRP_OPERATIONS_GUIDE.html](FRP_OPERATIONS_GUIDE.html) in a browser → Print → Save as PDF.

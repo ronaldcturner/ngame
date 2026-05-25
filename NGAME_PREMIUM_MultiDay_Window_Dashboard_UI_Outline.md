@@ -129,7 +129,7 @@ Consultant sets tier during install; FRP only changes `sequence_window` when pre
 | UI template | `ngame_ui/templates/dashboard.html` | Selector in Multi-Day card; wire to API; disable when not premium |
 | Artifacts | `NGAME_Fraud_Analysis.json` | Already has `summary.sequence_window` — keep populating |
 | Docs | `FRP_OPERATIONS_GUIDE.md` | Premium section: how to change lookback (when subscribed) |
-| Install | `INSTALL.md` | Consultant: enable premium flag / license file (not FRP) |
+| Implementation | `IMPLEMENTATION_GUIDE.md` | Consultant: enable premium flag / license file (not FRP) |
 
 **Optional:** `run_sequence_analysis.py` remains consultant diagnostic tool with `--window` (unchanged).
 
@@ -176,7 +176,7 @@ FRP never enters a license key in Terminal. Consultant or back-office enables pr
 - [ ] Non-premium install cannot set L ≠ 5 via UI (API returns 403).
 - [ ] **Run Churn Analysis** uses selected L; JSON and Multi-Day card show same L.
 - [ ] Invalid values (e.g. 2, 99) rejected with clear on-screen message.
-- [ ] `INSTALL.md` documents consultant premium enablement; FRP guide documents selector only.
+- [ ] `IMPLEMENTATION_GUIDE.md` documents consultant premium enablement; FRP guide documents selector only.
 
 ---
 

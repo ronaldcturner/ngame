@@ -4,7 +4,7 @@
 
 **Audience:** Course instructor / NGAME technical contact (primary); students (§ Student sign-in only).
 
-**Related:** Technical install — [INSTALL.md](../INSTALL.md) · FRP daily ops — [FRP_OPERATIONS_GUIDE.md](../FRP_OPERATIONS_GUIDE.md) · Churn example — [NGAME_Churn_Walkthrough.md](NGAME_Churn_Walkthrough.md)
+**Related:** Technical implementation — [IMPLEMENTATION_GUIDE.md](../IMPLEMENTATION_GUIDE.md) · FRP daily ops — [FRP_OPERATIONS_GUIDE.md](../FRP_OPERATIONS_GUIDE.md) · Churn example — [NGAME_Churn_Walkthrough.md](NGAME_Churn_Walkthrough.md)
 
 ---
 
@@ -62,7 +62,7 @@ Student PCs                         Surveillance computer (instructor / lab)
 | **Instructor (technical contact)** | One PC with NGAME installed | OAuth once, `quickbooks_config.json`, daily dashboard runs, watch churn |
 | **FRP (you, mirroring)** | Same surveillance PC | Run training/fraud checks; review warnings — see FRP guide |
 
-From [INSTALL.md](../INSTALL.md): NGAME **never changes** QuickBooks in the default deployment; it **reads** the same cloud data the bookkeeper edits.
+From [IMPLEMENTATION_GUIDE.md](../IMPLEMENTATION_GUIDE.md): NGAME **never changes** QuickBooks in the default deployment; it **reads** the same cloud data the bookkeeper edits.
 
 ---
 
@@ -122,7 +122,7 @@ They should **not** need [developer.intuit.com](https://developer.intuit.com) fo
 
 - **OAuth** connects NGAME to a company **once** on the surveillance machine. Only **Master Administrator** or **Company Administrator** can authorize an app connection.
 - **Lower roles** (e.g. Standard) may still **enter transactions** in the QBO UI but cannot complete app OAuth. That is expected; students stay in the UI only.
-- Tokens and `realm_id` live in `quickbooks_config.json` on the surveillance PC only ([INSTALL.md](../INSTALL.md) § Credentials).
+- Tokens and `realm_id` live in `quickbooks_config.json` on the surveillance PC only ([IMPLEMENTATION_GUIDE.md](../IMPLEMENTATION_GUIDE.md) § Credentials).
 
 ---
 
@@ -194,7 +194,7 @@ For dry runs without live bookkeepers, the repo includes **anomaly injection** (
 |----------|------|
 | This handout (Markdown) | `Training, Marketing, and Documentation/NGAME_Lab_QBO_Sandbox_Access.md` |
 | Printable (HTML) | `Training, Marketing, and Documentation/NGAME_Lab_QBO_Sandbox_Access.html` |
-| NGAME install (technical contact) | `INSTALL.md` |
+| NGAME implementation (technical contact) | `IMPLEMENTATION_GUIDE.md` |
 | FRP operations (dashboard + Audit Log) | `FRP_OPERATIONS_GUIDE.md` / `.html` |
 
 ---

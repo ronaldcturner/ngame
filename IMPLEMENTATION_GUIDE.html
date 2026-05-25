@@ -1,0 +1,1863 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+<title>IMPLEMENTATION_GUIDE.md</title>
+<style type='text/css'>:root {
+  /* Base Light */
+  --textPrimary: #24292E;
+  --background: #ffffff;
+  --body-border-color: #dfdfdf;
+  --link: #0366d6;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #f7f7f9;
+  --hr-background: #e3e4e8;
+  --thead-background: #f7f7f9;
+  --thead-border: #e3e4e8;
+  --tr-border: #bfc1c9; /* unused variable */
+  --tr-alt-background: #f7f7f9;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #d6d7dc;
+  --blockquote-color: #6a6d7c;
+  --blockquote-border: #e3e4e8;
+  --heading-color: #17181a;
+  --header-bottom-border: #e3e4e8;
+  --h6-color: #6a6d7c;
+  --frame-border: #e3e4e8;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58; /* unused variable */
+  --email-toggle-background: #e3e4e8; /* unused variable */
+  --email-quoted-color: #6a6d7c; /* unused variable */
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+  
+  /* Highlight Light */
+  --hl_Background: #F6F8FA ;
+  --hl_Number: #005cc5 ;
+  --hl_Escape: #032f62 ;
+  --hl_String: #032f62 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #6a737d ;
+  --hl_Line_Comment: #6a737d ;
+  --hl_Pre_Processor: #d73a49 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #032f62 ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #d73a49 ; /* import | func */
+  --hl_Keyword-2: #d73a49 ; /* int | str */
+  --hl_Keyword-3: #24292e ; /* ??? */
+  --hl_Keyword-4: #6f42c1 ; /* ??? */
+  --hl_Keyword-5: #d73a49 ; /* ??? */
+  --hl_Keyword-6: #d73a49 ; /* ??? */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Base Dark */
+  --textPrimary: #c9d1d9;
+  --background: #0d1117;
+  --body-border-color: #31363C;
+  --link: #58a6ff;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #2f3438;
+  --hr-background: #30363d;
+  --thead-background: #f7f7f9;
+  --thead-border: #3b434b;
+  --tr-border: #3b434b; /* unused variable */
+  --tr-alt-background: #161c23;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #050505;
+  --blockquote-color: #8b949e;
+  --blockquote-border: #3D434A;
+  --heading-color: #17181a;
+  --header-bottom-border: #21272c;
+  --h6-color: #6a6d7c;
+  --frame-border: #ff08d6;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58;
+  --email-toggle-background: #e3e4e8;
+  --email-quoted-color: #6a6d7c;
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+
+  /* Highlight Dark */
+  --hl_Background: #161b22 ;
+  --hl_Number: #79c0ff ;
+  --hl_Escape: #a5d6ff ;
+  --hl_String: #549ef1 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #8b949e ;
+  --hl_Line_Comment: #8b949e ;
+  --hl_Pre_Processor: #FF7B72 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #79c0ff ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #FF7B72 ; /* import | func */
+  --hl_Keyword-2: #FF7B72 ; /* int | str */
+  --hl_Keyword-3: #c9d1d9 ; /* ??? */
+  --hl_Keyword-4: #eea8ff ; /* ??? */
+  --hl_Keyword-5: #FF7B72 ; /* ??? */
+  --hl_Keyword-6: #FF7B72 ; /* ??? */
+  }
+}
+
+/*Syntax Highlight*/
+pre.hl	{ background-color: var(--hl_Background);}
+.hl.num { color: var(--hl_Number); font-weight: normal;}
+.hl.esc { color: var(--hl_Escape); font-weight: normal;}
+.hl.str { color: var(--hl_String); font-weight: normal;}
+.hl.pps { color: var(--hl_String_Pre_Processor); font-weight: normal;}
+.hl.com { color: var(--hl_Block_Comment); font-weight: normal;}
+.hl.slc { color: var(--hl_Line_Comment); font-weight: normal;}
+.hl.ppc { color: var(--hl_Pre_Processor); font-weight: normal;}
+.hl.lin { color: var(--hl_Line_Number); font-weight: normal;}
+.hl.opt { color: var(--hl_Operator); font-weight: normal;}
+.hl.ipl { color: var(--hl_Interpolation); font-weight: normal;}
+.hl.kwa { color: var(--hl_Keyword-1); font-weight: normal;}
+.hl.kwb { color: var(--hl_Keyword-2); font-weight: normal;}
+.hl.kwc { color: var(--hl_Keyword-3); font-weight: normal;}
+.hl.kwd { color: var(--hl_Keyword-4); font-weight: normal;}
+.hl.kwe { color: var(--hl_Keyword-5); font-weight: normal;}
+.hl.kwf { color: var(--hl_Keyword-6); font-weight: normal;}
+
+
+pre {
+  max-width: 902px;
+}
+* {
+  box-sizing: border-box;
+}
+
+input:disabled {
+  touch-action: none;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji, Segoe UI Emoji;
+}
+
+body {
+  margin: 0;
+  /* padding: 1em; */
+  color: var(--textPrimary);
+  background-color: var(--background);
+}
+
+/* If the window is bigger than 902 pixels, the border will be visible. */
+@media (min-width: 902px) {
+  article {
+    border-radius: 8px;
+    border-width: 1px;  
+    border-style: solid;
+    border-color: var(--body-border-color);
+  }
+}
+
+article {
+  margin: auto;
+  max-width: 902px;
+  font-size: inherit;
+  line-height: 1.5;
+  word-wrap: break-word;
+  padding: 32px;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  -webkit-tap-highlight-color: var(--link-highlight);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+details summary {
+  outline: 0;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+blockquote {
+  margin: 0;
+}
+
+table, table *, pre {
+  touch-action: pan-x;
+}
+
+.markdown-body ul.contains-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+pre, code, kbd {
+  font-size: 1em;
+  font-family: var(--code-font);
+}
+
+.issue-keyword {
+  border-bottom: 1px dotted var(--keyword-color);
+}
+
+.team-mention, .user-mention {
+  font-weight: 600;
+  color: var(--mention-color);
+  white-space: nowrap;
+}
+
+.email-hidden-toggle, .email-hidden-reply {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"] {
+    filter: invert(85%) brightness(1.5);
+  }
+}
+/* Fix checkboxes looking cut off when they render larger than the default size */
+input[type="checkbox"] {
+  transform: translate(0px);
+  width: 14px; height: 14px;
+}
+
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 0.18em 0.31em;
+  font-size: 0.7em;
+  line-height: 1.2em;
+  color: var(--kbd-color);
+  vertical-align: middle;
+  background-color: var(--kbd-background);
+  border: 1px solid var(--kbd-border);
+  border-radius: 0.25em;
+  box-shadow: inset 0 -1px 0 var(--kbd-border);
+  margin-right: 2px;
+}
+
+.markdown-body:after, .markdown-body:before {
+  display: table;
+  content: ""
+}
+
+.markdown-body:after {
+  clear: both;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .absent {
+  color: var(--red-600);
+}
+
+.markdown-body .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body blockquote, .markdown-body details, .markdown-body dl, .markdown-body ol, .markdown-body p, .markdown-body pre, .markdown-body table, .markdown-body ul {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body table table {
+    margin-bottom: 0;
+}
+
+.markdown-body hr {
+  height: .25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: var(--hr-background);
+  border: 0;
+}
+
+.markdown-body blockquote {
+  padding-left: 1em;
+  color: var(--blockquote-color);
+  border-left: .25em solid var(--blockquote-border);
+}
+
+.markdown-body blockquote > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body h1 .octicon-link, .markdown-body h2 .octicon-link, .markdown-body h3 .octicon-link, .markdown-body h4 .octicon-link, .markdown-body h5 .octicon-link, .markdown-body h6 .octicon-link {
+  color: var(--heading-color);
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor, .markdown-body h2:hover .anchor, .markdown-body h3:hover .anchor, .markdown-body h4:hover .anchor, .markdown-body h5:hover .anchor, .markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link, .markdown-body h2:hover .anchor .octicon-link, .markdown-body h3:hover .anchor .octicon-link, .markdown-body h4:hover .anchor .octicon-link, .markdown-body h5:hover .anchor .octicon-link, .markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 code, .markdown-body h1 tt, .markdown-body h2 code, .markdown-body h2 tt, .markdown-body h3 code, .markdown-body h3 tt, .markdown-body h4 code, .markdown-body h4 tt, .markdown-body h5 code, .markdown-body h5 tt, .markdown-body h6 code, .markdown-body h6 tt {
+  font-size: inherit;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+}
+
+.markdown-body h1, .markdown-body h2 {
+  padding-bottom: .3em;
+  border-bottom: 1px solid var(--header-bottom-border);
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1em;
+}
+
+.markdown-body h5 {
+  font-size: .875em;
+}
+
+.markdown-body h6 {
+  font-size: .85em;
+  color: var(--h6-color);
+}
+
+.markdown-body ol, .markdown-body ul {
+  padding-left: 1.5em;
+}
+
+.markdown-body ol.no-list, .markdown-body ul.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.markdown-body ol ol, .markdown-body ol ul, .markdown-body ul ol, .markdown-body ul ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li {
+  word-wrap: break-all;
+}
+
+.markdown-body li > p {
+  margin-top: 16px;
+}
+
+.markdown-body li + li {
+  margin-top: .25em;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.markdown-body table th {
+  font-weight: 600;
+}
+
+.markdown-body table td, .markdown-body table th {
+  padding: 6px 13px;
+  border: 1px solid var(--thead-border);
+}
+
+.markdown-body table tr {
+  background-color: var(--background);
+  border-top: 1px solid var(--tr-border); /* unused variable */
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: var(--tr-alt-background);
+}
+
+.markdown-body table img {
+  background-color: initial;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  box-sizing: initial;
+  background-color: var(--background);
+}
+
+.markdown-body img[align=right] {
+  padding-left: 20px;
+}
+
+.markdown-body img[align=left] {
+  padding-right: 20px;
+}
+
+.markdown-body .emoji {
+  max-width: none;
+  vertical-align: text-top;
+  background-color: initial;
+}
+
+.markdown-body img.emoji {
+    max-width: 18px;
+}
+
+.markdown-body span.frame {
+  display: block;
+  overflow: hidden;
+}
+
+.markdown-body span.frame > span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--frame-border);
+}
+
+.markdown-body span.frame span img {
+  display: block;
+  float: left;
+}
+
+.markdown-body span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: var(--frame-color);
+}
+
+.markdown-body span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-center > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.markdown-body span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.markdown-body span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-right > span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+
+.markdown-body span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-left span {
+  margin: 13px 0 0;
+}
+
+.markdown-body span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-right > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body code, .markdown-body tt {
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: var(--code-background);
+  border-radius: 6px;
+}
+
+.markdown-body code br, .markdown-body tt br {
+  display: none;
+}
+
+.markdown-body del code {
+  text-decoration: inherit;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre > code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body .highlight pre, .markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: var(--hl_Background);
+  border-radius: 6px;
+}
+
+.markdown-body pre code, .markdown-body pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: initial;
+  border: 0;
+}
+
+.markdown-body .csv-data td, .markdown-body .csv-data th {
+  padding: 5px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-body .csv-data .blob-num {
+  padding: 10px 8px 9px;
+  text-align: right;
+  background: var(--background);
+  border: 0;
+}
+
+.markdown-body .csv-data tr {
+  border-top: 0;
+}
+
+.markdown-body .csv-data th {
+  font-weight: 600;
+  background: var(--thead-background);
+  border-top: 0;
+}
+
+.markdown-body mark {
+    padding: .2em;
+    background-color: #fcf1b5;
+}
+
+@media (prefers-color-scheme: dark) {
+    .markdown-body mark {
+        padding: .2em;
+        background-color: #fcf8e3;
+    }
+}
+
+/* Mermaid diagrams */
+.mermaid {
+    text-align: center;
+    margin: 16px 0;
+    background-color: transparent;
+}
+
+.mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    .mermaid {
+        background-color: transparent;
+    }
+}
+
+</style>
+
+<script type="text/javascript">
+MathJax = {
+  options: {
+    enableMenu: false,
+  },
+  tex: {
+    // packages: ['base'],        // extensions to use
+    inlineMath: [              // start/end delimiter pairs for in-line math
+      ['$', '$']
+      // , ['\(', '\)']
+    ],
+    displayMath: [             // start/end delimiter pairs for display math
+      ['$$', '$$']
+      //, ['\[', '\]']
+    ],
+    processEscapes: true,       // use \$ to produce a literal dollar sign
+    processEnvironments: false
+  }
+};
+</script>
+</head>
+<body>
+<article class='markdown-body'>
+<h1 id="ngame-implementation-guide">NGAME — Implementation Guide</h1>
+<p><strong>Audience:</strong> Systems administrator or <strong>technical consultant</strong> (NGAME implementation lead) — comfortable with Python, Terminal or PowerShell, and secure handling of API credentials.</p>
+<p><strong>Not for:</strong> The <strong>Financially Responsible Person (FRP)</strong>. The FRP uses only the web dashboard. Give them <strong><a href="FRP_OPERATIONS_GUIDE.html">FRP_OPERATIONS_GUIDE.html</a></strong> (print/PDF) or <strong><a href="FRP_OPERATIONS_GUIDE.md">FRP_OPERATIONS_GUIDE.md</a></strong> — not this file.</p>
+<hr />
+<h2 id="documentation-map">Documentation map</h2>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Who reads it</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>This file (<code>IMPLEMENTATION_GUIDE.md</code>)</strong></td>
+<td>Technical consultant</td>
+<td>Clone, Python env, credentials, Ollama, dashboard service, verification, FRP handoff</td>
+</tr>
+<tr>
+<td><strong><a href="FRP_OPERATIONS_GUIDE.md">FRP_OPERATIONS_GUIDE.md</a></strong> / <strong><a href="FRP_OPERATIONS_GUIDE.html">.html</a></strong></td>
+<td>FRP</td>
+<td>Bookmark, daily training/fraud checks, warnings, QuickBooks Audit Log</td>
+</tr>
+<tr>
+<td><strong><a href="README.md">README.md</a></strong></td>
+<td>Developers / consultants</td>
+<td>Architecture, pipeline modules, CLI reference</td>
+</tr>
+<tr>
+<td><strong><a href="ngame_ui/README.md">ngame_ui/README.md</a></strong></td>
+<td>Consultants</td>
+<td>Dashboard URLs, API endpoints, UI troubleshooting</td>
+</tr>
+</tbody>
+</table>
+<p>Historical guides (CLI-era FRP workflow) are in <strong><a href="docs/archive/">docs/archive/</a></strong> — not for new deployments.</p>
+<h3 id="surveillance-computer-architecture">Surveillance computer architecture</h3>
+<p>NGAME runs on <strong>one machine only</strong>: the <strong>surveillance computer</strong>. The bookkeeper’s PC, other staff machines, and the QBO user’s browser workstation require <strong>no NGAME software</strong>.</p>
+<p>QuickBooks Online is cloud-hosted. The bookkeeper uses a browser; NGAME uses Intuit’s <strong>read-only</strong> API with credentials stored on the surveillance PC. Both paths read the same company data; they are independent.</p>
+<pre class='hl'><code class="language-">Bookkeeper&#39;s computer
+  └─ browser → QuickBooks Online (cloud)
+                      ↑
+Surveillance computer
+  └─ NGAME → Intuit API (read-only) → same company data
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NGAME software, Python, Ollama</td>
+<td>Surveillance computer</td>
+</tr>
+<tr>
+<td><code>quickbooks_config.json</code> / <code>wave_config.json</code></td>
+<td>Surveillance computer</td>
+</tr>
+<tr>
+<td>NGAME web dashboard (<code>localhost:5001</code>)</td>
+<td>Surveillance computer</td>
+</tr>
+<tr>
+<td>Bookkeeper / other org PCs</td>
+<td><strong>No NGAME install</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The bookkeeper does not need to change how they use QuickBooks. NGAME does not write to QBO unless you configure otherwise; the default deployment is read-only surveillance.</p>
+<h3 id="who-does-what">Who does what</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Technical consultant</th>
+<th>FRP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Install Python, Git, NGAME, Ollama</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Configure Wave / QuickBooks credentials</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Start dashboard service and auto-start at login</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Open Terminal or run <code>git</code> / <code>pip</code> daily</td>
+<td>Yes (setup only)</td>
+<td><strong>Never</strong></td>
+</tr>
+<tr>
+<td>Run training or fraud checks</td>
+<td>Optional (verification)</td>
+<td>Yes — <strong>dashboard only</strong></td>
+</tr>
+<tr>
+<td>Review QuickBooks Audit Log</td>
+<td>Advises on protocol</td>
+<td>Yes — in QBO browser</td>
+</tr>
+<tr>
+<td>Respond to MEDIUM/HIGH warnings</td>
+<td>May assist designated contact</td>
+<td>Yes — per FRP guide</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="consultant-checklist-end-to-end">Consultant checklist (end to end)</h2>
+<p>Use this order. Check off each item before handoff.</p>
+<ol>
+<li><input type="checkbox" disabled="" /> Install prerequisites (Python 3.10+, Git, accounting API access)</li>
+<li><input type="checkbox" disabled="" /> Clone repo and create <code>.venv</code> at <strong>repository root</strong></li>
+<li><input type="checkbox" disabled="" /> <code>pip install -r requirements.txt</code></li>
+<li><input type="checkbox" disabled="" /> Copy and fill <code>wave_config.json</code> and/or <code>quickbooks_config.json</code> (or <code>.env</code>)</li>
+<li><input type="checkbox" disabled="" /> Complete <a href="#6--ollama-before-phase-ii--fraud-analysis">§ 6 — Ollama</a> (required before Phase II / Day 31)</li>
+<li><input type="checkbox" disabled="" /> Smoke-test CLI: <code>python3 run_training_flow.py</code> from repo root (optional if dashboard works)</li>
+<li><input type="checkbox" disabled="" /> Start dashboard; confirm <strong><a href="http://localhost:5001/dashboard">http://localhost:5001/dashboard</a></strong> loads</li>
+<li><input type="checkbox" disabled="" /> Configure LaunchAgent (macOS) or Task Scheduler (Windows) so dashboard survives reboot</li>
+<li><input type="checkbox" disabled="" /> Run <strong>one</strong> training day from dashboard; confirm <code>NGAME_Training_Matrix.xlsx</code> appears</li>
+<li><input type="checkbox" disabled="" /> Print/PDF FRP guide; fill contact blanks; create <strong>NGAME Dashboard</strong> bookmark on surveillance PC</li>
+<li><input type="checkbox" disabled="" /> Supervise FRP through one <strong>Run Training Day</strong> (or primary green button in Phase I)</li>
+<li><input type="checkbox" disabled="" /> Hand off — FRP gets guide + bookmark only (no Terminal instructions for daily use)</li>
+</ol>
+<hr />
+<h2 id="windows-surveillance-pc-trial-install-start-here">Windows surveillance PC — trial install (start here)</h2>
+<p><strong>This file is the single implementation guide.</strong> You do not need this chat, older root-level guides, or anything under <strong><a href="docs/archive/">docs/archive/</a></strong> for a new Windows trial.</p>
+<h3 id="before-you-install-on-the-surveillance-pc">Before you install on the surveillance PC</h3>
+<p>On the machine where you develop NGAME (for example your Mac):</p>
+<ol>
+<li>Commit any doc or code changes.</li>
+<li>Run <code>git push origin main</code> so <strong>GitHub</strong> has the latest version.</li>
+</ol>
+<p>The Windows PC <strong>downloads</strong> the project with <code>git clone</code> (below). Pushing updates GitHub; the surveillance machine <strong>pulls</strong> when you need a newer copy later.</p>
+<h3 id="on-the-windows-pc-fresh-machine-no-prior-ngame">On the Windows PC (fresh machine, no prior NGAME)</h3>
+<p>Use <strong>PowerShell</strong>. Follow the sections in this order:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>What to do</th>
+<th>Section below</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Python 3.10+, Git, stable internet</td>
+<td><a href="#prerequisites">Prerequisites</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Clone repo, create <code>.venv</code>, <code>pip install -r requirements.txt</code></td>
+<td><a href="#windows-installation">Windows installation</a> §§ 1–4</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>quickbooks_config.json</code> and/or <code>wave_config.json</code></td>
+<td><a href="#credentials-and-configuration">Credentials and configuration</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Complete Ollama setup (needed before Phase II / Day 31)</td>
+<td><a href="#windows-installation">Windows installation</a> § 6</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Optional smoke test: <code>python run_training_flow.py</code></td>
+<td><a href="#windows-installation">Windows installation</a> § 7</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Start dashboard; confirm <strong><a href="http://localhost:5001/dashboard">http://localhost:5001/dashboard</a></strong></td>
+<td><a href="#dashboard-service-required-for-frp">Dashboard service</a></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Task Scheduler auto-start at logon</td>
+<td><a href="#windows--auto-start-at-login">Windows — auto-start at login</a></td>
+</tr>
+<tr>
+<td>8</td>
+<td>One <strong>Run Training Day</strong> from dashboard; confirm <code>NGAME_Training_Matrix.xlsx</code></td>
+<td><a href="#verify-installation">Verify installation</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Print FRP guide, bookmark, supervised handoff</td>
+<td><a href="#hand-off-to-the-frp">Hand off to the FRP</a></td>
+</tr>
+</tbody>
+</table>
+<p>Also use the <a href="#consultant-checklist-end-to-end">Consultant checklist</a> above and check off each box before you leave the site.</p>
+<p><strong>Clone (default path on Windows):</strong></p>
+<pre class='hl'><code class="language-powershell">cd &quot;$env:USERPROFILE\Documents&quot;
+git clone https://github.com/ronaldcturner/ngame.git
+cd ngame
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+</code></pre>
+<p>If PowerShell blocks activation, see <a href="#troubleshooting">Troubleshooting</a>. Substitute your actual <strong>INSTALL_PATH</strong> everywhere the <a href="#windows--auto-start-at-login">Windows auto-start</a> batch file shows <code>C:\Users\you\Documents\ngame</code>.</p>
+<h3 id="what-the-frp-uses-not-this-file">What the FRP uses (not this file)</h3>
+<table>
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>File / URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Daily operations (print/PDF)</td>
+<td><strong><a href="FRP_OPERATIONS_GUIDE.html">FRP_OPERATIONS_GUIDE.html</a></strong></td>
+</tr>
+<tr>
+<td>Browser bookmark</td>
+<td><code>http://localhost:5001/dashboard</code></td>
+</tr>
+</tbody>
+</table>
+<p>The FRP does <strong>not</strong> use Terminal, <code>git</code>, or <code>pip</code> for daily work.</p>
+<h3 id="updating-ngame-on-the-surveillance-pc-later">Updating NGAME on the surveillance PC later</h3>
+<pre class='hl'><code class="language-powershell">cd C:\path\to\ngame
+git pull origin main
+.venv\Scripts\Activate.ps1
+</code></pre>
+<p>Restart the dashboard (sign out/in if Task Scheduler starts it, or run <code>app-simple.py</code> once to test). Do <strong>not</strong> follow archived CLI daily workflows in <strong>docs/archive/</strong>.</p>
+<h3 id="related-docs-installer-only">Related docs (installer only)</h3>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Document</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dashboard URLs / UI issues</td>
+<td><a href="ngame_ui/README.md">ngame_ui/README.md</a>, <a href="ngame_ui/TROUBLESHOOTING.md">ngame_ui/TROUBLESHOOTING.md</a></td>
+</tr>
+<tr>
+<td>Wave API setup</td>
+<td><a href="NGAME_WAVE_GRAPHQL_README.md">NGAME_WAVE_GRAPHQL_README.md</a></td>
+</tr>
+<tr>
+<td>Architecture / developers</td>
+<td><a href="README.md">README.md</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="where-to-run-commands">Where to run commands</h2>
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Use for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Repository root</strong> (<code>ngame/</code> or <code>NGAME-POC/</code>)</td>
+<td><code>git</code>, <code>pip install</code>, <code>run_training_flow.py</code>, config files, credentials</td>
+</tr>
+<tr>
+<td><strong><code>ngame_ui/</code></strong> subfolder</td>
+<td><code>python3 app-simple.py</code> (dashboard server only)</td>
+</tr>
+</tbody>
+</table>
+<p>After <code>cd</code> to the repo root, activate the virtual environment <strong>once per Terminal session</strong>:</p>
+<pre class='hl'><code class="language-bash"><span class="hl slc"># macOS / Linux</span>
+<span class="hl kwb">source</span> .venv<span class="hl opt">/</span>bin<span class="hl opt">/</span>activate
+
+<span class="hl slc"># Windows PowerShell</span>
+.venv\Scripts\Activate.ps1
+</code></pre>
+<p>Your prompt shows <code>(.venv)</code> when active. Dashboard logs (<code>GET /api/...</code>) in Terminal are normal — they mean the browser is refreshing, not an error.</p>
+<hr />
+<h2 id="contents">Contents</h2>
+<ul>
+<li><a href="#windows-surveillance-pc--trial-install-start-here">Windows surveillance PC — trial install (start here)</a></li>
+<li><a href="#surveillance-computer-architecture">Surveillance computer architecture</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#macos-installation">macOS installation</a></li>
+<li><a href="#windows-installation">Windows installation</a></li>
+<li><a href="#credentials-and-configuration">Credentials and configuration</a></li>
+<li><a href="#dashboard-service-required-for-frp">Dashboard service (required for FRP)</a></li>
+<li><a href="#verify-installation">Verify installation</a></li>
+<li><a href="#hand-off-to-the-frp">Hand off to the FRP</a></li>
+<li><a href="#optional-cli-and-scheduled-runs">Optional: CLI and scheduled runs</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+<hr />
+<h2 id="prerequisites">Prerequisites</h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python 3.10 or later</td>
+<td><code>python3 --version</code> (Mac) or <code>python --version</code> (Windows)</td>
+</tr>
+<tr>
+<td>Git</td>
+<td>Clone and updates from GitHub</td>
+</tr>
+<tr>
+<td>QuickBooks Online <strong>or</strong> Wave</td>
+<td>Credentials configured after install (see below)</td>
+</tr>
+<tr>
+<td>Ollama</td>
+<td><strong>Required for Phase II (fraud analysis).</strong> Not required for the 30-day training phase. Without Ollama, fraud runs produce little or no LLM reasoning in management warnings.</td>
+</tr>
+<tr>
+<td>Surveillance computer</td>
+<td>Dedicated machine the FRP can reach daily; stable internet</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="macos-installation">macOS installation</h2>
+<p>Tested on macOS 12 Monterey and later. All commands assume <strong>repository root</strong> unless noted.</p>
+<h3 id="1-python-310">1 — Python 3.10+</h3>
+<p><a href="https://python.org/downloads">python.org/downloads</a> or:</p>
+<pre class='hl'><code class="language-bash">brew <span class="hl kwc">install</span> python&#64;<span class="hl num">3.13</span>
+python3 <span class="hl kwb">--version</span>
+</code></pre>
+<h3 id="2-git">2 — Git</h3>
+<pre class='hl'><code class="language-bash">xcode<span class="hl kwb">-select --install</span>   <span class="hl slc"># if Git not already present</span>
+git <span class="hl kwb">--version</span>
+</code></pre>
+<h3 id="3-clone-the-repository">3 — Clone the repository</h3>
+<pre class='hl'><code class="language-bash">git clone https<span class="hl opt">://</span>github.com<span class="hl opt">/</span>ronaldcturner<span class="hl opt">/</span>ngame.git
+<span class="hl kwb">cd</span> ngame
+</code></pre>
+<p>Use your fork URL if different.</p>
+<h3 id="4-virtual-environment">4 — Virtual environment</h3>
+<pre class='hl'><code class="language-bash">python3 <span class="hl kwb">-m</span> venv .venv
+<span class="hl kwb">source</span> .venv<span class="hl opt">/</span>bin<span class="hl opt">/</span>activate
+pip <span class="hl kwc">install</span> <span class="hl kwb">--upgrade</span> pip
+pip <span class="hl kwc">install</span> <span class="hl kwb">-r</span> requirements.txt
+</code></pre>
+<p>Allow 2–5 minutes on first install.</p>
+<h3 id="5-credentials">5 — Credentials</h3>
+<p>See <a href="#credentials-and-configuration">Credentials and configuration</a>.</p>
+<h3 id="6-ollama-before-phase-ii-fraud-analysis">6 — Ollama (before Phase II / fraud analysis)</h3>
+<p>Ollama runs <strong>locally</strong> on the surveillance computer. It powers the <strong>LLM step</strong> in fraud analysis (mapping anomalies to the misappropriation taxonomy in <code>Asset_Misappropriation.ttl</code>). Data stays on the machine — nothing is sent to a cloud LLM.</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Ollama required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Training</strong> (Days 1–30, <code>run_training_flow.py</code> or dashboard <strong>Run Training Day</strong>)</td>
+<td><strong>No</strong> — you can install Ollama after training works</td>
+</tr>
+<tr>
+<td><strong>Fraud / surveillance</strong> (Day 31+, <code>run_fraud_analysis.py</code> or dashboard <strong>Run Churn Analysis</strong>)</td>
+<td><strong>Yes</strong> — without Ollama, churn/z-scores may still run but management warnings lack LLM narrative</td>
+</tr>
+</tbody>
+</table>
+<p><strong>NGAME defaults</strong> (in <code>ngame_llm_analysis_agent.py</code>): service <code>http://localhost:11434</code>, model name <strong><code>llama3.1:8b</code></strong>. The name you <code>ollama pull</code> must <strong>exactly match</strong> the <code>self.model_name = &quot;...&quot;</code> line in that file.</p>
+<h4 id="61-install-the-ollama-application">6.1 — Install the Ollama application</h4>
+<ol>
+<li>In a browser, open <a href="https://ollama.com/download">ollama.com/download</a>.</li>
+<li>Download <strong>Ollama for macOS</strong> and install (drag to Applications is typical).</li>
+<li>Launch <strong>Ollama</strong> once. Confirm the <strong>menu bar icon</strong> (llama) appears — the app runs in the background.</li>
+<li>You do <strong>not</strong> need a separate <code>ollama serve</code> command when the macOS app is running.</li>
+</ol>
+<h4 id="62-verify-the-ollama-cli">6.2 — Verify the Ollama CLI</h4>
+<p>Open <strong>Terminal</strong> (venv not required for these commands):</p>
+<pre class='hl'><code class="language-bash">ollama <span class="hl kwb">--version</span>
+ollama list
+</code></pre>
+<p><code>ollama list</code> may be empty until you pull a model in § 6.4.</p>
+<h4 id="63-choose-a-model-ram-and-disk">6.3 — Choose a model (RAM and disk)</h4>
+<p>Pick <strong>one</strong> model for this machine. Use <code>ollama list</code> on the Mac after pull to see the exact tag.</p>
+<table>
+<thead>
+<tr>
+<th>Model tag (<code>ollama pull …</code>)</th>
+<th>Approx. disk</th>
+<th>RAM guidance</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>llama3.1:8b</code></strong></td>
+<td>~4–5 GB</td>
+<td><strong>16 GB+</strong> system RAM recommended</td>
+<td>Matches NGAME code default</td>
+</tr>
+<tr>
+<td><strong><code>llama2:7b</code></strong></td>
+<td>~3.8 GB</td>
+<td><strong>8 GB+</strong> RAM; close other apps</td>
+<td>Good trial on smaller Macs</td>
+</tr>
+<tr>
+<td><strong><code>gemma2:2b</code></strong></td>
+<td>~1.6 GB</td>
+<td><strong>8 GB</strong> tight but often workable</td>
+<td>Lighter; shorter LLM answers</td>
+</tr>
+</tbody>
+</table>
+<p>If the Mac already has a custom model (e.g. <code>fraud-analyzer:latest</code> from <code>ollama list</code>), you may use it — set <code>model_name</code> to that <strong>exact</strong> tag in § 6.5.</p>
+<h4 id="64-download-the-model">6.4 — Download the model</h4>
+<p>Replace <code>&lt;model&gt;</code> with your choice (example uses <code>llama2:7b</code>):</p>
+<pre class='hl'><code class="language-bash">ollama pull llama2<span class="hl opt">:</span><span class="hl num">7</span>b
+</code></pre>
+<p>Wait until the download completes. Verify:</p>
+<pre class='hl'><code class="language-bash">ollama list
+</code></pre>
+<h4 id="65-align-ngame-with-the-model-name">6.5 — Align NGAME with the model name</h4>
+<ol>
+<li>Open the repo root in Cursor or an editor.</li>
+<li>Edit <strong><code>ngame_llm_analysis_agent.py</code></strong> near the top of <code>NGameLLMAnalysisAgent.__init__</code>:</li>
+</ol>
+<pre class='hl'><code class="language-python">self<span class="hl opt">.</span>model_name <span class="hl opt">=</span> <span class="hl sng">&quot;llama2:7b&quot;</span>   <span class="hl slc"># must match `ollama list` exactly</span>
+</code></pre>
+<ol start="3">
+<li>Save the file. On the surveillance PC, this same line must match <strong>that</strong> machine’s pulled model (copy the file or repeat this edit after <code>git pull</code>).</li>
+</ol>
+<h4 id="66-smoke-test-ollama-not-ngame-yet">6.6 — Smoke-test Ollama (not NGAME yet)</h4>
+<pre class='hl'><code class="language-bash">ollama run llama2<span class="hl opt">:</span><span class="hl num">7</span>b <span class="hl sng">&quot;Reply with the single word OK.&quot;</span>
+</code></pre>
+<p>Exit the chat with <code>/bye</code> or <strong>Ctrl+D</strong>. If this fails, fix Ollama before running fraud analysis.</p>
+<p>Optional API check:</p>
+<pre class='hl'><code class="language-bash">curl <span class="hl kwb">-s</span> http<span class="hl opt">://</span>localhost<span class="hl opt">:</span><span class="hl num">11434</span><span class="hl opt">/</span>api<span class="hl opt">/</span>tags
+</code></pre>
+<h4 id="67-before-the-first-fraud-run-consultant-only">6.7 — Before the first fraud run (consultant only)</h4>
+<table>
+<thead>
+<tr>
+<th>Prerequisite</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>30 training days</strong> in <code>NGAME_Training_Matrix.xlsx</code></td>
+<td>Fraud launcher refuses fewer than 30 day columns — complete training or copy a 30-day matrix from another machine</td>
+</tr>
+<tr>
+<td><strong><code>Asset_Misappropriation.ttl</code></strong> in repo root</td>
+<td>Required for LLM taxonomy</td>
+</tr>
+<tr>
+<td><strong>Ollama running</strong></td>
+<td>Menu bar icon visible</td>
+</tr>
+<tr>
+<td><strong>Model pulled and <code>model_name</code> aligned</strong></td>
+<td>§ 6.4–6.5</td>
+</tr>
+</tbody>
+</table>
+<p>Test fraud analysis (repo root, venv active) when ready:</p>
+<pre class='hl'><code class="language-bash">python3 run_fraud_analysis.py
+</code></pre>
+<p>Answer <strong><code>y</code></strong> when prompted. Expect several minutes (QBO extract → CPI → churn → Ollama → warning JSON).</p>
+<p><strong>FRP:</strong> Does not install Ollama or edit <code>model_name</code>. The FRP only presses dashboard buttons; the technical contact completes this section.</p>
+<h3 id="7-quick-smoke-test-optional">7 — Quick smoke test (optional)</h3>
+<pre class='hl'><code class="language-bash">python3 run_training_flow.py
+</code></pre>
+<p>No errors → core pipeline is reachable. Full verification is in <a href="#verify-installation">Verify installation</a> after the dashboard is running.</p>
+<hr />
+<h2 id="windows-installation">Windows installation</h2>
+<p>Tested on Windows 10 (1909+) and Windows 11. Use <strong>PowerShell</strong> unless you prefer Git Bash. Even if you are familiar with “raw” Terminal CLI editing, use <strong>PowerShell</strong> or Git Bash instead. The script below will not work with “raw” CLI.</p>
+<h3 id="1-python-310">1 — Python 3.10+</h3>
+<p><a href="https://python.org/downloads">python.org/downloads</a> — check <strong>Add Python to PATH</strong> during install.</p>
+<pre class='hl'><code class="language-powershell">python --version
+</code></pre>
+<h3 id="2-git">2 — Git</h3>
+<p>In your browser (not PowerShell), open
+<a href="https://git-scm.com/download/win">git-scm.com/download/win</a> — This takes you directly to the Git Install page. The defaults are fine.</p>
+<pre class='hl'><code class="language-powershell">git --version
+</code></pre>
+<h3 id="3-clone">3 — Clone</h3>
+<p>Run these in <strong>PowerShell</strong> (not Command Prompt). Quote the path — without quotes, <code>\D</code> in <code>\Documents</code> is parsed as an escape and <code>cd</code> fails.</p>
+<pre class='hl'><code class="language-powershell">cd &quot;$env:USERPROFILE\Documents&quot;
+git clone https://github.com/ronaldcturner/ngame.git
+cd ngame
+</code></pre>
+<h3 id="4-virtual-environment">4 — Virtual environment</h3>
+<pre class='hl'><code class="language-powershell">python -m venv .venv
+.venv\Scripts\Activate.ps1
+</code></pre>
+<p>If activation is blocked:</p>
+<pre class='hl'><code class="language-powershell">Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+.venv\Scripts\Activate.ps1
+</code></pre>
+<p>With the venv active (<code>(.venv)</code> in the prompt), use <strong><code>python -m pip</code></strong> — not bare <code>pip</code>. On many Windows installs, <code>pip install</code> alone fails with <em>not a valid application for this OS platform</em>; <code>python -m pip</code> uses the correct interpreter.</p>
+<pre class='hl'><code class="language-powershell">python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+</code></pre>
+<p>If install fails with <strong>compiler</strong> errors, install <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">Microsoft C++ Build Tools</a> and retry.</p>
+<h3 id="5-credentials">5 — Credentials</h3>
+<p>See <a href="#credentials-and-configuration">Credentials and configuration</a>.</p>
+<h3 id="6-ollama-before-phase-ii-fraud-analysis">6 — Ollama (before Phase II / fraud analysis)</h3>
+<p>Ollama runs <strong>locally</strong> on the surveillance computer. It powers the <strong>LLM step</strong> in fraud analysis (mapping anomalies to the misappropriation taxonomy in <code>Asset_Misappropriation.ttl</code>). Data stays on the machine — nothing is sent to a cloud LLM.</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Ollama required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Training</strong> (Days 1–30, <code>run_training_flow.py</code> or dashboard <strong>Run Training Day</strong>)</td>
+<td><strong>No</strong> — install Ollama after training works</td>
+</tr>
+<tr>
+<td><strong>Fraud / surveillance</strong> (Day 31+, <code>run_fraud_analysis.py</code> or dashboard <strong>Run Churn Analysis</strong>)</td>
+<td><strong>Yes</strong> — without Ollama, churn/z-scores may still run but management warnings lack LLM narrative</td>
+</tr>
+</tbody>
+</table>
+<p><strong>NGAME defaults</strong> (in <code>ngame_llm_analysis_agent.py</code>): service <code>http://localhost:11434</code>, model name <strong><code>llama3.1:8b</code></strong>. The name you <code>ollama pull</code> must <strong>exactly match</strong> the <code>self.model_name = &quot;...&quot;</code> line in that file.</p>
+<h4 id="61-install-the-ollama-application">6.1 — Install the Ollama application</h4>
+<ol>
+<li>In a browser on the surveillance PC, open <a href="https://ollama.com/download">ollama.com/download</a>.</li>
+<li>Download <strong>Ollama for Windows</strong> and run the installer (defaults are fine).</li>
+<li>After install, Ollama usually runs as a <strong>background service</strong> with a <strong>tray icon</strong> (system tray). Leave it running.</li>
+<li>Do <strong>not</strong> run <code>ollama pull</code> in the browser — only in <strong>PowerShell</strong> (below).</li>
+</ol>
+<h4 id="62-verify-the-ollama-cli">6.2 — Verify the Ollama CLI</h4>
+<p>Open <strong>PowerShell</strong> (NGAME venv <strong>not</strong> required for these commands):</p>
+<pre class='hl'><code class="language-powershell">ollama --version
+ollama list
+</code></pre>
+<p><code>ollama list</code> may be empty until you pull a model in § 6.4.</p>
+<h4 id="63-choose-a-model-ram-and-disk">6.3 — Choose a model (RAM and disk)</h4>
+<p>Pick <strong>one</strong> model for this PC. Limited-RAM machines should <strong>not</strong> default to <code>llama3.1:8b</code> unless you have roughly <strong>16 GB+</strong> RAM.</p>
+<table>
+<thead>
+<tr>
+<th>Model tag (<code>ollama pull …</code>)</th>
+<th>Approx. disk</th>
+<th>RAM guidance</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>llama3.1:8b</code></strong></td>
+<td>~4–5 GB</td>
+<td><strong>16 GB+</strong> system RAM recommended</td>
+<td>Matches NGAME code default</td>
+</tr>
+<tr>
+<td><strong><code>llama2:7b</code></strong></td>
+<td>~3.8 GB</td>
+<td><strong>8 GB+</strong> RAM; close other apps</td>
+<td><strong>Recommended</strong> starting point for constrained PCs</td>
+</tr>
+<tr>
+<td><strong><code>gemma2:2b</code></strong></td>
+<td>~1.6 GB</td>
+<td><strong>8 GB</strong> tight but often workable</td>
+<td>Lighter; adequate for taxonomy-style prompts</td>
+</tr>
+</tbody>
+</table>
+<h4 id="64-download-the-model">6.4 — Download the model</h4>
+<p>Replace <code>&lt;model&gt;</code> with your choice (example uses <code>llama2:7b</code>):</p>
+<pre class='hl'><code class="language-powershell">ollama pull llama2:7b
+</code></pre>
+<p>Wait until the download completes (may take several minutes). Verify:</p>
+<pre class='hl'><code class="language-powershell">ollama list
+</code></pre>
+<p>You should see the model name in the <strong>NAME</strong> column. Copy that string exactly for § 6.5.</p>
+<h4 id="65-align-ngame-with-the-model-name">6.5 — Align NGAME with the model name</h4>
+<ol>
+<li>Open the repo folder in Cursor or Notepad (e.g. <code>Documents\ngame</code>).</li>
+<li>Edit <strong><code>ngame_llm_analysis_agent.py</code></strong> in the <strong>repository root</strong> — find <code>NGameLLMAnalysisAgent.__init__</code>:</li>
+</ol>
+<pre class='hl'><code class="language-python">self<span class="hl opt">.</span>model_name <span class="hl opt">=</span> <span class="hl sng">&quot;llama2:7b&quot;</span>   <span class="hl slc"># must match `ollama list` exactly</span>
+</code></pre>
+<ol start="3">
+<li>Save the file. If you <code>git pull</code> later from GitHub, re-check this line — the repo default may differ from what you pulled on this PC.</li>
+</ol>
+<p><strong>Do not</strong> change the model name only in this guide; NGAME reads <strong><code>ngame_llm_analysis_agent.py</code></strong>.</p>
+<h4 id="66-smoke-test-ollama-not-ngame-yet">6.6 — Smoke-test Ollama (not NGAME yet)</h4>
+<pre class='hl'><code class="language-powershell">ollama run llama2:7b &quot;Reply with the single word OK.&quot;
+</code></pre>
+<p>Exit with <code>/bye</code> or <strong>Ctrl+D</strong>. If this hangs or errors, fix Ollama before fraud analysis (RAM, tray icon, re-pull model).</p>
+<p>Optional check that the API responds:</p>
+<pre class='hl'><code class="language-powershell">Invoke-WebRequest -Uri http://localhost:11434/api/tags -UseBasicParsing | Select-Object -ExpandProperty Content
+</code></pre>
+<h4 id="67-before-the-first-fraud-run-consultant-only">6.7 — Before the first fraud run (consultant only)</h4>
+<table>
+<thead>
+<tr>
+<th>Prerequisite</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>30 training days</strong> in <code>NGAME_Training_Matrix.xlsx</code></td>
+<td><code>run_fraud_analysis.py</code> blocks if fewer than 30 day columns — add training days with <strong><code>y</code></strong>, or copy a 30-day matrix from the Mac</td>
+</tr>
+<tr>
+<td><strong><code>Asset_Misappropriation.ttl</code></strong> in repo root</td>
+<td>Ships with the repo; confirm present</td>
+</tr>
+<tr>
+<td><strong>Ollama service running</strong></td>
+<td>Tray icon visible</td>
+</tr>
+<tr>
+<td><strong>Model pulled and <code>model_name</code> aligned</strong></td>
+<td>§ 6.4–6.5</td>
+</tr>
+</tbody>
+</table>
+<p>Test fraud analysis (repo root, <code>(.venv)</code> active) when ready:</p>
+<pre class='hl'><code class="language-powershell">python run_fraud_analysis.py
+</code></pre>
+<p>Answer <strong><code>y</code></strong> when prompted. Or use the dashboard with <strong><code>app-simple.py</code></strong> running → <strong>Run Churn Analysis</strong>.</p>
+<p>Outputs to confirm in repo root: <code>management_dashboard.json</code>, <code>NGAME_Fraud_Analysis_readable*.json</code>; refresh <strong><a href="http://localhost:5001/dashboard">http://localhost:5001/dashboard</a></strong>.</p>
+<p><strong>FRP:</strong> Does not install Ollama, run <code>ollama pull</code>, or edit <code>model_name</code>. The FRP uses dashboard buttons only.</p>
+<h3 id="7-quick-smoke-test-optional">7 — Quick smoke test (optional)</h3>
+<pre class='hl'><code class="language-powershell">python run_training_flow.py
+</code></pre>
+<hr />
+<h2 id="credentials-and-configuration">Credentials and configuration</h2>
+<p>Configure <strong>one</strong> accounting source (or both if you are testing).</p>
+<h3 id="wave-simplest">Wave (simplest)</h3>
+<pre class='hl'><code class="language-bash"><span class="hl slc"># macOS</span>
+<span class="hl kwc">cp</span> wave_config.example.json wave_config.json
+
+<span class="hl slc"># Windows</span>
+Copy<span class="hl kwb">-Item</span> wave_config.example.json wave_config.json
+</code></pre>
+<p>Edit <code>wave_config.json</code> — token and business ID from <a href="https://developer.waveapps.com">developer.waveapps.com</a>. Details: <strong><a href="NGAME_WAVE_GRAPHQL_README.md">NGAME_WAVE_GRAPHQL_README.md</a></strong>.</p>
+<h3 id="quickbooks-online">QuickBooks Online</h3>
+<pre class='hl'><code class="language-bash"><span class="hl kwc">cp</span> quickbooks_config.example.json quickbooks_config.json   <span class="hl slc"># macOS</span>
+Copy<span class="hl kwb">-Item</span> quickbooks_config.example.json quickbooks_config.json   <span class="hl slc"># Windows</span>
+</code></pre>
+<p>OAuth fields from <a href="https://developer.intuit.com">developer.intuit.com</a>.</p>
+<h3 id="environment-variables">Environment variables</h3>
+<p>Alternatively: copy <code>.env.example</code> to <code>.env</code> and set variables listed there.</p>
+<blockquote>
+<p><strong>Security:</strong> <code>wave_config.json</code>, <code>quickbooks_config.json</code>, and <code>.env</code> are in <code>.gitignore</code>. Keep them only on the surveillance machine.</p>
+</blockquote>
+<hr />
+<h2 id="dashboard-service-required-for-frp">Dashboard service (required for FRP)</h2>
+<p>The FRP never uses Terminal for daily work. They use a <strong>browser bookmark</strong> to the dashboard, which you install and keep running.</p>
+<p><strong>Your responsibilities:</strong></p>
+<ol>
+<li>Run <code>app-simple.py</code> and confirm <strong><a href="http://localhost:5001/dashboard">http://localhost:5001/dashboard</a></strong></li>
+<li>Auto-start at login (LaunchAgent / Task Scheduler)</li>
+<li>Create bookmark <strong>NGAME Dashboard</strong> on the FRP’s browser</li>
+<li>Retain <code>launch_dashboard.command</code> (repo root) as <strong>consultant fallback</strong> only — double-click on macOS if auto-start fails</li>
+</ol>
+<h3 id="start-manually-testing">Start manually (testing)</h3>
+<p>From <strong>repository root</strong>, venv active:</p>
+<pre class='hl'><code class="language-bash"><span class="hl kwb">cd</span> ngame_ui
+python3 app<span class="hl kwb">-simple</span>.py          <span class="hl slc"># macOS</span>
+python app<span class="hl kwb">-simple</span>.py           <span class="hl slc"># Windows</span>
+</code></pre>
+<p>Stop with <strong>Ctrl+C</strong> when testing. Production should use auto-start, not a Terminal window the FRP must manage.</p>
+<h3 id="macos-auto-start-at-login">macOS — auto-start at login</h3>
+<p><strong>Goal:</strong> After the FRP signs in to the surveillance Mac, the dashboard starts by itself — no Terminal window and no daily double-click.</p>
+<p><strong>What you are building:</strong> macOS keeps a per-user folder of <strong>LaunchAgents</strong> — small XML <strong>plist</strong> files that tell the system what to start at login. You create <strong>one file</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>File name</strong></td>
+<td><code>com.ngame.dashboard.plist</code></td>
+</tr>
+<tr>
+<td><strong>Full path</strong></td>
+<td><code>~/Library/LaunchAgents/com.ngame.dashboard.plist</code></td>
+</tr>
+<tr>
+<td><strong>Expanded example</strong></td>
+<td><code>/Users/you/Library/LaunchAgents/com.ngame.dashboard.plist</code></td>
+</tr>
+</tbody>
+</table>
+<p>The tilde (<code>~</code>) is shorthand for the signed-in user’s home folder. This file lives in <strong>macOS user settings</strong>, not inside the NGAME repo.</p>
+<p><strong>Before you start:</strong></p>
+<ul>
+<li><a href="#start-manually-testing">Start manually (testing)</a> succeeded — <strong><a href="http://localhost:5001/dashboard">http://localhost:5001/dashboard</a></strong> loads.</li>
+<li>You know where you cloned NGAME: the <strong>repository root</strong> (folder containing <code>.venv</code>, <code>ngame_ui</code>, and <code>requirements.txt</code>).</li>
+</ul>
+<h4 id="step-1-write-down-your-install-path">Step 1 — Write down your install path</h4>
+<p>In <strong>Terminal</strong>, <code>cd</code> to your NGAME folder and print the full path:</p>
+<pre class='hl'><code class="language-bash"><span class="hl kwb">cd</span> <span class="hl opt">/</span>path<span class="hl opt">/</span>to<span class="hl opt">/</span>your<span class="hl opt">/</span>clone    <span class="hl slc"># wherever you ran git clone</span>
+<span class="hl kwb">pwd</span>
+</code></pre>
+<p>Example output: <code>/Users/you/Developer/Projects/NGAME-POC</code></p>
+<p>Use that string everywhere below as <strong>INSTALL_PATH</strong>. All paths in the plist must be <strong>absolute</strong> (start with <code>/Users/...</code>).</p>
+<h4 id="step-2-create-the-logs-folder">Step 2 — Create the logs folder</h4>
+<p>Replace the example with your <strong>INSTALL_PATH</strong>:</p>
+<pre class='hl'><code class="language-bash"><span class="hl kwc">mkdir</span> <span class="hl kwb">-p</span> <span class="hl opt">/</span>Users<span class="hl opt">/</span>you<span class="hl opt">/</span>Developer<span class="hl opt">/</span>Projects<span class="hl opt">/</span>NGAME<span class="hl kwb">-POC</span><span class="hl opt">/</span>logs
+</code></pre>
+<h4 id="step-3-create-the-launchagents-folder">Step 3 — Create the LaunchAgents folder</h4>
+<pre class='hl'><code class="language-bash"><span class="hl kwc">mkdir</span> <span class="hl kwb">-p</span> ~<span class="hl opt">/</span>Library<span class="hl opt">/</span>LaunchAgents
+</code></pre>
+<p><strong>Finder shortcut:</strong> <strong>Go → Go to Folder…</strong> (⇧⌘G), paste <code>~/Library/LaunchAgents</code>, press Return. (<code>~/Library</code> is hidden by default — that is normal.)</p>
+<h4 id="step-4-create-comngamedashboardplist">Step 4 — Create <code>com.ngame.dashboard.plist</code></h4>
+<p>You are creating a new text file named <strong><code>com.ngame.dashboard.plist</code></strong> in the folder from Step 3. Its entire contents are the XML block below — nothing else in the file.</p>
+<p><strong>Terminal (recommended):</strong></p>
+<pre class='hl'><code class="language-bash">nano ~<span class="hl opt">/</span>Library<span class="hl opt">/</span>LaunchAgents<span class="hl opt">/</span>com.ngame.dashboard.plist
+</code></pre>
+<p>Paste the XML. Replace <strong>every</strong> occurrence of <code>/Users/you/Developer/Projects/NGAME-POC</code> with your <strong>INSTALL_PATH</strong> from Step 1 (five paths total). Save: <strong>Ctrl+O</strong>, Enter, <strong>Ctrl+X</strong>.</p>
+<p><strong>TextEdit (GUI alternative):</strong></p>
+<ol>
+<li>Open <strong>TextEdit</strong> → <strong>Format → Make Plain Text</strong>.</li>
+<li>Paste the XML (with your paths substituted).</li>
+<li><strong>File → Save</strong> → <strong>Go to Folder…</strong> → paste <code>~/Library/LaunchAgents</code>.</li>
+<li>Save as <strong><code>com.ngame.dashboard.plist</code></strong> (not <code>.txt</code>).</li>
+</ol>
+<p><strong>File contents</strong> (substitute your <strong>INSTALL_PATH</strong> for the example path):</p>
+<pre class='hl'><code class="language-xml"><span class="hl kwa">&lt;?xml</span> <span class="hl kwb">version</span>=<span class="hl sng">&quot;1.0&quot;</span> <span class="hl kwb">encoding</span>=<span class="hl sng">&quot;UTF-8&quot;</span><span class="hl kwa">?&gt;</span>
+<span class="hl kwa">&lt;!DOCTYPE</span> plist PUBLIC <span class="hl sng">&quot;-//Apple//DTD PLIST 1.0//EN&quot;</span> <span class="hl sng">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span><span class="hl kwa">&gt;</span>
+<span class="hl kwa">&lt;plist</span> <span class="hl kwb">version</span>=<span class="hl sng">&quot;1.0&quot;</span><span class="hl kwa">&gt;</span>
+<span class="hl kwa">&lt;dict&gt;</span>
+  <span class="hl kwa">&lt;key&gt;</span>Label<span class="hl kwa">&lt;/key&gt;</span>
+  <span class="hl kwa">&lt;string&gt;</span>com.ngame.dashboard<span class="hl kwa">&lt;/string&gt;</span>
+  <span class="hl kwa">&lt;key&gt;</span>ProgramArguments<span class="hl kwa">&lt;/key&gt;</span>
+  <span class="hl kwa">&lt;array&gt;</span>
+    <span class="hl kwa">&lt;string&gt;</span>/Users/you/Developer/Projects/NGAME-POC/.venv/bin/python3<span class="hl kwa">&lt;/string&gt;</span>
+    <span class="hl kwa">&lt;string&gt;</span>/Users/you/Developer/Projects/NGAME-POC/ngame_ui/app-simple.py<span class="hl kwa">&lt;/string&gt;</span>
+  <span class="hl kwa">&lt;/array&gt;</span>
+  <span class="hl kwa">&lt;key&gt;</span>WorkingDirectory<span class="hl kwa">&lt;/key&gt;</span>
+  <span class="hl kwa">&lt;string&gt;</span>/Users/you/Developer/Projects/NGAME-POC/ngame_ui<span class="hl kwa">&lt;/string&gt;</span>
+  <span class="hl kwa">&lt;key&gt;</span>RunAtLoad<span class="hl kwa">&lt;/key&gt;</span>
+  <span class="hl kwa">&lt;true/&gt;</span>
+  <span class="hl kwa">&lt;key&gt;</span>KeepAlive<span class="hl kwa">&lt;/key&gt;</span>
+  <span class="hl kwa">&lt;true/&gt;</span>
+  <span class="hl kwa">&lt;key&gt;</span>StandardOutPath<span class="hl kwa">&lt;/key&gt;</span>
+  <span class="hl kwa">&lt;string&gt;</span>/Users/you/Developer/Projects/NGAME-POC/logs/dashboard.log<span class="hl kwa">&lt;/string&gt;</span>
+  <span class="hl kwa">&lt;key&gt;</span>StandardErrorPath<span class="hl kwa">&lt;/key&gt;</span>
+  <span class="hl kwa">&lt;string&gt;</span>/Users/you/Developer/Projects/NGAME-POC/logs/dashboard.err.log<span class="hl kwa">&lt;/string&gt;</span>
+<span class="hl kwa">&lt;/dict&gt;</span>
+<span class="hl kwa">&lt;/plist&gt;</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Path in plist</th>
+<th>Points to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>…/.venv/bin/python3</code></td>
+<td>Python from the venv you created at repo root</td>
+</tr>
+<tr>
+<td><code>…/ngame_ui/app-simple.py</code></td>
+<td>Dashboard script (same as <a href="#start-manually-testing">manual start</a>)</td>
+</tr>
+<tr>
+<td><code>…/ngame_ui</code></td>
+<td>Working directory for the process</td>
+</tr>
+<tr>
+<td><code>…/logs/dashboard.log</code></td>
+<td>Normal output log</td>
+</tr>
+<tr>
+<td><code>…/logs/dashboard.err.log</code></td>
+<td>Error log</td>
+</tr>
+</tbody>
+</table>
+<p>The string <code>com.ngame.dashboard</code> under <strong>Label</strong> is the service name macOS uses internally; it should match the file name (without <code>.plist</code>).</p>
+<h4 id="step-5-register-the-launchagent">Step 5 — Register the LaunchAgent</h4>
+<pre class='hl'><code class="language-bash">launchctl load ~<span class="hl opt">/</span>Library<span class="hl opt">/</span>LaunchAgents<span class="hl opt">/</span>com.ngame.dashboard.plist
+</code></pre>
+<h4 id="step-6-verify">Step 6 — Verify</h4>
+<ol>
+<li>
+<p>Stop any dashboard you started manually for testing (<strong>Ctrl+C</strong> in that Terminal window).</p>
+</li>
+<li>
+<p>Start the service now (optional quick check):</p>
+<pre class='hl'><code class="language-bash">launchctl start com.ngame.dashboard
+</code></pre>
+</li>
+<li>
+<p>Open <strong><a href="http://localhost:5001/dashboard">http://localhost:5001/dashboard</a></strong> — the page should load.</p>
+</li>
+<li>
+<p><strong>Reboot</strong> (or sign out and back in) and confirm the dashboard still loads <strong>without</strong> opening Terminal.</p>
+</li>
+</ol>
+<p><strong>If it fails:</strong> read <code>INSTALL_PATH/logs/dashboard.err.log</code> first. Common fixes: wrong <strong>INSTALL_PATH</strong> in the plist, <code>.venv</code> not created at repo root, or dashboard not yet tested manually.</p>
+<p><strong>Consultant fallback:</strong> double-click <code>launch_dashboard.command</code> in the repo root until the plist is fixed — do not leave that as the FRP’s daily workflow.</p>
+<h3 id="windows-auto-start-at-login">Windows — auto-start at login</h3>
+<p><strong>Goal:</strong> After the FRP signs in to the surveillance PC, the dashboard starts by itself — no PowerShell window the FRP must manage each morning.</p>
+<p><strong>What you are building:</strong> two pieces:</p>
+<ol>
+<li>A <strong>batch file</strong> (<code>.bat</code>) in your NGAME folder that starts the dashboard.</li>
+<li>A <strong>Task Scheduler</strong> job — a built-in Windows tool that runs that batch file at sign-in.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Batch file name</strong></td>
+<td><code>start-dashboard.bat</code></td>
+</tr>
+<tr>
+<td><strong>Example location</strong></td>
+<td><code>C:\Users\you\Documents\ngame\start-dashboard.bat</code></td>
+</tr>
+<tr>
+<td><strong>Task Scheduler task name</strong></td>
+<td><code>NGAME Dashboard</code> (you choose this in the wizard; use something recognizable)</td>
+</tr>
+</tbody>
+</table>
+<p>The batch file lives <strong>inside your NGAME install folder</strong> (repository root), next to <code>.venv</code> and <code>ngame_ui</code>. Task Scheduler is a Windows system app — you do not install anything extra.</p>
+<p><strong>Before you start:</strong></p>
+<ul>
+<li><a href="#start-manually-testing">Start manually (testing)</a> succeeded — <strong><a href="http://localhost:5001/dashboard">http://localhost:5001/dashboard</a></strong> loads.</li>
+<li>You know where you cloned NGAME: the <strong>repository root</strong> (folder containing <code>.venv</code>, <code>ngame_ui</code>, and <code>requirements.txt</code>).</li>
+</ul>
+<h4 id="step-1-write-down-your-install-path">Step 1 — Write down your install path</h4>
+<p>In <strong>PowerShell</strong>, <code>cd</code> to your NGAME folder and print the full path:</p>
+<pre class='hl'><code class="language-powershell">cd &quot;$env:USERPROFILE\Documents\ngame&quot;    # or wherever you ran git clone
+Get-Location
+</code></pre>
+<p>Example output: <code>C:\Users\you\Documents\ngame</code></p>
+<p>Use that string everywhere below as <strong>INSTALL_PATH</strong>. All paths in the batch file must match this exactly (backslashes <code>\</code>, not forward slashes).</p>
+<h4 id="step-2-create-the-logs-folder">Step 2 — Create the logs folder</h4>
+<p>Replace the example with your <strong>INSTALL_PATH</strong>:</p>
+<pre class='hl'><code class="language-powershell">New-Item -ItemType Directory -Force -Path &quot;C:\Users\you\Documents\ngame\logs&quot;
+</code></pre>
+<h4 id="step-3-create-start-dashboardbat">Step 3 — Create <code>start-dashboard.bat</code></h4>
+<p>You are creating a new text file named <strong><code>start-dashboard.bat</code></strong> in <strong>INSTALL_PATH</strong> (repository root). Its entire contents are the block below — nothing else in the file.</p>
+<p><strong>Notepad (recommended):</strong></p>
+<ol>
+<li>Open <strong>Notepad</strong>.</li>
+<li>Paste the batch file contents (with your paths substituted).</li>
+<li><strong>File → Save As…</strong></li>
+<li>Navigate to your <strong>INSTALL_PATH</strong> folder (e.g. <code>C:\Users\you\Documents\ngame</code>).</li>
+<li><strong>Save as type:</strong> <strong>All Files (*.*)</strong></li>
+<li><strong>File name:</strong> <code>start-dashboard.bat</code> (include the <code>.bat</code> extension — not <code>.bat.txt</code>).</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<p><strong>PowerShell alternative:</strong></p>
+<pre class='hl'><code class="language-powershell">notepad &quot;C:\Users\you\Documents\ngame\start-dashboard.bat&quot;
+</code></pre>
+<p>(If Notepad asks to create a new file, click <strong>Yes</strong>.)</p>
+<p><strong>File contents</strong> (substitute your <strong>INSTALL_PATH</strong> for the example path in all three lines):</p>
+<pre class='hl'><code class="language-bat">&#64;<span class="hl kwb">echo</span> off
+<span class="hl kwb">cd</span> <span class="hl opt">/</span>d C<span class="hl opt">:</span>\Users\you\Documents<span class="hl esc">\n</span>game<span class="hl esc">\n</span>game_ui
+C<span class="hl opt">:</span>\Users\you\Documents<span class="hl esc">\n</span>game\.venv\Scripts\pythonw.exe app<span class="hl opt">-</span>simple.py <span class="hl opt">&gt;&gt;</span> C<span class="hl opt">:</span>\Users\you\Documents<span class="hl esc">\n</span>game\logs\dashboard.log <span class="hl num">2</span><span class="hl opt">&gt;&gt;</span> C<span class="hl opt">:</span>\Users\you\Documents<span class="hl esc">\n</span>game\logs\dashboard.err.log
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Part of the batch file</th>
+<th>Points to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cd /d …\ngame_ui</code></td>
+<td>Dashboard working directory (same as <a href="#start-manually-testing">manual start</a>)</td>
+</tr>
+<tr>
+<td><code>…\.venv\Scripts\pythonw.exe</code></td>
+<td>Python from the venv — <strong><code>pythonw.exe</code></strong> runs without a visible console window</td>
+</tr>
+<tr>
+<td><code>app-simple.py</code></td>
+<td>Dashboard script</td>
+</tr>
+<tr>
+<td><code>&gt;&gt; …\logs\dashboard.log</code></td>
+<td>Normal output log</td>
+</tr>
+<tr>
+<td><code>2&gt;&gt; …\logs\dashboard.err.log</code></td>
+<td>Error log</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Quick test:</strong> Double-click <code>start-dashboard.bat</code> in File Explorer once. Wait a few seconds, then open <strong><a href="http://localhost:5001/dashboard">http://localhost:5001/dashboard</a></strong>. If it loads, stop the test (close any running dashboard from Task Manager or reboot) before continuing to Step 4.</p>
+<h4 id="step-4-create-the-task-scheduler-job">Step 4 — Create the Task Scheduler job</h4>
+<ol>
+<li>
+<p>Press the <strong>Windows key</strong>, type <strong>Task Scheduler</strong>, press <strong>Enter</strong>.</p>
+</li>
+<li>
+<p>In the right <strong>Actions</strong> pane, click <strong>Create Basic Task…</strong></p>
+</li>
+<li>
+<p><strong>Name:</strong> <code>NGAME Dashboard</code> → <strong>Next</strong></p>
+</li>
+<li>
+<p><strong>Trigger:</strong> <strong>When I log on</strong> → <strong>Next</strong></p>
+</li>
+<li>
+<p><strong>Action:</strong> <strong>Start a program</strong> → <strong>Next</strong></p>
+</li>
+<li>
+<p><strong>Program/script:</strong> paste the full path to your batch file, for example:</p>
+<p><code>C:\Users\you\Documents\ngame\start-dashboard.bat</code></p>
+<p>(Use <strong>Browse…</strong> if you prefer to pick the file in a dialog.)</p>
+</li>
+<li>
+<p><strong>Start in (optional):</strong> leave blank — the batch file sets its own folder → <strong>Next</strong></p>
+</li>
+<li>
+<p>Check <strong>Open the Properties dialog for this task when I click Finish</strong> → <strong>Finish</strong></p>
+</li>
+</ol>
+<p>In the <strong>Properties</strong> window that opens:</p>
+<ol start="9">
+<li><strong>General</strong> tab: select <strong>Run only when user is logged on</strong> (the FRP uses a browser on this same PC).</li>
+<li><strong>Conditions</strong> tab: if this is a <strong>laptop</strong>, uncheck <strong>Start the task only if the computer is on AC power</strong> so the dashboard still starts on battery.</li>
+<li><strong>Settings</strong> tab: uncheck <strong>Stop the task if it runs longer than</strong> — the dashboard is meant to run all day.</li>
+<li>Click <strong>OK</strong>. Enter your Windows password if prompted.</li>
+</ol>
+<h4 id="step-5-verify">Step 5 — Verify</h4>
+<ol>
+<li>Stop any dashboard you started manually for testing (<strong>Ctrl+C</strong> in that PowerShell window).</li>
+<li>Sign <strong>out</strong> and sign <strong>back in</strong> (or restart the PC).</li>
+<li>Wait 10–15 seconds after the desktop appears.</li>
+<li>Open <strong><a href="http://localhost:5001/dashboard">http://localhost:5001/dashboard</a></strong> — the page should load <strong>without</strong> you opening PowerShell or double-clicking the batch file.</li>
+</ol>
+<p><strong>If it fails:</strong> read <code>INSTALL_PATH\logs\dashboard.err.log</code> first. Common fixes: wrong <strong>INSTALL_PATH</strong> in the <code>.bat</code> file, <code>.venv</code> not created at repo root, Task Scheduler task points to the wrong file, or dashboard not yet tested manually.</p>
+<p><strong>Consultant fallback:</strong> double-click <code>start-dashboard.bat</code> in the repo root until Task Scheduler is fixed — do not leave that as the FRP’s daily workflow.</p>
+<blockquote>
+<p>Do <strong>not</strong> schedule <code>ngame_dual_mode.py</code> on the same machine if the FRP runs from the dashboard — that can double-run the pipeline.</p>
+</blockquote>
+<hr />
+<h2 id="verify-installation">Verify installation</h2>
+<p>Complete <strong>before</strong> FRP handoff.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Check</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Dashboard loads</td>
+<td>Open <strong><a href="http://localhost:5001/dashboard">http://localhost:5001/dashboard</a></strong> (empty results OK until first run)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Training via UI</td>
+<td><strong>NGAME Operations</strong> → <strong>Run Training Day</strong> (or primary green <strong>Run Today’s Training Day</strong>) → live output shows success / day recorded</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Matrix file</td>
+<td><code>NGAME_Training_Matrix.xlsx</code> exists in repo root</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Ollama (before Day 31)</td>
+<td><code>ollama list</code> shows your model; <code>model_name</code> aligned in <code>ngame_llm_analysis_agent.py</code>; when 30 training days complete, test <code>python run_training_flow.py</code> / <code>python3 run_fraud_analysis.py</code> or dashboard <strong>Run Churn Analysis</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>CLI fallback (optional)</td>
+<td><code>python3 run_training_flow.py</code> only if dashboard run failed — for debugging</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="hand-off-to-the-frp">Hand off to the FRP</h2>
+<p>Deliver <strong>only</strong> what the FRP needs:</p>
+<table>
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="FRP_OPERATIONS_GUIDE.html">FRP_OPERATIONS_GUIDE.html</a></strong> (print/PDF)</td>
+<td>Fill <strong>designated contact</strong> and <strong>NGAME technical contact</strong> blanks</td>
+</tr>
+<tr>
+<td><strong>NGAME Dashboard</strong> bookmark</td>
+<td><code>http://localhost:5001/dashboard</code></td>
+</tr>
+<tr>
+<td><strong>One supervised run</strong></td>
+<td>FRP clicks training button while you observe</td>
+</tr>
+<tr>
+<td><strong>Tour of results</strong></td>
+<td>Overall Risk, Management Warnings, Top Anomalies, Training Progress</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Do not give the FRP:</strong> Terminal steps, repo path, <code>pip</code>/<code>git</code> commands, or <code>launch_dashboard.command</code> unless auto-start failed and you trained them on a single double-click shortcut only.</p>
+<p><strong>Two contacts (explain to FRP):</strong></p>
+<ul>
+<li><strong>Designated contact</strong> — business/accounting lead for MEDIUM/HIGH warnings</li>
+<li><strong>NGAME technical contact</strong> — you (or your firm) for dashboard, credentials, and errors</li>
+</ul>
+<hr />
+<h2 id="optional-cli-and-scheduled-runs">Optional: CLI and scheduled runs</h2>
+<p>For <strong>consultant, lab, or unattended</strong> machines — not for dashboard-only FRP operation.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Command (repo root, venv active)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Training</td>
+<td><code>python3 run_training_flow.py</code></td>
+</tr>
+<tr>
+<td>Fraud analysis</td>
+<td><code>python3 run_fraud_analysis.py</code></td>
+</tr>
+<tr>
+<td>Auto mode</td>
+<td><code>python3 ngame_dual_mode.py</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>macOS cron example:</strong></p>
+<pre class='hl'><code class="language-">0 7 * * * /path/to/ngame/.venv/bin/python3 /path/to/ngame/ngame_dual_mode.py &gt;&gt; /path/to/ngame/logs/ngame_daily.log 2&gt;&amp;1
+</code></pre>
+<p><strong>Windows Task Scheduler:</strong> program = <code>.venv\Scripts\python.exe</code>, arguments = path to <code>ngame_dual_mode.py</code>.</p>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cd $env:USERPROFILE\Documents</code> — “filename, directory name, or volume label syntax is incorrect”</td>
+<td>Use <strong>PowerShell</strong> and quote the path: <code>cd &quot;$env:USERPROFILE\Documents&quot;</code> (or <code>cd &quot;$env:USERPROFILE/Documents&quot;</code>)</td>
+</tr>
+<tr>
+<td><code>python3</code> / <code>python</code> not found</td>
+<td>Reinstall Python; on Windows enable <strong>Add to PATH</strong></td>
+</tr>
+<tr>
+<td><code>pip install</code> → <em>not a valid application for this OS platform</em> (Windows)</td>
+<td>Use <code>python -m pip install ...</code> with venv active; see <a href="#4--virtual-environment">§ 4 — Virtual environment</a></td>
+</tr>
+<tr>
+<td><code>pip install</code> compiler error (Windows)</td>
+<td>Install Microsoft C++ Build Tools; retry</td>
+</tr>
+<tr>
+<td>PowerShell blocks venv activation</td>
+<td><code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code></td>
+</tr>
+<tr>
+<td>Dashboard empty</td>
+<td>Run one training or churn day from dashboard</td>
+</tr>
+<tr>
+<td>FRP cannot connect</td>
+<td>Check LaunchAgent / Task Scheduler; read <code>logs/dashboard.err.log</code></td>
+</tr>
+<tr>
+<td><code>Ollama is not running or not accessible</code></td>
+<td>Start Ollama (macOS: menu bar app; Windows: tray icon); <code>ollama list</code></td>
+</tr>
+<tr>
+<td><code>model not found</code> / LLM error in Phase II</td>
+<td><code>ollama list</code> tag must match <code>self.model_name</code> in <code>ngame_llm_analysis_agent.py</code>; run <code>ollama pull</code> for that tag</td>
+</tr>
+<tr>
+<td>Ollama very slow or PC freezes</td>
+<td>Use a smaller model (<code>gemma2:2b</code>); close browsers; see <a href="#6--ollama-before-phase-ii--fraud-analysis">§ 6 — Ollama</a></td>
+</tr>
+<tr>
+<td>Fraud blocked: training incomplete</td>
+<td>Need <strong>30</strong> day columns in <code>NGAME_Training_Matrix.xlsx</code></td>
+</tr>
+<tr>
+<td><code>No module named 'quickbooks'</code> (Windows)</td>
+<td><code>python -m pip install python-quickbooks intuit-oauth</code> or re-run <code>python -m pip install -r requirements.txt</code></td>
+</tr>
+<tr>
+<td>QBO / Wave auth error</td>
+<td>Refresh tokens in config JSON or <code>.env</code></td>
+</tr>
+<tr>
+<td>Terminal flooded with <code>GET /api/...</code></td>
+<td>Normal — dashboard auto-refresh; stop server with Ctrl+C when testing</td>
+</tr>
+</tbody>
+</table>
+<p>UI details: <strong><a href="ngame_ui/TROUBLESHOOTING.md">ngame_ui/TROUBLESHOOTING.md</a></strong>.</p>
+<hr />
+<p><em>NGAME · Apache 2.0 · Copyright 2026 Ron Turner</em></p>
+<div style='font-size: 72%; margin-top: 1.5em; padding-top: .5em; -webkit-user-select: none;'><hr style='height: 0; border: none; border-top: 1px solid rgba(0,0,0,.5); box-shadow: 0 1px 1px rgba(255, 255, 255, .5)'/><a href='https://github.com/sbarex/QLMarkdown'>QLMarkdown</a>, version 1.0.24 (50).<br />
+Developed by SBAREX 2020 - 2025 with <span style='font-style: normal'>❤️</span>.<br/>
+If you like this app, <a href='https://www.buymeacoffee.com/sbarex'><strong>buy me a coffee</strong></a>!</div>
+<!--
+
+File generated with QLMarkdown [https://github.com/sbarex/QLMarkdown] - QLMarkdown, version 1.0.24 (50).
+Developed by SBAREX 2020 - 2025 with ❤️
+
+-->
+
+</article>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# NGAME — Installation Guide
+# NGAME — Implementation Guide
 
 **Audience:** Systems administrator or **technical consultant** (NGAME implementation lead) — comfortable with Python, Terminal or PowerShell, and secure handling of API credentials.
 
@@ -10,7 +10,7 @@
 
 | Document | Who reads it | What it covers |
 |----------|--------------|----------------|
-| **This file (`INSTALL.md`)** | Technical consultant | Clone, Python env, credentials, Ollama, dashboard service, verification, FRP handoff |
+| **This file (`IMPLEMENTATION_GUIDE.md`)** | Technical consultant | Clone, Python env, credentials, Ollama, dashboard service, verification, FRP handoff |
 | **[FRP_OPERATIONS_GUIDE.md](FRP_OPERATIONS_GUIDE.md)** / **[.html](FRP_OPERATIONS_GUIDE.html)** | FRP | Bookmark, daily training/fraud checks, warnings, QuickBooks Audit Log |
 | **[README.md](README.md)** | Developers / consultants | Architecture, pipeline modules, CLI reference |
 | **[ngame_ui/README.md](ngame_ui/README.md)** | Consultants | Dashboard URLs, API endpoints, UI troubleshooting |
@@ -75,7 +75,7 @@ Use this order. Check off each item before handoff.
 
 ## Windows surveillance PC — trial install (start here)
 
-**This file is the single installer guide.** You do not need this chat, older root-level guides, or anything under **[docs/archive/](docs/archive/)** for a new Windows trial.
+**This file is the single implementation guide.** You do not need this chat, older root-level guides, or anything under **[docs/archive/](docs/archive/)** for a new Windows trial.
 
 ### Before you install on the surveillance PC
 
@@ -116,7 +116,7 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-If PowerShell blocks activation, see [Troubleshooting](#troubleshooting). Substitute your actual install path everywhere this guide shows `C:\NGAME\` in the auto-start batch file.
+If PowerShell blocks activation, see [Troubleshooting](#troubleshooting). Substitute your actual **INSTALL_PATH** everywhere the [Windows auto-start](#windows--auto-start-at-login) batch file shows `C:\Users\you\Documents\ngame`.
 
 ### What the FRP uses (not this file)
 
@@ -473,7 +473,7 @@ self.model_name = "llama2:7b"   # must match `ollama list` exactly
 
 3. Save the file. If you `git pull` later from GitHub, re-check this line — the repo default may differ from what you pulled on this PC.
 
-**Do not** change the model name only in INSTALL.md; NGAME reads **`ngame_llm_analysis_agent.py`**.
+**Do not** change the model name only in this guide; NGAME reads **`ngame_llm_analysis_agent.py`**.
 
 #### 6.6 — Smoke-test Ollama (not NGAME yet)
 
@@ -576,7 +576,72 @@ Stop with **Ctrl+C** when testing. Production should use auto-start, not a Termi
 
 ### macOS — auto-start at login
 
-Create `~/Library/LaunchAgents/com.ngame.dashboard.plist`. Replace `/NGAME_ROOT` with your install path (e.g. `/Users/you/Developer/Projects/NGAME-POC`):
+**Goal:** After the FRP signs in to the surveillance Mac, the dashboard starts by itself — no Terminal window and no daily double-click.
+
+**What you are building:** macOS keeps a per-user folder of **LaunchAgents** — small XML **plist** files that tell the system what to start at login. You create **one file**:
+
+| Item | Value |
+|------|--------|
+| **File name** | `com.ngame.dashboard.plist` |
+| **Full path** | `~/Library/LaunchAgents/com.ngame.dashboard.plist` |
+| **Expanded example** | `/Users/you/Library/LaunchAgents/com.ngame.dashboard.plist` |
+
+The tilde (`~`) is shorthand for the signed-in user's home folder. This file lives in **macOS user settings**, not inside the NGAME repo.
+
+**Before you start:**
+
+- [Start manually (testing)](#start-manually-testing) succeeded — **http://localhost:5001/dashboard** loads.
+- You know where you cloned NGAME: the **repository root** (folder containing `.venv`, `ngame_ui`, and `requirements.txt`).
+
+#### Step 1 — Write down your install path
+
+In **Terminal**, `cd` to your NGAME folder and print the full path:
+
+```bash
+cd /path/to/your/clone    # wherever you ran git clone
+pwd
+```
+
+Example output: `/Users/you/Developer/Projects/NGAME-POC`
+
+Use that string everywhere below as **INSTALL_PATH**. All paths in the plist must be **absolute** (start with `/Users/...`).
+
+#### Step 2 — Create the logs folder
+
+Replace the example with your **INSTALL_PATH**:
+
+```bash
+mkdir -p /Users/you/Developer/Projects/NGAME-POC/logs
+```
+
+#### Step 3 — Create the LaunchAgents folder
+
+```bash
+mkdir -p ~/Library/LaunchAgents
+```
+
+**Finder shortcut:** **Go → Go to Folder…** (⇧⌘G), paste `~/Library/LaunchAgents`, press Return. (`~/Library` is hidden by default — that is normal.)
+
+#### Step 4 — Create `com.ngame.dashboard.plist`
+
+You are creating a new text file named **`com.ngame.dashboard.plist`** in the folder from Step 3. Its entire contents are the XML block below — nothing else in the file.
+
+**Terminal (recommended):**
+
+```bash
+nano ~/Library/LaunchAgents/com.ngame.dashboard.plist
+```
+
+Paste the XML. Replace **every** occurrence of `/Users/you/Developer/Projects/NGAME-POC` with your **INSTALL_PATH** from Step 1 (five paths total). Save: **Ctrl+O**, Enter, **Ctrl+X**.
+
+**TextEdit (GUI alternative):**
+
+1. Open **TextEdit** → **Format → Make Plain Text**.
+2. Paste the XML (with your paths substituted).
+3. **File → Save** → **Go to Folder…** → paste `~/Library/LaunchAgents`.
+4. Save as **`com.ngame.dashboard.plist`** (not `.txt`).
+
+**File contents** (substitute your **INSTALL_PATH** for the example path):
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -587,43 +652,170 @@ Create `~/Library/LaunchAgents/com.ngame.dashboard.plist`. Replace `/NGAME_ROOT`
   <string>com.ngame.dashboard</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/NGAME_ROOT/.venv/bin/python3</string>
-    <string>/NGAME_ROOT/ngame_ui/app-simple.py</string>
+    <string>/Users/you/Developer/Projects/NGAME-POC/.venv/bin/python3</string>
+    <string>/Users/you/Developer/Projects/NGAME-POC/ngame_ui/app-simple.py</string>
   </array>
   <key>WorkingDirectory</key>
-  <string>/NGAME_ROOT/ngame_ui</string>
+  <string>/Users/you/Developer/Projects/NGAME-POC/ngame_ui</string>
   <key>RunAtLoad</key>
   <true/>
   <key>KeepAlive</key>
   <true/>
   <key>StandardOutPath</key>
-  <string>/NGAME_ROOT/logs/dashboard.log</string>
+  <string>/Users/you/Developer/Projects/NGAME-POC/logs/dashboard.log</string>
   <key>StandardErrorPath</key>
-  <string>/NGAME_ROOT/logs/dashboard.err.log</string>
+  <string>/Users/you/Developer/Projects/NGAME-POC/logs/dashboard.err.log</string>
 </dict>
 </plist>
 ```
 
+| Path in plist | Points to |
+|---------------|-----------|
+| `…/.venv/bin/python3` | Python from the venv you created at repo root |
+| `…/ngame_ui/app-simple.py` | Dashboard script (same as [manual start](#start-manually-testing)) |
+| `…/ngame_ui` | Working directory for the process |
+| `…/logs/dashboard.log` | Normal output log |
+| `…/logs/dashboard.err.log` | Error log |
+
+The string `com.ngame.dashboard` under **Label** is the service name macOS uses internally; it should match the file name (without `.plist`).
+
+#### Step 5 — Register the LaunchAgent
+
 ```bash
-mkdir -p /NGAME_ROOT/logs
 launchctl load ~/Library/LaunchAgents/com.ngame.dashboard.plist
 ```
 
-Reboot or `launchctl start com.ngame.dashboard`, then open the dashboard URL.
+#### Step 6 — Verify
+
+1. Stop any dashboard you started manually for testing (**Ctrl+C** in that Terminal window).
+2. Start the service now (optional quick check):
+
+   ```bash
+   launchctl start com.ngame.dashboard
+   ```
+
+3. Open **http://localhost:5001/dashboard** — the page should load.
+4. **Reboot** (or sign out and back in) and confirm the dashboard still loads **without** opening Terminal.
+
+**If it fails:** read `INSTALL_PATH/logs/dashboard.err.log` first. Common fixes: wrong **INSTALL_PATH** in the plist, `.venv` not created at repo root, or dashboard not yet tested manually.
+
+**Consultant fallback:** double-click `launch_dashboard.command` in the repo root until the plist is fixed — do not leave that as the FRP's daily workflow.
 
 ### Windows — auto-start at login
 
-1. Create `C:\NGAME\start-dashboard.bat` (adjust paths):
+**Goal:** After the FRP signs in to the surveillance PC, the dashboard starts by itself — no PowerShell window the FRP must manage each morning.
 
-   ```bat
-   @echo off
-   cd /d C:\NGAME\ngame_ui
-   C:\NGAME\.venv\Scripts\python.exe app-simple.py
-   ```
+**What you are building:** two pieces:
 
-2. **Task Scheduler** → trigger **At log on** → action = that `.bat` file.
+1. A **batch file** (`.bat`) in your NGAME folder that starts the dashboard.
+2. A **Task Scheduler** job — a built-in Windows tool that runs that batch file at sign-in.
 
-3. Confirm **http://localhost:5001/dashboard** after sign-in.
+| Item | Value |
+|------|--------|
+| **Batch file name** | `start-dashboard.bat` |
+| **Example location** | `C:\Users\you\Documents\ngame\start-dashboard.bat` |
+| **Task Scheduler task name** | `NGAME Dashboard` (you choose this in the wizard; use something recognizable) |
+
+The batch file lives **inside your NGAME install folder** (repository root), next to `.venv` and `ngame_ui`. Task Scheduler is a Windows system app — you do not install anything extra.
+
+**Before you start:**
+
+- [Start manually (testing)](#start-manually-testing) succeeded — **http://localhost:5001/dashboard** loads.
+- You know where you cloned NGAME: the **repository root** (folder containing `.venv`, `ngame_ui`, and `requirements.txt`).
+
+#### Step 1 — Write down your install path
+
+In **PowerShell**, `cd` to your NGAME folder and print the full path:
+
+```powershell
+cd "$env:USERPROFILE\Documents\ngame"    # or wherever you ran git clone
+Get-Location
+```
+
+Example output: `C:\Users\you\Documents\ngame`
+
+Use that string everywhere below as **INSTALL_PATH**. All paths in the batch file must match this exactly (backslashes `\`, not forward slashes).
+
+#### Step 2 — Create the logs folder
+
+Replace the example with your **INSTALL_PATH**:
+
+```powershell
+New-Item -ItemType Directory -Force -Path "C:\Users\you\Documents\ngame\logs"
+```
+
+#### Step 3 — Create `start-dashboard.bat`
+
+You are creating a new text file named **`start-dashboard.bat`** in **INSTALL_PATH** (repository root). Its entire contents are the block below — nothing else in the file.
+
+**Notepad (recommended):**
+
+1. Open **Notepad**.
+2. Paste the batch file contents (with your paths substituted).
+3. **File → Save As…**
+4. Navigate to your **INSTALL_PATH** folder (e.g. `C:\Users\you\Documents\ngame`).
+5. **Save as type:** **All Files (\*.\*)**
+6. **File name:** `start-dashboard.bat` (include the `.bat` extension — not `.bat.txt`).
+7. Click **Save**.
+
+**PowerShell alternative:**
+
+```powershell
+notepad "C:\Users\you\Documents\ngame\start-dashboard.bat"
+```
+
+(If Notepad asks to create a new file, click **Yes**.)
+
+**File contents** (substitute your **INSTALL_PATH** for the example path in all three lines):
+
+```bat
+@echo off
+cd /d C:\Users\you\Documents\ngame\ngame_ui
+C:\Users\you\Documents\ngame\.venv\Scripts\pythonw.exe app-simple.py >> C:\Users\you\Documents\ngame\logs\dashboard.log 2>> C:\Users\you\Documents\ngame\logs\dashboard.err.log
+```
+
+| Part of the batch file | Points to |
+|------------------------|-----------|
+| `cd /d …\ngame_ui` | Dashboard working directory (same as [manual start](#start-manually-testing)) |
+| `…\.venv\Scripts\pythonw.exe` | Python from the venv — **`pythonw.exe`** runs without a visible console window |
+| `app-simple.py` | Dashboard script |
+| `>> …\logs\dashboard.log` | Normal output log |
+| `2>> …\logs\dashboard.err.log` | Error log |
+
+**Quick test:** Double-click `start-dashboard.bat` in File Explorer once. Wait a few seconds, then open **http://localhost:5001/dashboard**. If it loads, stop the test (close any running dashboard from Task Manager or reboot) before continuing to Step 4.
+
+#### Step 4 — Create the Task Scheduler job
+
+1. Press the **Windows key**, type **Task Scheduler**, press **Enter**.
+2. In the right **Actions** pane, click **Create Basic Task…**
+3. **Name:** `NGAME Dashboard` → **Next**
+4. **Trigger:** **When I log on** → **Next**
+5. **Action:** **Start a program** → **Next**
+6. **Program/script:** paste the full path to your batch file, for example:
+
+   `C:\Users\you\Documents\ngame\start-dashboard.bat`
+
+   (Use **Browse…** if you prefer to pick the file in a dialog.)
+7. **Start in (optional):** leave blank — the batch file sets its own folder → **Next**
+8. Check **Open the Properties dialog for this task when I click Finish** → **Finish**
+
+In the **Properties** window that opens:
+
+9. **General** tab: select **Run only when user is logged on** (the FRP uses a browser on this same PC).
+10. **Conditions** tab: if this is a **laptop**, uncheck **Start the task only if the computer is on AC power** so the dashboard still starts on battery.
+11. **Settings** tab: uncheck **Stop the task if it runs longer than** — the dashboard is meant to run all day.
+12. Click **OK**. Enter your Windows password if prompted.
+
+#### Step 5 — Verify
+
+1. Stop any dashboard you started manually for testing (**Ctrl+C** in that PowerShell window).
+2. Sign **out** and sign **back in** (or restart the PC).
+3. Wait 10–15 seconds after the desktop appears.
+4. Open **http://localhost:5001/dashboard** — the page should load **without** you opening PowerShell or double-clicking the batch file.
+
+**If it fails:** read `INSTALL_PATH\logs\dashboard.err.log` first. Common fixes: wrong **INSTALL_PATH** in the `.bat` file, `.venv` not created at repo root, Task Scheduler task points to the wrong file, or dashboard not yet tested manually.
+
+**Consultant fallback:** double-click `start-dashboard.bat` in the repo root until Task Scheduler is fixed — do not leave that as the FRP's daily workflow.
 
 > Do **not** schedule `ngame_dual_mode.py` on the same machine if the FRP runs from the dashboard — that can double-run the pipeline.
 
