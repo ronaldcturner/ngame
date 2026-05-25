@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGAME — FRP Phase II Dashboard (One Page)</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @page { size: letter; margin: 0.45in; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 10.5px;
+      line-height: 1.35;
+      color: #1a1a1a;
+      background: #f0f0f0;
+    }
+    .sheet {
+      max-width: 8.5in;
+      margin: 12px auto;
+      padding: 0.4in 0.45in 0.35in;
+      background: #fff;
+      border: 1px solid #ddd;
+    }
+    @media print {
+      body { background: #fff; }
+      .sheet { margin: 0; border: none; max-width: none; padding: 0; }
+      .no-print { display: none; }
+    }
+    h1 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+    .subtitle { font-size: 10px; color: #555; margin-bottom: 10px; }
+    h2 {
+      font-size: 11px; font-weight: 700; margin: 10px 0 5px;
+      padding-bottom: 2px; border-bottom: 1px solid #e0e0e0;
+    }
+    p { margin-bottom: 5px; color: #333; }
+    .muted { color: #666; font-size: 9.5px; }
+    table {
+      width: 100%; border-collapse: collapse; font-size: 9.5px; margin-bottom: 6px;
+    }
+    th, td {
+      border: 1px solid #d8d8d8; padding: 4px 6px; text-align: left; vertical-align: top;
+    }
+    th { background: #f5f5f5; font-weight: 600; color: #444; }
+    .callout {
+      background: #fffbeb; border: 1px solid #fcd34d;
+      padding: 6px 8px; margin: 6px 0; font-size: 9.5px;
+    }
+    .callout strong { color: #92400e; }
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .panel {
+      border: 1px solid #d8d8d8;
+      padding: 6px;
+      background: #fafafa;
+      font-size: 9px;
+    }
+    .panel h3 { font-size: 10px; margin-bottom: 4px; color: #111; }
+    .badge-h { color: #b91c1c; font-weight: 700; }
+    .badge-m { color: #b45309; font-weight: 700; }
+    .badge-l { color: #15803d; font-weight: 700; }
+    ol { margin: 0 0 6px 1.1rem; font-size: 9.5px; }
+    li { margin-bottom: 2px; }
+    .footer {
+      margin-top: 8px; padding-top: 5px; border-top: 1px solid #e0e0e0;
+      font-size: 8.5px; color: #888;
+    }
+  </style>
+</head>
+<body>
+  <p class="no-print muted" style="text-align:center;margin:8px">Print: Cmd+P → Save as PDF · Full ops: FRP_OPERATIONS_GUIDE.html</p>
+
+  <article class="sheet">
+    <h1>NGAME — Reading the Phase II Dashboard</h1>
+    <p class="subtitle">For the Financially Responsible Person · One page · Dashboard bookmark only</p>
+
+    <h2>Which button?</h2>
+    <table>
+      <thead><tr><th>Phase</th><th>When</th><th>Button</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Phase I</strong> (days 1–30)</td><td>Learning normal</td><td><strong>Run Today's Training Day</strong></td></tr>
+        <tr><td><strong>Phase II</strong> (day 31+)</td><td>Daily monitoring</td><td><strong>Run Today's Fraud Check</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h2>Three checks every Phase II run (read all three)</h2>
+    <div class="three-col">
+      <div class="panel">
+        <h3>Top Anomalies</h3>
+        <p><strong>Today only.</strong> Which <em>categories</em> (Invoices, Vendors, …) are far from the 30-day baseline?</p>
+        <p class="muted">Drives Overall Risk &amp; Management Warnings.</p>
+      </div>
+      <div class="panel">
+        <h3>Multi-Day Pattern Alert</h3>
+        <p><strong>~5 days.</strong> Slow-burn: small changes that add up. Runs <em>every</em> fraud check once active.</p>
+        <p class="muted">Can be HIGH when today looks quiet.</p>
+      </div>
+      <div class="panel">
+        <h3>Credit Card Watch</h3>
+        <p><strong>Today only.</strong> Unusual company card activity.</p>
+        <p class="muted">Independent of churn rows.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Do not skip Multi-Day</strong> when Top Anomalies looks fine. Overall Risk may stay LOW while Multi-Day shows HIGH — check both.
+    </div>
+
+    <h2>Top Anomalies — one row explained</h2>
+    <table>
+      <thead><tr><th>You see</th><th>It means</th></tr></thead>
+      <tbody>
+        <tr><td>Category name (e.g. Vendors)</td><td>Unusual <strong>volume</strong> of records added/removed overnight — not one invoice</td></tr>
+        <tr><td><span class="badge-h">HIGH</span> / <span class="badge-m">MEDIUM</span> / <span class="badge-l">LOW</span></td><td>How far from Phase I “normal” — stronger = review sooner</td></tr>
+        <tr><td>Δ and %</td><td>Size of the deviation (detail for your accountant/contact)</td></tr>
+      </tbody>
+    </table>
+    <p class="muted"><strong>Not proof of fraud.</strong> Flag = unusual vs training. Innocent causes happen. <strong>Invoice amount edits</strong> on the same ID often do <em>not</em> appear here — use QuickBooks Audit Log.</p>
+
+    <h2>Multi-Day badge</h2>
+    <table>
+      <thead><tr><th>Badge</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Building</strong></td><td>Keep daily fraud checks — not enough history yet</td></tr>
+        <tr><td><strong>Clear</strong></td><td>No sustained pattern — still read Top Anomalies</td></tr>
+        <tr><td><span class="badge-m">MEDIUM</span> / <span class="badge-h">HIGH</span></td><td>Note categories; follow warning protocol; Audit Log</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Overall Risk — what to do</h2>
+    <table>
+      <thead><tr><th>Risk</th><th>Today</th></tr></thead>
+      <tbody>
+        <tr><td class="badge-l">LOW</td><td>Done — still skim Multi-Day + CC Watch</td></tr>
+        <tr><td class="badge-m">MEDIUM</td><td>Contact <strong>designated contact</strong> within 1 business day; Audit Log</td></tr>
+        <tr><td class="badge-h">HIGH</td><td>Screenshot; contact <strong>today</strong>; Audit Log first</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Daily checklist (Phase II)</h2>
+    <ol>
+      <li>Run <strong>Today's Fraud Check</strong> — wait for <strong>finished</strong>.</li>
+      <li>Overall Risk + Management Warnings → table above.</li>
+      <li>Top Anomalies → note categories.</li>
+      <li>Multi-Day Pattern Alert → note if not Clear.</li>
+      <li>Credit Card Watch → note flags.</li>
+      <li>Follow-up → QuickBooks <strong>Audit Log</strong> (who changed what).</li>
+    </ol>
+
+    <p class="muted">NGAME is read-only. Technical problems (❌, login prompt, page won't load) → NGAME technical contact, not designated contact for fraud review.</p>
+
+    <footer class="footer">
+      NGAME · FRP Phase II · May 2026 · Training, Marketing, and Documentation/NGAME_FRP_PhaseII_Dashboard_Guide.html
+    </footer>
+  </article>
+</body>
+</html>
