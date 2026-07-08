@@ -1,0 +1,17 @@
+%% Figure 6' — NGAME Training Flow (corrected: CPI/Jaccard, 18 types, μ/σ baseline)
+flowchart TD
+    START["Start training run<br/>N workdays (set by NPO management)"]
+
+    subgraph PERDAY["Repeat each training day d = 1..N"]
+        EXT["Data Extraction Agent<br/>pull QBO → write Today.ttl<br/>(18 transaction types)"]
+        SHIFT["Rotate prior Today.ttl → Yesterday.ttl<br/>(day 1 establishes Yesterday only)"]
+        CPID["CPI Analysis Agent (from day 2)<br/>Jaccard persistence per type<br/>CPI = |Y∩T| / |Y∪T|<br/>+ dollar-weighted wCPI"]
+        COL["Matrix Management Agent<br/>append day column → 18 × d matrix"]
+    end
+
+    AGG["After N days — derive per-type baseline<br/>μ = mean CPI (col B)<br/>σ = std CPI (col C)<br/>+ wCPI baseline sheet (μ_w, σ_w)"]
+    OUT["Trained Baseline<br/>NGAME_Training_Matrix.xlsx<br/>(persists until activity or Chart of Accounts changes)"]
+
+    START --> EXT --> SHIFT --> CPID --> COL
+    COL -->|next day| EXT
+    COL --> AGG --> OUT

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NGAME — DSRM Revision Draft with Reviewer Response Map (18 Jun 2026)</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 15px; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #fff; color: #1a1a1a; line-height: 1.65; }
+  .page { max-width: 860px; margin: 0 auto; padding: 40px 32px 72px; }
+  h1 { font-size: 1.75rem; font-weight: 700; line-height: 1.25; margin-bottom: 10px; }
+  h2 { font-size: 1.18rem; font-weight: 700; margin: 0 0 8px; }
+  h3 { font-size: 1rem; font-weight: 600; margin: 12px 0 6px; }
+  p, ul, ol { font-size: 0.9rem; line-height: 1.75; margin-bottom: 10px; }
+  ul, ol { margin-left: 1.25rem; }
+  li { margin-bottom: 4px; }
+  .section-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #2563eb; margin-bottom: 6px; }
+  .subtitle { font-size: 0.875rem; color: #555; }
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 28px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 8px 0; }
+  thead th { background: #f0f0f0; font-weight: 600; text-align: left; padding: 8px 10px; border: 1px solid #d4d4d4; }
+  tbody td { padding: 7px 10px; border: 1px solid #d4d4d4; vertical-align: top; }
+  tbody tr:nth-child(even) td { background: #fafafa; }
+  .callout { background: #eef4fb; border-left: 4px solid #3b82f6; border-radius: 3px; padding: 12px 16px; font-size: 0.855rem; color: #1d3a5f; line-height: 1.65; margin: 10px 0; }
+  .callout-warn { background: #fef9ee; border-left: 4px solid #d97706; color: #5c3d0a; }
+  .rev {
+    background: #f0fdf4; border-left: 4px solid #16a34a; border-radius: 3px;
+    padding: 10px 14px; font-size: 0.82rem; color: #14532d; line-height: 1.6; margin: 12px 0;
+  }
+  .rev strong { color: #166534; }
+  .rev-id { font-weight: 700; color: #15803d; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+  .tara { background: #fdf4ff; border-left-color: #9333ea; color: #581c87; }
+  .tara .rev-id { color: #7e22ce; }
+  code { font-size: 0.85em; background: #f4f4f4; padding: 1px 4px; border-radius: 2px; }
+  .map-table td:first-child { font-weight: 600; white-space: nowrap; width: 12%; }
+  .footer { font-size: 0.8rem; color: #888; font-style: italic; margin-top: 24px; }
+  @media print { .rev { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="section-label">Revision Draft — 18 June 2026</div>
+<h1>NGAME: A Design Science Artifact for Continuous Fraud Surveillance in Nonprofit and SME Cloud Accounting Systems</h1>
+<p class="subtitle">Second-pass author-guidance draft: DSRM structure (Geerts, 2011) with inline markers showing where each reviewer criticism from <em>Tara–Ron Writing Assignments.pdf</em> is addressed. Green boxes = incorporation guidance for Tara/Ron. Purple boxes = Tara’s assigned TO-DOs. Rewrite all body prose in human voice before submission.</p>
+
+<div class="callout-warn">
+<strong>Asymmetry note.</strong> The reviewed manuscript used a different structure. This draft <em>re-implements</em> design science (not merely re-labels old headings): Activities 1–6 drive §§3–8. Retain any strong prose from the original submission by transplanting it into the matching DSRM activity section listed in Part 0 below.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PART 0: REVIEWER RESPONSE MAP                              -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<hr>
+<h2>Part 0 — Reviewer Criticism → DSRM Section Map</h2>
+<p>Use this table when splitting rewrite work between co-authors. “Original claim to retire” flags language from the prior submission that must not reappear without new evidence.</p>
+
+<table class="map-table">
+  <thead><tr><th>Issue</th><th>Reviewer concern (summary)</th><th>Where addressed in this draft</th><th>Tara TO-DO</th><th>Original claim to retire</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>R1a</td>
+      <td>Problem statement underdeveloped; need nonprofit fraud statistics</td>
+      <td>§1.1, §3.1 (new nonprofit subsection)</td>
+      <td>Yes — lead author on problem narrative</td>
+      <td>Generic SME framing without nonprofit evidence</td>
+    </tr>
+    <tr>
+      <td>R1b</td>
+      <td>Implement DSM, not template reformat (Peffers; Geerts; Myers et al. 2024; Wang et al. 2025)</td>
+      <td>§2.4, §3 opening, Appendix A; knowledge-base citations at each activity</td>
+      <td>Yes — DSRM framing &amp; citations</td>
+      <td>Methodology section that reads as afterthought</td>
+    </tr>
+    <tr>
+      <td>R2</td>
+      <td>Limited empirical validation (TRL 3); need deployments, user testing, benchmarking; “85% accuracy” under-reported</td>
+      <td>§6 (demonstration), §7.3–7.7, §7.8 (TRL honesty), §7.9 (user testing)</td>
+      <td>Partial — field narrative; Ron on artifacts</td>
+      <td><strong>“85% accuracy”</strong> — not supported by current harness</td>
+    </tr>
+    <tr>
+      <td>R7</td>
+      <td>Training depends on individual bookkeeper behavior</td>
+      <td>§5.7 (baseline is org-level, not person-level)</td>
+      <td>Yes</td>
+      <td>Language implying baseline = one bookkeeper’s habits</td>
+    </tr>
+    <tr>
+      <td>R8</td>
+      <td>Turnover requires retraining; discuss mitigation</td>
+      <td>§5.7.2, §8.4</td>
+      <td>Yes</td>
+      <td>Implying retraining is costly or consultant-heavy</td>
+    </tr>
+    <tr>
+      <td>R9</td>
+      <td>Insufficient error-rate analysis; need triage vocabulary for CPI vs wCPI</td>
+      <td>§7.2 (expanded four-layer triage); Table 7.1</td>
+      <td>Yes — simplify glossary for journal</td>
+      <td>Undifferentiated FP/FN; TP/FP on Jaccard grid</td>
+    </tr>
+    <tr>
+      <td>R10</td>
+      <td>Complexity for low-resource orgs; cite Implementation Guide; TCO; FRP vs tech roles</td>
+      <td>§5.8 (new sustainability section)</td>
+      <td>Yes — TCO narrative</td>
+      <td>Implying FRP installs or maintains NGAME</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Items marked DONE in assignments:</strong> Three-layer glossary draft → superseded by four-layer glossary (<code>NGAME_Glossary_Four_Layer_Terminology.md</code>). Compress Tables A–E into §7.2 and one footnote for the journal version.</p>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ABSTRACT                                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="section-label">Manuscript body begins</div>
+
+<h2>Abstract</h2>
+<div class="rev"><span class="rev-id">Responds to R1a, R1b, R2</span>
+<strong>Authors:</strong> Open with nonprofit + SME fraud statistic (ACFE 2022 nonprofit median loss/duration). State explicitly that this is a <em>design science</em> proof-of-concept at Technology Readiness Level 3 — pipeline demonstrated, formal detection metrics deferred. Do <em>not</em> cite “85% accuracy.”
+</div>
+<p>Nonprofit organizations and small businesses delegate bookkeeping to staff or contractors while a volunteer or executive Financially Responsible Person (FRP) retains oversight—but often lacks tools for continuous forensic monitoring between audits. We present NGAME, a design science artifact that extracts daily QuickBooks Online transactions, builds RDF/OWL semantic snapshots, computes a multi-element Churn Persistence Index (CPI) behavioral fingerprint, compares activity against a trained organizational baseline, and delivers FRP-interpretable management warnings with locally hosted LLM scheme enrichment aligned to ACFE asset-misappropriation classes.</p>
+<p>Following the Design Science Research Methodology [Peffers et al., 2008; Geerts, 2011; Myers et al., 2024], we report six sequential research activities: problem identification, solution objectives, design and development, demonstration, evaluation, and communication. Evaluation applies Hevner et al.'s [2004] testing, analytical, observational, and descriptive methods to evidence from sandbox validation, anomaly injection, a consenting nonprofit field deployment (April–May 2026), and FRP interpretability review. We position the artifact at TRL 3 (proof-of-concept demonstrated) and introduce a four-layer triage vocabulary that replaces undifferentiated false-positive/false-negative language. Element-level precision and recall against injected ground truth await test-harness instrumentation; we report convergent analytical validity and operational FRP usability instead.</p>
+<p><strong>Keywords:</strong> design science research; forensic accounting; nonprofit fraud; churn persistence index; QuickBooks Online; continuous monitoring; triage; accounting information systems</p>
+
+<hr>
+
+<!-- §1 -->
+<h2>1&ensp; Introduction</h2>
+
+<h3>1.1&ensp; Problem: The Nonprofit and SME Oversight Gap</h3>
+<div class="rev tara"><span class="rev-id">R1a — Tara: explicit nonprofit problem statement</span>
+<strong>Incorporate here:</strong> ACFE 2022 statistics specific to nonprofits (median loss, median duration, % detected by tip vs audit). Name the FRP role (board treasurer, executive director). One concrete scenario: bookkeeper posts daily; FRP reviews bank statements monthly; fraud in vendor or expense categories persists until annual review. Cite AICPA/ACFE nonprofit guidance if available.
+</div>
+<p>Occupational fraud in nonprofit organizations presents a structurally familiar pattern: financial activity is delegated to a bookkeeper or external preparer, while governance responsibility rests with board members or executives who are not full-time accounting professionals [ACFE, 2022]. The Association of Certified Fraud Examiners reports that nonprofits suffer a median loss of [AUTHORS: insert ACFE 2022 nonprofit median loss] per scheme, with a median detection time of [AUTHORS: insert months] when continuous monitoring is absent—often exceeding the interval between board finance-committee reviews.</p>
+<p>Cloud accounting platforms such as QuickBooks Online have made daily transaction data programmatically accessible, yet no commercially available tool provides continuous, statistically grounded, FRP-operable forensic triage without episodic auditor involvement. NGAME addresses this gap for organizations that cannot sustain enterprise continuous-audit infrastructure but require same-day awareness when transaction-type activity deviates from an empirically learned organizational norm.</p>
+
+<h3>1.2&ensp; Research Approach: Design Science, Not Algorithmic Benchmarking Alone</h3>
+<div class="rev"><span class="rev-id">R1b — Implement DSM</span>
+<strong>Incorporate here:</strong> One paragraph explaining the revision: reviewers asked for explicit DSM; authors restructured the manuscript around Geerts (2011) six activities while preserving evidentiary content from the prior draft. Cite Peffers et al. (2007/2008), Geerts (2011), Myers et al. (2024), Wang, Chiu &amp; Vasarhelyi (2025) as accounting-DSR exemplars. State that each section names its activity, knowledge base, and artifact contribution per Christ et al. (2026) recommendations.
+</div>
+<p>This paper reports a design science research study [Hevner et al., 2004; March &amp; Smith, 1995] following the six-activity methodology adapted for accounting information systems [Geerts, 2011]. The contribution is an artifact—NGAME—not a standalone predictive accuracy claim. Evaluation compares observed artifact behavior against stated solution objectives (§4) using multiple Hevner [2004] evaluation strategies, consistent with recent accounting DSR guidance [Myers et al., 2024; Wang, Chiu &amp; Vasarhelyi, 2025].</p>
+
+<h3>1.3&ensp; Research Questions and Paper Organization</h3>
+<ul>
+  <li><strong>RQ1:</strong> Can daily QBO data be represented as RDF/OWL snapshots suitable for persistent organizational behavioral profiling?</li>
+  <li><strong>RQ2:</strong> Can a CPI phi array provide a statistically defensible baseline for transaction-type-level anomaly triage?</li>
+  <li><strong>RQ3:</strong> Can the full pipeline deliver FRP-interpretable warnings with locally hosted LLM scheme enrichment?</li>
+</ul>
+<p>§2 reviews literature. §§3–8 map to DSRM Activities 1–6. Appendix A provides the activity mapping table (Geerts, 2011, Table 1 format).</p>
+
+<hr>
+
+<!-- §2 -->
+<h2>2&ensp; Background and Literature Review</h2>
+<h3>2.1&ensp; Nonprofit Fraud and FRP Governance</h3>
+<p><em>[Tara: expand with nonprofit forensic accounting citations; board oversight literature.]</em></p>
+
+<h3>2.2&ensp; Continuous Monitoring and Audit Analytics</h3>
+<p>ACL/IDEA presuppose auditor operators and post-period review [Bovee et al., 2005]. Murthy &amp; Groomer [2004] established continuous auditing for enterprise ERP; NGAME extends the concept to cloud SME/nonprofit API access.</p>
+
+<h3>2.3&ensp; Design Science Research in Accounting (Knowledge Base for All Activities)</h3>
+<div class="rev tara"><span class="rev-id">R1b — DSM literature anchor</span>
+This subsection is the <strong>knowledge-base anchor</strong> reviewers expect. For each DSRM activity in §§3–8, cross-reference back here. Include one sentence per cited exemplar explaining what NGAME adopts (activity sequence from Geerts; evaluation diversity from Wang et al.; authoring standards from Myers et al.).
+</div>
+<p>Geerts [2011] introduces Peffers et al.'s [2008] nominal sequence—(1) problem identification, (2) objectives, (3) design and development, (4) demonstration, (5) evaluation, (6) communication—and retroactively maps AIS artifacts to each activity. Myers et al. [2024] and Wang, Chiu &amp; Vasarhelyi [2025] provide contemporary accounting-DSR evaluation and reporting standards that inform §7.</p>
+
+<hr>
+
+<!-- §3 -->
+<h2>3&ensp; Problem Identification and Motivation <span style="font-weight:400;font-size:0.85rem;color:#666;">(DSRM Activity 1)</span></h2>
+<div class="rev"><span class="rev-id">R1a, R1b</span>
+Transplant strongest problem-motivation paragraphs from the <em>original submission</em> here, then edit to nonprofit-first framing. End with explicit “Importance for practice” paragraph per Geerts Activity 1.
+</div>
+<p><em>[Body: gap analysis, weaknesses of QBO-native reporting, ACFE taxonomy alignment need—authors rewrite from original draft.]</em></p>
+
+<hr>
+
+<!-- §4 -->
+<h2>4&ensp; Objectives of a Solution <span style="font-weight:400;font-size:0.85rem;color:#666;">(DSRM Activity 2)</span></h2>
+<p>Objectives O1–O6 and design constraints as in prior draft (semantic representation through FRP-accessible warnings). <em>Authors: retain O1–O6 table from NGAME_FAS_DSRM_Manuscript_Draft_18Jun26.html.</em></p>
+
+<hr>
+
+<!-- §5 -->
+<h2>5&ensp; Design and Development <span style="font-weight:400;font-size:0.85rem;color:#666;">(DSRM Activity 3)</span></h2>
+
+<h3>5.1–5.6&ensp; Artifact Classification, Four-Layer Architecture, Pipeline</h3>
+<p><em>Retain §5.1–5.6 from prior DSRM draft: March &amp; Smith types; four-layer table; Phase I/II agents.</em></p>
+
+<h3>5.7&ensp; Training Baseline Design: Organizational Norm, Not Individual Bookkeeper Profiling</h3>
+<div class="rev tara"><span class="rev-id">R7, R8 — Tara: training dependency &amp; retraining</span>
+<strong>Core argument to develop:</strong> The training matrix accumulates <em>organization-level</em> transaction-type distributions (φ vectors), not keystroke or user-attribution profiles. Any authorized bookkeeper whose posting patterns conform to the entity’s chart-of-accounts taxonomy contributes interchangeable rows. Turnover changes <em>who</em> posts, not the <em>definition</em> of Vendors or Bills. Retraining after turnover is the same 30-day Training Mode the FRP already runs—no new model architecture.
+</div>
+<p>NGAME’s baseline is a vector of means (μ) and standard deviations (σ) computed per <em>transaction-type dimension</em> across N operational days (default N ≥ 30). Each training day captures the proportional distribution of activity classes—Vendors, Bills, BillPayments, and fourteen to sixteen additional canonical types—regardless of which user account created the underlying QBO records. The baseline therefore encodes <strong>organizational posting rhythm</strong>, not an individual bookkeeper’s typing habits, login times, or user ID.</p>
+<p>When a bookkeeper leaves and a replacement begins posting, new daily rows continue to reflect the same entity’s chart-of-accounts structure. Transient stylistic differences (e.g., a new preparer batches invoices on Fridays instead of daily) appear as gradual baseline drift absorbed by rolling μ and σ—not as a requirement to rebuild the artifact from scratch. Only a <em>structural</em> change—new GL accounts, new service lines, merger—materially shifts multiple φ dimensions simultaneously, which is precisely the class of event NGAME is designed to surface for FRP review.</p>
+
+<h3>5.7.2&ensp; Retraining After Turnover or Role Change</h3>
+<div class="rev tara"><span class="rev-id">R8</span>
+Describe the <strong>operational procedure</strong> in plain language: (1) FRP presses “Run Training Day” for 30 days after major org change, OR (2) consultant copies a fresh 30-day matrix from a parallel install. Emphasize <em>built-in simplicity</em>: dual-mode entry auto-switches; no code changes; FRP guide is one button per day.
+</div>
+<p>Mitigation for bookkeeper turnover follows the same Training Mode already used at initial deployment. The FRP (or designated contact) executes daily training runs until the matrix again contains thirty day-columns; Fraud Analysis Mode re-engages automatically via <code>ngame_dual_mode.py</code>. No agent reconfiguration, ontology rebuild, or consultant visit is required unless the organization changes accounting platforms or materially restructures its chart of accounts. For organizations that experience seasonal posting patterns, the existing baseline literature recommendation—ensure the training window precedes the surveillance period—applies; NGAME does not introduce a novel retraining tax beyond that standard continuous-monitoring assumption.</p>
+
+<h3>5.8&ensp; Deployment Roles, Complexity, and Total Cost of Ownership</h3>
+<div class="rev tara"><span class="rev-id">R10 — Tara: sustainability &amp; TCO</span>
+<strong>Cite:</strong> GitHub Implementation Guide (<code>IMPLEMENTATION_GUIDE.md</code> / README). Build a simple TCO table: one-time consultant days (install, OAuth, Ollama, handoff) vs ongoing FRP minutes/day (one dashboard button). State honestly: low-resource nonprofits need a <em>technical consultant</em> for setup; FRP daily cost is low <em>after</em> handoff.
+</div>
+<p>NGAME deliberately separates <strong>technical consultant</strong> responsibilities from <strong>FRP</strong> daily operation [Implementation Guide, 2026]. Setup—Python environment, OAuth credentials, Ollama model pull, dashboard service, supervised first training run—requires a systems administrator or implementation consultant comfortable with command-line tools. After handoff, the FRP uses only a browser bookmark (<code>localhost:5001/dashboard</code>) and the FRP Operations Guide; no Terminal, Git, or pip exposure is required for daily surveillance.</p>
+
+<table>
+  <thead><tr><th>Role</th><th>One-time effort</th><th>Ongoing effort</th><th>Competence required</th></tr></thead>
+  <tbody>
+    <tr><td>Technical consultant</td><td>4–8 hours: install, OAuth, Ollama, verify pipeline, print FRP guide</td><td>Episodic: OAuth refresh, Ollama model update, major QBO chart changes</td><td>Python, API credentials, basic IT</td></tr>
+    <tr><td>FRP</td><td>30–60 min supervised first training run</td><td>5–10 min/day Training Mode (Days 1–30); 5–10 min/day Fraud Analysis thereafter</td><td>None technical; reads plain-language warnings</td></tr>
+    <tr><td>Surveillance computer</td><td>Dedicated PC/Mac on org network</td><td>Power, internet, disk for TTL snapshots</td><td>Standard office IT</td></tr>
+  </tbody>
+</table>
+<p><em>[Tara: add dollar TCO ranges if desired—hardware amortization, consultant hourly rate bands, QBO subscription already sunk cost.]</em> Long-term sustainability strategy: (1) document handoff in FRP Operations Guide; (2) keep OAuth tokens on surveillance computer only; (3) planned packaged installer (future work) to reduce consultant dependency for multi-site nonprofit deployments.</p>
+
+<hr>
+
+<!-- §6 -->
+<h2>6&ensp; Demonstration <span style="font-weight:400;font-size:0.85rem;color:#666;">(DSRM Activity 4)</span></h2>
+<div class="rev"><span class="rev-id">R2 — deployments &amp; benchmarking</span>
+<strong>Evidence to cite:</strong> (1) QBO sandbox end-to-end; (2) anomaly injection 25 Apr 2026; (3) consenting nonprofit production QBO Apr–May 2026; (4) June 2026 smoke test. <strong>Cross-org benchmarking:</strong> honestly state single-org field evidence + planned university lab; do not imply multi-org benchmark exists yet.
+</div>
+<h3>6.1&ensp; Demonstration Contexts</h3>
+<ul>
+  <li><strong>Sandbox (Intuit QBO):</strong> Full pipeline validation on Craig's Design and Landscaping sandbox.</li>
+  <li><strong>Controlled injection (25 Apr 2026):</strong> Five ACFE-aligned pattern classes; 59 synthetic transactions; pipeline 8/8 checks passed.</li>
+  <li><strong>Nonprofit field deployment (Apr–May 2026):</strong> Production QBO; 30-day training; fraud analysis on live data; researcher-as-FRP interpretability confirmed.</li>
+  <li><strong>June 2026 operational smoke test:</strong> Type B session (large-dollar bills, new vendors); pipeline completed; JSON artifacts mutually consistent.</li>
+  <li><strong>Cross-organizational benchmarking (planned):</strong> University business-school lab with N peer-operated QBO companies—structured ground truth not yet collected.</li>
+</ul>
+
+<hr>
+
+<!-- §7 -->
+<h2>7&ensp; Evaluation <span style="font-weight:400;font-size:0.85rem;color:#666;">(DSRM Activity 5)</span></h2>
+
+<h3>7.1&ensp; Evaluation Framework and Technology Readiness Level</h3>
+<div class="rev"><span class="rev-id">R2 — TRL 3 honesty</span>
+State explicitly: TRL 3 ( proof-of-concept demonstrated in relevant environment). Not TRL 4+ (validated in operational nonprofit population at scale). This directly answers “limited empirical validation” without overselling.
+</div>
+<p>We evaluate NGAME against objectives O1–O6 using four Hevner et al. [2004] categories—testing, analytical, observational, descriptive—consistent with proof-of-concept design science artifacts [Geerts, 2011; Sedbrook &amp; Newmark, 2008]. We characterize the instantiation at <strong>Technology Readiness Level 3</strong>: experimental proof of concept demonstrated on live nonprofit QBO data and controlled injection, but not yet validated across a multi-organization benchmark sample.</p>
+
+<div class="callout-warn">
+<strong>Retire from prior submission:</strong> Any claim of “85% accuracy,” “83% top-3 recall,” or similar aggregate classifier accuracy. Current injection artifacts record pipeline pass/fail, not per-pattern ranked dimensions. Replace with convergent validity evidence (§7.7) and explicit limitation (§7.8.2).
+</div>
+
+<h3>7.2&ensp; Triage Vocabulary and Error-Rate Analysis</h3>
+<div class="rev tara"><span class="rev-id">R9 — triage vocabulary (CPI vs wCPI)</span>
+<strong>Tara’s task:</strong> Distill four-layer glossary into journal prose (~2 pages max). Table 7.1 below is the skeleton. Emphasize: CPI = presence/absence of record URIs (Layer 1); wCPI = same Jaccard structure dollar-weighted; neither uses FP/FN labels; Layer 2 alone uses precision/recall under controlled evaluation; Layer 4 uses benign resolution / corroborated alert.
+</div>
+<p>Reviewers appropriately asked how NGAME treats false positives and false negatives. NGAME uses these terms in <em>one restricted sense only</em>—Layer 2 controlled evaluation—because undifferentiated confusion-matrix language misstates what earlier layers measure.</p>
+
+<p><strong>Layer 1 — CPI (presence–absence churn).</strong> For each transaction type, NGAME compares yesterday’s and today’s record sets. Cells of the 2×2 partition are <em>retained</em> (a), <em>removed</em> (b), and <em>added</em> (c)—not true/false positives. CPI = a/n is Jaccard-style set similarity describing structural churn. A legitimately new vendor is <strong>Added</strong>, not a “false positive.”</p>
+
+<p><strong>Layer 1 — wCPI (dollar-weighted churn).</strong> wCPI applies the same partition logic with dollar weights instead of URI counts: wCPI = Σ(retained dollars)/Σ(all churned dollars). wCPI answers “did large dollars move?” when record identities churn. wCPI is accumulated in the training matrix alongside count-based CPI; in the current proof-of-concept, count-based φ dimensions primarily drive the z-score alert vector, with wCPI providing a parallel dollar-sensitive channel for interpretation [authors: note A1 backlog item if wCPI not yet separate dashboard row].</p>
+
+<p><strong>Layer 2 — detection evaluation.</strong> Under injected or documented ground truth, standard precision, recall, and FPR apply to top-<em>k</em> transaction-type ranking—not to individual transactions or dollar amounts.</p>
+
+<p><strong>Layer 4 — FRP adjudication.</strong> An alert resolved as legitimate after FRP review (e.g., ChartOfAccounts spike from new GL accounts, April 28 2026) is a <strong>benign resolution</strong>—a statistically warranted signal correctly adjudicated—not a “false positive” evidencing broken detection.</p>
+
+<h3>Table 7.1 — Where Error Language Applies (Reviewer Response Summary)</h3>
+<table>
+  <thead><tr><th>Signal</th><th>Measures</th><th>FP / FN applicable?</th><th>Operational / eval. vocabulary</th></tr></thead>
+  <tbody>
+    <tr><td>CPI (φ)</td><td>Record URI presence–absence churn per type</td><td><strong>No</strong></td><td>Retained, Added, Removed; z-score vs μ, σ</td></tr>
+    <tr><td>wCPI</td><td>Dollar-weighted churn per type</td><td><strong>No</strong> at Layer 1</td><td>Same partition; dollar-weighted α, δ; parallel z-score where instrumented</td></tr>
+    <tr><td>Top-<em>k</em> alert set</td><td>Ranked φ dimensions vs baseline</td><td><strong>Yes — eval. only</strong></td><td>TP, FP, FN, TN; precision; recall; FPR</td></tr>
+    <tr><td>FRP outcome</td><td>Human review after warning</td><td><strong>No</strong> (avoid unqualified FP)</td><td>Corroborated alert; benign resolution; missed event</td></tr>
+  </tbody>
+</table>
+
+<p><em>Footnote candidate (from glossary):</em> “False positives and false negatives apply only to Layer 2 evaluation of top-<em>k</em> dimension ranking against known anomalies. Day-over-day overlap uses retained/added/removed. FRP benign resolutions are not detector false positives under triage design.”</p>
+
+<h3>7.3&ensp; Testing Evaluation — Anomaly Injection (25 Apr 2026)</h3>
+<p>Five pattern classes; 8/8 validation checks passed; pipeline operational end-to-end. Per-pattern top-<em>k</em> logging not yet instrumented—cannot compute element-level precision/recall from existing JSON [§7.8.2].</p>
+
+<h3>7.4&ensp; Analytical Evaluation — CPI Decomposition (28 Apr 2026)</h3>
+<p>Cosine similarity 0.9958; max |z| = 5.0 (Vendors); 15/18 dimensions at z = 0.0; convergent with independent phi-coefficient analysis and <em>a priori</em> misappropriation risk ranking (#1 Vendors, score 0.878). <em>[Transplant full §5.4 prose from NGAME_DSRM_Evaluation_Draft.html.]</em></p>
+
+<h3>7.5&ensp; Observational Evaluation — Nonprofit Field Deployment</h3>
+<p>30-day training on production QBO; fraud analysis completed; FRP interpretability confirmed; ChartOfAccounts alert → benign resolution documented. <em>[Transplant §5.5 from evaluation draft.]</em></p>
+
+<h3>7.6&ensp; Descriptive Evaluation — Comparator Analysis</h3>
+<p>NGAME vs ACL/IDEA on continuous FRP-operable cloud API surveillance. <em>[Transplant §5.6 table.]</em></p>
+
+<h3>7.7&ensp; Convergent Validity Summary</h3>
+<p>Testing, z-score, phi-coefficient, <em>a priori</em> risk rank, field deployment, and comparative argument converge on localized Vendors/Contractors alerting—not undifferentiated global alarm. <em>[Transplant §5.7 table.]</em></p>
+
+<h3>7.8&ensp; Limitations</h3>
+<ol>
+  <li>No prospective trial on genuine fraud; TRL 3 only.</li>
+  <li>Injection harness lacks per-pattern top-<em>k</em> output → no publishable precision/recall yet (replaces prior “85% accuracy” claim).</li>
+  <li>Single nonprofit field org; cross-org benchmark deferred to university lab.</li>
+  <li>LLM Layer 3 variability not systematically evaluated.</li>
+  <li>wCPI not yet surfaced as distinct FRP dashboard row (parallel channel in training matrix).</li>
+</ol>
+
+<h3>7.9&ensp; User Testing and FRP Interpretability</h3>
+<div class="rev"><span class="rev-id">R2 — user testing evidence</span>
+<strong>Incorporate:</strong> Field deployment FRP review (no technical explanation needed); June 2026 smoke test; quote or paraphrase FRP Operations Guide workflow. Formal UX study is future work—state that clearly.
+</div>
+<p>User testing in this proof-of-concept took the form of <strong>naturalistic FRP review</strong> rather than a controlled usability lab. During the nonprofit deployment, the FRP (researcher acting in role) reviewed management dashboard output and <code>NGAME_Fraud_Analysis_readable.json</code> without developer explanation—satisfying O6. The June 2026 smoke test confirmed that Type B injected activity (large-dollar bills, six new vendors) produced internally consistent JSON and visible HIGH signals on Vendors/Contractors dimensions, with acceptable wall-clock runtime. Formal timed usability metrics (SUS scores, comprehension quizzes) are planned with the university lab deployment.</p>
+
+<hr>
+
+<!-- §8 -->
+<h2>8&ensp; Conclusion and Communication <span style="font-weight:400;font-size:0.85rem;color:#666;">(DSRM Activity 6)</span></h2>
+<p>Contribution: (1) NGAME instantiation for nonprofit/SME FRP triage; (2) CPI four-layer trust model with triage vocabulary responding to reviewer concerns on error language; (3) local LLM scheme enrichment with confidentiality. Artifact network positioning table retained from prior draft.</p>
+
+<h3>8.1&ensp; Response to Reviewers (optional subsection or cover letter only)</h3>
+<div class="rev">
+<strong>Authors decide:</strong> JFAR may prefer a separate “Response to Reviewers” document. If so, copy Part 0 map + one paragraph per issue. Do not duplicate in main text unless journal allows integrated revision markup.
+</div>
+
+<hr>
+
+<h2>Appendix A — DSRM Activity Mapping</h2>
+<p><em>Retain table from prior draft; add column “Reviewer issues addressed.”</em></p>
+
+<h2>Appendix B — Phi Array Definitions; Appendix C — Triage Vocabulary (optional)</h2>
+<p><em>If §7.2 exceeds page limit, move Table 7.1 and Layer 1 formulas to appendix; keep one-paragraph summary in §7.2.</em></p>
+
+<hr>
+
+<div class="footer">
+  <p><strong>Files:</strong> Prior scaffold: <code>NGAME_FAS_DSRM_Manuscript_Draft_18Jun26.html</code>. Assignments: <code>Tara-Ron Writing Assignments.pdf</code>. Glossary source: <code>NGAME_Glossary_Four_Layer_Terminology.md</code>. Evaluation prose: <code>NGAME_DSRM_Evaluation_Draft.html</code>.</p>
+  <p><strong>Co-author split suggestion:</strong> Tara — §§1.1, 2.1, 3, 5.7–5.8, 7.2 narrative, 7.9, nonprofit stats. Ron — §§5.1–5.6, 6, 7.3–7.7 artifacts, Appendix B, DSRM tables.</p>
+</div>
+
+</div>
+</body>
+</html>

@@ -11,6 +11,11 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 import logging
 
+from ngame_transaction_types import (
+    dollar_signal_duplicates_count,
+    is_actionable_anomaly,
+)
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -56,8 +61,24 @@ class NGameAnomalyIdentificationAgent:
         logger.info(f"🔍 {self.name}: Identifying top {top_n} anomalies")
         
         try:
-            # Get top N anomalies
-            top_anomalies = ranked_differences[:top_n]
+            def _composite_rank_key(diff: Dict[str, Any]) -> float:
+                count_z = abs(float(diff.get('abs_z_score') or 0.0))
+                dollar_z = abs(float(diff.get('dollar_abs_z_score') or 0.0))
+                index = int(diff.get('index') or 0)
+                tx_type = self.transaction_type_mappings.get(index, '')
+                if dollar_signal_duplicates_count(diff, tx_type):
+                    return count_z
+                return max(count_z, dollar_z)
+
+            # Only surface categories with elevated count or dollar signal — not
+            # quiet-day statistical noise (e.g. ChartOfAccounts with CPI=1.0).
+            eligible = [d for d in ranked_differences if is_actionable_anomaly(d)]
+            sorted_differences = sorted(
+                eligible,
+                key=_composite_rank_key,
+                reverse=True,
+            )
+            top_anomalies = sorted_differences[:top_n]
             
             # Enrich anomalies with transaction type information
             enriched_anomalies = []
@@ -68,13 +89,21 @@ class NGameAnomalyIdentificationAgent:
                 
                 enriched_anomaly = {
                     'index': index,
+                    'phi_index': f'φ{index}',
                     'transaction_type': transaction_type,
                     'today_value': anomaly['today_value'],
                     'average_value': anomaly['average_value'],
                     'absolute_difference': anomaly['absolute_difference'],
                     'percent_deviation': anomaly['percent_deviation'],
                     'deviation_level': anomaly['deviation_level'],
-                    'rank': anomaly['rank']
+                    'z_score': anomaly.get('z_score', 0.0),
+                    'abs_z_score': anomaly.get('abs_z_score', 0.0),
+                    'dollar_alarm_level': anomaly.get('dollar_alarm_level', 'LOW'),
+                    'dollar_alarm': bool(anomaly.get('dollar_alarm')),
+                    'dollar_z_score': anomaly.get('dollar_z_score', 0.0),
+                    'dollar_abs_z_score': anomaly.get('dollar_abs_z_score', 0.0),
+                    'composite_alarm': bool(anomaly.get('composite_alarm')),
+                    'rank': anomaly['rank'],
                 }
                 
                 enriched_anomalies.append(enriched_anomaly)

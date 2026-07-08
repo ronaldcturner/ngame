@@ -1,0 +1,84 @@
+/* Figure 4 - NGAME Agent Interaction Network (publication, Graphviz) */
+digraph NGAME_Fig4 {
+    rankdir=TB;
+    bgcolor="white";
+    splines=polyline;
+    nodesep=0.28;
+    ranksep=0.42;
+    pad=0.15;
+    fontname="Helvetica";
+    node [shape=box, style="rounded,filled", fillcolor="#ECECFF",
+          color="#5C5C99", fontname="Helvetica", fontsize=14,
+          margin="0.14,0.09"];
+    edge [fontname="Helvetica", fontsize=12, color="#444444", arrowsize=0.8];
+
+    subgraph cluster_orch {
+        label="Orchestration";
+        fontsize=15; fontname="Helvetica-Bold";
+        style="rounded,filled"; fillcolor="#FBFBE7"; color="#C9C97A";
+        P1  [label="Phase 1 Director Agent\n(Training run)"];
+        FAM [label="Fraud Analysis Flow Manager\n(Daily run)"];
+    }
+
+    subgraph cluster_src {
+        label="Data & Knowledge Sources";
+        fontsize=15; fontname="Helvetica-Bold";
+        style="rounded,filled"; fillcolor="#FBFBE7"; color="#C9C97A";
+        QBO [label="QuickBooks Online API\nOAuth 2.0, read-only"];
+        TTL [label="Today.ttl / Yesterday.ttl\nOWL snapshots"];
+        MTX [label="Training Matrix .xlsx\nmean (col B), std (col C), daily cols"];
+        BUF [label="CPI Rolling Buffer\nlast 30 days"];
+        TAX [label="Asset_Misappropriation.ttl +\nCurated Transaction Types.ttl\n(ACFE Fraud Tree)"];
+    }
+
+    subgraph cluster_stat {
+        label="Statistical Detection  -  Layers 1-2  (18 transaction types)";
+        fontsize=15; fontname="Helvetica-Bold";
+        style="rounded,filled"; fillcolor="#EEF6EE"; color="#9CC79C";
+        DE   [label="Data Extraction Agent"];
+        INJ  [label="Anomaly Injection Agent\n(demo / test only)"];
+        CPI  [label="CPI Analysis Agent\nJaccard persistence + dollar-weighted wCPI"];
+        SCPI [label="Sequence CPI Agent\nslow-burn, window L"];
+        CC   [label="Churn Comparison Agent\nz-score vs mean / std"];
+        AID  [label="Anomaly Identification Agent\ntop-3 by |z|"];
+    }
+
+    subgraph cluster_alert {
+        label="Interpretation & Alerting  -  Layers 3-4";
+        fontsize=15; fontname="Helvetica-Bold";
+        style="rounded,filled"; fillcolor="#FBEFEF"; color="#D6A3A3";
+        AM  [label="Account Mapping Agent\nChart of Accounts"];
+        LLM [label="LLM Analysis Agent\nOllama llama3.1:8b, RAG"];
+        MAP [label="Misappropriation Mapping & Scoring\ndeterministic ACFE anchor"];
+        CCW [label="Credit-Card Watch Agent\npersonal-use / structuring"];
+        MW  [label="Management Warning Agent\nHIGH / MEDIUM / LOW"];
+    }
+
+    FRP [label="FRP - Dashboard / Email Alerts", fillcolor="#FFF3CD", color="#C9A227"];
+
+    /* edges */
+    P1  -> DE  [label="training"];
+    FAM -> DE  [label="daily"];
+    QBO -> DE;
+    DE  -> TTL;
+    TTL -> CPI;
+    INJ -> TTL [style=dashed, label="test"];
+    CPI -> MTX;
+    CPI -> BUF;
+    BUF -> SCPI;
+    CPI -> CC;
+    SCPI -> CC;
+    MTX -> CC;
+    CC  -> AID;
+    AID -> AM;
+    TTL -> AM;
+    AM  -> LLM;
+    AM  -> MAP;
+    TAX -> LLM;
+    TAX -> MAP;
+    QBO -> CCW;
+    LLM -> MW;
+    MAP -> MW;
+    CCW -> MW;
+    MW  -> FRP;
+}

@@ -44,21 +44,17 @@ class NGameMatrixManagementAgent:
     def __init__(self):
         self.name = "NGameMatrixManagementAgent"
         self.matrix_file = "NGAME_Training_Matrix.xlsx"
-        self.cpi_array_size = 18  # 18 transaction types (incl. Vendors φ18)
 
         # Check if openpyxl is available
         if not OPENPYXL_AVAILABLE:
             logger.error("❌ openpyxl is not available. Matrix operations will not work.")
             raise ImportError("openpyxl is required for matrix management operations")
 
+        from ngame_transaction_types import STANDARD_TRANSACTION_TYPES, CPI_ARRAY_SIZE
+
         # Define the 18 standard transaction types in order
-        self.transaction_types = [
-            'Customers', 'Recurring_payments', 'Invoices', 'Payments', 'Time_Activities',
-            'Bills', 'Bill_Payments', 'Expenses', 'Bank_Transactions', 'Sales_transactions',
-            'Products', 'PurchaseOrders', 'Recurring_Transactions', 'Contractors',
-            'Mileage', 'ChartOfAccounts', 'EmployeePayroll',
-            'Vendors',          # φ18 — high-risk fraud hot-spot
-        ]
+        self.transaction_types = list(STANDARD_TRANSACTION_TYPES)
+        self.cpi_array_size = CPI_ARRAY_SIZE
         
         logger.info(f"🤖 {self.name} initialized")
     

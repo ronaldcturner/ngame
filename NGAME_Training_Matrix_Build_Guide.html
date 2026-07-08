@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NGAME — Building the 30-Session Training Matrix from Scratch</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 15px; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #fff;
+    color: #1a1a1a;
+    line-height: 1.65;
+  }
+  .page { max-width: 820px; margin: 0 auto; padding: 40px 32px 72px; }
+
+  h1 { font-size: 1.7rem; font-weight: 700; line-height: 1.25; margin-bottom: 10px; }
+  h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+  h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+  p  { font-size: 0.9rem; margin-bottom: 8px; }
+  p:last-child { margin-bottom: 0; }
+  li { font-size: 0.9rem; margin-bottom: 5px; }
+  ul, ol { padding-left: 1.4em; margin-bottom: 8px; }
+
+  .label {
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: #2563eb; margin-bottom: 6px;
+  }
+  .subtitle { font-size: 0.875rem; color: #555; }
+
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 26px 0; }
+
+  /* Callouts */
+  .callout {
+    border-left: 4px solid #3b82f6; background: #eef4fb;
+    border-radius: 3px; padding: 12px 16px;
+    font-size: 0.875rem; color: #1d3a5f; line-height: 1.65;
+  }
+  .callout.warn {
+    border-color: #f59e0b; background: #fffbeb; color: #78350f;
+  }
+  .callout.danger {
+    border-color: #ef4444; background: #fef2f2; color: #7f1d1d;
+  }
+  .callout.ok {
+    border-color: #22c55e; background: #f0fdf4; color: #14532d;
+  }
+  .callout strong { font-weight: 700; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 0.855rem; margin: 8px 0; }
+  thead th {
+    background: #f0f0f0; font-weight: 600;
+    text-align: left; padding: 8px 11px;
+    border: 1px solid #d4d4d4;
+  }
+  tbody td { padding: 7px 11px; border: 1px solid #d4d4d4; vertical-align: top; }
+  tbody tr:nth-child(even) td { background: #fafafa; }
+
+  /* Step blocks */
+  .step-block {
+    display: flex; gap: 14px; align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .step-num {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #2563eb; color: #fff;
+    font-weight: 700; font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .step-body { flex: 1; }
+  .step-body strong { font-weight: 600; }
+
+  /* Session type cards */
+  .session-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin: 8px 0;
+  }
+  .session-card {
+    border: 1px solid #d4d4d4; border-radius: 4px;
+    padding: 10px 12px; font-size: 0.855rem;
+  }
+  .session-card .sc-label {
+    font-weight: 700; color: #2563eb;
+    font-size: 0.78rem; text-transform: uppercase;
+    letter-spacing: 0.05em; margin-bottom: 4px;
+  }
+  .session-card ul { margin-bottom: 0; }
+
+  /* Checkbox list */
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 6px; }
+  .checklist li::before {
+    content: "☐"; font-size: 1rem; flex-shrink: 0; line-height: 1.4;
+    color: #555;
+  }
+
+  code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+         font-size: 0.82rem; background: #f3f4f6; padding: 1px 5px; border-radius: 3px; }
+
+  .footer { font-size: 0.8rem; color: #888; font-style: italic; }
+
+  @media print {
+    body { font-size: 10.5pt; }
+    h1 { font-size: 15pt; }
+    h2 { font-size: 12pt; }
+    .page { padding: 12px 0; }
+    thead th { background: #e8e8e8 !important; -webkit-print-color-adjust: exact; }
+    .callout { -webkit-print-color-adjust: exact; }
+    .step-num { background: #2563eb !important; color: #fff !important; -webkit-print-color-adjust: exact; }
+    .session-card .sc-label { color: #2563eb !important; -webkit-print-color-adjust: exact; }
+    hr { margin: 14px 0; }
+    .session-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="label">NGAME — Researcher / Technical Use</div>
+  <h1>Building the 30-Session Training Matrix from Scratch</h1>
+  <p class="subtitle">A standalone guide for constructing an authentic NGAME_Training_Matrix.xlsx through 30 real QBO sessions. Each session = post transactions in QBO → run Phase I in NGAME dashboard → verify row recorded. No Terminal required after initial setup.</p>
+
+  <br>
+  <div class="callout">
+    <strong>Purpose of this procedure:</strong> The Training Matrix produced by this guide is built from real QBO transaction data posted in live sessions. It replaces any previously synthesized matrix and provides the authentic behavioral baseline required to support the evaluation claims in the DSRM paper (§5.4 Analytical Evaluation and §5.5 Observational Evaluation).
+  </div>
+
+  <hr>
+
+  <!-- PART 1: PREREQUISITES -->
+  <h2>Part 1 — Prerequisites (confirm before starting)</h2>
+
+  <ul class="checklist">
+    <li>NGAME dashboard is running and accessible at <code>http://localhost:5001/dashboard</code> (or your configured port).</li>
+    <li>QBO sandbox (Craig's Design and Landscaping) or your nonprofit's QBO account is accessible in a browser. You are logged in as an Admin user.</li>
+    <li>Ollama is <strong>not</strong> required for Phase I. You may leave it stopped during the training build.</li>
+    <li>You have at least 2–3 hours of working time available (30 sessions × ~5 minutes each, spread across as many sittings as you like).</li>
+  </ul>
+
+  <hr>
+
+  <!-- PART 2: CLEAR THE OLD MATRIX -->
+  <h2>Part 2 — Clear the Existing (Synthesized) Matrix</h2>
+
+  <div class="callout warn">
+    <strong>Do this exactly once before Session 1.</strong> If you skip this step, NGAME will append new rows to the synthesized matrix and your baseline will be contaminated.
+  </div>
+
+  <br>
+
+  <div class="step-block">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <strong>Locate the training matrix file</strong> in the NGAME project folder:<br>
+      <code>NGAME_Training_Matrix.xlsx</code>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <strong>Rename it</strong> (do not delete — keep as a backup):<br>
+      <code>NGAME_Training_Matrix_SYNTHESIZED_BACKUP.xlsx</code>
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <strong>Also clear the TTL snapshot files</strong> so NGAME starts from a clean state:<br>
+      Rename <code>quickbooks_ontology_Today.ttl</code> → <code>_BACKUP_Today.ttl</code><br>
+      Rename <code>quickbooks_ontology_Yesterday.ttl</code> → <code>_BACKUP_Yesterday.ttl</code><br>
+      (Or the Wave equivalents if using Wave Financial.)
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <strong>Verify the dashboard shows "0 of 30"</strong> under Training Progress. If it shows any other count, call your technical contact — the old matrix data may still be cached.
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- PART 3: WHAT TO POST IN QBO -->
+  <h2>Part 3 — What to Post in QBO Each Session</h2>
+
+  <p>Each session must post a <strong>coherent, varied batch</strong> of transactions representing a plausible business day. The phi array measures the <em>proportional mix</em> of transaction types — not dollar amounts. Variety across sessions trains a realistic baseline.</p>
+
+  <p>The table below defines <strong>six session types</strong>. Rotate through them in order (A → B → C → D → E → F → A → B …) so the 30 sessions cover the full range of normal business activity five times over.</p>
+
+  <div class="session-grid">
+    <div class="session-card">
+      <div class="sc-label">Type A — Billing Day</div>
+      <ul>
+        <li>3–5 new Invoices (customers)</li>
+        <li>1–2 Bill Payments (pay existing bills)</li>
+        <li>1 Expense transaction</li>
+      </ul>
+    </div>
+    <div class="session-card">
+      <div class="sc-label">Type B — Vendor Day</div>
+      <ul>
+        <li>2–3 new Bills (from vendors)</li>
+        <li>1 new Vendor record</li>
+        <li>1–2 Invoices</li>
+        <li>1 Bank Transaction (deposit)</li>
+      </ul>
+    </div>
+    <div class="session-card">
+      <div class="sc-label">Type C — Payroll / Contractor Day</div>
+      <ul>
+        <li>2–3 Contractor payments (Checks or Expenses)</li>
+        <li>1–2 Bills</li>
+        <li>1 Invoice</li>
+      </ul>
+    </div>
+    <div class="session-card">
+      <div class="sc-label">Type D — Collections Day</div>
+      <ul>
+        <li>3–4 Customer Payments (receive payment on invoices)</li>
+        <li>1–2 Bank Deposits</li>
+        <li>1 Expense</li>
+      </ul>
+    </div>
+    <div class="session-card">
+      <div class="sc-label">Type E — Mixed / Light Day</div>
+      <ul>
+        <li>1–2 Invoices</li>
+        <li>1 Bill</li>
+        <li>1 Bill Payment</li>
+        <li>1 Expense</li>
+        <li>1 Bank Transaction</li>
+      </ul>
+    </div>
+    <div class="session-card">
+      <div class="sc-label">Type F — Admin Day</div>
+      <ul>
+        <li>1 new GL Account (Chart of Accounts addition)</li>
+        <li>1–2 recurring transactions</li>
+        <li>2 Estimates</li>
+        <li>1 Bill Payment</li>
+      </ul>
+    </div>
+  </div>
+
+  <br>
+  <div class="callout">
+    <strong>Dollar amounts don't matter for phi array training.</strong> The phi array measures proportional frequency of transaction <em>types</em>, not magnitudes. Use round, plausible amounts (e.g. $500 invoices, $200 bills) — don't spend time on realistic financials. Speed of entry is the priority.
+  </div>
+
+  <br>
+  <div class="callout warn">
+    <strong>Do not post transactions that would misrepresent the organization.</strong> If using the live nonprofit's QBO account, use clearly fictitious amounts and mark transactions as test entries in the memo field (e.g. "NGAME training test"). Better: use the QBO sandbox (Craig's Design and Landscaping), where no real financial records are affected.
+  </div>
+
+  <hr>
+
+  <!-- PART 4: PER-SESSION PROCEDURE -->
+  <h2>Part 4 — Per-Session Procedure (repeat 30 times)</h2>
+
+  <p>Each session takes approximately <strong>5–8 minutes</strong>. Sessions may be done back-to-back in one sitting or spread across multiple days.</p>
+
+  <div class="callout ok" style="margin: 14px 0 18px;">
+    <strong>Stopping the dashboard between sessions</strong><br>
+    You may stop and restart <code>app-simple.py</code> between sessions without losing training progress. The dashboard is only a launcher; your build is stored on disk:
+    <ul style="margin: 8px 0 0;">
+      <li><code>NGAME_Training_Matrix.xlsx</code> — day columns, μ, and σ</li>
+      <li><code>quickbooks_ontology_Today.ttl</code> and <code>quickbooks_ontology_Yesterday.ttl</code> — snapshots for the next CPI comparison</li>
+    </ul>
+    <strong>When it is safe to stop:</strong> wait until <strong>Run Today's Training Day</strong> finishes (success message in the live output panel), then press <strong>Ctrl+C</strong> in the terminal running the dashboard.<br>
+  <strong>Do not stop</strong> while the training run is still scrolling — you may leave the matrix or TTL files half-updated.<br>
+    <strong>To resume later:</strong> from the project folder run <code>python3 ngame_ui/app-simple.py</code>, open <code>http://localhost:5001/dashboard</code>, and confirm Training Progress still shows your last count (e.g. <code>7 of 30</code>). The live operation log clears on restart; that does not affect the matrix.
+  </div>
+
+  <div class="step-block">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <strong>Check your session type</strong> from the rotation table (A → B → C → D → E → F → repeat). Note the session number (1 through 30).
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <strong>Post the transactions in QBO.</strong> Log into your QBO account (sandbox or nonprofit), add the transaction types listed for this session type. Click Save after each entry. Do not close QBO.
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <strong>Switch to the NGAME Dashboard</strong> in your browser (<code>http://localhost:5001/dashboard</code>).
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <strong>Scroll to NGAME Operations.</strong> Confirm the Training Progress section shows Phase I and a progress bar (e.g. "7 of 30").
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <strong>Click "Run Today's Training Day"</strong> (large green button) or "Run Training Day" in the Training box.
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <strong>Watch the live output panel.</strong> Do not close the tab while it runs (1–3 minutes). Look for a success message such as:<br>
+      <code>Day 8 recorded successfully — 22 days remaining</code><br>
+      The progress bar advances by one.
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-num">7</div>
+    <div class="step-body">
+      <strong>Log the session</strong> in the tracking sheet below. Note the session number, session type, and any dashboard anomaly shown (expected: LOW or none in Phase I).
+    </div>
+  </div>
+  <div class="step-block">
+    <div class="step-num">8</div>
+    <div class="step-body">
+      <strong>Repeat from Step 1</strong> for the next session, moving to the next session type in the rotation.
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- PART 5: SESSION LOG -->
+  <h2>Part 5 — Session Log (fill in as you go)</h2>
+
+  <table>
+    <thead><tr><th style="width:70px">Session #</th><th style="width:80px">Type</th><th style="width:110px">Date / Time</th><th style="width:110px">Dashboard confirms</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>A</td><td></td><td>1 of 30</td><td></td></tr>
+      <tr><td>2</td><td>B</td><td></td><td>2 of 30</td><td></td></tr>
+      <tr><td>3</td><td>C</td><td></td><td>3 of 30</td><td></td></tr>
+      <tr><td>4</td><td>D</td><td></td><td>4 of 30</td><td></td></tr>
+      <tr><td>5</td><td>E</td><td></td><td>5 of 30</td><td></td></tr>
+      <tr><td>6</td><td>F</td><td></td><td>6 of 30</td><td></td></tr>
+      <tr><td>7</td><td>A</td><td></td><td>7 of 30</td><td></td></tr>
+      <tr><td>8</td><td>B</td><td></td><td>8 of 30</td><td></td></tr>
+      <tr><td>9</td><td>C</td><td></td><td>9 of 30</td><td></td></tr>
+      <tr><td>10</td><td>D</td><td></td><td>10 of 30</td><td></td></tr>
+      <tr><td>11</td><td>E</td><td></td><td>11 of 30</td><td></td></tr>
+      <tr><td>12</td><td>F</td><td></td><td>12 of 30</td><td></td></tr>
+      <tr><td>13</td><td>A</td><td></td><td>13 of 30</td><td></td></tr>
+      <tr><td>14</td><td>B</td><td></td><td>14 of 30</td><td></td></tr>
+      <tr><td>15</td><td>C</td><td></td><td>15 of 30</td><td></td></tr>
+      <tr><td>16</td><td>D</td><td></td><td>16 of 30</td><td></td></tr>
+      <tr><td>17</td><td>E</td><td></td><td>17 of 30</td><td></td></tr>
+      <tr><td>18</td><td>F</td><td></td><td>18 of 30</td><td></td></tr>
+      <tr><td>19</td><td>A</td><td></td><td>19 of 30</td><td></td></tr>
+      <tr><td>20</td><td>B</td><td></td><td>20 of 30</td><td></td></tr>
+      <tr><td>21</td><td>C</td><td></td><td>21 of 30</td><td></td></tr>
+      <tr><td>22</td><td>D</td><td></td><td>22 of 30</td><td></td></tr>
+      <tr><td>23</td><td>E</td><td></td><td>23 of 30</td><td></td></tr>
+      <tr><td>24</td><td>F</td><td></td><td>24 of 30</td><td></td></tr>
+      <tr><td>25</td><td>A</td><td></td><td>25 of 30</td><td></td></tr>
+      <tr><td>26</td><td>B</td><td></td><td>26 of 30</td><td></td></tr>
+      <tr><td>27</td><td>C</td><td></td><td>27 of 30</td><td></td></tr>
+      <tr><td>28</td><td>D</td><td></td><td>28 of 30</td><td></td></tr>
+      <tr><td>29</td><td>E</td><td></td><td>29 of 30</td><td></td></tr>
+      <tr><td>30</td><td>F</td><td></td><td><strong>30 of 30 ✓</strong></td><td></td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <!-- PART 6: COMPLETION CHECKS -->
+  <h2>Part 6 — Completion Checks (after Session 30)</h2>
+
+  <ul class="checklist">
+    <li>Dashboard Training Progress bar shows <strong>30 of 30</strong>.</li>
+    <li><code>NGAME_Training_Matrix.xlsx</code> exists in the project folder and is not the backup file.</li>
+    <li>Open <code>NGAME_Training_Matrix.xlsx</code> — confirm it has <strong>at least 30 data rows</strong> (plus header). Columns should show phi values (decimals between 0 and 1), not all zeros.</li>
+    <li>Each row's phi values vary slightly from row to row — not all identical — confirming the six session types produced genuine variation.</li>
+    <li>The TTL files <code>quickbooks_ontology_Today.ttl</code> and <code>quickbooks_ontology_Yesterday.ttl</code> are present and non-empty.</li>
+  </ul>
+
+  <br>
+  <div class="callout ok">
+    <strong>Training complete.</strong> The matrix is now an authentic behavioral baseline derived from real QBO transactions posted across 30 sessions. You are ready to proceed to Phase II fraud checks and to re-run the injection test suite and the April 28-style analytical evaluation run described in the DSRM Evaluation draft.
+  </div>
+
+  <hr>
+
+  <!-- PART 7: PAPER ACCURACY NOTES -->
+  <h2>Part 7 — Notes for the DSRM Paper (for the author's use)</h2>
+
+  <p>Once this matrix is built, the following statements in the Evaluation draft become accurate and can be used without qualification:</p>
+
+  <table>
+    <thead><tr><th style="width:30%">Draft statement</th><th>Becomes accurate because</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>"…a mature operational run — one in which the training matrix is populated from genuine historical transaction data…" (§5.4)</td>
+        <td>The matrix is now built from 30 sessions of real QBO transactions posted and extracted through the live pipeline.</td>
+      </tr>
+      <tr>
+        <td>"…NGAME was executed daily over a 30-day baseline accumulation window…" (§5.5)</td>
+        <td>Accurate if rephrased as: "NGAME was executed over 30 sessions of QBO activity, each session representing a discrete day's worth of posted transactions, accumulating the training matrix through the live dashboard Phase I workflow." The word "daily" should be changed to "over 30 sessions" to reflect the compressed timeline.</td>
+      </tr>
+      <tr>
+        <td>The injection test suite (§5.3) re-run after this matrix is built</td>
+        <td>The re-run will compare injected anomalies against an authentic baseline, making the z-score deviations meaningful rather than deviations from a synthetic construct.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br>
+  <div class="callout warn">
+    <strong>One revision still required in the paper regardless:</strong> §5.5 should not state "executed daily" — the correct characterization is "executed over 30 compressed sessions." The compression is legitimate (the phi array captures incremental QBO state changes per session, which is equivalent to day-over-day changes in production), but it must be described accurately. Reviewers familiar with behavioral baseline methods will notice if calendar days are implied but not delivered.
+  </div>
+
+  <hr>
+
+  <!-- TROUBLESHOOTING -->
+  <h2>Troubleshooting</h2>
+
+  <table>
+    <thead><tr><th style="width:35%">Problem</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td>Dashboard shows same day count after clicking Run Training Day</td><td>Check the live output panel for an error message. Most likely: QBO OAuth token expired. Re-run the OAuth flow (see IMPLEMENTATION_GUIDE.md § OAuth refresh) then retry.</td></tr>
+      <tr><td>Live output shows "Prerequisites not met"</td><td>Confirm the TTL backup files from Part 2 Step 3 were renamed (not left in place with the original filenames). NGAME may be trying to load an old snapshot.</td></tr>
+      <tr><td>Progress bar jumps by more than 1</td><td>NGAME may have found multiple TTL pairs queued. This is harmless for training purposes but worth noting in your session log.</td></tr>
+      <tr><td>Matrix row count does not match session count</td><td>Open NGAME_Training_Matrix.xlsx and count rows manually. If a session failed silently, re-run that session type and add a new QBO transaction batch first.</td></tr>
+      <tr><td>QBO sandbox has no existing transactions to compare against</td><td>Session 1's phi array will be computed against an empty Yesterday snapshot. This produces a high-deviation row 1 — that is expected and normal. The matrix stabilizes from session 2 onward as Yesterday is populated.</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <div class="footer">
+    <p>NGAME — Training Matrix Build Guide &nbsp;|&nbsp; For researcher / technical use &nbsp;|&nbsp; May 2026</p>
+    <p style="margin-top:4px;">Related documents: FRP_OPERATIONS_GUIDE.html (Phase II daily procedure) &nbsp;·&nbsp; NGAME_DSRM_Evaluation_Draft.html (paper draft this procedure supports)</p>
+  </div>
+
+</div>
+</body>
+</html>

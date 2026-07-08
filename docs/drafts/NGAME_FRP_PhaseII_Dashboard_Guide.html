@@ -1,0 +1,915 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+<title>NGAME_FRP_PhaseII_Dashboard_Guide.md</title>
+<style type='text/css'>:root {
+  /* Base Light */
+  --textPrimary: #24292E;
+  --background: #ffffff;
+  --body-border-color: #dfdfdf;
+  --link: #0366d6;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #f7f7f9;
+  --hr-background: #e3e4e8;
+  --thead-background: #f7f7f9;
+  --thead-border: #e3e4e8;
+  --tr-border: #bfc1c9; /* unused variable */
+  --tr-alt-background: #f7f7f9;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #d6d7dc;
+  --blockquote-color: #6a6d7c;
+  --blockquote-border: #e3e4e8;
+  --heading-color: #17181a;
+  --header-bottom-border: #e3e4e8;
+  --h6-color: #6a6d7c;
+  --frame-border: #e3e4e8;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58; /* unused variable */
+  --email-toggle-background: #e3e4e8; /* unused variable */
+  --email-quoted-color: #6a6d7c; /* unused variable */
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+  
+  /* Highlight Light */
+  --hl_Background: #F6F8FA ;
+  --hl_Number: #005cc5 ;
+  --hl_Escape: #032f62 ;
+  --hl_String: #032f62 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #6a737d ;
+  --hl_Line_Comment: #6a737d ;
+  --hl_Pre_Processor: #d73a49 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #032f62 ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #d73a49 ; /* import | func */
+  --hl_Keyword-2: #d73a49 ; /* int | str */
+  --hl_Keyword-3: #24292e ; /* ??? */
+  --hl_Keyword-4: #6f42c1 ; /* ??? */
+  --hl_Keyword-5: #d73a49 ; /* ??? */
+  --hl_Keyword-6: #d73a49 ; /* ??? */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Base Dark */
+  --textPrimary: #c9d1d9;
+  --background: #0d1117;
+  --body-border-color: #31363C;
+  --link: #58a6ff;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #2f3438;
+  --hr-background: #30363d;
+  --thead-background: #f7f7f9;
+  --thead-border: #3b434b;
+  --tr-border: #3b434b; /* unused variable */
+  --tr-alt-background: #161c23;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #050505;
+  --blockquote-color: #8b949e;
+  --blockquote-border: #3D434A;
+  --heading-color: #17181a;
+  --header-bottom-border: #21272c;
+  --h6-color: #6a6d7c;
+  --frame-border: #ff08d6;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58;
+  --email-toggle-background: #e3e4e8;
+  --email-quoted-color: #6a6d7c;
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+
+  /* Highlight Dark */
+  --hl_Background: #161b22 ;
+  --hl_Number: #79c0ff ;
+  --hl_Escape: #a5d6ff ;
+  --hl_String: #549ef1 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #8b949e ;
+  --hl_Line_Comment: #8b949e ;
+  --hl_Pre_Processor: #FF7B72 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #79c0ff ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #FF7B72 ; /* import | func */
+  --hl_Keyword-2: #FF7B72 ; /* int | str */
+  --hl_Keyword-3: #c9d1d9 ; /* ??? */
+  --hl_Keyword-4: #eea8ff ; /* ??? */
+  --hl_Keyword-5: #FF7B72 ; /* ??? */
+  --hl_Keyword-6: #FF7B72 ; /* ??? */
+  }
+}
+
+/*Syntax Highlight*/
+pre.hl	{ background-color: var(--hl_Background);}
+.hl.num { color: var(--hl_Number); font-weight: normal;}
+.hl.esc { color: var(--hl_Escape); font-weight: normal;}
+.hl.str { color: var(--hl_String); font-weight: normal;}
+.hl.pps { color: var(--hl_String_Pre_Processor); font-weight: normal;}
+.hl.com { color: var(--hl_Block_Comment); font-weight: normal;}
+.hl.slc { color: var(--hl_Line_Comment); font-weight: normal;}
+.hl.ppc { color: var(--hl_Pre_Processor); font-weight: normal;}
+.hl.lin { color: var(--hl_Line_Number); font-weight: normal;}
+.hl.opt { color: var(--hl_Operator); font-weight: normal;}
+.hl.ipl { color: var(--hl_Interpolation); font-weight: normal;}
+.hl.kwa { color: var(--hl_Keyword-1); font-weight: normal;}
+.hl.kwb { color: var(--hl_Keyword-2); font-weight: normal;}
+.hl.kwc { color: var(--hl_Keyword-3); font-weight: normal;}
+.hl.kwd { color: var(--hl_Keyword-4); font-weight: normal;}
+.hl.kwe { color: var(--hl_Keyword-5); font-weight: normal;}
+.hl.kwf { color: var(--hl_Keyword-6); font-weight: normal;}
+
+
+pre {
+  max-width: 902px;
+}
+* {
+  box-sizing: border-box;
+}
+
+input:disabled {
+  touch-action: none;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji, Segoe UI Emoji;
+}
+
+body {
+  margin: 0;
+  /* padding: 1em; */
+  color: var(--textPrimary);
+  background-color: var(--background);
+}
+
+/* If the window is bigger than 902 pixels, the border will be visible. */
+@media (min-width: 902px) {
+  article {
+    border-radius: 8px;
+    border-width: 1px;  
+    border-style: solid;
+    border-color: var(--body-border-color);
+  }
+}
+
+article {
+  margin: auto;
+  max-width: 902px;
+  font-size: inherit;
+  line-height: 1.5;
+  word-wrap: break-word;
+  padding: 32px;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  -webkit-tap-highlight-color: var(--link-highlight);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+details summary {
+  outline: 0;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+blockquote {
+  margin: 0;
+}
+
+table, table *, pre {
+  touch-action: pan-x;
+}
+
+.markdown-body ul.contains-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+pre, code, kbd {
+  font-size: 1em;
+  font-family: var(--code-font);
+}
+
+.issue-keyword {
+  border-bottom: 1px dotted var(--keyword-color);
+}
+
+.team-mention, .user-mention {
+  font-weight: 600;
+  color: var(--mention-color);
+  white-space: nowrap;
+}
+
+.email-hidden-toggle, .email-hidden-reply {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"] {
+    filter: invert(85%) brightness(1.5);
+  }
+}
+/* Fix checkboxes looking cut off when they render larger than the default size */
+input[type="checkbox"] {
+  transform: translate(0px);
+  width: 14px; height: 14px;
+}
+
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 0.18em 0.31em;
+  font-size: 0.7em;
+  line-height: 1.2em;
+  color: var(--kbd-color);
+  vertical-align: middle;
+  background-color: var(--kbd-background);
+  border: 1px solid var(--kbd-border);
+  border-radius: 0.25em;
+  box-shadow: inset 0 -1px 0 var(--kbd-border);
+  margin-right: 2px;
+}
+
+.markdown-body:after, .markdown-body:before {
+  display: table;
+  content: ""
+}
+
+.markdown-body:after {
+  clear: both;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .absent {
+  color: var(--red-600);
+}
+
+.markdown-body .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body blockquote, .markdown-body details, .markdown-body dl, .markdown-body ol, .markdown-body p, .markdown-body pre, .markdown-body table, .markdown-body ul {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body table table {
+    margin-bottom: 0;
+}
+
+.markdown-body hr {
+  height: .25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: var(--hr-background);
+  border: 0;
+}
+
+.markdown-body blockquote {
+  padding-left: 1em;
+  color: var(--blockquote-color);
+  border-left: .25em solid var(--blockquote-border);
+}
+
+.markdown-body blockquote > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body h1 .octicon-link, .markdown-body h2 .octicon-link, .markdown-body h3 .octicon-link, .markdown-body h4 .octicon-link, .markdown-body h5 .octicon-link, .markdown-body h6 .octicon-link {
+  color: var(--heading-color);
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor, .markdown-body h2:hover .anchor, .markdown-body h3:hover .anchor, .markdown-body h4:hover .anchor, .markdown-body h5:hover .anchor, .markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link, .markdown-body h2:hover .anchor .octicon-link, .markdown-body h3:hover .anchor .octicon-link, .markdown-body h4:hover .anchor .octicon-link, .markdown-body h5:hover .anchor .octicon-link, .markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 code, .markdown-body h1 tt, .markdown-body h2 code, .markdown-body h2 tt, .markdown-body h3 code, .markdown-body h3 tt, .markdown-body h4 code, .markdown-body h4 tt, .markdown-body h5 code, .markdown-body h5 tt, .markdown-body h6 code, .markdown-body h6 tt {
+  font-size: inherit;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+}
+
+.markdown-body h1, .markdown-body h2 {
+  padding-bottom: .3em;
+  border-bottom: 1px solid var(--header-bottom-border);
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1em;
+}
+
+.markdown-body h5 {
+  font-size: .875em;
+}
+
+.markdown-body h6 {
+  font-size: .85em;
+  color: var(--h6-color);
+}
+
+.markdown-body ol, .markdown-body ul {
+  padding-left: 1.5em;
+}
+
+.markdown-body ol.no-list, .markdown-body ul.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.markdown-body ol ol, .markdown-body ol ul, .markdown-body ul ol, .markdown-body ul ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li {
+  word-wrap: break-all;
+}
+
+.markdown-body li > p {
+  margin-top: 16px;
+}
+
+.markdown-body li + li {
+  margin-top: .25em;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.markdown-body table th {
+  font-weight: 600;
+}
+
+.markdown-body table td, .markdown-body table th {
+  padding: 6px 13px;
+  border: 1px solid var(--thead-border);
+}
+
+.markdown-body table tr {
+  background-color: var(--background);
+  border-top: 1px solid var(--tr-border); /* unused variable */
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: var(--tr-alt-background);
+}
+
+.markdown-body table img {
+  background-color: initial;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  box-sizing: initial;
+  background-color: var(--background);
+}
+
+.markdown-body img[align=right] {
+  padding-left: 20px;
+}
+
+.markdown-body img[align=left] {
+  padding-right: 20px;
+}
+
+.markdown-body .emoji {
+  max-width: none;
+  vertical-align: text-top;
+  background-color: initial;
+}
+
+.markdown-body img.emoji {
+    max-width: 18px;
+}
+
+.markdown-body span.frame {
+  display: block;
+  overflow: hidden;
+}
+
+.markdown-body span.frame > span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--frame-border);
+}
+
+.markdown-body span.frame span img {
+  display: block;
+  float: left;
+}
+
+.markdown-body span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: var(--frame-color);
+}
+
+.markdown-body span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-center > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.markdown-body span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.markdown-body span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-right > span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+
+.markdown-body span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-left span {
+  margin: 13px 0 0;
+}
+
+.markdown-body span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-right > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body code, .markdown-body tt {
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: var(--code-background);
+  border-radius: 6px;
+}
+
+.markdown-body code br, .markdown-body tt br {
+  display: none;
+}
+
+.markdown-body del code {
+  text-decoration: inherit;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre > code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body .highlight pre, .markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: var(--hl_Background);
+  border-radius: 6px;
+}
+
+.markdown-body pre code, .markdown-body pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: initial;
+  border: 0;
+}
+
+.markdown-body .csv-data td, .markdown-body .csv-data th {
+  padding: 5px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-body .csv-data .blob-num {
+  padding: 10px 8px 9px;
+  text-align: right;
+  background: var(--background);
+  border: 0;
+}
+
+.markdown-body .csv-data tr {
+  border-top: 0;
+}
+
+.markdown-body .csv-data th {
+  font-weight: 600;
+  background: var(--thead-background);
+  border-top: 0;
+}
+
+.markdown-body mark {
+    padding: .2em;
+    background-color: #fcf1b5;
+}
+
+@media (prefers-color-scheme: dark) {
+    .markdown-body mark {
+        padding: .2em;
+        background-color: #fcf8e3;
+    }
+}
+
+/* Mermaid diagrams */
+.mermaid {
+    text-align: center;
+    margin: 16px 0;
+    background-color: transparent;
+}
+
+.mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    .mermaid {
+        background-color: transparent;
+    }
+}
+
+</style>
+
+
+</head>
+<body>
+<article class='markdown-body'>
+<h1 id="ngame-frp-guide-reading-the-phase-ii-dashboard">NGAME — FRP Guide: Reading the Phase II Dashboard</h1>
+<p><em>One-page reference for the Financially Responsible Person — what each alert means and what to do.</em></p>
+<p><strong>You use:</strong> NGAME Dashboard bookmark only (no Terminal). <strong>Full daily ops:</strong> <a href="../../FRP_OPERATIONS_GUIDE.md">FRP_OPERATIONS_GUIDE.md</a>.</p>
+<hr />
+<h2 id="phase-i-vs-phase-ii-30-seconds">Phase I vs Phase II (30 seconds)</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Days</th>
+<th>Button</th>
+<th>What you are doing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Phase I</strong></td>
+<td>1–30</td>
+<td><strong>Run Today’s Training Day</strong></td>
+<td>NGAME <strong>learns</strong> normal churn — not daily fraud alerts</td>
+</tr>
+<tr>
+<td><strong>Phase II</strong></td>
+<td>31+</td>
+<td><strong>Run Today’s Fraud Check</strong></td>
+<td>NGAME <strong>compares</strong> today to that 30-day baseline</td>
+</tr>
+</tbody>
+</table>
+<p>After <strong>30 of 30</strong> on the progress bar, use Phase II from the <strong>next</strong> business day.</p>
+<hr />
+<h2 id="every-phase-ii-run-three-checks-at-once">Every Phase II run: three checks at once</h2>
+<p>NGAME runs <strong>three parallel readers</strong> on the same QuickBooks data. <strong>Read all three</strong> once Multi-Day shows <strong>active</strong> (not “Building”).</p>
+<table>
+<thead>
+<tr>
+<th>Dashboard section</th>
+<th>Plain question</th>
+<th>Time window</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Top Anomalies</strong></td>
+<td>Is <strong>today’s</strong> activity unusual vs our 30-day training?</td>
+<td><strong>Today only</strong></td>
+</tr>
+<tr>
+<td><strong>Multi-Day Pattern Alert</strong></td>
+<td>Was churn <strong>sustained</strong> over the last several fraud-check days?</td>
+<td><strong>~5 days</strong> (slow-burn)</td>
+</tr>
+<tr>
+<td><strong>Credit Card Watch</strong></td>
+<td>Any <strong>card transactions today</strong> that look risky?</td>
+<td><strong>Today only</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Overall Risk</strong> and <strong>Management Warnings</strong> come mainly from <strong>today’s</strong> top categories (not from Multi-Day today).</p>
+<blockquote>
+<p><strong>Important:</strong> Multi-Day can show <strong>HIGH</strong> while Top Anomalies looks quiet — that is normal for gradual schemes. Do <strong>not</strong> skip Multi-Day when today looks fine.</p>
+</blockquote>
+<hr />
+<h2 id="top-anomalies-how-to-read-a-row">Top Anomalies — how to read a row</h2>
+<p>Each row is a <strong>category</strong> of QuickBooks records (Invoices, Vendors, Bills, …), not one invoice or one person.</p>
+<table>
+<thead>
+<tr>
+<th>On screen</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Transaction type</strong> (e.g. Vendors)</td>
+<td>Which bucket of records moved differently than usual</td>
+</tr>
+<tr>
+<td><strong>Δ</strong> and <strong>%</strong></td>
+<td>How far today’s pattern is from the trained “normal” for that category</td>
+</tr>
+<tr>
+<td><strong>HIGH / MEDIUM / LOW</strong></td>
+<td>How unusual vs the 30-day baseline (stronger = review sooner)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Plain language:</strong></p>
+<ul>
+<li><strong>Many new or removed records</strong> in a category → often shows here (CPI / “attendance” of record IDs).</li>
+<li><strong>Editing an existing invoice amount</strong> → may <strong>not</strong> appear here; use QuickBooks <strong>Audit Log</strong> (see below).</li>
+</ul>
+<p>NGAME does <strong>not</strong> prove fraud. A flag means <strong>“far from what we learned in Phase I”</strong> — may have an innocent explanation.</p>
+<hr />
+<h2 id="multi-day-pattern-alert-slow-burn">Multi-Day Pattern Alert (slow-burn)</h2>
+<table>
+<thead>
+<tr>
+<th>Badge</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Building</strong></td>
+<td>Not enough Phase II daily runs yet — keep running fraud checks</td>
+</tr>
+<tr>
+<td><strong>Clear</strong></td>
+<td>Last ~5 days look normal in aggregate</td>
+</tr>
+<tr>
+<td><strong>MEDIUM / HIGH</strong></td>
+<td>Sustained unusual churn in one or more categories</td>
+</tr>
+</tbody>
+</table>
+<p>This is <strong>not</strong> “yesterday vs today only.” It smooths several days so a little change each day can add up to an alert.</p>
+<p><strong>Does not replace Top Anomalies</strong> — both can fire on the same run.</p>
+<hr />
+<h2 id="credit-card-watch">Credit Card Watch</h2>
+<p>Flags <strong>today’s</strong> company card activity (unusual vendor, amount, timing, etc.). Independent of churn rows above.</p>
+<hr />
+<h2 id="management-warnings-overall-risk">Management Warnings &amp; Overall Risk</h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What you do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LOW</strong> or no warnings</td>
+<td>Done for today (still skim Multi-Day and CC Watch)</td>
+</tr>
+<tr>
+<td><strong>MEDIUM</strong></td>
+<td>Note warnings + Top Anomalies; contact <strong>designated contact</strong> within one business day; check <strong>Audit Log</strong></td>
+</tr>
+<tr>
+<td><strong>HIGH</strong></td>
+<td>Screenshot now; contact designated contact <strong>today</strong>; Audit Log <strong>before</strong> other action</td>
+</tr>
+</tbody>
+</table>
+<p>Details: <a href="../../FRP_OPERATIONS_GUIDE.md">FRP_OPERATIONS_GUIDE.md</a> § Warning response protocol.</p>
+<hr />
+<h2 id="what-ngame-does-not-show-on-the-dashboard">What NGAME does not show on the dashboard</h2>
+<table>
+<thead>
+<tr>
+<th>Gap</th>
+<th>What you do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Who</strong> changed a record</td>
+<td>QuickBooks <strong>Audit Log</strong> (in QBO browser, not in NGAME)</td>
+</tr>
+<tr>
+<td><strong>Line edits</strong> on same invoice ID</td>
+<td>Audit Log; optional deep report from technical contact</td>
+</tr>
+<tr>
+<td><strong>Slow-burn in Overall Risk</strong></td>
+<td>Read <strong>Multi-Day Pattern Alert</strong> even when risk is LOW</td>
+</tr>
+</tbody>
+</table>
+<p>NGAME is <strong>read-only</strong> — it never changes QuickBooks.</p>
+<hr />
+<h2 id="daily-phase-ii-checklist-after-bookkeeper-posts">Daily Phase II checklist (after bookkeeper posts)</h2>
+<ol>
+<li>Open dashboard bookmark → <strong>Run Today’s Fraud Check</strong> → wait until <strong>finished</strong>.</li>
+<li><strong>Overall Risk</strong> + <strong>Management Warnings</strong> — follow table above if MEDIUM/HIGH.</li>
+<li><strong>Top Anomalies</strong> — note categories flagged.</li>
+<li><strong>Multi-Day Pattern Alert</strong> — note if not Clear (once active).</li>
+<li><strong>Credit Card Watch</strong> — note any flags.</li>
+<li>If anything needs follow-up → <strong>Audit Log</strong> for that date.</li>
+<li>Close browser.</li>
+</ol>
+<hr />
+<h2 id="when-to-call-your-ngame-technical-contact">When to call your NGAME technical contact</h2>
+<ul>
+<li>Dashboard will not load or run errors (❌ in live output)</li>
+<li>QuickBooks login prompt during a run</li>
+<li>Ollama problems (Phase II)</li>
+<li>You need help interpreting a flag before contacting leadership</li>
+</ul>
+<hr />
+<h2 id="related-documents">Related documents</h2>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This guide (Markdown)</td>
+<td><code>Training, Marketing, and Documentation/NGAME_FRP_PhaseII_Dashboard_Guide.md</code></td>
+</tr>
+<tr>
+<td>Printable (HTML)</td>
+<td><code>Training, Marketing, and Documentation/NGAME_FRP_PhaseII_Dashboard_Guide.html</code></td>
+</tr>
+<tr>
+<td>FRP full operations</td>
+<td><code>FRP_OPERATIONS_GUIDE.md</code> / <code>.html</code></td>
+</tr>
+<tr>
+<td>Overnight churn example</td>
+<td><code>NGAME_Churn_Walkthrough.md</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>NGAME · FRP Phase II dashboard · May 2026</em></p>
+<div style='font-size: 72%; margin-top: 1.5em; padding-top: .5em; -webkit-user-select: none;'><hr style='height: 0; border: none; border-top: 1px solid rgba(0,0,0,.5); box-shadow: 0 1px 1px rgba(255, 255, 255, .5)'/><a href='https://github.com/sbarex/QLMarkdown'>QLMarkdown</a>, version 1.0.24 (50).<br />
+Developed by SBAREX 2020 - 2025 with <span style='font-style: normal'>❤️</span>.<br/>
+If you like this app, <a href='https://www.buymeacoffee.com/sbarex'><strong>buy me a coffee</strong></a>!</div>
+<!--
+
+File generated with QLMarkdown [https://github.com/sbarex/QLMarkdown] - QLMarkdown, version 1.0.24 (50).
+Developed by SBAREX 2020 - 2025 with ❤️
+
+-->
+
+</article>
+
+</body>
+</html>

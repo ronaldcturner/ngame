@@ -1,0 +1,37 @@
+/* Figure 6 - NGAME Training Flow (publication, Graphviz) */
+digraph NGAME_Fig6 {
+    rankdir=TB;
+    bgcolor="white";
+    splines=polyline;
+    nodesep=0.28;
+    ranksep=0.40;
+    pad=0.15;
+    fontname="Helvetica";
+    node [shape=box, style="rounded,filled", fillcolor="white",
+          color="black", fontname="Helvetica", fontsize=14,
+          margin="0.16,0.10"];
+    edge [fontname="Helvetica", fontsize=12, color="black", arrowsize=0.8];
+
+    START [label="Start training run\nN workdays (set by NPO management)",
+           fillcolor="#DDDDDD", color="black"];
+
+    subgraph cluster_perday {
+        label="Repeat each training day  d = 1 .. N";
+        fontsize=15; fontname="Helvetica-Bold";
+        style="rounded,filled"; fillcolor="#E6E6E6"; color="black";
+        EXT   [label="Data Extraction Agent\npull QBO, write Today.ttl\n(18 transaction types)"];
+        SHIFT [label="Rotate prior Today.ttl to Yesterday.ttl\n(day 1 establishes Yesterday only)"];
+        CPID  [label="CPI Analysis Agent (from day 2)\nJaccard persistence per type\nCPI = |Y and T| / |Y or T|\n+ dollar-weighted wCPI"];
+        COL   [label="Matrix Management Agent\nappend day column  ->  18 x d matrix"];
+        EXT -> SHIFT -> CPID -> COL;
+        COL -> EXT [label="next day", constraint=false, style=dashed];
+    }
+
+    AGG [label="After N days - derive per-type baseline\nmean (col B), std (col C)\n+ wCPI baseline sheet (mean_w, std_w)"];
+    OUT [label="Trained Baseline\nNGAME_Training_Matrix.xlsx\n(persists until activity or Chart of Accounts changes)",
+         fillcolor="#DDDDDD", color="black"];
+
+    START -> EXT;
+    COL -> AGG;
+    AGG -> OUT;
+}

@@ -11,6 +11,10 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 import logging
 
+from ngame_contractor_extraction import (
+    build_contractor_payment_records,
+    contractor_vendor_ids,
+)
 from ngame_quickbooks_oauth import (
     QuickBooksOAuthError,
     default_quickbooks_config_path,
@@ -261,7 +265,6 @@ class DataExtractionAgent:
                 'PurchaseOrders': ('quickbooks.objects.purchaseorder', 'PurchaseOrder'),
                 'Receipts': ('quickbooks.objects.receipt', 'Receipt'),
                 'Recurring_Transactions': ('quickbooks.objects.recurringtransaction', 'RecurringTransaction'),
-                'Contractors': ('quickbooks.objects.vendor', 'Vendor'),
                 'Mileage': ('quickbooks.objects.vehicle', 'Vehicle'),
                 'ChartOfAccounts': ('quickbooks.objects.account', 'Account'),
                 'CreditCardTransactions': ('quickbooks.objects.creditcardpayment', 'CreditCardPayment'),
@@ -282,6 +285,8 @@ class DataExtractionAgent:
             
             # Retrieve data for each transaction type
             for tx_type, info in transaction_types.items():
+                if tx_type == 'Contractors':
+                    continue
                 if tx_type in api_mappings:
                     module_name, class_name = api_mappings[tx_type]
                     try:
@@ -319,6 +324,27 @@ class DataExtractionAgent:
                         'record_count': 0,
                         'error': 'No API mapping available'
                     }
+
+            if 'Contractors' in transaction_types:
+                vendors = data.get('vendors') or []
+                contractor_ids = contractor_vendor_ids(vendors)
+                contractor_records = build_contractor_payment_records(
+                    contractor_ids,
+                    purchases=data.get('expenses') or [],
+                    bill_payments=data.get('bill_payments') or [],
+                    bills=data.get('bills') or [],
+                )
+                data['contractors'] = contractor_records
+                record_count = len(contractor_records)
+                extraction_stats['total_records'] += record_count
+                extraction_stats['successful_extractions'] += 1
+                extraction_stats['extraction_details']['Contractors'] = {
+                    'success': True,
+                    'record_count': record_count,
+                    'error': None,
+                    'contractor_vendor_count': len(contractor_ids),
+                    'source': '1099_vendor_payments',
+                }
             
             logger.info(f"✅ {self.name}: Data extraction completed - {extraction_stats['total_records']} total records")
             return {

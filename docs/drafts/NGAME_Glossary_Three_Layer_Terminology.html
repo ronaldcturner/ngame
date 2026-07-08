@@ -1,0 +1,1088 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+<title>NGAME_Glossary_Three_Layer_Terminology.md</title>
+<style type='text/css'>:root {
+  /* Base Light */
+  --textPrimary: #24292E;
+  --background: #ffffff;
+  --body-border-color: #dfdfdf;
+  --link: #0366d6;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #f7f7f9;
+  --hr-background: #e3e4e8;
+  --thead-background: #f7f7f9;
+  --thead-border: #e3e4e8;
+  --tr-border: #bfc1c9; /* unused variable */
+  --tr-alt-background: #f7f7f9;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #d6d7dc;
+  --blockquote-color: #6a6d7c;
+  --blockquote-border: #e3e4e8;
+  --heading-color: #17181a;
+  --header-bottom-border: #e3e4e8;
+  --h6-color: #6a6d7c;
+  --frame-border: #e3e4e8;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58; /* unused variable */
+  --email-toggle-background: #e3e4e8; /* unused variable */
+  --email-quoted-color: #6a6d7c; /* unused variable */
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+  
+  /* Highlight Light */
+  --hl_Background: #F6F8FA ;
+  --hl_Number: #005cc5 ;
+  --hl_Escape: #032f62 ;
+  --hl_String: #032f62 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #6a737d ;
+  --hl_Line_Comment: #6a737d ;
+  --hl_Pre_Processor: #d73a49 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #032f62 ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #d73a49 ; /* import | func */
+  --hl_Keyword-2: #d73a49 ; /* int | str */
+  --hl_Keyword-3: #24292e ; /* ??? */
+  --hl_Keyword-4: #6f42c1 ; /* ??? */
+  --hl_Keyword-5: #d73a49 ; /* ??? */
+  --hl_Keyword-6: #d73a49 ; /* ??? */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Base Dark */
+  --textPrimary: #c9d1d9;
+  --background: #0d1117;
+  --body-border-color: #31363C;
+  --link: #58a6ff;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #2f3438;
+  --hr-background: #30363d;
+  --thead-background: #f7f7f9;
+  --thead-border: #3b434b;
+  --tr-border: #3b434b; /* unused variable */
+  --tr-alt-background: #161c23;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #050505;
+  --blockquote-color: #8b949e;
+  --blockquote-border: #3D434A;
+  --heading-color: #17181a;
+  --header-bottom-border: #21272c;
+  --h6-color: #6a6d7c;
+  --frame-border: #ff08d6;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58;
+  --email-toggle-background: #e3e4e8;
+  --email-quoted-color: #6a6d7c;
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+
+  /* Highlight Dark */
+  --hl_Background: #161b22 ;
+  --hl_Number: #79c0ff ;
+  --hl_Escape: #a5d6ff ;
+  --hl_String: #549ef1 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #8b949e ;
+  --hl_Line_Comment: #8b949e ;
+  --hl_Pre_Processor: #FF7B72 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #79c0ff ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #FF7B72 ; /* import | func */
+  --hl_Keyword-2: #FF7B72 ; /* int | str */
+  --hl_Keyword-3: #c9d1d9 ; /* ??? */
+  --hl_Keyword-4: #eea8ff ; /* ??? */
+  --hl_Keyword-5: #FF7B72 ; /* ??? */
+  --hl_Keyword-6: #FF7B72 ; /* ??? */
+  }
+}
+
+/*Syntax Highlight*/
+pre.hl	{ background-color: var(--hl_Background);}
+.hl.num { color: var(--hl_Number); font-weight: normal;}
+.hl.esc { color: var(--hl_Escape); font-weight: normal;}
+.hl.str { color: var(--hl_String); font-weight: normal;}
+.hl.pps { color: var(--hl_String_Pre_Processor); font-weight: normal;}
+.hl.com { color: var(--hl_Block_Comment); font-weight: normal;}
+.hl.slc { color: var(--hl_Line_Comment); font-weight: normal;}
+.hl.ppc { color: var(--hl_Pre_Processor); font-weight: normal;}
+.hl.lin { color: var(--hl_Line_Number); font-weight: normal;}
+.hl.opt { color: var(--hl_Operator); font-weight: normal;}
+.hl.ipl { color: var(--hl_Interpolation); font-weight: normal;}
+.hl.kwa { color: var(--hl_Keyword-1); font-weight: normal;}
+.hl.kwb { color: var(--hl_Keyword-2); font-weight: normal;}
+.hl.kwc { color: var(--hl_Keyword-3); font-weight: normal;}
+.hl.kwd { color: var(--hl_Keyword-4); font-weight: normal;}
+.hl.kwe { color: var(--hl_Keyword-5); font-weight: normal;}
+.hl.kwf { color: var(--hl_Keyword-6); font-weight: normal;}
+
+
+pre {
+  max-width: 902px;
+}
+* {
+  box-sizing: border-box;
+}
+
+input:disabled {
+  touch-action: none;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji, Segoe UI Emoji;
+}
+
+body {
+  margin: 0;
+  /* padding: 1em; */
+  color: var(--textPrimary);
+  background-color: var(--background);
+}
+
+/* If the window is bigger than 902 pixels, the border will be visible. */
+@media (min-width: 902px) {
+  article {
+    border-radius: 8px;
+    border-width: 1px;  
+    border-style: solid;
+    border-color: var(--body-border-color);
+  }
+}
+
+article {
+  margin: auto;
+  max-width: 902px;
+  font-size: inherit;
+  line-height: 1.5;
+  word-wrap: break-word;
+  padding: 32px;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  -webkit-tap-highlight-color: var(--link-highlight);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+details summary {
+  outline: 0;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+blockquote {
+  margin: 0;
+}
+
+table, table *, pre {
+  touch-action: pan-x;
+}
+
+.markdown-body ul.contains-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+pre, code, kbd {
+  font-size: 1em;
+  font-family: var(--code-font);
+}
+
+.issue-keyword {
+  border-bottom: 1px dotted var(--keyword-color);
+}
+
+.team-mention, .user-mention {
+  font-weight: 600;
+  color: var(--mention-color);
+  white-space: nowrap;
+}
+
+.email-hidden-toggle, .email-hidden-reply {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"] {
+    filter: invert(85%) brightness(1.5);
+  }
+}
+/* Fix checkboxes looking cut off when they render larger than the default size */
+input[type="checkbox"] {
+  transform: translate(0px);
+  width: 14px; height: 14px;
+}
+
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 0.18em 0.31em;
+  font-size: 0.7em;
+  line-height: 1.2em;
+  color: var(--kbd-color);
+  vertical-align: middle;
+  background-color: var(--kbd-background);
+  border: 1px solid var(--kbd-border);
+  border-radius: 0.25em;
+  box-shadow: inset 0 -1px 0 var(--kbd-border);
+  margin-right: 2px;
+}
+
+.markdown-body:after, .markdown-body:before {
+  display: table;
+  content: ""
+}
+
+.markdown-body:after {
+  clear: both;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .absent {
+  color: var(--red-600);
+}
+
+.markdown-body .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body blockquote, .markdown-body details, .markdown-body dl, .markdown-body ol, .markdown-body p, .markdown-body pre, .markdown-body table, .markdown-body ul {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body table table {
+    margin-bottom: 0;
+}
+
+.markdown-body hr {
+  height: .25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: var(--hr-background);
+  border: 0;
+}
+
+.markdown-body blockquote {
+  padding-left: 1em;
+  color: var(--blockquote-color);
+  border-left: .25em solid var(--blockquote-border);
+}
+
+.markdown-body blockquote > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body h1 .octicon-link, .markdown-body h2 .octicon-link, .markdown-body h3 .octicon-link, .markdown-body h4 .octicon-link, .markdown-body h5 .octicon-link, .markdown-body h6 .octicon-link {
+  color: var(--heading-color);
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor, .markdown-body h2:hover .anchor, .markdown-body h3:hover .anchor, .markdown-body h4:hover .anchor, .markdown-body h5:hover .anchor, .markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link, .markdown-body h2:hover .anchor .octicon-link, .markdown-body h3:hover .anchor .octicon-link, .markdown-body h4:hover .anchor .octicon-link, .markdown-body h5:hover .anchor .octicon-link, .markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 code, .markdown-body h1 tt, .markdown-body h2 code, .markdown-body h2 tt, .markdown-body h3 code, .markdown-body h3 tt, .markdown-body h4 code, .markdown-body h4 tt, .markdown-body h5 code, .markdown-body h5 tt, .markdown-body h6 code, .markdown-body h6 tt {
+  font-size: inherit;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+}
+
+.markdown-body h1, .markdown-body h2 {
+  padding-bottom: .3em;
+  border-bottom: 1px solid var(--header-bottom-border);
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1em;
+}
+
+.markdown-body h5 {
+  font-size: .875em;
+}
+
+.markdown-body h6 {
+  font-size: .85em;
+  color: var(--h6-color);
+}
+
+.markdown-body ol, .markdown-body ul {
+  padding-left: 1.5em;
+}
+
+.markdown-body ol.no-list, .markdown-body ul.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.markdown-body ol ol, .markdown-body ol ul, .markdown-body ul ol, .markdown-body ul ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li {
+  word-wrap: break-all;
+}
+
+.markdown-body li > p {
+  margin-top: 16px;
+}
+
+.markdown-body li + li {
+  margin-top: .25em;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.markdown-body table th {
+  font-weight: 600;
+}
+
+.markdown-body table td, .markdown-body table th {
+  padding: 6px 13px;
+  border: 1px solid var(--thead-border);
+}
+
+.markdown-body table tr {
+  background-color: var(--background);
+  border-top: 1px solid var(--tr-border); /* unused variable */
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: var(--tr-alt-background);
+}
+
+.markdown-body table img {
+  background-color: initial;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  box-sizing: initial;
+  background-color: var(--background);
+}
+
+.markdown-body img[align=right] {
+  padding-left: 20px;
+}
+
+.markdown-body img[align=left] {
+  padding-right: 20px;
+}
+
+.markdown-body .emoji {
+  max-width: none;
+  vertical-align: text-top;
+  background-color: initial;
+}
+
+.markdown-body img.emoji {
+    max-width: 18px;
+}
+
+.markdown-body span.frame {
+  display: block;
+  overflow: hidden;
+}
+
+.markdown-body span.frame > span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--frame-border);
+}
+
+.markdown-body span.frame span img {
+  display: block;
+  float: left;
+}
+
+.markdown-body span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: var(--frame-color);
+}
+
+.markdown-body span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-center > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.markdown-body span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.markdown-body span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-right > span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+
+.markdown-body span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-left span {
+  margin: 13px 0 0;
+}
+
+.markdown-body span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-right > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body code, .markdown-body tt {
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: var(--code-background);
+  border-radius: 6px;
+}
+
+.markdown-body code br, .markdown-body tt br {
+  display: none;
+}
+
+.markdown-body del code {
+  text-decoration: inherit;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre > code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body .highlight pre, .markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: var(--hl_Background);
+  border-radius: 6px;
+}
+
+.markdown-body pre code, .markdown-body pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: initial;
+  border: 0;
+}
+
+.markdown-body .csv-data td, .markdown-body .csv-data th {
+  padding: 5px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-body .csv-data .blob-num {
+  padding: 10px 8px 9px;
+  text-align: right;
+  background: var(--background);
+  border: 0;
+}
+
+.markdown-body .csv-data tr {
+  border-top: 0;
+}
+
+.markdown-body .csv-data th {
+  font-weight: 600;
+  background: var(--thead-background);
+  border-top: 0;
+}
+
+.markdown-body mark {
+    padding: .2em;
+    background-color: #fcf1b5;
+}
+
+@media (prefers-color-scheme: dark) {
+    .markdown-body mark {
+        padding: .2em;
+        background-color: #fcf8e3;
+    }
+}
+
+/* Mermaid diagrams */
+.mermaid {
+    text-align: center;
+    margin: 16px 0;
+    background-color: transparent;
+}
+
+.mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    .mermaid {
+        background-color: transparent;
+    }
+}
+
+</style>
+
+
+</head>
+<body>
+<article class='markdown-body'>
+<h1 id="ngame-terminology-glossary">NGAME Terminology Glossary</h1>
+<h2 id="three-layer-model-for-churn-detection-and-triage">Three-Layer Model for Churn, Detection, and Triage</h2>
+<p><strong>Status:</strong> Draft for journal manuscript<br />
+<strong>Purpose:</strong> Replace confusion-matrix labels (TP / FP / FN / TN) on the Jaccard 2×2 with precise, layer-specific terms.<br />
+<strong>Audience:</strong> Co-authors, reviewers, and readers of the NGAME design-science evaluation.</p>
+<hr />
+<h2 id="why-this-glossary-exists">Why This Glossary Exists</h2>
+<p>NGAME uses “positive” and “negative” in three distinct senses. Conflating them invites reviewer criticism and misstates what the artifact does. This glossary assigns <strong>one vocabulary per layer</strong> and retires TP/FP/FN/TN on the day-over-day record-overlap matrix (Layer 1). Standard confusion-matrix language is reserved for <strong>controlled evaluation against ground truth</strong> (Layer 2). FRP-facing outcomes use <strong>triage vocabulary</strong> that does not imply autonomous fraud verdicts (Layer 3).</p>
+<hr />
+<h2 id="layer-overview">Layer Overview</h2>
+<table>
+<thead>
+<tr>
+<th align="center">Layer</th>
+<th>Question answered</th>
+<th>Primary outputs</th>
+<th>Ground truth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong>1 — Structural</strong></td>
+<td>How stable is each transaction-type population from yesterday to today?</td>
+<td>CPI, α (addition rate), δ (deletion rate), wCPI</td>
+<td>None required; descriptive set overlap</td>
+</tr>
+<tr>
+<td align="center"><strong>2 — Detection</strong></td>
+<td>Which φ dimensions deviate enough from the trained baseline to rank in the top-<em>k</em> alert set?</td>
+<td>z-scores, HIGH / MEDIUM / LOW bands, top-<em>k</em> rankings</td>
+<td>Injected or known anomalies (evaluation only)</td>
+</tr>
+<tr>
+<td align="center"><strong>3 — Triage</strong></td>
+<td>What should the Financially Responsible Person (FRP) review, and what did review conclude?</td>
+<td>Management warnings, overall risk, dashboard artifacts</td>
+<td>FRP professional judgment after review</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="table-1-layer-1-day-over-day-record-overlap-jaccard-cpi">Table 1 — Layer 1: Day-over-Day Record Overlap (Jaccard / CPI)</h2>
+<p><strong>Replaces the Jaccard 2×2 labels TP, FP, FN, TN in the journal version.</strong></p>
+<p>Rows: presence in <strong>Yesterday’s</strong> snapshot (Y). Columns: presence in <strong>Today’s</strong> snapshot (T).</p>
+<table>
+<thead>
+<tr>
+<th align="center">Cell</th>
+<th>Preferred term</th>
+<th align="center">Symbol</th>
+<th align="center">Set notation</th>
+<th align="center">Role in CPI</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Upper-left</td>
+<td><strong>Retained</strong></td>
+<td align="center"><em>a</em></td>
+<td align="center">Y ∩ T</td>
+<td align="center">Numerator of CPI</td>
+<td>Record URI present in both snapshots; continuity across days</td>
+</tr>
+<tr>
+<td align="center">Upper-right</td>
+<td><strong>Removed</strong></td>
+<td align="center"><em>b</em></td>
+<td align="center">Y \ T</td>
+<td align="center">Contributes to δ (deletion rate)</td>
+<td>Record existed yesterday, absent today; churn or deletion</td>
+</tr>
+<tr>
+<td align="center">Lower-left</td>
+<td><strong>Added</strong></td>
+<td align="center"><em>c</em></td>
+<td align="center">T \ Y</td>
+<td align="center">Contributes to α (addition rate)</td>
+<td>Record absent yesterday, present today; new entry</td>
+</tr>
+<tr>
+<td align="center">Lower-right</td>
+<td><strong>Excluded</strong></td>
+<td align="center">—</td>
+<td align="center">(not counted)</td>
+<td align="center"><strong>Not in formula</strong></td>
+<td>Absent both days; universe of non-occurring records is undefined</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Core formulas (Layer 1 only):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Formula</th>
+<th align="center">Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPI (Churn Persistence Index)</td>
+<td>CPI = <em>a</em> / <em>n</em>, where <em>n</em> = <em>a</em> + <em>b</em> + <em>c</em></td>
+<td align="center">[0, 1]</td>
+</tr>
+<tr>
+<td>Addition rate (α)</td>
+<td>α = <em>c</em> / <em>n</em></td>
+<td align="center">[0, 1]</td>
+</tr>
+<tr>
+<td>Deletion rate (δ)</td>
+<td>δ = <em>b</em> / <em>n</em></td>
+<td align="center">[0, 1]</td>
+</tr>
+<tr>
+<td>Partition identity</td>
+<td>CPI + α + δ = 1</td>
+<td align="center">—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Edge convention:</strong> When <em>n</em> = 0 (no records of type <em>k</em> in either snapshot), CPI = 1.0 — absence is treated as stable.</p>
+<p><strong>Dollar-weighted variant:</strong> Same structure with dollar weights <em>w</em>ᵢ instead of URI counts → wCPI, wAdditionRate, wDeletionRate.</p>
+<h3 id="retired-layer-1-labels-do-not-use-in-journal-prose">Retired Layer 1 labels (do not use in journal prose)</h3>
+<table>
+<thead>
+<tr>
+<th>Retired label</th>
+<th>Was used to mean</th>
+<th>Use instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TP (True Positive)</td>
+<td>Retained</td>
+<td><strong>Retained</strong> (<em>a</em>)</td>
+</tr>
+<tr>
+<td>FP (False Positive)</td>
+<td>Added</td>
+<td><strong>Added</strong> (<em>c</em>)</td>
+</tr>
+<tr>
+<td>FN (False Negative)</td>
+<td>Removed</td>
+<td><strong>Removed</strong> (<em>b</em>)</td>
+</tr>
+<tr>
+<td>TN (True Negative)</td>
+<td>Excluded</td>
+<td><strong>Excluded</strong> (state explicitly that this cell is omitted from Jaccard)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> “Added” is not a “false” outcome. A legitimate new vendor is <strong>Added</strong> at Layer 1 and may still yield a LOW z-score at Layer 2 if consistent with the trained baseline.</p>
+<hr />
+<h2 id="table-2-layer-2-detector-evaluation-metrics-ground-truth-comparison">Table 2 — Layer 2: Detector Evaluation Metrics (Ground-Truth Comparison)</h2>
+<p><strong>Use standard IR / confusion-matrix terms only here</strong>, when comparing NGAME’s top-<em>k</em> flagged φ dimensions to known or injected anomalies.</p>
+<p><strong>Detection task (evaluation):</strong> Given an <em>N</em>-element daily φ (CPI) array, rank dimensions by |z| (or composite alarm) and treat the top-<em>k</em> as the alert set (<em>k</em> = 3 in current instantiation; <em>N</em> = 17–18).</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th align="center">Symbol</th>
+<th>Definition</th>
+<th>Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>True Positive (eval.)</strong></td>
+<td align="center">TP</td>
+<td>Flagged dimension where an anomaly was knowingly introduced or present in ground truth</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>False Positive (eval.)</strong></td>
+<td align="center">FP</td>
+<td>Flagged dimension with only normal variation relative to ground truth</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>False Negative (eval.)</strong></td>
+<td align="center">FN</td>
+<td>Ground-truth anomaly dimension not in the top-<em>k</em> alert set</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>True Negative (eval.)</strong></td>
+<td align="center">TN</td>
+<td>Normal-variation dimension not flagged</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Precision</strong></td>
+<td align="center">—</td>
+<td>Share of flagged dimensions that match ground truth</td>
+<td>TP / (TP + FP)</td>
+</tr>
+<tr>
+<td><strong>Recall (top-<em>k</em>)</strong></td>
+<td align="center">—</td>
+<td>Share of anomalous dimensions captured in top-<em>k</em></td>
+<td>TP / (TP + FN)</td>
+</tr>
+<tr>
+<td><strong>False Positive Rate</strong></td>
+<td align="center">FPR</td>
+<td>Share of normal dimensions incorrectly flagged</td>
+<td>FP / (FP + TN)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Scope limits (state in manuscript):</strong></p>
+<ul>
+<li>Metrics apply to <strong>transaction-type dimension ranking</strong>, not dollar amount of any single transaction.</li>
+<li>Formal element-level precision/recall requires per-pattern logging of top-<em>k</em> rankings against ground truth; pipeline pass/fail alone is insufficient.</li>
+<li>Design intent: triage favors <strong>recall over precision</strong> given ACFE-style detection lag without continuous monitoring.</li>
+</ul>
+<p><strong>Layer 2 outputs (operational, pre-FRP):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>z-score</strong></td>
+<td><em>z</em>ₖ = (CPIₖ(today) − μₖ) / σₖ; signed deviation from trained mean</td>
+</tr>
+<tr>
+<td><strong>Deviation band</strong></td>
+<td>|z| &gt; 3.0 → HIGH; |z| &gt; 2.0 → MEDIUM; else LOW</td>
+</tr>
+<tr>
+<td><strong>Composite alarm</strong></td>
+<td>Fires when count-based or dollar-weighted signal reaches MEDIUM or HIGH</td>
+</tr>
+<tr>
+<td><strong>Top-<em>k</em> alert set</strong></td>
+<td>The <em>k</em> φ dimensions with largest |z| (or equivalent ranking rule) on a given day</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="table-3-layer-3-frp-triage-outcomes-operational">Table 3 — Layer 3: FRP Triage Outcomes (Operational)</h2>
+<p><strong>NGAME does not accuse anyone of fraud.</strong> A warning means activity is statistically unusual relative to the organization’s 30-day baseline; the FRP adjudicates.</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+<th>Relation to Layer 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Statistically warranted alert</strong></td>
+<td>|z| or composite alarm exceeds threshold; signal is real relative to trained μ, σ</td>
+<td>May correspond to FP (eval.) if ground truth is “normal business change”</td>
+</tr>
+<tr>
+<td><strong>Corroborated alert</strong></td>
+<td>FRP review finds material concern: fraud, control weakness, or required correction</td>
+<td>Aligns with TP (eval.) when ground truth exists; broader in production</td>
+</tr>
+<tr>
+<td><strong>Benign resolution</strong></td>
+<td>Alert correctly reflected baseline deviation; FRP explains as legitimate (e.g., new GL accounts, seasonal vendor onboarding)</td>
+<td>Often FP (eval.) under fraud ground truth; <strong>not</strong> a system failure under triage design</td>
+</tr>
+<tr>
+<td><strong>Missed event</strong></td>
+<td>Material misappropriation occurred but did not surface in warnings or top-<em>k</em></td>
+<td>FN (eval.) when ground truth is known</td>
+</tr>
+</tbody>
+</table>
+<h3 id="terms-to-avoid-at-layer-3">Terms to avoid at Layer 3</h3>
+<table>
+<thead>
+<tr>
+<th>Avoid</th>
+<th>Reason</th>
+<th>Prefer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>False positive</strong> (unqualified)</td>
+<td>Implies detector error; conflates with Layer 2</td>
+<td><strong>Benign resolution</strong> or <strong>statistically warranted, benign on review</strong></td>
+</tr>
+<tr>
+<td><strong>True positive</strong> (unqualified)</td>
+<td>Implies fraud confirmed by the system</td>
+<td><strong>Corroborated alert</strong> (after FRP review)</td>
+</tr>
+<tr>
+<td><strong>Unreliable warning</strong></td>
+<td>Suggests broken instrumentation</td>
+<td><strong>Benign resolution</strong> or <strong>spurious for fraud purposes, valid for triage</strong></td>
+</tr>
+<tr>
+<td><strong>Reliable</strong> (for warnings)</td>
+<td>Collides with “reliable μ and σ estimates” (Layer 1 training)</td>
+<td><strong>Corroborated</strong>, <strong>warranted</strong>, or <strong>actionable after review</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="table-4-cross-layer-mapping-illustrative">Table 4 — Cross-Layer Mapping (Illustrative)</h2>
+<p>One day’s Vendors dimension can illustrate how layers diverge:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Example reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 — Structural</strong></td>
+<td>High <strong>Added</strong> and <strong>Removed</strong> counts → low CPI (churn)</td>
+</tr>
+<tr>
+<td><strong>2 — Detection</strong></td>
+<td>|z| &gt; 3 on Vendors → HIGH; Vendors in top-<em>k</em></td>
+</tr>
+<tr>
+<td><strong>3 — Triage</strong></td>
+<td>FRP reviews Audit Log → <strong>benign resolution</strong> (legitimate vendor cleanup) or <strong>corroborated alert</strong> (shell-vendor pattern)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Chart of Accounts example (field deployment):</strong> Layer 2 correctly flags HIGH deviation; Layer 3 <strong>benign resolution</strong> after FRP confirms legitimate new GL accounts. Not an eval. FN; triage behaved as designed.</p>
+<hr />
+<h2 id="table-5-notation-quick-reference">Table 5 — Notation Quick Reference</h2>
+<table>
+<thead>
+<tr>
+<th align="center">Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Y, T</td>
+<td>Yesterday and Today ontology snapshots for a transaction type</td>
+</tr>
+<tr>
+<td align="center"><em>a</em>, <em>b</em>, <em>c</em>, <em>n</em></td>
+<td>Retained, removed, added, and union count (<em>n</em> = <em>a</em> + <em>b</em> + <em>c</em>)</td>
+</tr>
+<tr>
+<td align="center">φₖ, CPIₖ</td>
+<td>Churn Persistence Index for transaction type <em>k</em></td>
+</tr>
+<tr>
+<td align="center">μₖ, σₖ</td>
+<td>Trained mean and standard deviation of CPIₖ (30-day baseline)</td>
+</tr>
+<tr>
+<td align="center">wCPIₖ</td>
+<td>Dollar-weighted CPI for type <em>k</em></td>
+</tr>
+<tr>
+<td align="center">SCPIₖ(<em>t</em>, <em>L</em>)</td>
+<td>Sequence CPI: geometric mean of CPIₖ over window <em>L</em></td>
+</tr>
+<tr>
+<td align="center"><em>z</em>ₖ</td>
+<td>Standardized deviation: (CPIₖ(today) − μₖ) / σₖ</td>
+</tr>
+<tr>
+<td align="center"><em>k</em> (alert)</td>
+<td>Number of top-ranked anomalous dimensions in evaluation (default 3)</td>
+</tr>
+<tr>
+<td align="center">FRP</td>
+<td>Financially Responsible Person — designated reviewer</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="suggested-manuscript-footnote-optional-paste-in">Suggested Manuscript Footnote (optional paste-in)</h2>
+<blockquote>
+<p><em>Terminology:</em> Day-over-day record overlap (retained, added, removed) describes structural churn only and is not labeled with confusion-matrix terms. True and false positives, precision, and recall apply solely to evaluation of top-<em>k</em> dimension ranking against known or injected anomalies. Management warnings indicate statistical departure from an organization-specific baseline; the FRP classifies outcomes as corroborated, benign on review, or missed—NGAME does not render autonomous fraud verdicts.</p>
+</blockquote>
+<hr />
+<p><em>Draft aligned with NGAME CPI analysis (<code>ngame_cpi_analysis_agent.py</code>), churn comparison thresholds (<code>ngame_churn_comparison_agent.py</code>), FRP Operations Guide, and DSRM Evaluation Draft §5.2.</em></p>
+<div style='font-size: 72%; margin-top: 1.5em; padding-top: .5em; -webkit-user-select: none;'><hr style='height: 0; border: none; border-top: 1px solid rgba(0,0,0,.5); box-shadow: 0 1px 1px rgba(255, 255, 255, .5)'/><a href='https://github.com/sbarex/QLMarkdown'>QLMarkdown</a>, version 1.0.24 (50).<br />
+Developed by SBAREX 2020 - 2025 with <span style='font-style: normal'>❤️</span>.<br/>
+If you like this app, <a href='https://www.buymeacoffee.com/sbarex'><strong>buy me a coffee</strong></a>!</div>
+<!--
+
+File generated with QLMarkdown [https://github.com/sbarex/QLMarkdown] - QLMarkdown, version 1.0.24 (50).
+Developed by SBAREX 2020 - 2025 with ❤️
+
+-->
+
+</article>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""
-NGAME Web Application (Simplified Version)
+"""https://developer.intuit.com/app/developer/homepage
+NGAME Web Application (Simplified Version)  
 A simplified version that works without WebSocket dependencies for easier installation.
 """
 
@@ -15,6 +15,23 @@ import subprocess
 import sys as _sys
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, List
+
+_repo_root_path = Path(__file__).resolve().parent.parent
+if str(_repo_root_path) not in _sys.path:
+    _sys.path.insert(0, str(_repo_root_path))
+
+from ngame_dashboard_alerts import (
+    build_dollar_alarm_alerts,
+    filter_top_anomalies_for_display,
+    format_cc_flags_for_display,
+    merge_full_fraud_comparison,
+)
+from ngame_dashboard_category_churn import build_category_day_activity
+from ngame_dashboard_trends import (
+    append_dashboard_activity,
+    build_analysis_trends,
+    build_recent_activity,
+)
 
 # Import NGAME components (optional - will work without them)
 try:
@@ -41,6 +58,21 @@ def _repo_root() -> Path:
 TRAINING_MATRIX_FILE = "NGAME_Training_Matrix.xlsx"
 TRAINING_TARGET_DAYS = 30
 FRP_MODE = os.environ.get("NGAME_UI_FRP_MODE", "1").lower() not in ("0", "false", "no")
+
+
+def _ui_feature_visible(env_var: str) -> bool:
+    """Visible in consultant mode unless overridden; hidden on FRP / earliest installs."""
+    val = os.environ.get(env_var, "").lower()
+    if val in ("1", "true", "yes"):
+        return True
+    if val in ("0", "false", "no"):
+        return False
+    return not FRP_MODE
+
+
+SHOW_MANAGEMENT_WARNINGS = _ui_feature_visible("NGAME_UI_SHOW_MANAGEMENT_WARNINGS")
+SHOW_TOTAL_ANALYSES = _ui_feature_visible("NGAME_UI_SHOW_TOTAL_ANALYSES")
+SHOW_ACTIVE_ALERTS = _ui_feature_visible("NGAME_UI_SHOW_ACTIVE_ALERTS")
 
 
 def _count_training_days(matrix_path: Path) -> int:
@@ -78,6 +110,70 @@ def _get_training_status() -> Dict[str, Any]:
         "phase": "fraud_analysis" if complete else "training",
     }
 
+
+def _parse_display_timestamp(value: Any) -> Optional[datetime]:
+    """Best-effort parse of artifact timestamps for comparison."""
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        return value
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        pass
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(text[:19], fmt)
+        except ValueError:
+            continue
+    return None
+
+
+def _pipeline_activity_timestamp() -> Optional[str]:
+    """
+    Latest on-disk touch time for training or Phase II pipeline outputs.
+    Used for dashboard 'Last Updated' when stale management JSON is present.
+    """
+    root = _repo_root()
+    fallbacks = root / "GENERATED_FILES"
+    candidates = [
+        root / TRAINING_MATRIX_FILE,
+        root / "quickbooks_ontology_Today.ttl",
+        root / "NGAME_Fraud_Analysis.json",
+        root / "NGAME_Fraud_Analysis_readable.json",
+        root / "NGAME_Fraud_Analysis_readable_clean.json",
+        root / "NGAME_Fraud_Analysis_readable_truly_clean.json",
+        fallbacks / "NGAME_Fraud_Analysis.json",
+    ]
+    mtimes = [p.stat().st_mtime for p in candidates if p.is_file()]
+    if not mtimes:
+        return None
+    return datetime.fromtimestamp(max(mtimes)).isoformat()
+
+
+def _newest_display_timestamp(*values: Any) -> Optional[str]:
+    """Return ISO string for the newest parseable timestamp among values."""
+    best_dt: Optional[datetime] = None
+    best_iso: Optional[str] = None
+    for value in values:
+        if value is None:
+            continue
+        if isinstance(value, (int, float)):
+            dt = datetime.fromtimestamp(value)
+            iso = dt.isoformat()
+        else:
+            dt = _parse_display_timestamp(value)
+            if dt is None:
+                continue
+            iso = dt.isoformat()
+        if best_dt is None or dt > best_dt:
+            best_dt = dt
+            best_iso = iso
+    return best_iso
+
 def _try_load_json(path: Path) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
     try:
         if not path.exists():
@@ -86,6 +182,7 @@ def _try_load_json(path: Path) -> Tuple[Optional[Dict[str, Any]], Optional[str]]
             return json.load(f), None
     except Exception as e:
         return None, f"{path}: {e}"
+
 
 def _load_latest_artifacts() -> Dict[str, Any]:
     """
@@ -128,7 +225,12 @@ def _load_latest_artifacts() -> Dict[str, Any]:
                 break
 
     management_dashboard = loaded.get("management_dashboard") or {}
-    fraud = loaded.get("fraud_analysis") or {}
+    fraud = merge_full_fraud_comparison(
+        loaded.get("fraud_analysis") or {},
+        _try_load_json,
+        root,
+        fallbacks,
+    )
 
     # Extract consolidated view
     management_summary = (management_dashboard.get("management_summary") or
@@ -139,7 +241,10 @@ def _load_latest_artifacts() -> Dict[str, Any]:
                     fraud.get("warning_result", {}).get("overall_risk_level") or
                     "UNKNOWN")
 
-    top_anomalies = (fraud.get("anomaly_result", {}) or {}).get("top_anomalies") or []
+    top_anomalies = filter_top_anomalies_for_display(
+        (fraud.get("anomaly_result", {}) or {}).get("top_anomalies") or []
+    )
+    dollar_alarm_alerts = build_dollar_alarm_alerts(fraud)
     fraud_summary = fraud.get("summary") or {}
     sequence_result = fraud.get("sequence_result")
     cc_watch_result = fraud.get("cc_watch_result") or {}
@@ -159,21 +264,58 @@ def _load_latest_artifacts() -> Dict[str, Any]:
         )[:5]
 
     cc_summary = cc_watch_result.get("summary") or {}
-    cc_flagged = cc_watch_result.get("flagged_transactions") or []
+    if not cc_summary and fraud_summary:
+        cc_summary = {
+            "total_flagged": fraud_summary.get("cc_watch_flagged", 0),
+            "total_cc_transactions": fraud_summary.get("cc_watch_transactions", 0),
+            "highest_risk_level": fraud_summary.get("cc_watch_highest_risk", "CLEAR"),
+        }
+    # Credit card watch agent outputs `cc_flags`; keep a backward-compatible alias.
+    cc_flagged = (
+        cc_watch_result.get("cc_flags")
+        or cc_watch_result.get("flagged_transactions")
+        or []
+    )
+    cc_flagged_display = format_cc_flags_for_display(cc_flagged)
 
     # Last-updated timestamps (best effort)
-    last_updated = management_dashboard.get("last_updated") or management_dashboard.get("management_summary", {}).get("summary_timestamp")
+    artifact_updated = (
+        management_dashboard.get("last_updated")
+        or management_dashboard.get("management_summary", {}).get("summary_timestamp")
+    )
     execution_time = fraud.get("execution_time")
+    pipeline_updated = _pipeline_activity_timestamp()
+    last_updated = _newest_display_timestamp(
+        artifact_updated, execution_time, pipeline_updated
+    )
+
+    training_status = _get_training_status()
+    analysis_trends = build_analysis_trends(root)
+    recent_activity = build_recent_activity(
+        root,
+        fraud=fraud,
+        training_status=training_status,
+        fraud_summary=fraud_summary,
+    )
+    category_day_activity = build_category_day_activity(root, fraud=fraud)
 
     return {
         "success": True,
         "sources": sources,
         "errors": errors[-10:],  # keep response small
-        "training_status": _get_training_status(),
+        "training_status": training_status,
+        "analysis_trends": analysis_trends,
+        "recent_activity": recent_activity,
+        "category_day_activity": category_day_activity,
         "summary": {
             "overall_risk_level": overall_risk,
             "warnings_count": len(warnings),
             "top_anomalies_count": len(top_anomalies),
+            "dollar_alarm_count": len(dollar_alarm_alerts),
+            "dollar_alarm_high_count": sum(
+                1 for a in dollar_alarm_alerts
+                if (a.get("dollar_alarm_level") or "").upper() == "HIGH"
+            ),
             "last_updated": last_updated,
             "execution_time": execution_time,
             "sequence_active": sequence_active,
@@ -181,6 +323,7 @@ def _load_latest_artifacts() -> Dict[str, Any]:
             "sequence_high_count": sequence_high,
             "sequence_medium_count": sequence_medium,
             "cc_watch_flagged": int(cc_summary.get("total_flagged") or 0),
+            "cc_watch_transactions": int(cc_summary.get("total_cc_transactions") or 0),
             "cc_watch_highest_risk": cc_summary.get("highest_risk_level", "CLEAR"),
         },
         "management_dashboard": {
@@ -194,12 +337,14 @@ def _load_latest_artifacts() -> Dict[str, Any]:
             "anomaly_result": {
                 "top_anomalies": top_anomalies[:10],
             },
+            "dollar_alarm_alerts": dollar_alarm_alerts[:10],
             "llm_result": fraud.get("llm_result", {}),
             "summary": fraud_summary,
             "sequence_result": sequence_result,
             "sequence_top": sequence_top,
             "cc_watch_result": cc_watch_result,
-            "cc_flagged": cc_flagged[:10],
+            "cc_flagged": cc_flagged_display[:10],
+            "category_day_activity": category_day_activity,
         },
     }
 
@@ -260,8 +405,22 @@ ngame_state = NGAMEState()
 def inject_ui_config():
     return {
         "frp_mode": FRP_MODE,
+        "show_management_warnings": SHOW_MANAGEMENT_WARNINGS,
+        "show_total_analyses": SHOW_TOTAL_ANALYSES,
+        "show_active_alerts": SHOW_ACTIVE_ALERTS,
         "training_status": _get_training_status(),
+        "dashboard_build": "2026-07-08-ccwatch2",
     }
+
+
+@app.after_request
+def _disable_dashboard_cache(response):
+    """Prevent stale dashboard HTML/JSON when templates or API payloads change."""
+    if request.path in ("/", "/dashboard") or request.path.startswith("/api/consolidated-dashboard"):
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    return response
 
 
 @app.route('/')
@@ -523,13 +682,18 @@ def api_active_alerts():
 
 # ── Operation runner helpers ──────────────────────────────────────────────────
 
-def _stream_script(script_name: str, stdin_input: str = "y\n"):
+def _stream_script(
+    script_name: str,
+    stdin_input: str = "y\n",
+    activity_type: Optional[str] = None,
+):
     """
     Run a top-level NGAME script as a subprocess, stream its output into
     ngame_state.operation_log, then mark operation_running = False.
     """
     root = _repo_root()
     script = root / script_name
+    label = activity_type or script_name
 
     ngame_state.operation_log = [f"▶ Starting {script_name} …", ""]
 
@@ -557,14 +721,31 @@ def _stream_script(script_name: str, stdin_input: str = "y\n"):
                     ngame_state.operation_log = ngame_state.operation_log[-300:]
 
         proc.wait()
-        exit_msg = "✅ Completed (exit 0)" if proc.returncode == 0 else f"⚠️  Exited with code {proc.returncode}"
+        exit_code = proc.returncode
+        exit_msg = "✅ Completed (exit 0)" if exit_code == 0 else f"⚠️  Exited with code {exit_code}"
         with ngame_state._operation_lock:
             ngame_state.operation_log.append("")
             ngame_state.operation_log.append(exit_msg)
+        append_dashboard_activity(
+            root,
+            {
+                "type": label,
+                "message": exit_msg,
+                "status": "success" if exit_code == 0 else "error",
+            },
+        )
 
     except Exception as exc:
         with ngame_state._operation_lock:
             ngame_state.operation_log.append(f"❌ Error: {exc}")
+        append_dashboard_activity(
+            root,
+            {
+                "type": label,
+                "message": str(exc),
+                "status": "error",
+            },
+        )
     finally:
         ngame_state.operation_running = False
 
@@ -577,7 +758,13 @@ def api_training_status():
 
 @app.route('/api/ui-config')
 def api_ui_config():
-    return jsonify({"frp_mode": FRP_MODE, "training_status": _get_training_status()})
+    return jsonify({
+        "frp_mode": FRP_MODE,
+        "show_management_warnings": SHOW_MANAGEMENT_WARNINGS,
+        "show_total_analyses": SHOW_TOTAL_ANALYSES,
+        "show_active_alerts": SHOW_ACTIVE_ALERTS,
+        "training_status": _get_training_status(),
+    })
 
 
 @app.route('/api/run-daily', methods=['POST'])
@@ -601,7 +788,7 @@ def api_run_training():
 
     t = threading.Thread(
         target=_stream_script,
-        args=("run_training_flow.py", "y\n"),
+        args=("run_training_flow.py", "y\n", "Training day"),
         daemon=True,
     )
     t.start()
@@ -620,7 +807,7 @@ def api_run_fraud_analysis():
 
     t = threading.Thread(
         target=_stream_script,
-        args=("run_fraud_analysis.py", "y\n"),
+        args=("run_fraud_analysis.py", "y\n", "Fraud check"),
         daemon=True,
     )
     t.start()
@@ -639,7 +826,7 @@ def api_run_demo_scenario():
 
     t = threading.Thread(
         target=_stream_script,
-        args=("run_demo_scenario.py", ""),
+        args=("run_demo_scenario.py", "", "Demo scenario"),
         daemon=True,
     )
     t.start()

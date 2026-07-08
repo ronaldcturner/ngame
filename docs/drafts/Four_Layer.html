@@ -1,0 +1,1491 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+<title>NGAME_Glossary_Four_Layer_Terminology.md</title>
+<style type='text/css'>:root {
+  /* Base Light */
+  --textPrimary: #24292E;
+  --background: #ffffff;
+  --body-border-color: #dfdfdf;
+  --link: #0366d6;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #f7f7f9;
+  --hr-background: #e3e4e8;
+  --thead-background: #f7f7f9;
+  --thead-border: #e3e4e8;
+  --tr-border: #bfc1c9; /* unused variable */
+  --tr-alt-background: #f7f7f9;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #d6d7dc;
+  --blockquote-color: #6a6d7c;
+  --blockquote-border: #e3e4e8;
+  --heading-color: #17181a;
+  --header-bottom-border: #e3e4e8;
+  --h6-color: #6a6d7c;
+  --frame-border: #e3e4e8;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58; /* unused variable */
+  --email-toggle-background: #e3e4e8; /* unused variable */
+  --email-quoted-color: #6a6d7c; /* unused variable */
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+  
+  /* Highlight Light */
+  --hl_Background: #F6F8FA ;
+  --hl_Number: #005cc5 ;
+  --hl_Escape: #032f62 ;
+  --hl_String: #032f62 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #6a737d ;
+  --hl_Line_Comment: #6a737d ;
+  --hl_Pre_Processor: #d73a49 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #032f62 ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #d73a49 ; /* import | func */
+  --hl_Keyword-2: #d73a49 ; /* int | str */
+  --hl_Keyword-3: #24292e ; /* ??? */
+  --hl_Keyword-4: #6f42c1 ; /* ??? */
+  --hl_Keyword-5: #d73a49 ; /* ??? */
+  --hl_Keyword-6: #d73a49 ; /* ??? */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Base Dark */
+  --textPrimary: #c9d1d9;
+  --background: #0d1117;
+  --body-border-color: #31363C;
+  --link: #58a6ff;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #2f3438;
+  --hr-background: #30363d;
+  --thead-background: #f7f7f9;
+  --thead-border: #3b434b;
+  --tr-border: #3b434b; /* unused variable */
+  --tr-alt-background: #161c23;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #050505;
+  --blockquote-color: #8b949e;
+  --blockquote-border: #3D434A;
+  --heading-color: #17181a;
+  --header-bottom-border: #21272c;
+  --h6-color: #6a6d7c;
+  --frame-border: #ff08d6;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58;
+  --email-toggle-background: #e3e4e8;
+  --email-quoted-color: #6a6d7c;
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+
+  /* Highlight Dark */
+  --hl_Background: #161b22 ;
+  --hl_Number: #79c0ff ;
+  --hl_Escape: #a5d6ff ;
+  --hl_String: #549ef1 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #8b949e ;
+  --hl_Line_Comment: #8b949e ;
+  --hl_Pre_Processor: #FF7B72 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #79c0ff ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #FF7B72 ; /* import | func */
+  --hl_Keyword-2: #FF7B72 ; /* int | str */
+  --hl_Keyword-3: #c9d1d9 ; /* ??? */
+  --hl_Keyword-4: #eea8ff ; /* ??? */
+  --hl_Keyword-5: #FF7B72 ; /* ??? */
+  --hl_Keyword-6: #FF7B72 ; /* ??? */
+  }
+}
+
+/*Syntax Highlight*/
+pre.hl	{ background-color: var(--hl_Background);}
+.hl.num { color: var(--hl_Number); font-weight: normal;}
+.hl.esc { color: var(--hl_Escape); font-weight: normal;}
+.hl.str { color: var(--hl_String); font-weight: normal;}
+.hl.pps { color: var(--hl_String_Pre_Processor); font-weight: normal;}
+.hl.com { color: var(--hl_Block_Comment); font-weight: normal;}
+.hl.slc { color: var(--hl_Line_Comment); font-weight: normal;}
+.hl.ppc { color: var(--hl_Pre_Processor); font-weight: normal;}
+.hl.lin { color: var(--hl_Line_Number); font-weight: normal;}
+.hl.opt { color: var(--hl_Operator); font-weight: normal;}
+.hl.ipl { color: var(--hl_Interpolation); font-weight: normal;}
+.hl.kwa { color: var(--hl_Keyword-1); font-weight: normal;}
+.hl.kwb { color: var(--hl_Keyword-2); font-weight: normal;}
+.hl.kwc { color: var(--hl_Keyword-3); font-weight: normal;}
+.hl.kwd { color: var(--hl_Keyword-4); font-weight: normal;}
+.hl.kwe { color: var(--hl_Keyword-5); font-weight: normal;}
+.hl.kwf { color: var(--hl_Keyword-6); font-weight: normal;}
+
+
+pre {
+  max-width: 902px;
+}
+* {
+  box-sizing: border-box;
+}
+
+input:disabled {
+  touch-action: none;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji, Segoe UI Emoji;
+}
+
+body {
+  margin: 0;
+  /* padding: 1em; */
+  color: var(--textPrimary);
+  background-color: var(--background);
+}
+
+/* If the window is bigger than 902 pixels, the border will be visible. */
+@media (min-width: 902px) {
+  article {
+    border-radius: 8px;
+    border-width: 1px;  
+    border-style: solid;
+    border-color: var(--body-border-color);
+  }
+}
+
+article {
+  margin: auto;
+  max-width: 902px;
+  font-size: inherit;
+  line-height: 1.5;
+  word-wrap: break-word;
+  padding: 32px;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  -webkit-tap-highlight-color: var(--link-highlight);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+details summary {
+  outline: 0;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+blockquote {
+  margin: 0;
+}
+
+table, table *, pre {
+  touch-action: pan-x;
+}
+
+.markdown-body ul.contains-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+pre, code, kbd {
+  font-size: 1em;
+  font-family: var(--code-font);
+}
+
+.issue-keyword {
+  border-bottom: 1px dotted var(--keyword-color);
+}
+
+.team-mention, .user-mention {
+  font-weight: 600;
+  color: var(--mention-color);
+  white-space: nowrap;
+}
+
+.email-hidden-toggle, .email-hidden-reply {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"] {
+    filter: invert(85%) brightness(1.5);
+  }
+}
+/* Fix checkboxes looking cut off when they render larger than the default size */
+input[type="checkbox"] {
+  transform: translate(0px);
+  width: 14px; height: 14px;
+}
+
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 0.18em 0.31em;
+  font-size: 0.7em;
+  line-height: 1.2em;
+  color: var(--kbd-color);
+  vertical-align: middle;
+  background-color: var(--kbd-background);
+  border: 1px solid var(--kbd-border);
+  border-radius: 0.25em;
+  box-shadow: inset 0 -1px 0 var(--kbd-border);
+  margin-right: 2px;
+}
+
+.markdown-body:after, .markdown-body:before {
+  display: table;
+  content: ""
+}
+
+.markdown-body:after {
+  clear: both;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .absent {
+  color: var(--red-600);
+}
+
+.markdown-body .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body blockquote, .markdown-body details, .markdown-body dl, .markdown-body ol, .markdown-body p, .markdown-body pre, .markdown-body table, .markdown-body ul {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body table table {
+    margin-bottom: 0;
+}
+
+.markdown-body hr {
+  height: .25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: var(--hr-background);
+  border: 0;
+}
+
+.markdown-body blockquote {
+  padding-left: 1em;
+  color: var(--blockquote-color);
+  border-left: .25em solid var(--blockquote-border);
+}
+
+.markdown-body blockquote > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body h1 .octicon-link, .markdown-body h2 .octicon-link, .markdown-body h3 .octicon-link, .markdown-body h4 .octicon-link, .markdown-body h5 .octicon-link, .markdown-body h6 .octicon-link {
+  color: var(--heading-color);
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor, .markdown-body h2:hover .anchor, .markdown-body h3:hover .anchor, .markdown-body h4:hover .anchor, .markdown-body h5:hover .anchor, .markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link, .markdown-body h2:hover .anchor .octicon-link, .markdown-body h3:hover .anchor .octicon-link, .markdown-body h4:hover .anchor .octicon-link, .markdown-body h5:hover .anchor .octicon-link, .markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 code, .markdown-body h1 tt, .markdown-body h2 code, .markdown-body h2 tt, .markdown-body h3 code, .markdown-body h3 tt, .markdown-body h4 code, .markdown-body h4 tt, .markdown-body h5 code, .markdown-body h5 tt, .markdown-body h6 code, .markdown-body h6 tt {
+  font-size: inherit;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+}
+
+.markdown-body h1, .markdown-body h2 {
+  padding-bottom: .3em;
+  border-bottom: 1px solid var(--header-bottom-border);
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1em;
+}
+
+.markdown-body h5 {
+  font-size: .875em;
+}
+
+.markdown-body h6 {
+  font-size: .85em;
+  color: var(--h6-color);
+}
+
+.markdown-body ol, .markdown-body ul {
+  padding-left: 1.5em;
+}
+
+.markdown-body ol.no-list, .markdown-body ul.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.markdown-body ol ol, .markdown-body ol ul, .markdown-body ul ol, .markdown-body ul ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li {
+  word-wrap: break-all;
+}
+
+.markdown-body li > p {
+  margin-top: 16px;
+}
+
+.markdown-body li + li {
+  margin-top: .25em;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.markdown-body table th {
+  font-weight: 600;
+}
+
+.markdown-body table td, .markdown-body table th {
+  padding: 6px 13px;
+  border: 1px solid var(--thead-border);
+}
+
+.markdown-body table tr {
+  background-color: var(--background);
+  border-top: 1px solid var(--tr-border); /* unused variable */
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: var(--tr-alt-background);
+}
+
+.markdown-body table img {
+  background-color: initial;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  box-sizing: initial;
+  background-color: var(--background);
+}
+
+.markdown-body img[align=right] {
+  padding-left: 20px;
+}
+
+.markdown-body img[align=left] {
+  padding-right: 20px;
+}
+
+.markdown-body .emoji {
+  max-width: none;
+  vertical-align: text-top;
+  background-color: initial;
+}
+
+.markdown-body img.emoji {
+    max-width: 18px;
+}
+
+.markdown-body span.frame {
+  display: block;
+  overflow: hidden;
+}
+
+.markdown-body span.frame > span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--frame-border);
+}
+
+.markdown-body span.frame span img {
+  display: block;
+  float: left;
+}
+
+.markdown-body span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: var(--frame-color);
+}
+
+.markdown-body span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-center > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.markdown-body span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.markdown-body span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-right > span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+
+.markdown-body span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-left span {
+  margin: 13px 0 0;
+}
+
+.markdown-body span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-right > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body code, .markdown-body tt {
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: var(--code-background);
+  border-radius: 6px;
+}
+
+.markdown-body code br, .markdown-body tt br {
+  display: none;
+}
+
+.markdown-body del code {
+  text-decoration: inherit;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre > code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body .highlight pre, .markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: var(--hl_Background);
+  border-radius: 6px;
+}
+
+.markdown-body pre code, .markdown-body pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: initial;
+  border: 0;
+}
+
+.markdown-body .csv-data td, .markdown-body .csv-data th {
+  padding: 5px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-body .csv-data .blob-num {
+  padding: 10px 8px 9px;
+  text-align: right;
+  background: var(--background);
+  border: 0;
+}
+
+.markdown-body .csv-data tr {
+  border-top: 0;
+}
+
+.markdown-body .csv-data th {
+  font-weight: 600;
+  background: var(--thead-background);
+  border-top: 0;
+}
+
+.markdown-body mark {
+    padding: .2em;
+    background-color: #fcf1b5;
+}
+
+@media (prefers-color-scheme: dark) {
+    .markdown-body mark {
+        padding: .2em;
+        background-color: #fcf8e3;
+    }
+}
+
+/* Mermaid diagrams */
+.mermaid {
+    text-align: center;
+    margin: 16px 0;
+    background-color: transparent;
+}
+
+.mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    .mermaid {
+        background-color: transparent;
+    }
+}
+
+</style>
+
+
+</head>
+<body>
+<article class='markdown-body'>
+<h1 id="ngame-terminology-glossary">NGAME Terminology Glossary</h1>
+<h2 id="four-layer-model-for-churn-detection-interpretation-and-adjudication">Four-Layer Model for Churn, Detection, Interpretation, and Adjudication</h2>
+<p><strong>Status:</strong> Draft for journal manuscript<br />
+<strong>Purpose:</strong> Assign precise, layer-specific vocabulary across the NGAME pipeline; retire confusion-matrix labels (TP / FP / FN / TN) on the Jaccard 2×2 (Layer 1); separate statistical detection (Layer 2), LLM taxonomy linkage (Layer 3), and FRP adjudication (Layer 4).<br />
+<strong>Audience:</strong> Co-authors, reviewers, and readers of the NGAME design-science evaluation.</p>
+<hr />
+<h2 id="why-this-glossary-exists">Why This Glossary Exists</h2>
+<p>NGAME uses “positive,” “negative,” “reliable,” and “triage” in several distinct senses. Conflating them invites reviewer criticism and misstates what the artifact does. This glossary assigns <strong>one vocabulary per layer</strong> and directs each layer’s <strong>trust property</strong> — the kind of warrant the layer can honestly claim — without imposing a single global definition of “reliability.”</p>
+<p>For the anticipated reviewer question <strong>“What about false positives and false negatives?”</strong> see <strong>Tables A–E</strong> (below the layer overview).</p>
+<table>
+<thead>
+<tr>
+<th align="center">Layer</th>
+<th>Retires or restricts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong>1 — Structural</strong></td>
+<td>TP/FP/FN/TN on the day-over-day Jaccard 2×2; use retained / added / removed / excluded</td>
+</tr>
+<tr>
+<td align="center"><strong>2 — Detection</strong></td>
+<td>Standard IR / confusion-matrix terms <strong>only</strong> in controlled evaluation against ground truth</td>
+</tr>
+<tr>
+<td align="center"><strong>3 — Scheme interpretation</strong></td>
+<td>“Triage,” “reliable ranking,” and fraud-verdict language for LLM taxonomy output</td>
+</tr>
+<tr>
+<td align="center"><strong>4 — FRP adjudication</strong></td>
+<td>Unqualified “true/false positive” and autonomous fraud verdicts</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="layer-overview">Layer Overview</h2>
+<table>
+<thead>
+<tr>
+<th align="center">Layer</th>
+<th>Question answered</th>
+<th>Primary outputs</th>
+<th>Ground truth</th>
+<th>Trust property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong>1 — Structural</strong></td>
+<td>How stable is each transaction-type population from yesterday to today?</td>
+<td>CPI, α (addition rate), δ (deletion rate), wCPI</td>
+<td>None required; descriptive set overlap</td>
+<td><strong>Reproducibility</strong> — same snapshots → same CPI</td>
+</tr>
+<tr>
+<td align="center"><strong>2 — Detection</strong></td>
+<td>Which φ dimensions deviate enough from the trained baseline to rank in the top-<em>k</em> alert set?</td>
+<td>z-scores, HIGH / MEDIUM / LOW bands, top-<em>k</em> rankings</td>
+<td>Injected or known anomalies (evaluation only)</td>
+<td><strong>Detection validity</strong> — precision/recall on dimension ranking (eval. only)</td>
+</tr>
+<tr>
+<td align="center"><strong>3 — Scheme interpretation</strong></td>
+<td>Given flagged dimensions, how plausibly do patterns align with asset-misappropriation scheme classes?</td>
+<td>Taxonomy mappings, LLM narrative, model-reported confidence, deterministic anchor scores</td>
+<td>Curated ontology + ACFE priors; not adjudicated fraud</td>
+<td><strong>Interpretive fidelity</strong> — grounded, auditable, non-authoritative</td>
+</tr>
+<tr>
+<td align="center"><strong>4 — FRP adjudication</strong></td>
+<td>What did human review conclude, and what action followed?</td>
+<td>Corroborated / benign / missed outcomes; management warnings as briefing artifacts</td>
+<td>FRP professional judgment after review</td>
+<td><strong>Adjudication outcome</strong> — operational ground truth in production</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pipeline order:</strong> Layer 1 → Layer 2 → Layer 3 → Layer 4. Layer 2 produces the <strong>statistical alert set</strong> (deterministic top-<em>k</em> ranking). Layer 3 <strong>enriches</strong> that set with scheme labels and narrative; it does not replace Layer 2 as the primary trigger for FRP attention. Layer 4 is where “what actually happened” is established.</p>
+<hr />
+<h2 id="answering-but-is-it-reliable">Answering “But is it reliable?”</h2>
+<p>Readers will ask <strong>“Is it reliable?”</strong> at every layer. Do not answer with one global yes or no. Point to the <strong>trust property</strong> for that layer:</p>
+<table>
+<thead>
+<tr>
+<th align="center">Layer</th>
+<th>Reader’s question</th>
+<th>Answer in one line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong>1</strong></td>
+<td>Is CPI measurement trustworthy?</td>
+<td>Same Y/T inputs yield the same CPI; descriptive, not evaluative.</td>
+</tr>
+<tr>
+<td align="center"><strong>2</strong></td>
+<td>Does it flag the right φ dimensions?</td>
+<td>Top-<em>k</em> ranking is deterministic given μ, σ; precision/recall apply under controlled evaluation.</td>
+</tr>
+<tr>
+<td align="center"><strong>3</strong></td>
+<td>Is the scheme label / LLM narrative trustworthy?</td>
+<td>Grounded in <code>Asset_Misappropriation.ttl</code>, auditable against a deterministic anchor; <strong>not</strong> a fraud verdict and not evaluated with Layer 2 IR metrics.</td>
+</tr>
+<tr>
+<td align="center"><strong>4</strong></td>
+<td>Was the management action correct?</td>
+<td>FRP judgment is ground truth in production; outcomes are corroborated, benign, or missed.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="answering-what-about-false-positives-and-false-negatives">Answering “What about false positives and false negatives?”</h2>
+<p>Reviewers and readers trained in machine learning will ask this question early. <strong>NGAME does not retire confusion-matrix language globally.</strong> It <strong>relocates</strong> TP, FP, FN, and TN to the layer where ground truth and a defined detection task exist, and <strong>replaces</strong> those labels elsewhere with terms that do not imply classifier error.</p>
+<p><strong>Direct answer (one paragraph for manuscript adaptation):</strong></p>
+<blockquote>
+<p>False positives and false negatives are standard information-retrieval terms for comparing a detector’s output to <strong>known ground truth</strong>. In NGAME they apply <strong>only at Layer 2</strong>, where top-<em>k</em> transaction-type dimensions are evaluated against injected or known anomalies. They do <strong>not</strong> apply to the Layer 1 Jaccard partition (retained, added, removed), which is descriptive set overlap without a reference “correct” class. At Layer 3, scheme labels are hypotheses auditable against a curated taxonomy anchor—not TP/FP outcomes. At Layer 4, an alert that proves benign on FRP review may resemble a Layer 2 false positive under a fraud-only ground-truth definition, but under NGAME’s triage design it is a <strong>benign resolution</strong>, not evidence of broken detection.</p>
+</blockquote>
+<h3 id="table-a-where-tp-fp-fn-tn-belong-and-where-they-do-not">Table A — Where TP / FP / FN / TN belong (and where they do not)</h3>
+<table>
+<thead>
+<tr>
+<th align="center">Layer</th>
+<th align="center">Do TP / FP / FN / TN apply?</th>
+<th align="center">Ground truth required?</th>
+<th>Correct vocabulary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong>1 — Structural</strong></td>
+<td align="center"><strong>No</strong></td>
+<td align="center">No</td>
+<td>Retained (<em>a</em>), Removed (<em>b</em>), Added (<em>c</em>), Excluded</td>
+</tr>
+<tr>
+<td align="center"><strong>2 — Detection</strong></td>
+<td align="center"><strong>Yes</strong> (evaluation only)</td>
+<td align="center">Yes — injected or known anomalies</td>
+<td>TP, FP, FN, TN (eval.); precision, recall, FPR</td>
+</tr>
+<tr>
+<td align="center"><strong>3 — Scheme interpretation</strong></td>
+<td align="center"><strong>No</strong></td>
+<td align="center">Partial — ontology + ACFE priors, not adjudicated fraud</td>
+<td>Scheme-concordant mapping, interpretive divergence, narrative adjunct</td>
+</tr>
+<tr>
+<td align="center"><strong>4 — FRP adjudication</strong></td>
+<td align="center"><strong>No</strong> (avoid unqualified use)</td>
+<td align="center">FRP judgment in production</td>
+<td>Corroborated alert, benign resolution, missed event</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-b-what-the-reader-may-call-a-false-positive-vs-what-ngame-means">Table B — What the reader may call a “false positive” vs what NGAME means</h3>
+<table>
+<thead>
+<tr>
+<th>Reader’s informal claim</th>
+<th align="center">Layer</th>
+<th>NGAME term</th>
+<th>Why the distinction matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“A new vendor is a false positive on the Jaccard grid.”</td>
+<td align="center"><strong>1</strong></td>
+<td><strong>Added</strong> (<em>c</em>)</td>
+<td>Layer 1 does not judge correctness; new records are structural facts, not errors.</td>
+</tr>
+<tr>
+<td>“CPI flagged Vendors but no fraud was injected.”</td>
+<td align="center"><strong>2</strong></td>
+<td><strong>FP (eval.)</strong> — if and only if ground truth is defined</td>
+<td>Valid eval. metric under controlled test; requires explicit anomaly injection record.</td>
+</tr>
+<tr>
+<td>“CPI flagged Vendors but FRP found legitimate cleanup.”</td>
+<td align="center"><strong>4</strong></td>
+<td><strong>Benign resolution</strong></td>
+<td>Statistically warranted alert + legitimate business explanation; <strong>not</strong> a detector fault under triage design.</td>
+</tr>
+<tr>
+<td>“The LLM named the wrong fraud scheme.”</td>
+<td align="center"><strong>3</strong></td>
+<td><strong>Interpretive divergence</strong></td>
+<td>Scheme label is a hypothesis, not a detection verdict; audit against deterministic anchor.</td>
+</tr>
+<tr>
+<td>“The LLM said HIGH risk but there was no fraud.”</td>
+<td align="center"><strong>3</strong> + <strong>4</strong></td>
+<td><strong>Benign resolution</strong> (after FRP)</td>
+<td>LLM enriches briefing; Layer 2 triggered review; FRP adjudicates.</td>
+</tr>
+<tr>
+<td>“Fraud occurred but NGAME stayed quiet.”</td>
+<td align="center"><strong>2</strong> + <strong>4</strong></td>
+<td><strong>FN (eval.)</strong> if ground truth known; <strong>missed event</strong> in production</td>
+<td>FN requires eval. ground truth; missed event is the operational Layer 4 label.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-c-layer-1-retired-labels-jaccard-22-why-false-is-misleading">Table C — Layer 1 retired labels (Jaccard 2×2): why “false” is misleading</h3>
+<p>Training materials sometimes overlay confusion-matrix names on the Jaccard grid. <strong>Do not carry that overlay into manuscript prose.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Retired label</th>
+<th>Was used to mean</th>
+<th>Problem if kept</th>
+<th>Use instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TP</td>
+<td>Retained</td>
+<td>Implies a “correct detection” where no detector exists</td>
+<td><strong>Retained</strong> (<em>a</em>)</td>
+</tr>
+<tr>
+<td>FP</td>
+<td>Added</td>
+<td>Implies a <strong>new record is an error</strong>; legitimate vendors become “false alarms”</td>
+<td><strong>Added</strong> (<em>c</em>)</td>
+</tr>
+<tr>
+<td>FN</td>
+<td>Removed</td>
+<td>Implies a <strong>missed detection</strong> where churn is a structural fact</td>
+<td><strong>Removed</strong> (<em>b</em>)</td>
+</tr>
+<tr>
+<td>TN</td>
+<td>Excluded</td>
+<td>Implies correct rejection in a classifier sense</td>
+<td><strong>Excluded</strong> (omitted from Jaccard denominator)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Same grid, different semantics:</strong> The 2×2 layout matches intersection-over-union (IoU) in segmentation, where TP/FP/FN are defined against a <strong>reference mask</strong>. NGAME Layer 1 compares <strong>yesterday vs today</strong> with no reference mask and no prediction task. CPI = <em>a</em>/<em>n</em> is Jaccard set similarity, not classifier accuracy.</p>
+<h3 id="table-d-layer-2-detection-task-the-only-home-for-standard-fp-fn-metrics">Table D — Layer 2 detection task (the only home for standard FP / FN metrics)</h3>
+<p><strong>Detection task (evaluation):</strong> Rank each of <em>N</em> φ dimensions by |z| (or composite alarm); treat the top-<em>k</em> as the alert set (<em>k</em> = 3; <em>N</em> = 17–18).</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TP (eval.)</strong></td>
+<td>Flagged dimension where an anomaly was knowingly introduced or present in ground truth</td>
+</tr>
+<tr>
+<td><strong>FP (eval.)</strong></td>
+<td>Flagged dimension with only normal variation relative to ground truth</td>
+</tr>
+<tr>
+<td><strong>FN (eval.)</strong></td>
+<td>Ground-truth anomaly dimension <strong>not</strong> in the top-<em>k</em> alert set</td>
+</tr>
+<tr>
+<td><strong>TN (eval.)</strong></td>
+<td>Normal-variation dimension not flagged</td>
+</tr>
+<tr>
+<td><strong>Precision</strong></td>
+<td>TP / (TP + FP)</td>
+</tr>
+<tr>
+<td><strong>Recall (top-<em>k</em>)</strong></td>
+<td>TP / (TP + FN)</td>
+</tr>
+<tr>
+<td><strong>False positive rate</strong></td>
+<td>FP / (FP + TN)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Scope:</strong> Metrics measure <strong>transaction-type dimension ranking</strong>, not dollar amount of a single transaction and not LLM scheme labels. Pipeline pass/fail alone is insufficient for formal precision/recall; per-pattern top-<em>k</em> logging against ground truth is required.</p>
+<h3 id="table-e-layer-4-outcomes-that-resemblebut-are-notthe-same-aslayer-2-fp-fn">Table E — Layer 4 outcomes that resemble—but are not—the same as—Layer 2 FP / FN</h3>
+<table>
+<thead>
+<tr>
+<th>Layer 4 outcome</th>
+<th>Resembles (informally)</th>
+<th>Is it the same as Layer 2 FP or FN?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Benign resolution</strong></td>
+<td>“False alarm” / FP</td>
+<td><strong>No</strong> — alert was statistically warranted; FRP established legitimate context. Often <strong>would</strong> count as FP (eval.) only if ground truth were strictly “no anomaly of any kind.”</td>
+</tr>
+<tr>
+<td><strong>Corroborated alert</strong></td>
+<td>“True hit” / TP</td>
+<td><strong>Aligns with TP (eval.)</strong> when eval. ground truth exists; broader in production (includes control weaknesses, not only fraud).</td>
+</tr>
+<tr>
+<td><strong>Missed event</strong></td>
+<td>“Miss” / FN</td>
+<td><strong>Aligns with FN (eval.)</strong> when ground truth is known; operational label when fraud was material but did not surface in top-<em>k</em> or warnings.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Design intent:</strong> NGAME is a <strong>triage instrument</strong>. A moderate Layer 2 FP rate under fraud-only ground truth is acceptable when the cost of late detection (ACFE-style median lag without continuous monitoring) dominates the cost of FRP review of statistically warranted alerts.</p>
+<h3 id="suggested-manuscript-paste-in-false-positives-negatives">Suggested manuscript paste-in (false positives / negatives)</h3>
+<blockquote>
+<p><em>False positives and false negatives:</em> Confusion-matrix terms apply only to Layer 2 evaluation of top-<em>k</em> φ-dimension ranking against known or injected anomalies. Day-over-day record overlap (Layer 1) uses retained, added, and removed—not TP, FP, FN, or TN—because it is descriptive Jaccard similarity, not classifier output. Scheme interpretation (Layer 3) produces taxonomy-grounded hypotheses, not FP/FN outcomes. At Layer 4, alerts resolved as benign after FRP review are not classified as false positives in the detector-error sense; they are <strong>benign resolutions</strong> of statistically warranted signals.</p>
+</blockquote>
+<hr />
+<h2 id="table-1-layer-1-day-over-day-record-overlap-jaccard-cpi">Table 1 — Layer 1: Day-over-Day Record Overlap (Jaccard / CPI)</h2>
+<p><strong>Replaces the Jaccard 2×2 labels TP, FP, FN, TN in manuscript prose.</strong></p>
+<p>Rows: presence in <strong>Yesterday’s</strong> snapshot (Y). Columns: presence in <strong>Today’s</strong> snapshot (T).</p>
+<table>
+<thead>
+<tr>
+<th align="center">Cell</th>
+<th>Preferred term</th>
+<th align="center">Symbol</th>
+<th align="center">Set notation</th>
+<th align="center">Role in CPI</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Upper-left</td>
+<td><strong>Retained</strong></td>
+<td align="center"><em>a</em></td>
+<td align="center">Y ∩ T</td>
+<td align="center">Numerator of CPI</td>
+<td>Record URI present in both snapshots; continuity across days</td>
+</tr>
+<tr>
+<td align="center">Upper-right</td>
+<td><strong>Removed</strong></td>
+<td align="center"><em>b</em></td>
+<td align="center">Y \ T</td>
+<td align="center">Contributes to δ (deletion rate)</td>
+<td>Record existed yesterday, absent today; churn or deletion</td>
+</tr>
+<tr>
+<td align="center">Lower-left</td>
+<td><strong>Added</strong></td>
+<td align="center"><em>c</em></td>
+<td align="center">T \ Y</td>
+<td align="center">Contributes to α (addition rate)</td>
+<td>Record absent yesterday, present today; new entry</td>
+</tr>
+<tr>
+<td align="center">Lower-right</td>
+<td><strong>Excluded</strong></td>
+<td align="center">—</td>
+<td align="center">(not counted)</td>
+<td align="center"><strong>Not in formula</strong></td>
+<td>Absent both days; universe of non-occurring records is undefined</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Core formulas (Layer 1 only):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Formula</th>
+<th align="center">Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPI (Churn Persistence Index)</td>
+<td>CPI = <em>a</em> / <em>n</em>, where <em>n</em> = <em>a</em> + <em>b</em> + <em>c</em></td>
+<td align="center">[0, 1]</td>
+</tr>
+<tr>
+<td>Addition rate (α)</td>
+<td>α = <em>c</em> / <em>n</em></td>
+<td align="center">[0, 1]</td>
+</tr>
+<tr>
+<td>Deletion rate (δ)</td>
+<td>δ = <em>b</em> / <em>n</em></td>
+<td align="center">[0, 1]</td>
+</tr>
+<tr>
+<td>Partition identity</td>
+<td>CPI + α + δ = 1</td>
+<td align="center">—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Edge convention:</strong> When <em>n</em> = 0 (no records of type <em>k</em> in either snapshot), CPI = 1.0 — absence is treated as stable.</p>
+<p><strong>Dollar-weighted variant:</strong> Same structure with dollar weights <em>w</em>ᵢ instead of URI counts → wCPI, wAdditionRate, wDeletionRate.</p>
+<h3 id="jaccard-vs-confusion-matrix-layout-reader-bridge">Jaccard vs confusion-matrix layout (reader bridge)</h3>
+<p>In mainstream usage, Jaccard similarity is a <strong>set-similarity coefficient</strong>: |A ∩ B| / |A ∪ B|. The 2×2 partition (present/absent in Y × present/absent in T) has the <strong>same grid shape</strong> as a confusion matrix and as intersection-over-union (IoU) in segmentation, where cells are sometimes labeled TP/FP/FN relative to a <strong>reference mask</strong>. NGAME Layer 1 uses <strong>no such reference</strong>: rows and columns index <strong>temporal membership</strong> (yesterday vs today), not predicted vs correct. CPI = <em>a</em>/<em>n</em> is descriptive churn measurement, not classifier performance.</p>
+<h3 id="retired-layer-1-labels-do-not-use-in-journal-prose">Retired Layer 1 labels (do not use in journal prose)</h3>
+<table>
+<thead>
+<tr>
+<th>Retired label</th>
+<th>Was used to mean</th>
+<th>Use instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TP (True Positive)</td>
+<td>Retained</td>
+<td><strong>Retained</strong> (<em>a</em>)</td>
+</tr>
+<tr>
+<td>FP (False Positive)</td>
+<td>Added</td>
+<td><strong>Added</strong> (<em>c</em>)</td>
+</tr>
+<tr>
+<td>FN (False Negative)</td>
+<td>Removed</td>
+<td><strong>Removed</strong> (<em>b</em>)</td>
+</tr>
+<tr>
+<td>TN (True Negative)</td>
+<td>Excluded</td>
+<td><strong>Excluded</strong> (state explicitly that this cell is omitted from Jaccard)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> “Added” is not a “false” outcome. A legitimate new vendor is <strong>Added</strong> at Layer 1 and may still yield a LOW z-score at Layer 2 if consistent with the trained baseline.</p>
+<hr />
+<h2 id="table-2-layer-2-detector-evaluation-metrics-ground-truth-comparison">Table 2 — Layer 2: Detector Evaluation Metrics (Ground-Truth Comparison)</h2>
+<p><strong>Use standard IR / confusion-matrix terms only here</strong>, when comparing NGAME’s top-<em>k</em> flagged φ dimensions to known or injected anomalies.</p>
+<p><strong>Detection task (evaluation):</strong> Given an <em>N</em>-element daily φ (CPI) array, rank dimensions by |z| (or composite alarm) and treat the top-<em>k</em> as the alert set (<em>k</em> = 3 in current instantiation; <em>N</em> = 17–18).</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th align="center">Symbol</th>
+<th>Definition</th>
+<th>Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>True Positive (eval.)</strong></td>
+<td align="center">TP</td>
+<td>Flagged dimension where an anomaly was knowingly introduced or present in ground truth</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>False Positive (eval.)</strong></td>
+<td align="center">FP</td>
+<td>Flagged dimension with only normal variation relative to ground truth</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>False Negative (eval.)</strong></td>
+<td align="center">FN</td>
+<td>Ground-truth anomaly dimension not in the top-<em>k</em> alert set</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>True Negative (eval.)</strong></td>
+<td align="center">TN</td>
+<td>Normal-variation dimension not flagged</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Precision</strong></td>
+<td align="center">—</td>
+<td>Share of flagged dimensions that match ground truth</td>
+<td>TP / (TP + FP)</td>
+</tr>
+<tr>
+<td><strong>Recall (top-<em>k</em>)</strong></td>
+<td align="center">—</td>
+<td>Share of anomalous dimensions captured in top-<em>k</em></td>
+<td>TP / (TP + FN)</td>
+</tr>
+<tr>
+<td><strong>False Positive Rate</strong></td>
+<td align="center">FPR</td>
+<td>Share of normal dimensions incorrectly flagged</td>
+<td>FP / (FP + TN)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Scope limits (state in manuscript):</strong></p>
+<ul>
+<li>Metrics apply to <strong>transaction-type dimension ranking</strong>, not dollar amount of any single transaction.</li>
+<li>Formal element-level precision/recall requires per-pattern logging of top-<em>k</em> rankings against ground truth; pipeline pass/fail alone is insufficient.</li>
+<li>Design intent: the alert instrument favors <strong>recall over precision</strong> given ACFE-style detection lag without continuous monitoring.</li>
+</ul>
+<p><strong>Layer 2 outputs (operational, pre-interpretation):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>z-score</strong></td>
+<td><em>z</em>ₖ = (CPIₖ(today) − μₖ) / σₖ; signed deviation from trained mean</td>
+</tr>
+<tr>
+<td><strong>Deviation band</strong></td>
+<td>|z| &gt; 3.0 → HIGH; |z| &gt; 2.0 → MEDIUM; else LOW</td>
+</tr>
+<tr>
+<td><strong>Composite alarm</strong></td>
+<td>Fires when count-based or dollar-weighted signal reaches MEDIUM or HIGH</td>
+</tr>
+<tr>
+<td><strong>Top-<em>k</em> alert set</strong></td>
+<td>The <em>k</em> φ dimensions with largest |z| (or equivalent ranking rule) on a given day; <strong>primary statistical trigger</strong> for downstream steps</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="table-3-layer-3-scheme-interpretation-taxonomy-linkage">Table 3 — Layer 3: Scheme Interpretation (Taxonomy Linkage)</h2>
+<p><strong>Question:</strong> Given the Layer 2 alert set, how plausibly do observed patterns align with known asset-misappropriation scheme classes?</p>
+<p>After top-<em>k</em> dimensions are flagged, NGAME maps associated accounts to classes in <code>Asset_Misappropriation.ttl</code> using a locally hosted LLM with retrieval-style prompting (<code>ngame_llm_analysis_agent.py</code>). A <strong>deterministic anchor</strong> — curated QuickBooks transaction-type → taxonomy mapping with ACFE evidence priors (<code>ngame_misappropriation_mapping_and_scoring.py</code>) — provides a reproducible baseline for audit.</p>
+<p><strong>NGAME does not treat Layer 3 output as a fraud verdict.</strong> Scheme labels and narrative <strong>brief the FRP</strong>; they do not alone escalate severity or replace Layer 2 alerting.</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Statistical alert set</strong></td>
+<td>Top-<em>k</em> φ dimensions from Layer 2; primary trigger for FRP attention</td>
+</tr>
+<tr>
+<td><strong>Scheme-concordant mapping</strong></td>
+<td>Taxonomy class assignment consistent with both the flagged transaction type and curated ACFE/QBO priors</td>
+</tr>
+<tr>
+<td><strong>Taxonomy grounding</strong></td>
+<td>Assigned scheme classes must exist in <code>Asset_Misappropriation.ttl</code>; no free-form scheme invention</td>
+</tr>
+<tr>
+<td><strong>Deterministic anchor</strong></td>
+<td>Reproducible misappropriation-likelihood score from curated mapping rules and ACFE evidence weights</td>
+</tr>
+<tr>
+<td><strong>Interpretive divergence</strong></td>
+<td>LLM-assigned scheme class or emphasis disagrees with the deterministic anchor</td>
+</tr>
+<tr>
+<td><strong>Narrative adjunct</strong></td>
+<td>LLM explanation text supporting FRP review; subordinate to statistical alerting</td>
+</tr>
+<tr>
+<td><strong>Model-reported confidence</strong></td>
+<td>LLM self-assessed confidence (0–1 in prompts); <strong>epistemic, not calibrated</strong> — not treated as probability of fraud</td>
+</tr>
+</tbody>
+</table>
+<h3 id="warranted-claims-at-layer-3-interpretive-fidelity">Warranted claims at Layer 3 (interpretive fidelity)</h3>
+<p>State explicitly what Layer 3 <strong>does</strong> warrant:</p>
+<ol>
+<li><strong>Taxonomy grounding</strong> — outputs reference ontology-defined scheme classes.</li>
+<li><strong>Reproducibility under fixed model and temperature</strong> — repeated runs with identical inputs are expected to be substantially stable, not necessarily bit-identical.</li>
+<li><strong>Concordance with deterministic anchor</strong> — LLM outputs can be audited against the curated mapping/scoring module.</li>
+<li><strong>Non-authoritative role</strong> — Layer 2 triggers review; Layer 3 enriches the briefing.</li>
+</ol>
+<h3 id="layer-3-evaluation-lightweight-not-a-confusion-matrix">Layer 3 evaluation (lightweight; not a confusion matrix)</h3>
+<p>If quantitative reporting is required without a fourth metric grid:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>What it measures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Grounding rate</strong></td>
+<td>Fraction of LLM-assigned taxonomy classes that exist in the TTL</td>
+</tr>
+<tr>
+<td><strong>Anchor concordance</strong></td>
+<td>Fraction of flagged transaction types where LLM top scheme class matches deterministic anchor top class</td>
+</tr>
+<tr>
+<td><strong>Rerun stability</strong></td>
+<td>Qualitative agreement of scheme classes across repeated runs (fixed model, temperature)</td>
+</tr>
+</tbody>
+</table>
+<p>Formal calibration of scheme labels against adjudicated outcomes (Layer 4 → retrospective labels) may be deferred; state as a limitation if not yet measured.</p>
+<h3 id="terms-to-avoid-at-layer-3">Terms to avoid at Layer 3</h3>
+<table>
+<thead>
+<tr>
+<th>Avoid</th>
+<th>Reason</th>
+<th>Prefer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>The triage</strong> (for LLM output)</td>
+<td>Collides with Layer 4 FRP adjudication</td>
+<td><strong>Scheme interpretation</strong> or <strong>taxonomy enrichment</strong></td>
+</tr>
+<tr>
+<td><strong>Reliable ranking</strong> (LLM)</td>
+<td>Implies Layer 2–style detection validity</td>
+<td><strong>Concordant with deterministic anchor</strong> or <strong>grounded scheme mapping</strong></td>
+</tr>
+<tr>
+<td><strong>False positive</strong> (scheme label)</td>
+<td>Conflates with Layer 2 eval.</td>
+<td><strong>Interpretive divergence</strong> or <strong>scheme mismatch on review</strong></td>
+</tr>
+<tr>
+<td><strong>Fraud confirmed</strong></td>
+<td>NGAME does not adjudicate</td>
+<td><strong>Scheme-concordant hypothesis</strong> (FRP decides at Layer 4)</td>
+</tr>
+<tr>
+<td><strong>Reliable</strong> (unqualified, for LLM)</td>
+<td>Reader imports Layer 1–2 meaning</td>
+<td><strong>Grounded</strong>, <strong>auditable</strong>, or <strong>interpretively concordant</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="table-4-layer-4-frp-adjudication-outcomes-operational">Table 4 — Layer 4: FRP Adjudication Outcomes (Operational)</h2>
+<p><strong>NGAME does not accuse anyone of fraud.</strong> A management warning means activity is statistically unusual relative to the organization’s 30-day baseline; the FRP adjudicates at Layer 4.</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+<th>Relation to prior layers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Statistically warranted alert</strong></td>
+<td>|z| or composite alarm exceeds threshold; signal is real relative to trained μ, σ</td>
+<td>Layer 2; may correspond to FP (eval.) if ground truth is “normal business change”</td>
+</tr>
+<tr>
+<td><strong>Scheme-concordant hypothesis</strong></td>
+<td>Layer 3 mapping plausibly names an ACFE-style scheme class for flagged activity</td>
+<td>Layer 3; may still yield <strong>benign resolution</strong> at Layer 4</td>
+</tr>
+<tr>
+<td><strong>Corroborated alert</strong></td>
+<td>FRP review finds material concern: fraud, control weakness, or required correction</td>
+<td>Aligns with TP (eval.) when ground truth exists; broader in production</td>
+</tr>
+<tr>
+<td><strong>Benign resolution</strong></td>
+<td>Alert correctly reflected baseline deviation; FRP explains as legitimate (e.g., new GL accounts, seasonal vendor onboarding)</td>
+<td>Often FP (eval.) under fraud ground truth; <strong>not</strong> a system failure under triage design</td>
+</tr>
+<tr>
+<td><strong>Missed event</strong></td>
+<td>Material misappropriation occurred but did not surface in warnings or top-<em>k</em></td>
+<td>FN (eval.) when ground truth is known</td>
+</tr>
+</tbody>
+</table>
+<h3 id="terms-to-avoid-at-layer-4">Terms to avoid at Layer 4</h3>
+<table>
+<thead>
+<tr>
+<th>Avoid</th>
+<th>Reason</th>
+<th>Prefer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>False positive</strong> (unqualified)</td>
+<td>Implies detector error; conflates with Layer 2</td>
+<td><strong>Benign resolution</strong> or <strong>statistically warranted, benign on review</strong></td>
+</tr>
+<tr>
+<td><strong>True positive</strong> (unqualified)</td>
+<td>Implies fraud confirmed by the system</td>
+<td><strong>Corroborated alert</strong> (after FRP review)</td>
+</tr>
+<tr>
+<td><strong>Unreliable warning</strong></td>
+<td>Suggests broken instrumentation</td>
+<td><strong>Benign resolution</strong> or <strong>spurious for fraud purposes, valid for triage</strong></td>
+</tr>
+<tr>
+<td><strong>Reliable</strong> (for warnings)</td>
+<td>Collides with “reliable μ and σ estimates” (Layer 1 training)</td>
+<td><strong>Corroborated</strong>, <strong>warranted</strong>, or <strong>actionable after review</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="table-5-cross-layer-mapping-illustrative">Table 5 — Cross-Layer Mapping (Illustrative)</h2>
+<p>One day’s Vendors dimension can illustrate how layers diverge:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Example reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 — Structural</strong></td>
+<td>High <strong>Added</strong> and <strong>Removed</strong> counts → low CPI (churn)</td>
+</tr>
+<tr>
+<td><strong>2 — Detection</strong></td>
+<td>|z| &gt; 3 on Vendors → HIGH; Vendors in top-<em>k</em></td>
+</tr>
+<tr>
+<td><strong>3 — Scheme interpretation</strong></td>
+<td>LLM maps to fictitious-vendor / billing-scheme class; deterministic anchor agrees Vendors is high-evidence; narrative cites vendor churn</td>
+</tr>
+<tr>
+<td><strong>4 — FRP adjudication</strong></td>
+<td>FRP reviews Audit Log → <strong>benign resolution</strong> (legitimate vendor cleanup) or <strong>corroborated alert</strong> (shell-vendor pattern)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Chart of Accounts example (field deployment):</strong> Layer 2 correctly flags HIGH deviation; Layer 3 may propose a master-data scheme hypothesis; Layer 4 <strong>benign resolution</strong> after FRP confirms legitimate new GL accounts. Not an eval. FN; adjudication behaved as designed.</p>
+<p><strong>Scheme-concordant but benign:</strong> Layer 3 can be scheme-concordant while Layer 4 is benign — the statistical signal was real and the scheme hypothesis was plausible, but FRP established legitimate business context. That is not interpretive or detection failure.</p>
+<hr />
+<h2 id="table-6-notation-quick-reference">Table 6 — Notation Quick Reference</h2>
+<table>
+<thead>
+<tr>
+<th align="center">Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">Y, T</td>
+<td>Yesterday and Today ontology snapshots for a transaction type</td>
+</tr>
+<tr>
+<td align="center"><em>a</em>, <em>b</em>, <em>c</em>, <em>n</em></td>
+<td>Retained, removed, added, and union count (<em>n</em> = <em>a</em> + <em>b</em> + <em>c</em>)</td>
+</tr>
+<tr>
+<td align="center">φₖ, CPIₖ</td>
+<td>Churn Persistence Index for transaction type <em>k</em></td>
+</tr>
+<tr>
+<td align="center">μₖ, σₖ</td>
+<td>Trained mean and standard deviation of CPIₖ (30-day baseline)</td>
+</tr>
+<tr>
+<td align="center">wCPIₖ</td>
+<td>Dollar-weighted CPI for type <em>k</em></td>
+</tr>
+<tr>
+<td align="center">SCPIₖ(<em>t</em>, <em>L</em>)</td>
+<td>Sequence CPI: geometric mean of CPIₖ over window <em>L</em></td>
+</tr>
+<tr>
+<td align="center"><em>z</em>ₖ</td>
+<td>Standardized deviation: (CPIₖ(today) − μₖ) / σₖ</td>
+</tr>
+<tr>
+<td align="center"><em>k</em> (alert)</td>
+<td>Number of top-ranked anomalous dimensions in evaluation (default 3)</td>
+</tr>
+<tr>
+<td align="center">FRP</td>
+<td>Financially Responsible Person — designated reviewer</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="suggested-manuscript-footnote-optional-paste-in">Suggested Manuscript Footnote (optional paste-in)</h2>
+<blockquote>
+<p><em>Terminology:</em> Day-over-day record overlap (retained, added, removed) describes structural churn only and is not labeled with confusion-matrix terms. True and false positives, precision, and recall apply solely to evaluation of top-<em>k</em> dimension ranking against known or injected anomalies (Layer 2). Scheme interpretation (Layer 3) maps flagged activity to ontology-defined misappropriation classes via a locally hosted LLM and is auditable against a deterministic curated anchor; it does not render fraud verdicts. The Financially Responsible Person adjudicates outcomes at Layer 4 as corroborated, benign on review, or missed.</p>
+</blockquote>
+<hr />
+<p><em>Draft aligned with NGAME CPI analysis (<code>ngame_cpi_analysis_agent.py</code>), churn comparison thresholds (<code>ngame_churn_comparison_agent.py</code>), LLM taxonomy linkage (<code>ngame_llm_analysis_agent.py</code>), deterministic scheme scoring (<code>ngame_misappropriation_mapping_and_scoring.py</code>), FRP Operations Guide, and DSRM Evaluation Draft §5.2.</em></p>
+<div style='font-size: 72%; margin-top: 1.5em; padding-top: .5em; -webkit-user-select: none;'><hr style='height: 0; border: none; border-top: 1px solid rgba(0,0,0,.5); box-shadow: 0 1px 1px rgba(255, 255, 255, .5)'/><a href='https://github.com/sbarex/QLMarkdown'>QLMarkdown</a>, version 1.0.24 (50).<br />
+Developed by SBAREX 2020 - 2025 with <span style='font-style: normal'>❤️</span>.<br/>
+If you like this app, <a href='https://www.buymeacoffee.com/sbarex'><strong>buy me a coffee</strong></a>!</div>
+<!--
+
+File generated with QLMarkdown [https://github.com/sbarex/QLMarkdown] - QLMarkdown, version 1.0.24 (50).
+Developed by SBAREX 2020 - 2025 with ❤️
+
+-->
+
+</article>
+
+</body>
+</html>

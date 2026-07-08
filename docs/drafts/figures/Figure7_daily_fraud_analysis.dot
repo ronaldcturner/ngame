@@ -1,0 +1,49 @@
+/* Figure 7 - NGAME Daily Fraud Analysis (publication, Graphviz) */
+digraph NGAME_Fig7 {
+    rankdir=TB;
+    bgcolor="white";
+    splines=polyline;
+    nodesep=0.30;
+    ranksep=0.38;
+    pad=0.15;
+    fontname="Helvetica";
+    node [shape=box, style="rounded,filled", fillcolor="#ECECFF",
+          color="#5C5C99", fontname="Helvetica", fontsize=14,
+          margin="0.16,0.10"];
+    edge [fontname="Helvetica", fontsize=12, color="#444444", arrowsize=0.8];
+
+    S1  [label="Step 1 - End of workday\n(bookkeeper signed out)",
+         fillcolor="#FFF3CD", color="#C9A227"];
+    DE  [label="Step 2 - Data Extraction Agent\nQBO -> Today.ttl (18 types)"];
+    INJ [label="Anomaly Injection\n(optional, demo / test)"];
+    CCW [label="Step 2c - Credit-Card Watch\npersonal-use / structuring\n(independent of matrix)"];
+    CPI [label="Step 2 - CPI Analysis Agent\nJaccard CPI array (18)\n+ dollar-weighted wCPI array"];
+    BUF [label="append to CPI Rolling Buffer"];
+    SCPI[label="Step 2b - Sequence CPI (SCPI)\ngeom-mean over window L\nz_seq = (SCPI - mean) / (std / sqrt L)\nactive when buffer >= L"];
+    CC  [label="Step 3 - Churn Comparison\nz = (today - mean) / std vs Training Matrix\ndollar z = (wCPI - mean_w) / std_w\nbands |z|>3 HIGH, |z|>2 MEDIUM -> composite alarm"];
+    RANK[label="Step 4 - Rank by |z-score|"];
+    AID [label="Step 5 - Top-3 Anomaly Identification"];
+    AM  [label="Account Mapping\ntop-3 types -> Chart of Accounts"];
+    LLM [label="Step 6 - LLM Analysis (RAG)\nOllama llama3.1:8b +\nAsset_Misappropriation.ttl"];
+    MAP [label="Deterministic anchor\nACFE scheme priors\n(reproducible cross-check)"];
+    MW  [label="Step 7 - Management Warning\nrisk level + confidence\ndashboard / email"];
+    FRP [label="FRP", fillcolor="#FFF3CD", color="#C9A227"];
+
+    S1  -> DE;
+    INJ -> DE [style=dashed, label="test"];
+    DE  -> CCW;
+    DE  -> CPI;
+    CPI -> BUF;
+    BUF -> SCPI;
+    CPI -> CC;
+    SCPI -> CC;
+    CC  -> RANK;
+    RANK -> AID;
+    AID -> AM;
+    AM  -> LLM;
+    AM  -> MAP;
+    LLM -> MW;
+    MAP -> MW;
+    CCW -> MW;
+    MW  -> FRP;
+}

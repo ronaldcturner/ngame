@@ -1,0 +1,1540 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+<title>cursor_smoke_testing_results_and_observ.md</title>
+<style type='text/css'>:root {
+  /* Base Light */
+  --textPrimary: #24292E;
+  --background: #ffffff;
+  --body-border-color: #dfdfdf;
+  --link: #0366d6;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #f7f7f9;
+  --hr-background: #e3e4e8;
+  --thead-background: #f7f7f9;
+  --thead-border: #e3e4e8;
+  --tr-border: #bfc1c9; /* unused variable */
+  --tr-alt-background: #f7f7f9;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #d6d7dc;
+  --blockquote-color: #6a6d7c;
+  --blockquote-border: #e3e4e8;
+  --heading-color: #17181a;
+  --header-bottom-border: #e3e4e8;
+  --h6-color: #6a6d7c;
+  --frame-border: #e3e4e8;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58; /* unused variable */
+  --email-toggle-background: #e3e4e8; /* unused variable */
+  --email-quoted-color: #6a6d7c; /* unused variable */
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+  
+  /* Highlight Light */
+  --hl_Background: #F6F8FA ;
+  --hl_Number: #005cc5 ;
+  --hl_Escape: #032f62 ;
+  --hl_String: #032f62 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #6a737d ;
+  --hl_Line_Comment: #6a737d ;
+  --hl_Pre_Processor: #d73a49 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #032f62 ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #d73a49 ; /* import | func */
+  --hl_Keyword-2: #d73a49 ; /* int | str */
+  --hl_Keyword-3: #24292e ; /* ??? */
+  --hl_Keyword-4: #6f42c1 ; /* ??? */
+  --hl_Keyword-5: #d73a49 ; /* ??? */
+  --hl_Keyword-6: #d73a49 ; /* ??? */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Base Dark */
+  --textPrimary: #c9d1d9;
+  --background: #0d1117;
+  --body-border-color: #31363C;
+  --link: #58a6ff;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #2f3438;
+  --hr-background: #30363d;
+  --thead-background: #f7f7f9;
+  --thead-border: #3b434b;
+  --tr-border: #3b434b; /* unused variable */
+  --tr-alt-background: #161c23;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #050505;
+  --blockquote-color: #8b949e;
+  --blockquote-border: #3D434A;
+  --heading-color: #17181a;
+  --header-bottom-border: #21272c;
+  --h6-color: #6a6d7c;
+  --frame-border: #ff08d6;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58;
+  --email-toggle-background: #e3e4e8;
+  --email-quoted-color: #6a6d7c;
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+
+  /* Highlight Dark */
+  --hl_Background: #161b22 ;
+  --hl_Number: #79c0ff ;
+  --hl_Escape: #a5d6ff ;
+  --hl_String: #549ef1 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #8b949e ;
+  --hl_Line_Comment: #8b949e ;
+  --hl_Pre_Processor: #FF7B72 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #79c0ff ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #FF7B72 ; /* import | func */
+  --hl_Keyword-2: #FF7B72 ; /* int | str */
+  --hl_Keyword-3: #c9d1d9 ; /* ??? */
+  --hl_Keyword-4: #eea8ff ; /* ??? */
+  --hl_Keyword-5: #FF7B72 ; /* ??? */
+  --hl_Keyword-6: #FF7B72 ; /* ??? */
+  }
+}
+
+/*Syntax Highlight*/
+pre.hl	{ background-color: var(--hl_Background);}
+.hl.num { color: var(--hl_Number); font-weight: normal;}
+.hl.esc { color: var(--hl_Escape); font-weight: normal;}
+.hl.str { color: var(--hl_String); font-weight: normal;}
+.hl.pps { color: var(--hl_String_Pre_Processor); font-weight: normal;}
+.hl.com { color: var(--hl_Block_Comment); font-weight: normal;}
+.hl.slc { color: var(--hl_Line_Comment); font-weight: normal;}
+.hl.ppc { color: var(--hl_Pre_Processor); font-weight: normal;}
+.hl.lin { color: var(--hl_Line_Number); font-weight: normal;}
+.hl.opt { color: var(--hl_Operator); font-weight: normal;}
+.hl.ipl { color: var(--hl_Interpolation); font-weight: normal;}
+.hl.kwa { color: var(--hl_Keyword-1); font-weight: normal;}
+.hl.kwb { color: var(--hl_Keyword-2); font-weight: normal;}
+.hl.kwc { color: var(--hl_Keyword-3); font-weight: normal;}
+.hl.kwd { color: var(--hl_Keyword-4); font-weight: normal;}
+.hl.kwe { color: var(--hl_Keyword-5); font-weight: normal;}
+.hl.kwf { color: var(--hl_Keyword-6); font-weight: normal;}
+
+
+pre {
+  max-width: 902px;
+}
+* {
+  box-sizing: border-box;
+}
+
+input:disabled {
+  touch-action: none;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji, Segoe UI Emoji;
+}
+
+body {
+  margin: 0;
+  /* padding: 1em; */
+  color: var(--textPrimary);
+  background-color: var(--background);
+}
+
+/* If the window is bigger than 902 pixels, the border will be visible. */
+@media (min-width: 902px) {
+  article {
+    border-radius: 8px;
+    border-width: 1px;  
+    border-style: solid;
+    border-color: var(--body-border-color);
+  }
+}
+
+article {
+  margin: auto;
+  max-width: 902px;
+  font-size: inherit;
+  line-height: 1.5;
+  word-wrap: break-word;
+  padding: 32px;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  -webkit-tap-highlight-color: var(--link-highlight);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+details summary {
+  outline: 0;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+blockquote {
+  margin: 0;
+}
+
+table, table *, pre {
+  touch-action: pan-x;
+}
+
+.markdown-body ul.contains-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+pre, code, kbd {
+  font-size: 1em;
+  font-family: var(--code-font);
+}
+
+.issue-keyword {
+  border-bottom: 1px dotted var(--keyword-color);
+}
+
+.team-mention, .user-mention {
+  font-weight: 600;
+  color: var(--mention-color);
+  white-space: nowrap;
+}
+
+.email-hidden-toggle, .email-hidden-reply {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"] {
+    filter: invert(85%) brightness(1.5);
+  }
+}
+/* Fix checkboxes looking cut off when they render larger than the default size */
+input[type="checkbox"] {
+  transform: translate(0px);
+  width: 14px; height: 14px;
+}
+
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 0.18em 0.31em;
+  font-size: 0.7em;
+  line-height: 1.2em;
+  color: var(--kbd-color);
+  vertical-align: middle;
+  background-color: var(--kbd-background);
+  border: 1px solid var(--kbd-border);
+  border-radius: 0.25em;
+  box-shadow: inset 0 -1px 0 var(--kbd-border);
+  margin-right: 2px;
+}
+
+.markdown-body:after, .markdown-body:before {
+  display: table;
+  content: ""
+}
+
+.markdown-body:after {
+  clear: both;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .absent {
+  color: var(--red-600);
+}
+
+.markdown-body .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body blockquote, .markdown-body details, .markdown-body dl, .markdown-body ol, .markdown-body p, .markdown-body pre, .markdown-body table, .markdown-body ul {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body table table {
+    margin-bottom: 0;
+}
+
+.markdown-body hr {
+  height: .25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: var(--hr-background);
+  border: 0;
+}
+
+.markdown-body blockquote {
+  padding-left: 1em;
+  color: var(--blockquote-color);
+  border-left: .25em solid var(--blockquote-border);
+}
+
+.markdown-body blockquote > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body h1 .octicon-link, .markdown-body h2 .octicon-link, .markdown-body h3 .octicon-link, .markdown-body h4 .octicon-link, .markdown-body h5 .octicon-link, .markdown-body h6 .octicon-link {
+  color: var(--heading-color);
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor, .markdown-body h2:hover .anchor, .markdown-body h3:hover .anchor, .markdown-body h4:hover .anchor, .markdown-body h5:hover .anchor, .markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link, .markdown-body h2:hover .anchor .octicon-link, .markdown-body h3:hover .anchor .octicon-link, .markdown-body h4:hover .anchor .octicon-link, .markdown-body h5:hover .anchor .octicon-link, .markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 code, .markdown-body h1 tt, .markdown-body h2 code, .markdown-body h2 tt, .markdown-body h3 code, .markdown-body h3 tt, .markdown-body h4 code, .markdown-body h4 tt, .markdown-body h5 code, .markdown-body h5 tt, .markdown-body h6 code, .markdown-body h6 tt {
+  font-size: inherit;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+}
+
+.markdown-body h1, .markdown-body h2 {
+  padding-bottom: .3em;
+  border-bottom: 1px solid var(--header-bottom-border);
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1em;
+}
+
+.markdown-body h5 {
+  font-size: .875em;
+}
+
+.markdown-body h6 {
+  font-size: .85em;
+  color: var(--h6-color);
+}
+
+.markdown-body ol, .markdown-body ul {
+  padding-left: 1.5em;
+}
+
+.markdown-body ol.no-list, .markdown-body ul.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.markdown-body ol ol, .markdown-body ol ul, .markdown-body ul ol, .markdown-body ul ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li {
+  word-wrap: break-all;
+}
+
+.markdown-body li > p {
+  margin-top: 16px;
+}
+
+.markdown-body li + li {
+  margin-top: .25em;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.markdown-body table th {
+  font-weight: 600;
+}
+
+.markdown-body table td, .markdown-body table th {
+  padding: 6px 13px;
+  border: 1px solid var(--thead-border);
+}
+
+.markdown-body table tr {
+  background-color: var(--background);
+  border-top: 1px solid var(--tr-border); /* unused variable */
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: var(--tr-alt-background);
+}
+
+.markdown-body table img {
+  background-color: initial;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  box-sizing: initial;
+  background-color: var(--background);
+}
+
+.markdown-body img[align=right] {
+  padding-left: 20px;
+}
+
+.markdown-body img[align=left] {
+  padding-right: 20px;
+}
+
+.markdown-body .emoji {
+  max-width: none;
+  vertical-align: text-top;
+  background-color: initial;
+}
+
+.markdown-body img.emoji {
+    max-width: 18px;
+}
+
+.markdown-body span.frame {
+  display: block;
+  overflow: hidden;
+}
+
+.markdown-body span.frame > span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--frame-border);
+}
+
+.markdown-body span.frame span img {
+  display: block;
+  float: left;
+}
+
+.markdown-body span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: var(--frame-color);
+}
+
+.markdown-body span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-center > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.markdown-body span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.markdown-body span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-right > span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+
+.markdown-body span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-left span {
+  margin: 13px 0 0;
+}
+
+.markdown-body span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-right > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body code, .markdown-body tt {
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: var(--code-background);
+  border-radius: 6px;
+}
+
+.markdown-body code br, .markdown-body tt br {
+  display: none;
+}
+
+.markdown-body del code {
+  text-decoration: inherit;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre > code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body .highlight pre, .markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: var(--hl_Background);
+  border-radius: 6px;
+}
+
+.markdown-body pre code, .markdown-body pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: initial;
+  border: 0;
+}
+
+.markdown-body .csv-data td, .markdown-body .csv-data th {
+  padding: 5px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-body .csv-data .blob-num {
+  padding: 10px 8px 9px;
+  text-align: right;
+  background: var(--background);
+  border: 0;
+}
+
+.markdown-body .csv-data tr {
+  border-top: 0;
+}
+
+.markdown-body .csv-data th {
+  font-weight: 600;
+  background: var(--thead-background);
+  border-top: 0;
+}
+
+.markdown-body mark {
+    padding: .2em;
+    background-color: #fcf1b5;
+}
+
+@media (prefers-color-scheme: dark) {
+    .markdown-body mark {
+        padding: .2em;
+        background-color: #fcf8e3;
+    }
+}
+
+/* Mermaid diagrams */
+.mermaid {
+    text-align: center;
+    margin: 16px 0;
+    background-color: transparent;
+}
+
+.mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    .mermaid {
+        background-color: transparent;
+    }
+}
+
+</style>
+
+<script type="text/javascript">
+MathJax = {
+  options: {
+    enableMenu: false,
+  },
+  tex: {
+    // packages: ['base'],        // extensions to use
+    inlineMath: [              // start/end delimiter pairs for in-line math
+      ['$', '$']
+      // , ['\(', '\)']
+    ],
+    displayMath: [             // start/end delimiter pairs for display math
+      ['$$', '$$']
+      //, ['\[', '\]']
+    ],
+    processEscapes: true,       // use \$ to produce a literal dollar sign
+    processEnvironments: false
+  }
+};
+</script>
+</head>
+<body>
+<article class='markdown-body'>
+<h1 id="smoke-testing-results-and-observations">Smoke testing results and observations</h1>
+<p><em>Exported on 6/4/2026 at 09:20:02 PDT from Cursor (3.6.31)</em></p>
+<hr />
+<p><strong>User</strong></p>
+<p>Smoke testing. I just performed the first Session’s (“Day’s”) transactions. I used your Type B session types. I inserted huge dollar amounts into each Bill, Invoice, and Bank Transaction. I created 6 new Vendors. The dashboard ran to completion, showing success (a “0” at the end of the display). But I thought I saw some unfamiliar errors rolling by. The two warnings on the dashboard were only for Contractors, Vendors, and Expenses. The numbers for COntractors and Vendors are the same and are HIGH. All of the generated .json files appear to be proper. I see high dollar amounts labeled as “HIGH” in the .json files, but no flags on the dashboard. The executionn time is acceptable: “2026-06-03T15:03:41.806057”. Respond to each of my comments, reporting any bugs and what is next.</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Investigating smoke-test behavior: dashboard warnings, HIGH flags in JSON vs UI, and any errors during execution.</p>
+<h2 id="smoke-test-verdict">Smoke test verdict</h2>
+<p>Your run <strong>completed successfully</strong>. Artifacts at <code>2026-06-03T15:03:41</code> are consistent and internally coherent. The pipeline detected your Type B vendor activity. A few behaviors are <strong>expected but confusing</strong>, and two items are <strong>real bugs/gaps</strong> worth fixing before you rely on the dashboard alone.</p>
+<hr />
+<h3 id="1-unfamiliar-errors-rolling-by-in-the-log">1. Unfamiliar errors rolling by in the log</h3>
+<p><strong>Likely not failures.</strong> The dashboard streams merged stdout/stderr from the full pipeline. Common harmless messages include:</p>
+<ul>
+<li><code>❌ Error retrieving Recurring_Transactions</code> (QBO sandbox often has no recurring-transaction API data)</li>
+<li><code>⚠️ No API mapping for … - skipping</code> for ontology types without QBO endpoints</li>
+<li><code>⚠️ Management Warnings: 0</code> (summary line — the <strong>0</strong> you noticed)</li>
+<li><code>🔁 Sequence SCPI: building buffer</code> (<code>sequence_active: false</code> — only <strong>1 day</strong> in <code>NGAME_CPI_Rolling_Buffer.json</code>, so multi-day is not active yet)</li>
+<li>Per-type extraction logs (<code>🔍 Retrieving …</code>) that look noisy but are normal</li>
+</ul>
+<p><strong>Not a bug</strong> if the run ended with exit 0 and fresh JSON. If you want certainty, scroll the log for lines starting with <code>❌</code> <em>after</em> the final summary — those would be real failures. Nothing in today’s artifacts suggests the run failed.</p>
+<hr />
+<h3 id="2-two-warnings-for-contractors-vendors-and-expenses">2. “Two warnings” for Contractors, Vendors, and Expenses</h3>
+<p>You’re seeing the <strong>Top Anomalies</strong> panel, not <strong>Management Warnings</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Panel</th>
+<th>Your run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Management Warnings</strong></td>
+<td><strong>0</strong> (LLM found no misappropriation matches — expected on first live day)</td>
+</tr>
+<tr>
+<td><strong>Top Anomalies</strong></td>
+<td><strong>3</strong> rows: Contractors <strong>HIGH</strong>, Vendors <strong>HIGH</strong>, Expenses <strong>LOW</strong></td>
+</tr>
+</tbody>
+</table>
+<p>That matches Type B (vendor-heavy day with 6 new vendors). New vendor records drove a large count-based drop in vendor CPI vs the 30-day baseline.</p>
+<p>Expenses appears as the <strong>#3 ranked</strong> category (z ≈ 0.90 on count CPI) but its badge is <strong>LOW</strong> — it landed in the top-3 slot by ranking, not because it crossed the HIGH threshold.</p>
+<hr />
+<h3 id="3-contractors-and-vendors-same-numbers-both-high">3. Contractors and Vendors — same numbers, both HIGH</h3>
+<p><strong>Confirmed bug (data layer).</strong> φ14 Contractors and φ18 Vendors are <strong>identical</strong> in your JSON:</p>
+<ul>
+<li>Same <code>today_value</code> (0.8846…)</li>
+<li>Same z-score (−9.06)</li>
+<li>Same μ in the training matrix (0.994794…)</li>
+</ul>
+<p><strong>Cause:</strong> both rows pull from the same QBO API object in <code>ngame_data_extraction_agent.py</code>:</p>
+<pre class='hl'><code class="language-291:291:ngame_data_extraction_agent.py">                &#39;Contractors&#39;: (&#39;quickbooks.objects.vendor&#39;, &#39;Vendor&#39;),
+</code></pre>
+<pre class='hl'><code class="language-266:266:ngame_data_extraction_agent.py">                &#39;Vendors&#39;: (&#39;quickbooks.objects.vendor&#39;, &#39;Vendor&#39;),
+</code></pre>
+<p>So every vendor you create feeds <strong>both</strong> matrix rows. That’s why the dashboard shows duplicate HIGH entries. <strong>Fix needed:</strong> Contractors should use a distinct source (e.g. 1099 contractor payments / expense checks tagged to contractor accounts), not the full Vendor list.</p>
+<hr />
+<h3 id="4-high-dollar-amounts-in-json-but-no-flags-on-the-dashboard">4. HIGH dollar amounts in JSON but no flags on the dashboard</h3>
+<p><strong>Confirmed gap (UI), not a pipeline failure.</strong> The JSON correctly flagged <strong>dollar-weighted</strong> anomalies that the dashboard does not surface:</p>
+<table>
+<thead>
+<tr>
+<th>φ</th>
+<th>Category</th>
+<th>Count deviation</th>
+<th>Dollar alarm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>Invoices</td>
+<td>LOW</td>
+<td><strong>HIGH</strong> (dz ≈ −6.0)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Bills</td>
+<td>LOW</td>
+<td><strong>HIGH</strong> (dz ≈ −4.7)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Bank_Transactions</td>
+<td>LOW</td>
+<td><strong>HIGH</strong> (dz ≈ −4.9)</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Contractors</td>
+<td>HIGH</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Vendors</td>
+<td>HIGH</td>
+<td>HIGH</td>
+</tr>
+</tbody>
+</table>
+<p>Your huge Bill/Invoice/Bank amounts <strong>were detected</strong> in <code>comparison_result.differences</code> via <code>dollar_alarm_level: &quot;HIGH&quot;</code>. The dashboard <strong>Top Anomalies</strong> widget only shows:</p>
+<ol>
+<li>Top <strong>3</strong> by <strong>count</strong> z-score (<code>rank_differences</code> uses <code>abs_z_score</code>, not dollar)</li>
+<li>Badge from <code>deviation_level</code> only — <strong>not</strong> <code>dollar_alarm_level</code></li>
+</ol>
+<p>So Invoices/Bills/Bank never appear in Top Anomalies despite dollar HIGH. <strong>Fix needed:</strong> surface <code>dollar_alarm_level</code> (and/or rank by <code>composite_alarm</code>).</p>
+<p><strong>Overall Risk = LOW</strong> is also misleading here: it comes only from LLM management warnings (0 matches), <strong>not</strong> from churn/dollar anomalies. That’s by current design, but worth revisiting for Phase II.</p>
+<hr />
+<h3 id="5-execution-time">5. Execution time</h3>
+<p><strong>Acceptable.</strong> Full pipeline finished at <code>2026-06-03T15:03:41.806057</code>. No performance concern from this run.</p>
+<hr />
+<h3 id="6-json-artifacts-look-proper">6. JSON artifacts look proper</h3>
+<p><strong>Agreed.</strong> <code>NGAME_Fraud_Analysis.json</code>, <code>management_dashboard.json</code>, and <code>NGAME_CPI_Rolling_Buffer.json</code> are structurally valid and mutually consistent. The “0” at the end of the log is <strong><code>Management Warnings: 0</code></strong> with <strong><code>overall_risk_level: LOW</code></strong> — a successful fraud check, not a silent failure.</p>
+<hr />
+<h2 id="bug-summary">Bug summary</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Severity</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contractors ≡ Vendors (same QBO source)</td>
+<td><strong>High</strong> — duplicate signals</td>
+<td>Open</td>
+</tr>
+<tr>
+<td>Dollar HIGH not shown on dashboard</td>
+<td><strong>Medium</strong> — UI gap</td>
+<td>Open</td>
+</tr>
+<tr>
+<td>Overall Risk ignores churn/dollar HIGH</td>
+<td><strong>Medium</strong> — UX confusion</td>
+<td>Open (design)</td>
+</tr>
+<tr>
+<td>Stale log text “17 element pairs”</td>
+<td><strong>Low</strong></td>
+<td>Cosmetic</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="whats-next">What’s next</h2>
+<p><strong>If you’re on the D12 replay path (Phase I):</strong></p>
+<ol>
+<li><strong>Session 2 → Type C</strong> (Payroll / Contractor Day) per the rotation table.</li>
+<li>Dashboard → <strong>Run Today’s Training Day</strong> (not Fraud Check) after posting QBO entries.</li>
+<li>Confirm matrix shows <strong>1 of 30</strong> (or your current N) in training progress.</li>
+<li>Continue through session 12, then merge per the replay checklist.</li>
+</ol>
+<p><strong>If you’re smoke-testing Phase II (fraud monitoring):</strong></p>
+<ol>
+<li>Run <strong>Daily Fraud Check</strong> on several more business days to fill the 5-day sequence buffer (Multi-Day Pattern Alert stays “Building” until then).</li>
+<li>After Day 5+, re-test with huge dollar amounts — dollar alarms should still appear in JSON; dashboard won’t until we fix the UI.</li>
+<li>Prioritize fixing <strong>Contractors vs Vendors</strong> before treating duplicate HIGH as two independent signals.</li>
+</ol>
+<p><strong>Recommended fix order for the codebase:</strong></p>
+<ol>
+<li>Split Contractors extraction from Vendors (distinct QBO query).</li>
+<li>Dashboard: show dollar alarm badge and/or a “Dollar-weighted alerts” row.</li>
+<li>Consider elevating Overall Risk when <code>composite_alarm</code> count ≥ 1, even without LLM matches.</li>
+</ol>
+<p>Want me to implement the Contractors/Vendors split and the dashboard dollar-alarm display next?</p>
+<hr />
+<p><strong>User</strong></p>
+<p>Yes. implement the Contractors/Vendors split and the dashboard dollar-alarm display next</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Implementing the Contractors/Vendors split and dashboard dollar-alarm display. Exploring how extraction and CPI analysis handle each type.</p>
+<p>Implementing the extraction split and dashboard updates.</p>
+<p>Creating shared contractor extraction logic, then updating the agents and dashboard.</p>
+<p>Updating the dashboard UI and phase1 director agent.</p>
+<p>Both fixes are in place. Here is what changed and how to verify.</p>
+<h2 id="1-contractors-vendors-split">1. Contractors / Vendors split</h2>
+<p><strong>New module:</strong> <code>ngame_contractor_extraction.py</code></p>
+<table>
+<thead>
+<tr>
+<th>Row</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>φ18 Vendors</strong></td>
+<td>All QBO <code>Vendor</code> master records (new-vendor churn)</td>
+</tr>
+<tr>
+<td><strong>φ14 Contractors</strong></td>
+<td>Payment transactions (Purchases, Bill Payments, Bills) paid to vendors with <strong><code>Vendor1099 = true</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Updated:</strong> <code>ngame_data_extraction_agent.py</code>, <code>phase1_director_agent.py</code></p>
+<ul>
+<li>Removed the duplicate <code>Contractors → Vendor</code> API mapping.</li>
+<li>After the main extraction loop, <code>_populate_contractors_row()</code> builds the contractor list from cached expenses/bills/bill payments.</li>
+</ul>
+<p><strong>Type B (Vendor Day):</strong> new vendors affect <strong>Vendors only</strong> unless they are flagged 1099 and have payments.</p>
+<p><strong>Type C (Contractor Day):</strong> mark payees as <strong>1099 vendors</strong> in QBO, then post checks/expenses/bills — those hit <strong>Contractors</strong>.</p>
+<hr />
+<h2 id="2-dashboard-dollar-alarm-display">2. Dashboard dollar-alarm display</h2>
+<p><strong>New module:</strong> <code>ngame_dashboard_alerts.py</code> — builds dollar alerts from <code>comparison_result.differences</code>.</p>
+<p><strong>Updated:</strong> <code>ngame_anomaly_identification_agent.py</code>, <code>ngame_ui/app-simple.py</code>, <code>ngame_ui/app.py</code>, <code>dashboard.html</code></p>
+<ul>
+<li><strong>Top Anomalies</strong> now ranks by <code>max(count z, dollar z)</code> so huge Invoices/Bills can appear in the top 3.</li>
+<li>Each row shows <strong>Count</strong> and <strong>$</strong> badges when dollar alarm fires.</li>
+<li>New <strong>Dollar-Weighted Alerts</strong> subsection lists all <code>dollar_alarm</code> categories sorted by |dz|.</li>
+</ul>
+<p>Using your existing JSON, a refresh should show <strong>5 dollar alerts</strong> (Contractors, Vendors, Invoices, Bank_Transactions, Bills) and <strong>Invoices</strong> in the top 3 instead of Expenses.</p>
+<hr />
+<h2 id="verify">Verify</h2>
+<ol>
+<li>Restart the dashboard if it is running.</li>
+<li>Refresh the page (or run another <strong>Daily Fraud Check</strong> for live data).</li>
+<li>Confirm:
+<ul>
+<li><strong>Dollar-Weighted Alerts</strong> panel populated</li>
+<li>Top Anomalies shows dual badges (e.g. <code>Count LOW</code> + <code>$ HIGH</code> on Invoices)</li>
+</ul>
+</li>
+<li>On the <strong>next extraction run</strong>, Contractors and Vendors should <strong>no longer match</strong> after Type B vendor-only activity.</li>
+</ol>
+<p><strong>Note:</strong> Contractor rows stay empty until you have <strong>1099-flagged vendors with payment transactions</strong> — expected for a pure vendor-creation day. For Type C sessions, enable <strong>Track payments for 1099</strong> on contractor vendors in QBO before posting payments.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>For Verifiy, stop, then estart the dashboart with @ngame_ui/app-simple.pyin the Terminal?</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Checking for a running dashboard process, then restarting <code>app-simple.py</code>.</p>
+<p>The dashboard loads a stripped JSON artifact without dollar-alarm fields. Fixing the loader so dollar alerts populate, then confirming the restart.</p>
+<p>The readable JSON includes <code>differences</code> but strips dollar-alarm fields. Updating the merge logic.</p>
+<p>Yes — that’s the right way to verify. I stopped the old process and restarted it for you.</p>
+<p><strong>What I did</strong></p>
+<ol>
+<li>Stopped the previous dashboard on port <strong>5001</strong></li>
+<li>Started fresh with:
+<pre class='hl'><code class="language-bash"><span class="hl kwb">cd</span> <span class="hl opt">/</span>Users<span class="hl opt">/</span>ronturner<span class="hl opt">/</span>Developer<span class="hl opt">/</span>Projects<span class="hl opt">/</span>NGAME<span class="hl kwb">-POC</span>
+.venv<span class="hl opt">/</span>bin<span class="hl opt">/</span>python ngame_ui<span class="hl opt">/</span>app<span class="hl kwb">-simple</span>.py
+</code></pre>
+</li>
+<li>Fixed a loader issue so <strong>Dollar-Weighted Alerts</strong> populate from the full <code>NGAME_Fraud_Analysis.json</code> (the readable artifact strips dollar fields)</li>
+</ol>
+<p><strong>Dashboard is running at:</strong> <a href="http://127.0.0.1:5001">http://127.0.0.1:5001</a></p>
+<p><strong>What you should see after a browser refresh</strong></p>
+<ul>
+<li><strong>Top Anomalies</strong> — 3 rows (may still show Expenses as #3 until the next fraud check run)</li>
+<li><strong>Dollar-Weighted Alerts</strong> — <strong>5</strong> entries: Contractors, Vendors, Invoices, Bank_Transactions, Bills (all HIGH)</li>
+</ul>
+<p><strong>If you need to restart manually later</strong></p>
+<ol>
+<li>In the terminal running the dashboard: <strong>Ctrl+C</strong></li>
+<li>Then:
+<pre class='hl'><code class="language-bash"><span class="hl kwb">cd</span> <span class="hl opt">/</span>Users<span class="hl opt">/</span>ronturner<span class="hl opt">/</span>Developer<span class="hl opt">/</span>Projects<span class="hl opt">/</span>NGAME<span class="hl kwb">-POC</span>
+.venv<span class="hl opt">/</span>bin<span class="hl opt">/</span>python ngame_ui<span class="hl opt">/</span>app<span class="hl kwb">-simple</span>.py
+</code></pre>
+</li>
+</ol>
+<p>Open or refresh <a href="http://127.0.0.1:5001">http://127.0.0.1:5001</a> and confirm the Dollar-Weighted Alerts panel shows the five HIGH items.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>&lt;system_notification&gt;
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.</p>
+<!-- raw HTML omitted -->
+<p>&lt;system_notification&gt;
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.</p>
+<!-- raw HTML omitted -->
+<hr />
+<p><strong>Cursor</strong></p>
+<p>The exit code <strong>143</strong> on those two tasks is expected — that means the process received <strong>SIGTERM</strong> when the dashboard was stopped to restart it with the updated code. It is not a crash.</p>
+<p>The dashboard <strong>is running</strong> now at <a href="http://127.0.0.1:5001">http://127.0.0.1:5001</a> (HTTP 200). Refresh the page to verify the Dollar-Weighted Alerts panel.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>Contractors and Vendors still show the same delta values. Assume the numbers will diverge, starting with the next day’s analysis, correct?</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Yes — that’s the right assumption.</p>
+<p>What you’re seeing now is from the <strong>June 3 run</strong>, which was built when both φ14 and φ18 pulled the same QBO <code>Vendor</code> list. The dashboard is still showing that artifact until you run another analysis.</p>
+<p><strong>After the fix, on the next training day or fraud check:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Row</th>
+<th>What moves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vendors (φ18)</strong></td>
+<td>All vendor master records — your Type B new vendors hit here</td>
+</tr>
+<tr>
+<td><strong>Contractors (φ14)</strong></td>
+<td>Only payment transactions (Purchases, Bill Payments, Bills) to vendors flagged <strong>Vendor1099</strong> in QBO</td>
+</tr>
+</tbody>
+</table>
+<p>So on a <strong>Type B Vendor Day</strong> (new vendors, no 1099 payments), Vendors should show churn while Contractors stays flat or unchanged — they should <strong>no longer match</strong>.</p>
+<p>They can still look similar if, for example, you add 1099 vendors and pay them the same day (both rows move, but from different underlying records).</p>
+<p><strong>Bottom line:</strong> Re-run <strong>Run Today’s Training Day</strong> or <strong>Daily Fraud Check</strong> after your next QBO session; that’s when the split takes effect and the deltas should diverge.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>Again, explain why Expenses even appears as an anomaly if the count is LOW. What does that mean to the FRP?</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Expenses is in <strong>Top Anomalies</strong> because the panel always shows the <strong>top three categories ranked for the day</strong> — not only categories that crossed an alert threshold.</p>
+<h2 id="why-expenses-is-there-with-low">Why Expenses is there with <strong>LOW</strong></h2>
+<p>On your June 3 run, Expenses (φ8) was the <strong>#3 ranked</strong> category by count-based |z|:</p>
+<p>| Rank | Category | |z| | Threshold band |
+|——|–––––|—–|––––––––|
+| 1 | Contractors | 9.06 | <strong>HIGH</strong> (&gt;3σ) |
+| 2 | Vendors | 9.06 | <strong>HIGH</strong> |
+| 3 | <strong>Expenses</strong> | <strong>0.90</strong> | <strong>LOW</strong> (&lt;2σ) |</p>
+<p>NGAME flags <strong>HIGH</strong> at |z| &gt; 3, <strong>MEDIUM</strong> at |z| &gt; 2, and everything else as <strong>LOW</strong>. Expenses at z ≈ 0.90 is a small move (~2% vs baseline CPI) — unusual only in the sense that <strong>fourteen other categories moved even less</strong>. It had <strong>no dollar alarm</strong> on that run.</p>
+<p>So the panel is saying: <em>“If anything beyond Contractors/Vendors caught our eye today, Expenses moved the third-most — but it’s still within normal.”</em></p>
+<h2 id="what-that-means-for-the-frp">What that means for the FRP</h2>
+<p>Per the Phase II dashboard guide:</p>
+<ul>
+<li><strong>Top Anomalies</strong> answers: <em>“What moved most today vs the 30-day baseline?”</em></li>
+<li>The <strong>LOW badge</strong> means: <strong>no escalation</strong> for that row by itself.</li>
+<li>FRP action tiers are driven by <strong>HIGH/MEDIUM</strong> signals and <strong>Management Warnings / Overall Risk</strong>, not by filling the third slot in Top Anomalies.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>FRP meaning (your run)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contractors / Vendors <strong>HIGH</strong></td>
+<td>Review those categories; note for designated contact if your protocol treats churn HIGH as actionable</td>
+</tr>
+<tr>
+<td>Expenses <strong>LOW</strong> in Top Anomalies</td>
+<td><strong>Informational only</strong> — “third on the list,” not a fraud flag</td>
+</tr>
+<tr>
+<td>Management Warnings <strong>0</strong>, Overall Risk <strong>LOW</strong></td>
+<td><strong>Done for today</strong> (still skim Multi-Day and CC Watch)</td>
+</tr>
+<tr>
+<td>Dollar-Weighted Alerts (Invoices, Bills, Bank, etc.)</td>
+<td>Those are the stronger “big money” signals for this run; Expenses wasn’t among them</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Plain language for operators:</strong> Expenses appearing with <strong>LOW</strong> is like a weather report listing the third-warmest city on a mild day — it’s relative ranking, not a storm warning. <strong>Act on HIGH rows and dollar alerts; treat LOW third-place as context, not a call to action.</strong></p>
+<p>On the next run (with composite ranking), slot #3 may show <strong>Invoices</strong> instead of Expenses if dollar weighting dominates — but any <strong>LOW</strong> entry in Top Anomalies carries the same FRP meaning: ranked for visibility, not escalated.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>Ive just completed Day 5, supported by the stitched Training Matrix. The Dashboard is functioning well. Explain to me in plan language what this single anomaly means:
+Payments (φ4)
+Δ 0.113955 • 11.60% • z≈-2.14
+Count MEDIUM $ HIGH</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Checking your latest run data for Payments (φ4) to ground the explanation.</p>
+<h2 id="what-ngame-is-telling-you-plain-language">What NGAME is telling you (plain language)</h2>
+<p><strong>Payments (φ4)</strong> is <strong>customer payment activity</strong> in QuickBooks — money received against invoices, not bills or vendor spend.</p>
+<p>Today’s payment <strong>record pattern</strong> doesn’t match what the stitched 30-day matrix learned as normal. NGAME is flagging that in two ways:</p>
+<hr />
+<h3 id="the-numbers-in-everyday-terms">The numbers, in everyday terms</h3>
+<table>
+<thead>
+<tr>
+<th>What you see</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Δ 0.11 • 11.6%</strong></td>
+<td>Today’s “how much stayed the same overnight” score for Payments is about <strong>11.6% below</strong> the trained average. More payment records were <strong>added, removed, or turned over</strong> than usual.</td>
+</tr>
+<tr>
+<td><strong>z ≈ −2.14</strong></td>
+<td>That churn is <strong>moderately unusual</strong> vs the baseline (roughly <strong>2 standard deviations</strong> below normal). The minus sign means <strong>more churn than usual</strong>, not less.</td>
+</tr>
+<tr>
+<td><strong>Count MEDIUM</strong></td>
+<td>By <strong>head count</strong> of payment records, this warrants <strong>enhanced attention</strong>, not panic — but don’t ignore it.</td>
+</tr>
+<tr>
+<td><strong>$ HIGH</strong></td>
+<td>By <strong>dollar weight</strong>, the story is <strong>stronger</strong>. The amounts tied to today’s payment adds/removals are <strong>far out of line</strong> with what the baseline expects (your run: dollar z ≈ <strong>−5.6</strong>). A few big payments (or big changes) are driving more of the signal than “a few extra small payments” would.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Short version:</strong><br />
+<em>“Today we saw more churn than usual in customer payment records (MEDIUM), and the dollars involved in that churn are unusually large (HIGH).”</em></p>
+<hr />
+<h3 id="what-it-does-not-mean">What it does <strong>not</strong> mean</h3>
+<ul>
+<li>It is <strong>not</strong> proof of theft or misappropriation.</li>
+<li>It does <strong>not</strong> say <strong>who</strong> changed anything — that’s QuickBooks <strong>Audit Log</strong> territory.</li>
+<li>It does <strong>not</strong> by itself mean Overall Risk is HIGH (that path still leans on management/LLM warnings unless your protocol says otherwise).</li>
+</ul>
+<hr />
+<h3 id="frp-read-for-day-5-type-e-mixed-light">FRP read for Day 5 (Type E — Mixed / Light)</h3>
+<p>You posted a light/mixed day while the matrix still reflects <strong>Days 1–12 replay + original Days 13–30</strong>. A <strong>single Payments flag</strong> after several replay days often means:</p>
+<ul>
+<li>New or changed <strong>customer payment</strong> transactions in the sandbox, and/or</li>
+<li><strong>Large payment amounts</strong> relative to what φ4 looked like during training,</li>
+</ul>
+<p>—not necessarily a live fraud event.</p>
+<p><strong>What to do (proportionate to MEDIUM + $ HIGH):</strong></p>
+<ol>
+<li><strong>Note</strong> Payments on today’s check (you’ve already seen it).</li>
+<li>In QBO, open <strong>Receive Payment</strong> / payment list for today — look for <strong>large amounts</strong>, <strong>new payments</strong>, <strong>voids/deletes</strong>, or <strong>unusual payers</strong>.</li>
+<li>Skim <strong>Audit Log</strong> if anything looks wrong.</li>
+<li>Per FRP: <strong>MEDIUM</strong> → note + Top Anomalies + consider designated contact <strong>within one business day</strong> if your org treats composite <strong>$ HIGH</strong> on payments as actionable; otherwise document and continue the replay.</li>
+</ol>
+<hr />
+<h3 id="one-sentence-for-your-session-log">One sentence for your session log</h3>
+<blockquote>
+<p><strong>Day 5:</strong> φ4 Payments — customer payment churn moderately above baseline (Count MEDIUM); dollar-weighted activity strongly above baseline ($ HIGH); review payment transactions in QBO, no automatic fraud conclusion.</p>
+</blockquote>
+<hr />
+<p><strong>User</strong></p>
+<p>Why does Chart of Accounts appear under Dollar Amounts warning? I purposely entered extral accounts, just to deviate from normal and prompt a warning. But that is an anomaly of Count, not of dollar value? Bug?</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Investigating how dollar alarms are computed for Chart of Accounts (φ16).</p>
+<p>Your read is right: <strong>this is a count anomaly showing up under a dollar label</strong> — a <strong>design/labeling gap</strong>, not you misreading the dashboard.</p>
+<h2 id="what-you-did">What you did</h2>
+<p>You added <strong>extra Chart of Accounts rows</strong> in QBO. That changes <strong>how many account records</strong> appear in today’s snapshot vs yesterday — classic <strong>count churn</strong> (how many IDs were added / retained / removed). That’s exactly the signal you wanted.</p>
+<h2 id="why-it-appears-under-dollar-weighted-alerts">Why it appears under “Dollar-Weighted Alerts”</h2>
+<p>NGAME runs <strong>two parallel tracks</strong> for each category:</p>
+<table>
+<thead>
+<tr>
+<th>Track</th>
+<th>What it measures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Count (CPI)</strong></td>
+<td>Record IDs — adds/removes of accounts</td>
+</tr>
+<tr>
+<td><strong>Dollar (wCPI)</strong></td>
+<td>Same churn, but each record is weighted by money</td>
+</tr>
+</tbody>
+</table>
+<p>For <strong>Chart of Accounts</strong>, account master records in the ontology <strong>don’t carry <code>hasTotalAmount</code></strong>. The CPI agent treats each account as <strong>$1</strong> when no amount is present. So:</p>
+<ul>
+<li><strong>Weighted CPI = unweighted CPI</strong> (same numbers)</li>
+<li><strong>Dollar divergence = 0</strong> (no “big dollars vs small counts” story)</li>
+</ul>
+<p>Your Day 5 run shows that clearly:</p>
+<ul>
+<li>Count CPI today: <strong>0.980</strong></li>
+<li>Weighted CPI today: <strong>0.980</strong> (identical)</li>
+<li><strong>z ≈ −4.10</strong> on count → <strong>HIGH</strong></li>
+<li><strong>Dollar z ≈ −4.10</strong> → <strong>HIGH</strong> (same value)</li>
+</ul>
+<p>The pipeline still compares <strong>wCPI</strong> to the trained <strong>μ_w</strong> baseline and applies the same z thresholds. For φ16 that produces a <strong>duplicate</strong> of the count alert, not a separate “large dollar transaction” warning.</p>
+<p>So: <strong>not wrong math</strong>, but <strong>misleading for FRP</strong> — the panel name implies <em>transaction dollar volume</em>, while Chart of Accounts is <strong>master-data count churn</strong>.</p>
+<h2 id="bug">Bug?</h2>
+<p><strong>Yes, in product terms</strong> — not that NGAME failed to detect your extra accounts (it did), but that <strong>φ16 shouldn’t surface as a dollar-weighted alert</strong> when there is no real dollar weighting (uniform $1 weights, divergence 0).</p>
+<p><strong>Not a bug</strong> in the sense that your test worked: extra accounts → HIGH count anomaly; it’s just <strong>double-labeled</strong> as dollar HIGH.</p>
+<h2 id="frp-plain-language">FRP plain language</h2>
+<blockquote>
+<p><strong>Chart of Accounts (φ16):</strong> “We added or changed more GL <strong>account records</strong> than the 30-day baseline expects.”<br />
+That’s <strong>structural / setup churn</strong>, not “someone moved a huge payment.”</p>
+</blockquote>
+<p><strong>Act on:</strong> Count <strong>HIGH</strong> — review new/changed accounts in QBO (intentional or not).<br />
+<strong>Don’t over-read:</strong> <strong>$ HIGH</strong> on this row — it’s the same story with a dollar badge attached.</p>
+<h2 id="what-wed-fix-when-you-want-it">What we’d fix (when you want it)</h2>
+<p>Suppress dollar alerts for <strong>non-monetary entity types</strong> (ChartOfAccounts, Vendors master, Customers, Products, etc.) <strong>or</strong> when <code>weighted_cpi == cpi</code> and <code>dollar_weight_divergence == 0</code>, so Dollar-Weighted Alerts only list categories where dollar weighting actually differs from count (Invoices, Bills, Payments, etc.).</p>
+<p>Your intentional deviation test <strong>succeeded on count</strong>; the dollar panel entry for CoA is the confusing part.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>Are Analysis Trends and Recent Activity just placeholders on the Dashboard? Can you implement them?</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Implementing both panels from training-matrix and pipeline artifacts—they’re wired but never fed real data.</p>
+<p>Yes — until now they were effectively <strong>placeholders</strong>:</p>
+<ul>
+<li><strong>Analysis Trends</strong> — Chart.js initialized with empty labels/data and never updated.</li>
+<li><strong>Recent Activity</strong> — Only filled from in-memory <code>analysis_history</code>, which <code>app-simple.py</code> never populates (no Socket.IO), so the panel stayed blank.</li>
+</ul>
+<h2 id="whats-implemented-now">What’s implemented now</h2>
+<p><strong>Analysis Trends</strong> plots a <strong>daily churn index</strong> (1 − average CPI across φ1–φ18) from:</p>
+<ul>
+<li>Each <strong>Day column</strong> in <code>NGAME_Training_Matrix.xlsx</code> (your stitched matrix — all 30 days show up)</li>
+<li>Any <strong>Phase II</strong> entries in <code>NGAME_CPI_Rolling_Buffer.json</code></li>
+</ul>
+<p>Higher on the chart = more record turnover that day.</p>
+<p><strong>Recent Activity</strong> lists real events from:</p>
+<ul>
+<li>Latest <strong>fraud check</strong> (risk, anomaly count, warnings)</li>
+<li><strong>Rolling buffer</strong> snapshots</li>
+<li><strong>Training matrix</strong> status (e.g. “30/30 complete”)</li>
+<li><strong>Persisted runs</strong> in <code>ngame_dashboard_activity.json</code> when you use Training Day / Fraud Check / Demo (survives refresh)</li>
+</ul>
+<h2 id="what-you-should-do">What you should do</h2>
+<p>Refresh the dashboard at <a href="http://127.0.0.1:5001">http://127.0.0.1:5001</a> (restart <code>app-simple.py</code> if it was started before this change).</p>
+<p>You should see a <strong>30-point trend line</strong> and activity items like “Fraud check”, “Rolling buffer”, and “Training matrix”. After the next operation from the dashboard, a new <strong>“Training day”</strong> or <strong>“Fraud check”</strong> line will appear in Recent Activity automatically.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>No trend line in Analysis Trends. Just a blank graph. Recent Activity: no change. still just an image.</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Investigating why the chart and activity feed aren’t rendering—checking the API response, frontend wiring, and the running server.</p>
+<p>Churn values are very small (~0.02), so the line sits on the x-axis and looks blank. Fixing the chart scale and adding visible loading defaults.</p>
+<p>You were seeing two separate issues:</p>
+<h2 id="1-stale-dashboard-process">1. Stale dashboard process</h2>
+<p>The server on port <strong>5001</strong> was still running <strong>before</strong> the trends/activity code was added. The API was returning <code>success: true</code> but <strong>no</strong> <code>analysis_trends</code> or <code>recent_activity</code> fields — so the chart stayed empty and Recent Activity never updated.</p>
+<p>The dashboard has been <strong>restarted</strong> with the current code. The API now returns <strong>30 trend points</strong> and <strong>3 activity items</strong>.</p>
+<h2 id="2-blank-chart-line-looked-empty">2. “Blank” chart (line looked empty)</h2>
+<p>Your churn index values are very small (about <strong>0.002–0.025</strong>). With a Y-axis fixed at <strong>0–1</strong>, the line sat on the bottom and looked like an empty graph.</p>
+<p>The chart now <strong>auto-scales the Y-axis</strong> to the data (capped at 1.0) so the trend is visible.</p>
+<h2 id="what-you-should-do">What you should do</h2>
+<ol>
+<li><strong>Hard refresh</strong> the page: <code>Cmd+Shift+R</code> on <a href="http://127.0.0.1:5001">http://127.0.0.1:5001</a></li>
+<li>You should see:
+<ul>
+<li><strong>Analysis Trends</strong> — line across <strong>Day 2 … Day 30</strong> (plus your latest check date)</li>
+<li><strong>Recent Activity</strong> — lines such as “Fraud check”, “Rolling buffer”, “Training matrix”</li>
+</ul>
+</li>
+</ol>
+<p>Recent Activity is <strong>not</strong> a static image — it was an empty panel with only the section title icon when nothing was loaded.</p>
+<h2 id="after-each-dashboard-run">After each dashboard run</h2>
+<p>Restart only if you change Python code again:</p>
+<pre class='hl'><code class="language-bash"><span class="hl kwb">cd</span> <span class="hl opt">/</span>Users<span class="hl opt">/</span>ronturner<span class="hl opt">/</span>Developer<span class="hl opt">/</span>Projects<span class="hl opt">/</span>NGAME<span class="hl kwb">-POC</span>
+<span class="hl slc"># Ctrl+C in the terminal running the dashboard, then:</span>
+.venv<span class="hl opt">/</span>bin<span class="hl opt">/</span>python ngame_ui<span class="hl opt">/</span>app<span class="hl kwb">-simple</span>.py
+</code></pre>
+<p>If it’s still blank after a hard refresh, say so and we can check the browser console for errors.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>&lt;system_notification&gt;
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.</p>
+<!-- raw HTML omitted -->
+<p>&lt;system_notification&gt;
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.</p>
+<!-- raw HTML omitted -->
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Those <strong>exit code 143</strong> results are normal — the old dashboard process was stopped on purpose (SIGTERM) so a new one could start with the updated code.</p>
+<p>The dashboard <strong>is running</strong> now on <a href="http://127.0.0.1:5001">http://127.0.0.1:5001</a> (HTTP 200). Do a hard refresh (<code>Cmd+Shift+R</code>) to pick up the Analysis Trends line and Recent Activity feed.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>Recent Activity looks OK. Graph  labeled for Day 2 through Day 29 only. I’ve now run 36 days. The blue graph line is at nearly 0.0 all the way across.</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Checking the training matrix and how trend data is built — why days stop at 29 and why the line sits near zero.</p>
+<p>Fixing the chart: Day 1 is empty in the matrix (starts at Day 2), the metric was too flat (switching to peak category churn), and we’re removing the 30-point cap so all matrix days display.</p>
+<p>Here is what was going on and what we changed.</p>
+<h2 id="why-you-saw-day-229-only">Why you saw Day 2–29 only</h2>
+<ol>
+<li><strong>Day 1 is empty</strong> in <code>NGAME_Training_Matrix.xlsx</code> (column exists, no CPI values). The chart used to <strong>skip</strong> it, so the first point was <strong>Day 2</strong>.</li>
+<li><strong>Day 30</strong> (and the fraud-check date) were on the chart but easy to miss — the x-axis only showed ~12 tick labels, so the end was often clipped.</li>
+<li>The file on disk has <strong>30 day columns</strong> (Day 1–Day 30), not 36. Training status also reports <strong>30 / 30 complete</strong>. If you count <strong>36</strong>, that may include <strong>6 separate fraud-check runs</strong> after training; those do not add columns to the matrix unless you run more <strong>training</strong> days and the matrix grows past column 33.</li>
+</ol>
+<h2 id="why-the-line-sat-near-00">Why the line sat near 0.0</h2>
+<p>The chart used <strong>mean churn</strong> (1 − average CPI). On most days almost all 18 categories are near 1.0, so the average barely moves (about <strong>0.002–0.025</strong>). That is mathematically correct but <strong>looks flat</strong>.</p>
+<h2 id="what-we-changed">What we changed</h2>
+<ul>
+<li>Chart metric is now <strong>peak category churn</strong> — the <strong>worst</strong> φ that day (e.g. one category at 0.79 CPI → <strong>~0.21</strong> on the chart).</li>
+<li><strong>Day 1</strong> is included (0 when empty).</li>
+<li><strong>All 30 matrix days</strong> + fraud-check point are shown (no 30-point cap).</li>
+<li>Y-axis scales to the data so spikes are visible (your matrix now peaks around <strong>~0.26</strong> on the busiest days).</li>
+</ul>
+<p><strong>Hard refresh</strong> the dashboard (<code>Cmd+Shift+R</code>). You should see <strong>Day 1 through Day 30</strong>, a clearer line with visible bumps, and a caption like “30 matrix columns, 29 with data.”</p>
+<h2 id="about-36-days">About “36 days”</h2>
+<p>Open <code>NGAME_Training_Matrix.xlsx</code> and check the last header in row 1. If it still says <strong>Day 30</strong>, days 31–36 were not written to the matrix (only extra fraud checks or sessions). To extend the trend line beyond 30, each new <strong>training</strong> day must add a <strong>Day 31</strong>, <strong>Day 32</strong>, … column via <strong>Run Today’s Training Day</strong>.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>Training Matrix only goes to Day 30</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>That’s expected — <strong>by design</strong>.</p>
+<h2 id="phase-i-training-matrix-30-days-max">Phase I: Training matrix = 30 days max</h2>
+<p>NGAME’s training baseline is built for <strong>30 business days</strong> (Phase I). <code>NGAME_Training_Matrix.xlsx</code> is structured as:</p>
+<table>
+<thead>
+<tr>
+<th>Columns A–C</th>
+<th>Day 1 … Day 30</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transaction type, μ, σ</td>
+<td>One CPI column per training day</td>
+</tr>
+</tbody>
+</table>
+<p>When you hit <strong>30 / 30</strong>, training is <strong>complete</strong>. The matrix does <strong>not</strong> add Day 31, Day 32, etc. unless you change that limit in code and in the build guide.</p>
+<h2 id="what-36-days-might-mean">What “36 days” might mean</h2>
+<p>If you counted <strong>36</strong> runs, common mixes:</p>
+<table>
+<thead>
+<tr>
+<th>Activity</th>
+<th>Adds a matrix column?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Run Today’s Training Day</strong> (while &lt; 30)</td>
+<td>Yes — Day N</td>
+</tr>
+<tr>
+<td><strong>Daily fraud check</strong> (Phase II)</td>
+<td>No — updates <code>NGAME_Fraud_Analysis.json</code> and the rolling buffer</td>
+</tr>
+<tr>
+<td>Replay / smoke sessions after 30/30</td>
+<td>No new Day columns</td>
+</tr>
+</tbody>
+</table>
+<p>So you can have <strong>many monitoring days</strong> after training, but the <strong>matrix still ends at Day 30</strong> — that’s the frozen churn baseline for comparisons.</p>
+<h2 id="what-happens-after-day-30">What happens after Day 30</h2>
+<ul>
+<li>Dashboard shows <strong>Phase II</strong> / fraud monitoring.</li>
+<li><strong>Analysis Trends</strong> plots those <strong>30 matrix days</strong> plus optional <strong>fraud-check</strong> points (dates from the rolling buffer), not Day 31–36 in the spreadsheet.</li>
+<li>Today’s activity is compared to the <strong>μ and σ</strong> learned from Days 1–30.</li>
+</ul>
+<h2 id="if-you-need-more-than-30-training-days">If you need more than 30 training days</h2>
+<p>That would be a <strong>product change</strong> (e.g. raise <code>target_days</code> from 30 and widen the matrix). The stitched D12 replay checklist and current FRP guide assume <strong>30</strong> as the training window.</p>
+<p><strong>Bottom line:</strong> Training Matrix only to Day 30 is correct for this POC; extra sessions after that are Phase II checks, not new training columns.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>The graph is now properly scaled. But is is limited to the 30 days’</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Yes. The <strong>training</strong> portion of the graph is limited to <strong>30 days</strong> on purpose.</p>
+<h2 id="what-the-graph-shows">What the graph shows</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Source</th>
+<th>How many points</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Day 1 … Day 30</strong></td>
+<td><code>NGAME_Training_Matrix.xlsx</code></td>
+<td>Up to <strong>30</strong> columns (Phase I baseline)</td>
+</tr>
+<tr>
+<td><strong>After Day 30</strong></td>
+<td><code>NGAME_CPI_Rolling_Buffer.json</code></td>
+<td><strong>One point per daily fraud check</strong> (Phase II), not new matrix columns</td>
+</tr>
+</tbody>
+</table>
+<p>So the line is not capped at “30 only” forever — it can add <strong>monitoring</strong> points after training, but only when you run <strong>Daily Fraud Check</strong> and the pipeline appends to the rolling buffer. Right now you likely have <strong>one</strong> such point (a date after Day 30), not six extra matrix days.</p>
+<h2 id="why-it-works-that-way">Why it works that way</h2>
+<ul>
+<li><strong>Days 1–30</strong> = learn normal churn (μ, σ in the matrix).</li>
+<li><strong>Day 31+</strong> = compare <strong>today</strong> to that baseline; history lives in the <strong>buffer</strong>, not in new matrix columns.</li>
+</ul>
+<h2 id="if-you-want-a-longer-line-after-training">If you want a longer line after training</h2>
+<p>Run <strong>one fraud check per business day</strong>. Each run should add another buffer entry and another point on the graph (labeled by date, e.g. <code>2026-06-04 (fraud check)</code>). You will <strong>not</strong> get Day 31–36 in the spreadsheet unless the product is changed to allow more than 30 training days.</p>
+<p><strong>Summary:</strong> The graph correctly reflects the <strong>30-day training matrix</strong> plus any <strong>Phase II checks</strong> you have actually run. It is not meant to mirror “36 training days” in Excel — only <strong>30 training columns</strong> plus separate monitoring snapshots.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>I see. So the 1 “fraud check point” represents the only check possible, because of the five-day prerequisite to incorporate the rolling buffer, correct?</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<p>Not quite — the <strong>5-day rule</strong> applies to a different feature.</p>
+<h2 id="two-different-things">Two different things</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Needs 5 days in buffer?</th>
+<th>What you have now</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Analysis Trends</strong> fraud-check point(s)</td>
+<td><strong>No</strong></td>
+<td><strong>1 point</strong> = one stored buffer day (one fraud check <strong>date</strong>, or re-runs on the same date)</td>
+</tr>
+<tr>
+<td><strong>Multi-Day Pattern Alert</strong> (slow-burn)</td>
+<td><strong>Yes</strong> — needs <strong>5</strong> distinct days</td>
+<td>Stays <strong>“Building”</strong> until you have 5 buffer entries</td>
+</tr>
+</tbody>
+</table>
+<p>Every successful <strong>Daily Fraud Check</strong> appends to <code>NGAME_CPI_Rolling_Buffer.json</code> right away. That is what adds points on the graph after Day 30. No 5-day wait.</p>
+<h2 id="why-you-only-see-one-fraud-check-point">Why you only see <strong>one</strong> fraud-check point</h2>
+<p>Most likely:</p>
+<ol>
+<li>You have only run <strong>one</strong> fraud check (or only one <strong>calendar date</strong> of checks), or</li>
+<li>Several checks on the <strong>same day</strong> — the buffer <strong>replaces</strong> that date’s record, so you still get <strong>one</strong> point for that date.</li>
+</ol>
+<p>It is <strong>not</strong> because the buffer blocks the first four checks.</p>
+<h2 id="what-happens-as-you-keep-monitoring">What happens as you keep monitoring</h2>
+<table>
+<thead>
+<tr>
+<th>Fraud checks run</th>
+<th>Buffer</th>
+<th>Trends graph (after Day 30)</th>
+<th>Multi-Day Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1st check</td>
+<td>1 day</td>
+<td>+1 point</td>
+<td>Building</td>
+</tr>
+<tr>
+<td>2nd check (different date)</td>
+<td>2 days</td>
+<td>+2 points</td>
+<td>Building</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>Building</td>
+</tr>
+<tr>
+<td>5th check (5 different dates)</td>
+<td>5 days</td>
+<td>+5 points</td>
+<td>Can go <strong>Clear</strong> / <strong>MEDIUM</strong> / <strong>HIGH</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Summary:</strong> The single fraud-check point means <strong>one monitoring snapshot in the buffer</strong>, not “only one check allowed.” Run a fraud check on <strong>each new business day</strong> to extend the line; after <strong>five</strong> such days, the Multi-Day panel can start reporting slow-burn patterns too.</p>
+<hr />
+<p><strong>User</strong></p>
+<p>Yet again, put into very plain words what the two measures in the first two columns of the matrix are: why each of Mean and Standard Deviation are signifiacnt for generating the data necessary for fraud  detection.</p>
+<hr />
+<p><strong>Cursor</strong></p>
+<h2 id="the-two-columns-in-plain-words">The two columns in plain words</h2>
+<p>After the <strong>Transaction Type</strong> column, the matrix stores two numbers <strong>per row</strong> (per category — Customers, Bills, Vendors, etc.):</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Name (in the sheet)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>B</strong></td>
+<td><strong>μ (Mean CPI)</strong></td>
+<td>“What <strong>normal</strong> looks like” for that category across your <strong>30 training days</strong></td>
+</tr>
+<tr>
+<td><strong>C</strong></td>
+<td><strong>σ (Std Dev CPI)</strong></td>
+<td>“How <strong>bouncy</strong> normal is” — how much that category <strong>usually</strong> wiggles day to day</td>
+</tr>
+</tbody>
+</table>
+<p>They are <strong>not</strong> dollar amounts. They summarize <strong>30 days of “how stable were the records in this category?”</strong></p>
+<hr />
+<h2 id="what-cpi-is-one-sentence">What CPI is (one sentence)</h2>
+<p>Each day, NGAME asks: <em>Of all the records in this category that appeared yesterday or today, what fraction <strong>stayed the same</strong>?</em><br />
+That fraction is the <strong>CPI</strong> (close to <strong>1.0</strong> = very stable, lower = more adds/removes/churn).</p>
+<p><strong>μ</strong> = average of those daily CPI values over training.<br />
+<strong>σ</strong> = how much those daily values typically vary.</p>
+<hr />
+<h2 id="why-mean-μ-matters-for-fraud-detection">Why <strong>Mean (μ)</strong> matters for fraud detection</h2>
+<p>Fraud detection needs an answer to: <em>“Is <strong>today</strong> like the 30 days we used to learn normal?”</em></p>
+<ul>
+<li><strong>μ</strong> is the <strong>baseline “usual” stability</strong> for each category.</li>
+<li>On a monitoring day, NGAME compares <strong>today’s CPI</strong> to <strong>μ</strong>.</li>
+<li>If today is <strong>far below</strong> μ, that category had <strong>more churn than normal</strong> (many new, removed, or changed records).</li>
+</ul>
+<p>Without <strong>μ</strong>, there is no trained notion of “normal” — only raw numbers with no reference.</p>
+<p><strong>Plain analogy:</strong> μ is the <strong>typical temperature</strong> for that category in your “weather history” (30 training days).</p>
+<hr />
+<h2 id="why-standard-deviation-σ-matters-for-fraud-detection">Why <strong>Standard deviation (σ)</strong> matters for fraud detection</h2>
+<p>Categories differ in how steady they usually are.</p>
+<ul>
+<li><strong>Vendors</strong> might bounce around a lot day to day → <strong>larger σ</strong> → a given drop in CPI is <strong>less surprising</strong>.</li>
+<li><strong>Bills</strong> might be very steady → <strong>smaller σ</strong> → the <strong>same</strong> drop is <strong>more surprising</strong>.</li>
+</ul>
+<p>NGAME uses <strong>σ</strong> to turn “how far from normal” into a <strong>fair</strong> alert:</p>
+<p>[
+z = \frac{\text{today’s CPI} - \mu}{\sigma}
+]</p>
+<ul>
+<li>Big deviation + <strong>small σ</strong> → <strong>HIGH</strong> alert (unusual <em>for that category</em>).</li>
+<li>Same deviation + <strong>large σ</strong> → might only be <strong>LOW</strong> (noisy category; big moves happen often).</li>
+</ul>
+<p>Without <strong>σ</strong>, a volatile category would false-alarm every week, and a stable category could hide real fraud.</p>
+<p><strong>Plain analogy:</strong> σ is whether that category’s weather is usually <strong>calm</strong> or <strong>stormy</strong>. A 10° drop means more on a calm category than on one that swings every day.</p>
+<hr />
+<h2 id="how-they-work-together-one-line">How they work together (one line)</h2>
+<ul>
+<li><strong>μ</strong> answers: <em>“What should today look like?”</em></li>
+<li><strong>σ</strong> answers: <em>“How wrong does today have to be before we care?”</em></li>
+</ul>
+<p>That pair is what turns “today feels weird” into <strong>HIGH / MEDIUM / LOW</strong> on the dashboard — and what the 30 training days are <strong>for</strong>.</p>
+<hr />
+<h2 id="what-they-are-not">What they are <strong>not</strong></h2>
+<ul>
+<li>They are <strong>not</strong> average dollar amounts (dollar weighting uses a separate path).</li>
+<li>They are <strong>not</strong> built from a single day — they need <strong>many training days</strong> (your 30 columns) so μ and σ are trustworthy.</li>
+<li><strong>Day 1</strong> in the matrix does not feed μ/σ until it has real CPI data; empty Day 1 columns do not help the baseline.</li>
+</ul>
+<p><strong>Bottom line:</strong> <strong>Mean</strong> stores <strong>normal</strong>. <strong>Standard deviation</strong> stores <strong>how much normal wiggles</strong>. Together they let Phase II say whether <strong>today</strong> is unusually unstable for each type of QuickBooks activity — which is the core of this fraud-detection approach.</p>
+<div style='font-size: 72%; margin-top: 1.5em; padding-top: .5em; -webkit-user-select: none;'><hr style='height: 0; border: none; border-top: 1px solid rgba(0,0,0,.5); box-shadow: 0 1px 1px rgba(255, 255, 255, .5)'/><a href='https://github.com/sbarex/QLMarkdown'>QLMarkdown</a>, version 1.0.24 (50).<br />
+Developed by SBAREX 2020 - 2025 with <span style='font-style: normal'>❤️</span>.<br/>
+If you like this app, <a href='https://www.buymeacoffee.com/sbarex'><strong>buy me a coffee</strong></a>!</div>
+<!--
+
+File generated with QLMarkdown [https://github.com/sbarex/QLMarkdown] - QLMarkdown, version 1.0.24 (50).
+Developed by SBAREX 2020 - 2025 with ❤️
+
+-->
+
+</article>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</body>
+</html>

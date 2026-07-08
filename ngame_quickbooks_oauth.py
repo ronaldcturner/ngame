@@ -223,38 +223,46 @@ def ensure_quickbooks_auth(config_path: str, *, interactive_on_invalid_grant: bo
     callback_host = parsed_redirect.hostname or "localhost"
     callback_port = parsed_redirect.port
 
+    access_token = (api.get("access_token") or "").strip()
+    refresh_token = (api.get("refresh_token") or "").strip()
+
     auth_client = AuthClient(
         client_id=client_id,
         client_secret=client_secret,
-        access_token=api.get("access_token"),
-        refresh_token=api.get("refresh_token"),
+        access_token=access_token or None,
+        refresh_token=refresh_token or None,
         environment=environment,
         redirect_uri=redirect_uri,
     )
 
-    # 1) Try refresh (best path; no UI)
-    try:
-        auth_client.refresh()
-        api["access_token"] = auth_client.access_token
-        api["refresh_token"] = auth_client.refresh_token or api.get("refresh_token")
-        api["environment"] = environment
-        api["redirect_uri"] = redirect_uri
-        _strip_secrets_for_persist(
-            api,
-            client_id_from_env=client_id_from_env,
-            client_secret_from_env=client_secret_from_env,
-        )
-        config["quickbooks_api"] = api
-        save_quickbooks_config(config_path, config)
-        realm_id = str(api.get("realm_id") or auth_client.realm_id or "")
-        if not realm_id:
-            raise QuickBooksOAuthError("Missing realm_id in config (and not provided by refresh).")
-        return QuickBooksAuthBundle(auth_client=auth_client, realm_id=realm_id)
-    except Exception as e:
-        msg = str(e)
-        invalid_grant = ("invalid_grant" in msg) or ("Token invalid" in msg) or ("token invalid" in msg)
-        if not (interactive_on_invalid_grant and invalid_grant):
-            raise
+    # 1) Try refresh (best path; no UI) — skip when tokens were cleared for re-auth
+    need_interactive = not refresh_token
+    if not need_interactive:
+        try:
+            auth_client.refresh()
+            api["access_token"] = auth_client.access_token
+            api["refresh_token"] = auth_client.refresh_token or api.get("refresh_token")
+            api["environment"] = environment
+            api["redirect_uri"] = redirect_uri
+            _strip_secrets_for_persist(
+                api,
+                client_id_from_env=client_id_from_env,
+                client_secret_from_env=client_secret_from_env,
+            )
+            config["quickbooks_api"] = api
+            save_quickbooks_config(config_path, config)
+            realm_id = str(api.get("realm_id") or auth_client.realm_id or "")
+            if not realm_id:
+                raise QuickBooksOAuthError("Missing realm_id in config (and not provided by refresh).")
+            return QuickBooksAuthBundle(auth_client=auth_client, realm_id=realm_id)
+        except Exception as e:
+            msg = str(e)
+            invalid_grant = ("invalid_grant" in msg) or ("Token invalid" in msg) or ("token invalid" in msg)
+            invalid_request = "invalid_request" in msg
+            if interactive_on_invalid_grant and (invalid_grant or invalid_request):
+                need_interactive = True
+            else:
+                raise
 
     if _running_in_ci():
         raise QuickBooksOAuthError(

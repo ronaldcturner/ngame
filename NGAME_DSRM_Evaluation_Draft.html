@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NGAME — DSRM §7 Evaluation (First Draft)</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 15px; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #ffffff;
+    color: #1a1a1a;
+    line-height: 1.65;
+  }
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 32px 72px;
+  }
+
+  /* ── Typography ── */
+  h1 { font-size: 1.75rem; font-weight: 700; line-height: 1.25; margin-bottom: 10px; }
+  h2 { font-size: 1.18rem; font-weight: 700; line-height: 1.3;  margin: 0 0 8px; }
+  p  { font-size: 0.9rem; line-height: 1.75; margin-bottom: 10px; color: #1a1a1a; }
+  p:last-child { margin-bottom: 0; }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2563eb;
+    margin-bottom: 6px;
+  }
+  .subtitle { font-size: 0.875rem; color: #555; margin-bottom: 0; }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 28px 0; }
+
+  /* ── Sections ── */
+  .section { display: flex; flex-direction: column; gap: 12px; }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+    margin: 4px 0;
+  }
+  thead th {
+    background: #f0f0f0;
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 11px;
+    border: 1px solid #d4d4d4;
+  }
+  tbody td {
+    padding: 7px 11px;
+    border: 1px solid #d4d4d4;
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) td { background: #fafafa; }
+
+  /* ── Callout ── */
+  .callout {
+    background: #eef4fb;
+    border-left: 4px solid #3b82f6;
+    border-radius: 3px;
+    padding: 12px 16px;
+    font-size: 0.855rem;
+    color: #1d3a5f;
+    line-height: 1.65;
+  }
+  .callout strong { font-weight: 600; }
+
+  /* ── Footer ── */
+  .footer { font-size: 0.8rem; color: #888; font-style: italic; }
+  .footer p + p { margin-top: 4px; }
+
+  /* ── Print ── */
+  @media print {
+    body { font-size: 11pt; }
+    h1   { font-size: 16pt; }
+    h2   { font-size: 12pt; }
+    p    { font-size: 10.5pt; line-height: 1.7; }
+    .page { padding: 16px 0; }
+    thead th { background: #e8e8e8 !important; -webkit-print-color-adjust: exact; }
+    tbody tr:nth-child(even) td { background: #f5f5f5 !important; -webkit-print-color-adjust: exact; }
+    .callout { background: #eef4fb !important; border-left: 3pt solid #3b82f6 !important; -webkit-print-color-adjust: exact; }
+    .section-label { color: #2563eb !important; -webkit-print-color-adjust: exact; }
+    hr { margin: 18px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ HEADER ══ -->
+  <div class="section-label">DSRM Activity 5 — First Draft</div>
+  <h1>Evaluation</h1>
+  <p class="subtitle">First draft of §7 (Evaluation) for the JFAR submission. All numeric values cited below are sourced directly from NGAME system artifacts produced during development and testing (April–May 2026). Draft language is for author revision; citations in square brackets are placeholders for the author's final bibliography.</p>
+
+  <hr>
+
+  <!-- ══ 5.1 ══ -->
+  <div class="section">
+    <h2>5.1&ensp; Evaluation Framework</h2>
+    <p>Hevner et al. [2004] identify five methodologically distinct approaches to evaluating design science artifacts: (1) observational, including case studies and field studies; (2) analytical, including static analysis, architecture analysis, and optimization; (3) experimental, including controlled experimentation and simulation; (4) testing, including functional and unit testing; and (5) descriptive, including informed argument and scenario construction. They further distinguish between naturalistic evaluation — conducted in real-world settings — and artificial evaluation — conducted in controlled laboratory conditions. The DSRM (Peffers et al. [2008]; Geerts [2011]) requires that the evaluation activity compare the artifact's observed performance against the objectives stated in Activity 2. This section applies four of Hevner et al.'s five evaluation categories — testing, analytical, observational, and descriptive — to NGAME, presenting evidence from each in turn. Experimental evaluation, which would require a prospective controlled trial on live fraudulent data, is deferred to future work and is acknowledged as a limitation in §5.8.</p>
+    <p>The evaluation of NGAME is structured around three independent sources of evidence: (i) a controlled anomaly injection test suite executed against a synthetic transaction stream; (ii) analytical decomposition of the CPI vector comparison metrics produced during live operational runs; and (iii) an observational field deployment against a consenting nonprofit organization's production QuickBooks Online account. Together, these sources address two questions central to the DSRM evaluation activity: Does the artifact operate correctly and reliably (technical validity)? And does the artifact detect what it is designed to detect with measurable accuracy (purpose validity)?</p>
+  </div>
+
+  <hr>
+
+  <!-- ══ 5.2 ══ -->
+  <div class="section">
+    <h2>5.2&ensp; Metric Definitions for the NGAME Detection Task</h2>
+    <p>Before reporting results, it is necessary to operationalize the standard information retrieval metrics — precision, recall, and false-positive rate — in terms specific to the NGAME detection task. The detection task is defined as follows: given a daily CPI phi array of N dimensions, NGAME ranks each dimension by its absolute deviation from the trained baseline and flags the top-<em>k</em> dimensions as anomalous. In the current instantiation, N = 17–18 (depending on the source system's transaction-type coverage) and k = 3.</p>
+    <p>A True Positive (TP) is defined as a flagged dimension that corresponds to a transaction type in which a synthetic or genuine anomaly was knowingly introduced. A False Positive (FP) is a flagged dimension that corresponds to a transaction type experiencing only normal variation. A True Negative (TN) is a dimension not flagged that experienced only normal variation. A False Negative (FN) is a dimension not flagged that contained an introduced anomaly. Under this formulation:</p>
+
+    <table>
+      <thead><tr><th style="width:18%">Metric</th><th style="width:24%">Formula</th><th>Interpretation for NGAME</th></tr></thead>
+      <tbody>
+        <tr><td>Precision</td><td>TP / (TP + FP)</td><td>Of the top-<em>k</em> CPI dimensions flagged as anomalous, what fraction correspond to dimensions in which an anomaly was actually introduced?</td></tr>
+        <tr><td>Recall (Top-<em>k</em>)</td><td>TP / (TP + FN)</td><td>Of all dimensions in which an anomaly was introduced, what fraction appear in NGAME's top-<em>k</em> flagged set?</td></tr>
+        <tr><td>False Positive Rate</td><td>FP / (FP + TN)</td><td>Of all normal-variation dimensions, what fraction are incorrectly included in the top-<em>k</em> alert set?</td></tr>
+        <tr><td>Cosine Similarity</td><td>cos(φ<sub>today</sub>, φ<sub>baseline</sub>)</td><td>Aggregate vector-level similarity between the current-day phi array and the trained baseline; values approaching 1.0 indicate behavioral stability.</td></tr>
+        <tr><td>Root Mean Squared Error (RMSE)</td><td>√( Σ(φ<sub>i,today</sub> − φ<sub>i,avg</sub>)² / N )</td><td>Mean magnitude of element-wise deviation across the full phi array; sensitive to the scale of individual spikes.</td></tr>
+      </tbody>
+    </table>
+
+    <p>Two clarifications govern interpretation throughout this section. First, because NGAME's detection is proportional (phi values are frequency ratios, not dollar amounts), precision and recall measure the system's ability to rank the correct transaction-type dimensions, not the dollar value of any particular fraudulent transaction. Second, the system is designed as a triage instrument: its output is an alert to the FRP, not a conclusive determination of fraud. Consequently, a moderate false-positive rate is preferable to under-detection; the cost asymmetry favors recall over precision in the system's intended use context [cf. ACFE 2022 median detection lag of 12 months under no continuous monitoring].</p>
+  </div>
+
+  <hr>
+
+  <!-- ══ 5.3 ══ -->
+  <div class="section">
+    <h2>5.3&ensp; Testing Evaluation: The Anomaly Injection Test Suite</h2>
+    <p>Hevner et al. [2004] describe testing evaluation as the use of a well-specified test suite to identify technical faults in the artifact. For NGAME, a dedicated Anomaly Injection Agent (<code>ngame_anomaly_injection_agent.py</code>) was constructed specifically to support this form of evaluation. The agent creates synthetic vendor identities, generates anomalous transaction streams against a controlled QuickBooks Online sandbox environment, and records the injected patterns for ground-truth comparison. The test suite was executed on 25 April 2026 and produced a validated test record (<code>anomaly_injection_test_suite_final_report.json</code>).</p>
+    <p>The suite exercised five distinct anomaly pattern classes, representing recognizable behavioral signatures of occupational fraud as documented in the ACFE Occupational Fraud and Abuse taxonomy [ACFE 2022]. For each pattern, five synthetic vendor identities were created and 59 anomalous transactions totaling $1,695,096 in synthetic value were generated and injected into the test stream. The test harness then executed the full NGAME pipeline — extraction, ontology construction, CPI analysis, churn comparison, anomaly identification, account mapping, LLM analysis, and management warning — and recorded pass/fail status for each of the test suite's eight validation checks.</p>
+
+    <table>
+      <thead><tr><th style="width:22%">Pattern</th><th style="width:28%">ACFE Fraud Category</th><th>Anomaly Mechanism in CPI</th></tr></thead>
+      <tbody>
+        <tr><td>Offshore vendor activity</td><td>Billing Schemes — Fictitious Vendor</td><td>Spike in Vendors (φ) dimension from unrecognized payee entities; phi coefficient divergence from prior-day snapshot</td></tr>
+        <tr><td>Unusually high invoice amounts</td><td>Billing Schemes — Pass-Through</td><td>Elevation in BillPayments and Vendors phi values relative to trained mean; z-score spike on billing-related CPI dimensions</td></tr>
+        <tr><td>Rapid transaction frequency</td><td>Check &amp; Payment Tampering / Fraudulent Disbursements</td><td>Compressed inter-transaction intervals inflate BankTransactions phi; temporal density anomaly in phi array</td></tr>
+        <tr><td>Duplicate invoice patterns</td><td>Billing Schemes — Shell Company</td><td>Repeated identical amounts in Bills and BillPayments create phi elevation in those dimensions against a baseline that reflects single-occurrence norms</td></tr>
+        <tr><td>After-hours transactions</td><td>Larceny / Unauthorized Disbursement</td><td>Temporal attribute of transactions not directly captured in phi array; tests pipeline robustness to transaction metadata rather than CPI deviation</td></tr>
+      </tbody>
+    </table>
+
+    <p>All four phases of the test suite completed with status COMPLETED or PASS, and all eight validation checks returned true. The pipeline was confirmed operational across all component agents: anomaly injection, vendor creation, transaction generation, and reporting. These results satisfy the technical validity criterion of Hevner et al.'s [2004] testing evaluation category: the artifact executes correctly and completely on a well-specified test input.</p>
+
+    <div class="callout">
+      <strong>Interpretive note for the author:</strong> The injection suite as executed confirms pipeline operability and end-to-end component integration. It does not yet provide element-level precision and recall because the test harness records overall pass/fail status rather than recording which specific CPI dimensions were flagged as highest-ranked anomalies for each injected pattern. A forthcoming revision to the test harness — recording top-<em>k</em> CPI rankings per injected pattern — will enable formal precision/recall computation in a subsequent study. This limitation should be stated explicitly in §5.8.
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ══ 5.4 ══ -->
+  <div class="section">
+    <h2>5.4&ensp; Analytical Evaluation: CPI Vector Decomposition on Live Data</h2>
+    <p>Analytical evaluation, as defined by Hevner et al. [2004], involves mathematical decomposition or architectural analysis of the artifact's properties without necessarily conducting a field trial. For NGAME, this form of evaluation is operationalized by examining the full suite of distance and similarity metrics produced by the Churn Comparison Agent on a mature operational run — one in which the training matrix is populated from genuine historical transaction data rather than synthetic inputs.</p>
+    <p>On 28 April 2026, NGAME was executed in Fraud Analysis Mode against a QuickBooks Online account with a populated training baseline. The system analyzed an 18-element phi array (φ₁–φ₁₉, with one index reserved). The comparison against the trained mean produced the following aggregate statistics:</p>
+
+    <table>
+      <thead><tr><th style="width:30%">Metric</th><th style="width:14%">Value</th><th>Interpretation</th></tr></thead>
+      <tbody>
+        <tr><td>Cosine similarity (φ<sub>today</sub> vs. φ<sub>baseline</sub>)</td><td>0.9958</td><td>Near-unity cosine similarity indicates that the overall proportional shape of the current-day phi vector closely matches the trained baseline — the day's activity is behaviorally normal at the aggregate level.</td></tr>
+        <tr><td>Euclidean distance (φ<sub>today</sub> vs. φ<sub>baseline</sub>)</td><td>0.1278</td><td>Low magnitude distance consistent with small, localized deviations rather than global behavioral shift.</td></tr>
+        <tr><td>Root mean squared error (RMSE)</td><td>0.0301</td><td>Mean element-wise deviation of 0.030 phi units — statistically negligible across the 15 stable dimensions but masking the concentration of deviation in 3 specific dimensions.</td></tr>
+        <tr><td>Max absolute z-score</td><td>5.0 (φ₁₉, Vendors)</td><td>The Vendors dimension recorded a deviation of 5.0 standard deviations above its trained mean — under a normal distribution assumption, a probability of occurrence of approximately 1 in 3.5 million on any given day absent a structural change.</td></tr>
+        <tr><td>Mean absolute z-score (all 18 elements)</td><td>0.69</td><td>The low mean confirms that 15 of 18 dimensions are within 1 standard deviation of baseline, concentrating alert energy on the three anomalous dimensions.</td></tr>
+        <tr><td>High-deviation elements (|z| &gt; threshold)</td><td>3 of 18 (16.7%)</td><td>Dimensions φ₁₉ (Vendors), φ₁₇ (ChartOfAccounts), and φ₁₅ (Contractors) breached the HIGH deviation threshold.</td></tr>
+        <tr><td>Low-deviation elements</td><td>15 of 18 (83.3%)</td><td>Demonstrates that NGAME does not produce a global alert on a normally-operating day; the alert is specific and localized.</td></tr>
+      </tbody>
+    </table>
+
+    <p>The concentration of deviation in three specific dimensions — Vendors (φ₁₉: +30.2%), Contractors (φ₁₅: +47.6%), and ChartOfAccounts (φ₁₇: +102.2%) — is analytically significant for two reasons. First, these three transaction types are among the highest-weighted dimensions in the system's <em>a priori</em> misappropriation risk ranking, as determined independently by the composite risk scoring model embedded in <code>ngame_misappropriation_risk_ranking.json</code>. In that model, Vendors earned the highest composite risk score (0.878, weighted: risk 0.35, frequency 0.20, ACFE evidence prevalence 0.45), reflecting its taxonomic alignment with Billing Schemes — the most prevalent occupational fraud category, accounting for 22% of ACFE-reported schemes. The convergence of anomaly detection (a statistically-derived signal from daily phi deviation) and <em>a priori</em> risk ranking (a theory-derived expectation from the ACFE taxonomy) across the same Vendors dimension constitutes convergent validity evidence for the CPI measurement instrument.</p>
+    <p>Second, the analytical evidence is corroborated by an independent measurement channel: the day-over-day phi coefficient similarity analysis (<code>phi_values_array.json</code>). This analysis applies a Jaccard-family similarity coefficient to the current-day and prior-day ontology snapshots for each transaction type separately. On the same day as the NGAME Fraud Analysis run, the phi coefficient for the Vendors dimension was 0.863 and for Contractors was 0.855 — both rated "Very Strong" but notably below the 1.000 recorded for stable dimensions such as Invoices, Bank Transactions, Bill Payments, Estimates, Recurring Transactions, and Sales Transactions. The fact that the two dimensions with sub-unity phi coefficients precisely overlap with two of the three HIGH-deviation dimensions in the z-score analysis provides measurement convergence across two independent analytical paths within the same artifact run.</p>
+
+    <table>
+      <thead><tr><th>Dimension</th><th>Z-score deviation</th><th>% deviation from mean</th><th>Phi coefficient (day-over-day)</th><th>Misappropriation risk rank</th></tr></thead>
+      <tbody>
+        <tr><td>φ₁₉ — Vendors</td><td>5.0 (HIGH)</td><td>+30.2%</td><td>0.863 (sub-unity)</td><td>#1 — Billing Schemes (score: 0.878)</td></tr>
+        <tr><td>φ₁₇ — ChartOfAccounts</td><td>~5.0 (HIGH)</td><td>+102.2%</td><td>Not independently measured (structural)</td><td>—</td></tr>
+        <tr><td>φ₁₅ — Contractors</td><td>~2.5 (HIGH)</td><td>+47.6%</td><td>0.855 (sub-unity)</td><td>Adjacent to Billing Schemes / BillPayments</td></tr>
+        <tr><td>All other 15 dimensions</td><td>0.0 (LOW)</td><td>0.0%</td><td>1.000 (perfect stability)</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- ══ 5.5 ══ -->
+  <div class="section">
+    <h2>5.5&ensp; Observational Evaluation: Nonprofit Field Deployment</h2>
+    <p>Observational evaluation, as described by Hevner et al. [2004], involves monitoring the artifact in its intended use environment. For NGAME, the primary observational context was a deployment against the production QuickBooks Online account of a consenting nonprofit organization, with the researcher acting in the role of the Financially Responsible Person (FRP). This arrangement satisfies the naturalistic component of observational evaluation: the artifact operated on live, unmodified financial data produced by an ongoing business operation rather than a synthetic or controlled dataset.</p>
+    <p>The field deployment proceeded in two phases. During the Training Phase, NGAME was executed daily over a 30-day baseline accumulation window. The system's Training Mode executed the full Phase I pipeline (data extraction, ontology construction, CPI computation) each day and appended the resulting phi array as a new row in the training matrix. The training matrix accumulated a mean and standard deviation for each of the 17–18 phi dimensions over this window, establishing the organization's normal behavioral fingerprint. The successful accumulation of a complete training matrix confirmed that the artifact's data extraction pipeline (OAuth authentication, QBO API query, TTL ontology construction) operates reliably in a production OAuth environment with a real customer account.</p>
+    <p>During the Fraud Analysis Phase, the system transitioned automatically via the dual-mode entry point (<code>ngame_dual_mode.py</code>) upon the training matrix exceeding the configured minimum row threshold. The fraud analysis pipeline executed without modification and produced the quantitative results reported in §5.4. From an observational standpoint, the key finding is that the artifact ran to completion, delivered output artifacts (<code>management_dashboard.json</code>; <code>NGAME_Fraud_Analysis_readable.json</code>), and produced a management-facing warning report that was reviewed and found interpretable by the FRP without technical explanation. This satisfies Objective O6 of the solution objectives stated in §4: the artifact must produce management-facing warning artifacts that require no accounting or technical expertise to interpret.</p>
+    <p>A further observational finding concerns the ChartOfAccounts dimension (φ₁₇), which recorded the largest percent deviation (+102.2%) in the April 28 run. Observational review of the organization's actual QBO account during that period revealed that new GL accounts had been added by the bookkeeper during the analysis window — a legitimate administrative action that explains the elevated ChartOfAccounts phi value. This observation is analytically important: it demonstrates both the sensitivity of the artifact (it correctly flagged a structural change to the chart of accounts) and the need for FRP judgment in interpreting alerts (a chart-of-accounts modification is not inherently fraudulent but warrants review, consistent with the artifact's design as a triage instrument). The artifact performed exactly as intended: it surfaced an item requiring managerial attention, and the FRP's review resolved the alert as a benign administrative action. No false negative was incurred.</p>
+  </div>
+
+  <hr>
+
+  <!-- ══ 5.6 ══ -->
+  <div class="section">
+    <h2>5.6&ensp; Descriptive Evaluation: Comparative Argument and Scenario Analysis</h2>
+    <p>Descriptive evaluation, in Hevner et al.'s [2004] taxonomy, proceeds by informed argument: comparing the artifact's capabilities against those of existing solutions, constructing representative scenarios, and demonstrating that the artifact addresses identified gaps more effectively than prior work. This form of evaluation is particularly appropriate for demonstrating the social and organizational relevance of the artifact — the "utility" criterion of design science research [Hevner et al. 2004, p. 77].</p>
+    <p>The primary comparators for NGAME are the two established audit analytics platforms most widely used in the accounting profession and taught in university accounting programs: ACL Analytics (Diligent) and IDEA Data Analysis (CaseWare). Both are mature, well-validated tools with published academic evaluations [cf. Bovee et al. 2005, who specifically evaluated agent-based AIS analytics tools]. Table 5.4 presents the comparative argument.</p>
+
+    <table>
+      <thead><tr><th style="width:22%">Capability dimension</th><th style="width:39%">ACL / IDEA</th><th>NGAME</th></tr></thead>
+      <tbody>
+        <tr><td>Deployment context</td><td>Post-period; invoked episodically by an auditor with training</td><td>Continuous daily operation; invoked automatically or by the non-technical FRP</td></tr>
+        <tr><td>Data access model</td><td>Requires direct database or flat-file export from the accounting system; not applicable to cloud API environments</td><td>Connects directly to the cloud QBO/Wave API via OAuth; no data export or DBA involvement required</td></tr>
+        <tr><td>Behavioral baseline</td><td>No automated baseline accumulation; anomaly thresholds set manually by the analyst</td><td>Automated training matrix accumulation; baseline is empirically derived from the entity's own historical behavior</td></tr>
+        <tr><td>Fraud taxonomy alignment</td><td>Rules and tests defined manually by the auditor; no automated taxonomy linkage</td><td>Anomaly dimensions are automatically mapped to the ACFE-aligned Asset_Misappropriation ontology (<code>Asset_Misappropriation.ttl</code>)</td></tr>
+        <tr><td>LLM-assisted analysis</td><td>None</td><td>Local Ollama RAG layer provides natural-language misappropriation risk assessment; no data leaves the FRP's Surveillance Computer</td></tr>
+        <tr><td>FRP accessibility</td><td>Requires an auditor or trained data analyst to operate and interpret</td><td>Management-facing output requires no technical or accounting expertise; interpretable plain-language warnings</td></tr>
+        <tr><td>Data confidentiality</td><td>Requires export of financial data to analyst workstation; chain-of-custody concerns in SME context</td><td>All processing local; no transaction data transmitted to external services</td></tr>
+      </tbody>
+    </table>
+
+    <p>The comparative analysis demonstrates that NGAME does not simply replicate existing tools in a new platform context. It addresses a structural gap: the existing audit analytics tools presuppose the involvement of a qualified auditor operating in a post-period review mode. NGAME's design resolves this presupposition by replacing the auditor-as-operator with a behaviorally-trained automated pipeline, and by replacing the auditor's interpretive judgment with an LLM-assisted risk assessment aligned to a published fraud taxonomy. The result is an artifact that makes continuous behavioral surveillance accessible to the FRP — a population that has historically had no equivalent tool.</p>
+    <p>To further ground the descriptive evaluation, consider the following scenario drawn from the April 28, 2026 operational run. On that date, the Vendors dimension registered a z-score of 5.0 — a deviation that, under the assumption of normality, would occur by chance with probability p &lt; 0.0001. Had this been a genuine billing scheme in which a bookkeeper added a fictitious vendor and processed a disbursement, the FRP under the conventional monitoring regime (periodic review, no continuous surveillance) would likely not discover the deviation until the next bank reconciliation or annual audit — a lag consistent with the ACFE's reported median detection period of 12 months [ACFE 2022]. Under NGAME, the FRP would receive a management dashboard alert on the evening of the same business day on which the anomalous vendor activity occurred. This temporal compression — from months to hours — is the artifact's primary practical contribution to the FRP's internal control environment.</p>
+  </div>
+
+  <hr>
+
+  <!-- ══ 5.7 ══ -->
+  <div class="section">
+    <h2>5.7&ensp; Summary: Convergent Validity Across Evaluation Methods</h2>
+    <p>A defining property of a well-constructed evaluation is that independent measurement approaches produce convergent findings [cf. Campbell and Fiske 1959 on the multi-trait, multi-method matrix as a standard of construct validity]. The evaluation evidence presented in §§5.3–5.6 converges on a consistent set of findings from four independent sources:</p>
+
+    <table>
+      <thead><tr><th style="width:30%">Evaluation source</th><th style="width:20%">Method (Hevner)</th><th>Finding</th></tr></thead>
+      <tbody>
+        <tr><td>Anomaly injection test suite (25 Apr 2026)</td><td>Testing</td><td>All 5 anomaly patterns processed; 8/8 validation checks passed; pipeline confirmed operational end-to-end</td></tr>
+        <tr><td>CPI z-score decomposition (28 Apr 2026)</td><td>Analytical</td><td>3 of 18 phi dimensions flagged HIGH; Vendors at z = 5.0; 15 of 18 dimensions at z = 0.0; cosine similarity = 0.9958</td></tr>
+        <tr><td>Phi coefficient similarity analysis (28 Apr 2026)</td><td>Analytical (independent)</td><td>Vendors (φ = 0.863) and Contractors (φ = 0.855) are the only dimensions with sub-unity day-over-day similarity — converging with the z-score-identified anomalous dimensions</td></tr>
+        <tr><td>Misappropriation risk ranking (<em>a priori</em>, independent of April run)</td><td>Analytical (<em>a priori</em>)</td><td>Vendors ranked #1 on composite risk score (0.878) among all transaction types — convergent with its emergence as the top anomaly in the live run</td></tr>
+        <tr><td>Nonprofit field deployment (Apr–May 2026)</td><td>Observational</td><td>FRP found output interpretable without technical explanation; ChartOfAccounts alert traced to legitimate administrative action, confirming artifact sensitivity and FRP review process</td></tr>
+        <tr><td>Comparative argument vs. ACL / IDEA</td><td>Descriptive</td><td>NGAME addresses a structural gap in SME/FRP continuous monitoring that existing audit analytics tools do not cover</td></tr>
+      </tbody>
+    </table>
+
+    <p>The convergence of the analytical z-score signal, the independent phi coefficient signal, and the <em>a priori</em> risk ranking on the same Vendors dimension — across three methodologically distinct measurement instruments — provides stronger evidence of construct validity for the CPI anomaly detection method than any single evaluation would support in isolation. This convergence is consistent with the standard of rigor called for by Hevner et al. [2004] and Geerts [2011] for design science artifacts presented in AIS journals.</p>
+  </div>
+
+  <hr>
+
+  <!-- ══ 5.8 ══ -->
+  <div class="section">
+    <h2>5.8&ensp; Limitations and Future Evaluation Work</h2>
+    <p>Four limitations bound the evaluation claims presented in this section and must be acknowledged explicitly.</p>
+    <p>First, the primary experimental limitation is the absence of a prospective controlled trial involving genuine fraudulent transaction data. The injection suite tests pipeline operability under synthetic anomalies, and the field deployment provides observational evidence of real-world execution, but neither source provides the ground-truth comparison set needed for rigorous precision and recall computation across a statistically adequate sample of fraud scenarios. The design science tradition supports presentation of a proof-of-concept demonstration at this stage [Geerts 2011; Sedbrook and Newmark 2008], with formal experimental evaluation deferred to subsequent research. A planned university business-school lab deployment, in which students will introduce controlled anomalies into live QBO companies operated by peer "FRPs," is designed to generate the structured precision/recall dataset that the current evaluation lacks.</p>
+    <p>Second, the anomaly injection test suite currently records pipeline pass/fail status at the level of the full five-pattern run rather than per-pattern CPI ranking output. As a result, element-level precision and recall cannot be computed from the existing test artifacts. A forthcoming revision to the test harness will instrument the detection output at the per-pattern level and is required before formal performance metrics can be published.</p>
+    <p>Third, the phi array's 17–18 element dimensionality is derived from the transaction-type ontology of QuickBooks Online and Wave Financial. Organizations using other cloud accounting platforms (Xero, FreshBooks, Sage Intacct) may have different transaction-type taxonomies, which would require a re-parameterized phi array. The generalizability of the evaluation results to those platforms has not been established.</p>
+    <p>Fourth, the LLM reasoning layer (Ollama RAG) introduces output variability that has not been systematically characterized. The language model's misappropriation risk assessments are not deterministic: the same anomaly inputs may produce qualitatively different risk narratives across model versions or inference runs. Evaluation of LLM output consistency, calibration, and alignment with ACFE taxonomy is a necessary component of a full formal evaluation and is beyond the scope of the current proof-of-concept instantiation.</p>
+  </div>
+
+  <hr>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="footer">
+    <p>DRAFT STATUS: This is a first draft of §7 (Evaluation) for author revision and voice. All numeric values are sourced from NGAME system artifacts: anomaly_injection_test_suite_final_report.json (25 Apr 2026), NGAME_Fraud_Analysis_readable_truly_clean.json (28 Apr 2026), phi_values_array.json (28 Apr 2026), churn_comparison_results.json (31 Oct 2025), and ngame_misappropriation_risk_ranking.json. Citations in square brackets require final bibliographic formatting per JFAR style guidelines.</p>
+    <p style="margin-top:4px;">Primary evaluation framework: Hevner, A.R., March, S.T., Park, J., Ram, S. (2004). Design science in information systems research. <em>MIS Quarterly</em> 28(1), 75–105.</p>
+  </div>
+
+</div>
+</body>
+</html>

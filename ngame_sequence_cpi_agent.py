@@ -45,15 +45,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Canonical 18-element ordering — must stay aligned with NGameCpiAnalysisAgent
-STANDARD_TRANSACTION_TYPES = [
-    'Customers', 'Recurring_payments', 'Invoices', 'Payments', 'Time_Activities',
-    'Bills', 'Bill_Payments', 'Expenses', 'Bank_Transactions', 'Sales_transactions',
-    'Products', 'PurchaseOrders', 'Recurring_Transactions', 'Contractors',
-    'Mileage', 'ChartOfAccounts', 'EmployeePayroll',
-    'Vendors',          # φ18 — high-risk fraud hot-spot
-]
-CPI_ARRAY_SIZE = 18
+from ngame_transaction_types import STANDARD_TRANSACTION_TYPES, CPI_ARRAY_SIZE
 
 
 class NGameSequenceCpiAgent:

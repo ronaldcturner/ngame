@@ -1,0 +1,123 @@
+{
+  "success": true,
+  "cc_flags": [
+    {
+      "uri": "http://www.semanticweb.org/quickbooks/expenses/144",
+      "tx_class": "Expenses",
+      "is_credit": false,
+      "vendor_name": "",
+      "gl_account": "Mastercard",
+      "amount": 34.0,
+      "date": "2025-04-21",
+      "memo": "",
+      "vendor_class": {
+        "matched": false,
+        "keyword": "",
+        "actual_category": "Unknown",
+        "risk_level": "UNKNOWN",
+        "confidence": 0.0
+      },
+      "alerts": [
+        {
+          "dimension": "missing_vendor_name",
+          "risk": "MEDIUM",
+          "detail": "CC charge has no vendor name \u2014 cannot classify actual use"
+        }
+      ],
+      "overall_risk": "MEDIUM",
+      "alert_count": 1
+    },
+    {
+      "uri": "http://www.semanticweb.org/quickbooks/expenses/139",
+      "tx_class": "Expenses",
+      "is_credit": false,
+      "vendor_name": "",
+      "gl_account": "Mastercard",
+      "amount": 900.0,
+      "date": "2025-04-10",
+      "memo": "Monthly Payment",
+      "vendor_class": {
+        "matched": false,
+        "keyword": "",
+        "actual_category": "Unknown",
+        "risk_level": "UNKNOWN",
+        "confidence": 0.0
+      },
+      "alerts": [
+        {
+          "dimension": "missing_vendor_name",
+          "risk": "MEDIUM",
+          "detail": "CC charge has no vendor name \u2014 cannot classify actual use"
+        }
+      ],
+      "overall_risk": "MEDIUM",
+      "alert_count": 1
+    },
+    {
+      "uri": "http://www.semanticweb.org/quickbooks/expensetransaction/144",
+      "tx_class": "ExpenseTransaction",
+      "is_credit": false,
+      "vendor_name": "",
+      "gl_account": "Mastercard",
+      "amount": 34.0,
+      "date": "2025-04-21",
+      "memo": "",
+      "vendor_class": {
+        "matched": false,
+        "keyword": "",
+        "actual_category": "Unknown",
+        "risk_level": "UNKNOWN",
+        "confidence": 0.0
+      },
+      "alerts": [
+        {
+          "dimension": "missing_vendor_name",
+          "risk": "MEDIUM",
+          "detail": "CC charge has no vendor name \u2014 cannot classify actual use"
+        }
+      ],
+      "overall_risk": "MEDIUM",
+      "alert_count": 1
+    },
+    {
+      "uri": "http://www.semanticweb.org/quickbooks/expensetransaction/139",
+      "tx_class": "ExpenseTransaction",
+      "is_credit": false,
+      "vendor_name": "",
+      "gl_account": "Mastercard",
+      "amount": 900.0,
+      "date": "2025-04-10",
+      "memo": "Monthly Payment",
+      "vendor_class": {
+        "matched": false,
+        "keyword": "",
+        "actual_category": "Unknown",
+        "risk_level": "UNKNOWN",
+        "confidence": 0.0
+      },
+      "alerts": [
+        {
+          "dimension": "missing_vendor_name",
+          "risk": "MEDIUM",
+          "detail": "CC charge has no vendor name \u2014 cannot classify actual use"
+        }
+      ],
+      "overall_risk": "MEDIUM",
+      "alert_count": 1
+    }
+  ],
+  "structuring_flags": [],
+  "summary": {
+    "total_cc_transactions": 28,
+    "total_flagged": 4,
+    "critical_count": 0,
+    "high_count": 0,
+    "medium_count": 4,
+    "low_count": 0,
+    "structuring_flags": 0,
+    "top_flagged_vendors": [],
+    "total_at_risk_dollars": 0,
+    "highest_risk_level": "MEDIUM"
+  },
+  "scan_timestamp": "2026-07-08T13:57:19.858622"
+}

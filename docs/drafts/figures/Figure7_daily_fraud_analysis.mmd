@@ -1,0 +1,32 @@
+%% Figure 7' — NGAME Daily Fraud Analysis (corrected: z-score, 18 types, wCPI/SCPI/CC layers)
+flowchart TD
+    S1["Step 1 — End of workday<br/>(bookkeeper signed out)"]
+    DE["Step 2 — Data Extraction Agent<br/>QBO → Today.ttl (18 types)"]
+    INJ["Anomaly Injection<br/>(optional, demo/test)"]
+    CCW["Step 2c — Credit-Card Watch<br/>personal-use / structuring<br/>(independent of matrix)"]
+    CPI["Step 2 — CPI Analysis Agent<br/>Jaccard CPI array (18)<br/>+ dollar-weighted wCPI array"]
+    BUF["append to CPI Rolling Buffer"]
+    SCPI["Step 2b — Sequence CPI (SCPI)<br/>geom-mean over window L<br/>z_seq = (SCPI − μ) / (σ / √L)<br/>active when buffer ≥ L"]
+    CC["Step 3 — Churn Comparison<br/>z = (today − μ) / σ vs Training Matrix<br/>dollar z = (wCPI − μ_w) / σ_w<br/>bands |z|>3 HIGH, |z|>2 MEDIUM → composite alarm"]
+    RANK["Step 4 — Rank by |z-score|"]
+    AID["Step 5 — Top-3 Anomaly Identification"]
+    AM["Account Mapping<br/>top-3 types → Chart of Accounts"]
+    LLM["Step 6 — LLM Analysis (RAG)<br/>Ollama llama3.1:8b +<br/>Asset_Misappropriation.ttl"]
+    MAP["Deterministic anchor<br/>ACFE scheme priors<br/>(reproducible cross-check)"]
+    MW["Step 7 — Management Warning<br/>risk level + confidence<br/>dashboard / email"]
+    FRP["FRP"]
+
+    S1 --> DE
+    INJ -. test .-> DE
+    DE --> CCW
+    DE --> CPI
+    CPI --> BUF --> SCPI
+    CPI --> CC
+    SCPI --> CC
+    CC --> RANK --> AID --> AM
+    AM --> LLM
+    AM --> MAP
+    LLM --> MW
+    MAP --> MW
+    CCW --> MW
+    MW --> FRP

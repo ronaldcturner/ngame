@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NGAME — V1.1 Feature &amp; Fix Backlog</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 15px; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #ffffff;
+    color: #1a1a1a;
+    line-height: 1.6;
+  }
+  .page { max-width: 960px; margin: 0 auto; padding: 40px 32px 72px; }
+
+  h1 { font-size: 1.75rem; font-weight: 700; line-height: 1.25; margin-bottom: 10px; }
+  h2 { font-size: 1.1rem;  font-weight: 700; line-height: 1.3;  margin-bottom: 6px; }
+  p  { font-size: 0.875rem; margin-bottom: 0; color: #1a1a1a; }
+
+  .section-label {
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: #2563eb; margin-bottom: 6px;
+  }
+  .subtitle { font-size: 0.875rem; color: #555; }
+
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 28px 0; }
+
+  /* Pills */
+  .pills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+  .pill {
+    font-size: 0.74rem; font-weight: 500;
+    padding: 3px 10px; border-radius: 20px;
+    border: 1px solid #d0d0d0; color: #333; background: #f5f5f5;
+  }
+  .pill-warn { border-color: #f5a623; color: #7c4a00; background: #fff8ee; }
+
+  /* Callout */
+  .callout {
+    background: #eef4fb; border-left: 4px solid #3b82f6;
+    border-radius: 3px; padding: 12px 16px;
+    font-size: 0.855rem; color: #1d3a5f; line-height: 1.65;
+  }
+  .callout-warn {
+    background: #fff8ee; border-left: 4px solid #f5a623;
+    color: #5c3d00;
+  }
+  .scope-in  { color: #15803d; font-weight: 600; white-space: nowrap; }
+  .scope-out { color: #b45309; font-weight: 600; white-space: nowrap; }
+  .scope-partial { color: #7c4a00; font-weight: 600; white-space: nowrap; }
+  .sub-block { font-size: 0.82rem; color: #444; margin-top: 8px; line-height: 1.55; }
+  .sub-block strong { color: #1a1a1a; }
+  ul.compact { font-size: 0.82rem; margin: 6px 0 0 18px; color: #444; }
+  ul.compact li { margin-bottom: 3px; }
+
+  /* Category block */
+  .category { display: flex; flex-direction: column; gap: 10px; }
+  .cat-summary { font-size: 0.855rem; color: #555; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 0.825rem; margin-top: 6px; }
+  thead th {
+    background: #f0f0f0; font-weight: 600;
+    text-align: left; padding: 8px 10px;
+    border: 1px solid #d4d4d4;
+  }
+  tbody td { padding: 7px 10px; border: 1px solid #d4d4d4; vertical-align: top; }
+  tbody tr:nth-child(even) td { background: #fafafa; }
+  td.id-col { font-weight: 700; color: #2563eb; white-space: nowrap; width: 42px; }
+  td.title-col { font-weight: 600; width: 22%; }
+  td.source-col { color: #666; font-size: 0.79rem; width: 20%; }
+
+  /* Bug category highlight */
+  .cat-warn thead th { background: #fff8ee; }
+  .cat-warn td.id-col { color: #b45309; }
+
+  /* Footer */
+  .footer { font-size: 0.8rem; color: #888; }
+  .footer p + p { margin-top: 4px; }
+
+  /* Print */
+  @media print {
+    body { font-size: 10.5pt; }
+    h1   { font-size: 16pt; }
+    h2   { font-size: 12pt; }
+    .page { padding: 12px 0; }
+    thead th { background: #e8e8e8 !important; -webkit-print-color-adjust: exact; }
+    tbody tr:nth-child(even) td { background: #f5f5f5 !important; -webkit-print-color-adjust: exact; }
+    .callout { background: #eef4fb !important; -webkit-print-color-adjust: exact; }
+    .callout-warn { background: #fff3d6 !important; -webkit-print-color-adjust: exact; }
+    .cat-warn thead th { background: #fff3d6 !important; -webkit-print-color-adjust: exact; }
+    hr { margin: 16px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="section-label">NGAME — Product Backlog</div>
+  <h1>V1.1 Feature &amp; Fix Backlog</h1>
+  <p class="subtitle">Compiled from: project documentation, README Known Risks, the DSRM Outline canvas, the DSRM Evaluation draft, the Deployment Plan chat, the NGAME Premium Multi-Day Window outline, and the auditor use-case scope review (June 2026). Reflects the state of the frozen V1.0 codebase (May 2026). No V1.0 code or documentation was modified to produce this list.</p>
+  <div class="pills">
+    <span class="pill">24 build items (A–F)</span>
+    <span class="pill">G: Scope &amp; non-goals</span>
+    <span class="pill">A: Pipeline (5)</span>
+    <span class="pill">B: Evaluation (4)</span>
+    <span class="pill">C: Dashboard UX (2)</span>
+    <span class="pill">D: Premium (5)</span>
+    <span class="pill">E: Deployment (5)</span>
+    <span class="pill pill-warn">F: Bugs (3)</span>
+  </div>
+
+  <br>
+
+  <div class="callout">
+    This is a reference list, not a prioritized sprint plan. Items in <strong>Category F (bugs)</strong> have the highest urgency for any V1.1 work. Items in <strong>Category B (evaluation infrastructure)</strong> are prerequisites for the JFAR paper revision. <strong>Category G</strong> records product positioning, auditor non-goals, and Intuit relationship guardrails — consult G before adding auditor-facing features. All other categories are sequenced by product roadmap priorities to be determined.
+  </div>
+
+  <hr>
+
+  <!-- CATEGORY A -->
+  <div class="category">
+    <h2>A — Statistical Pipeline Completions</h2>
+    <p class="cat-summary">Detection channels designed in V1.0 but not yet wired into the z-score pipeline or FRP output.</p>
+    <table>
+      <thead><tr><th style="width:44px">ID</th><th style="width:22%">Item</th><th>Detail</th><th style="width:20%">Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="id-col">A1</td>
+          <td class="title-col">wCPI — integrate into z-score pipeline</td>
+          <td>wCPI is designed and documented (Churn Walkthrough) but does not currently drive the statistical z-score vector. Needs parameterization, baseline accumulation in the training matrix, and threshold calibration alongside the existing CPI phi array.</td>
+          <td class="source-col">Churn Walkthrough; this chat</td>
+        </tr>
+        <tr>
+          <td class="id-col">A2</td>
+          <td class="title-col">wCPI — surface as distinct FRP-facing output on dashboard</td>
+          <td>Once A1 is complete, the management dashboard should display a wCPI anomaly row separate from the CPI row so the FRP can distinguish "many records moved" from "large dollars moved."</td>
+          <td class="source-col">FRP Dashboard Guide; this chat</td>
+        </tr>
+        <tr>
+          <td class="id-col">A3</td>
+          <td class="title-col">Property mutations — instrument in detection pipeline</td>
+          <td>Property mutations (field-level diffs on persisting record IDs: e.g. invoice amount changed from $1,200 → $12,000 on same ID) are documented as supplementary and do not drive the z-score vector. Needs a mutation-count or mutation-magnitude metric added to the phi array or as a parallel signal.</td>
+          <td class="source-col">Churn Walkthrough ("supplementary — do not currently drive z-score vector")</td>
+        </tr>
+        <tr>
+          <td class="id-col">A4</td>
+          <td class="title-col">Property mutations — surface on FRP dashboard</td>
+          <td>Once A3 is complete, surface <strong>anonymous structural diffs</strong> (field yesterday → today on same record ID) as a supplementary triage panel — not an Audit Log substitute. Panel must point FRP to QBO Audit Log for attribution and authoritative detail. Does not close the "who changed it" gap (see C1 / G-N4).</td>
+          <td class="source-col">FRP Dashboard Guide ("What NGAME does not show"); this chat</td>
+        </tr>
+        <tr>
+          <td class="id-col">A5</td>
+          <td class="title-col">Formal sensitivity analysis of z-score thresholds and training window size</td>
+          <td>Systematically vary alert threshold (|z| = 2.0, 2.5, 3.0) and training window size (N = 20, 30, 60 days) and record precision/recall/FPR. Required for a defensible threshold recommendation in the JFAR paper and for FRP-configurable sensitivity in a future premium tier.</td>
+          <td class="source-col">DSRM Evaluation §5.8; DSRM Outline §5.1</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- CATEGORY B -->
+  <div class="category">
+    <h2>B — Evaluation Infrastructure</h2>
+    <p class="cat-summary">Items needed to produce rigorous precision/recall evidence for the JFAR paper and future publications.</p>
+    <table>
+      <thead><tr><th style="width:44px">ID</th><th style="width:22%">Item</th><th>Detail</th><th style="width:20%">Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="id-col">B1</td>
+          <td class="title-col">Revise injection test harness to record per-pattern CPI rankings</td>
+          <td>The current injection suite records overall pass/fail status for the 5-pattern run as a whole. The harness must be revised to log which specific top-<em>k</em> CPI dimensions were flagged for each individual injected pattern, enabling element-level precision and recall computation.</td>
+          <td class="source-col">DSRM Evaluation §5.8 Limitation #2; this chat</td>
+        </tr>
+        <tr>
+          <td class="id-col">B2</td>
+          <td class="title-col">University business-school lab deployment for precision/recall dataset</td>
+          <td>Planned deployment where students introduce controlled anomalies into live QBO companies and peer-FRPs run NGAME. Produces the structured ground-truth dataset needed for formal experimental evaluation per Hevner et al. (2004). Also validates the multi-company FRP use case.</td>
+          <td class="source-col">DSRM Evaluation §5.8 Limitation #1; DSRM Outline §4.3</td>
+        </tr>
+        <tr>
+          <td class="id-col">B3</td>
+          <td class="title-col">LLM output consistency and calibration evaluation</td>
+          <td>The Ollama RAG layer is non-deterministic. Evaluate output consistency across model versions and inference runs; assess calibration against ACFE taxonomy labels; document acceptable variability bounds. Required before LLM output can be cited as evaluated evidence in a journal paper.</td>
+          <td class="source-col">DSRM Evaluation §5.8 Limitation #4</td>
+        </tr>
+        <tr>
+          <td class="id-col">B4</td>
+          <td class="title-col">Multi-platform generalizability testing</td>
+          <td>The phi array dimensionality is derived from QBO/Wave transaction-type ontologies. Test and document phi array re-parameterization for Xero, FreshBooks, and Sage Intacct. Each platform may require a different N-element array.</td>
+          <td class="source-col">DSRM Evaluation §5.8 Limitation #3</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- CATEGORY C -->
+  <div class="category">
+    <h2>C — FRP Dashboard / UX Gaps</h2>
+    <p class="cat-summary">Documented gaps in the current FRP-facing output that require future instrumentation.</p>
+    <table>
+      <thead><tr><th style="width:44px">ID</th><th style="width:22%">Item</th><th>Detail</th><th style="width:20%">Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="id-col">C1</td>
+          <td class="title-col">"Who changed a record" — document gap, do not build</td>
+          <td>The FRP Dashboard Guide lists this as a gap: NGAME cannot identify which user made a change; the FRP is directed to QBO Audit Log. <strong>Intentional non-goal (Category G):</strong> do not pull Audit Log API data or build user-attribution into NGAME — that would compete with Intuit's Audit Log. Keep the handoff to QBO browser review explicit in FRP docs.</td>
+          <td class="source-col">FRP Dashboard Guide; auditor scope review (June 2026)</td>
+        </tr>
+        <tr>
+          <td class="id-col">C2</td>
+          <td class="title-col">Slow-burn alert not incorporated into Overall Risk badge</td>
+          <td>The FRP Dashboard Guide notes "Read Multi-Day Pattern Alert even when risk is LOW" — implying the Overall Risk badge does not yet incorporate the multi-day signal. The composite risk score should weight multi-day pattern alert severity into the top-line Overall Risk badge.</td>
+          <td class="source-col">FRP Dashboard Guide</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- CATEGORY D -->
+  <div class="category">
+    <h2>D — Premium / Commercial Features</h2>
+    <p class="cat-summary">Features scoped and documented for a subscription tier in NGAME_PREMIUM_MultiDay_Window_Dashboard_UI_Outline.md.</p>
+    <table>
+      <thead><tr><th style="width:44px">ID</th><th style="width:22%">Item</th><th>Detail</th><th style="width:20%">Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="id-col">D1</td>
+          <td class="title-col">Multi-Day Window — consultant-settable lookback L (P1)</td>
+          <td>Consultant sets sequence_window in ngame_ui_settings.json; no FRP UI yet. First step in the phased delivery toward a premium FRP control.</td>
+          <td class="source-col">Premium Outline §8 P1</td>
+        </tr>
+        <tr>
+          <td class="id-col">D2</td>
+          <td class="title-col">Multi-Day Window — FRP dropdown on dashboard (P2)</td>
+          <td>FRP can choose lookback L from {3,4,5,6,7,10} business days on the dashboard. Requires /api/settings/sequence-window endpoint, premium_active flag, and dashboard selector control. Non-premium installs see the selector disabled.</td>
+          <td class="source-col">Premium Outline §8 P2</td>
+        </tr>
+        <tr>
+          <td class="id-col">D3</td>
+          <td class="title-col">Subscription licensing — local license file (P3)</td>
+          <td>ngame_license.json written at install time by consultant. Controls premium_active flag. Graceful degradation to L=5 on expiry with on-screen upgrade message.</td>
+          <td class="source-col">Premium Outline §6</td>
+        </tr>
+        <tr>
+          <td class="id-col">D4</td>
+          <td class="title-col">Subscription licensing — online validation API (P3)</td>
+          <td>Periodic validation against a NGAME subscription API. Flagged in the Premium outline as "future." Required before commercial multi-customer deployment.</td>
+          <td class="source-col">Premium Outline §6</td>
+        </tr>
+        <tr>
+          <td class="id-col">D5</td>
+          <td class="title-col">Per-organization defaults from cloud admin portal (P4)</td>
+          <td>Cloud-side configuration so Ron can set default sequence_window and tier per deployed organization without touching the local install.</td>
+          <td class="source-col">Premium Outline §8 P4</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- CATEGORY E -->
+  <div class="category">
+    <h2>E — Deployment &amp; Distribution</h2>
+    <p class="cat-summary">Infrastructure items required for commercial rollout and university lab scale.</p>
+    <table>
+      <thead><tr><th style="width:44px">ID</th><th style="width:22%">Item</th><th>Detail</th><th style="width:20%">Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="id-col">E1</td>
+          <td class="title-col">Packaged one-click installer (macOS .pkg / Windows .exe)</td>
+          <td>Bundles Python environment, NGAME codebase, dependencies, and app credentials (QBO_CLIENT_ID / QBO_CLIENT_SECRET as env vars). FRP runs one installer; no command-line exposure. Required before university lab deployment and before serving customers beyond the trusted non-profit field test.</td>
+          <td class="source-col">Deployment Plan chat</td>
+        </tr>
+        <tr>
+          <td class="id-col">E2</td>
+          <td class="title-col">Intuit production app review / certification</td>
+          <td>Required before NGAME can connect to more than ~25 production QBO companies. Submit through Developer Portal App Assessment. Timeline: 2–6 weeks. Must be initiated before university lab launch or any multi-customer commercial deployment.</td>
+          <td class="source-col">Deployment Plan chat</td>
+        </tr>
+        <tr>
+          <td class="id-col">E3</td>
+          <td class="title-col">Faculty multi-tenant dashboard (university lab)</td>
+          <td>A single pane of glass for the course instructor showing anomaly summaries for all N student companies simultaneously. NGAME V1.0 is one-company-per-installation. Multi-tenant requires N OAuth tokens and a supervisor dashboard layer.</td>
+          <td class="source-col">DSRM Outline §4.3; Deployment Plan chat</td>
+        </tr>
+        <tr>
+          <td class="id-col">E4</td>
+          <td class="title-col">Per-student config scoping for shared lab computers</td>
+          <td>If students share lab machines (not personal laptops), each quickbooks_config.json must live in a student-specific directory so one student's tokens do not overwrite another's. Must be built into the installer's directory structure.</td>
+          <td class="source-col">Deployment Plan chat</td>
+        </tr>
+        <tr>
+          <td class="id-col">E5</td>
+          <td class="title-col">CSV import template set for university lab company setup</td>
+          <td>Faculty-maintained CSV templates for Chart of Accounts (nonprofit structure), vendor/donor list, and seed transaction history. Allows students to import a "starter company" in ~15 minutes. Replaces the unavailable QBB restore path — QBO does not accept QBB files.</td>
+          <td class="source-col">Deployment Plan chat</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- CATEGORY F -->
+  <div class="category">
+    <h2>F — Code Hygiene / Known Bugs</h2>
+    <p class="cat-summary">Known technical issues flagged in the V1.0 README under "Known Risks / Caveats." Highest urgency for V1.1.</p>
+    <table class="cat-warn">
+      <thead><tr><th style="width:44px">ID</th><th style="width:22%">Item</th><th>Detail</th><th style="width:20%">Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="id-col" style="color:#b45309">F1</td>
+          <td class="title-col">Mixed 0-based/1-based indexing in anomaly flows</td>
+          <td>README Known Risks: "Mixed 0-based/1-based indexing appears in some anomaly flows." Identify the affected agent(s), write a regression test, and standardize to one convention throughout the pipeline.</td>
+          <td class="source-col">README.md — Known Risks</td>
+        </tr>
+        <tr>
+          <td class="id-col" style="color:#b45309">F2</td>
+          <td class="title-col">Wave Financial Phase II validation</td>
+          <td>README Known Risks: "ngame_cpi_analysis_agent.py currently references QuickBooks TTL filenames; Wave-mode Phase II should be validated." Phase I extraction supports Wave GraphQL; Phase II CPI analysis has not been end-to-end tested with Wave-origin TTL files.</td>
+          <td class="source-col">README.md — Known Risks</td>
+        </tr>
+        <tr>
+          <td class="id-col" style="color:#b45309">F3</td>
+          <td class="title-col">LLM availability health-check and graceful degradation</td>
+          <td>README Known Risks: "Monitor LLM availability and output quality drift." Implement a health-check wrapper around the Ollama call that degrades gracefully (produces a warning-without-LLM output) rather than failing silently when Ollama is unavailable or the model has been updated.</td>
+          <td class="source-col">README.md — Known Risks / Caveats</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- CATEGORY G -->
+  <div class="category">
+    <h2>G — Auditor Use Cases, Scope Boundaries &amp; Non-Goals</h2>
+    <p class="cat-summary">Product positioning relative to Intuit and QBO; classification of auditor-requested capabilities; guardrails for backlog acceptance. Most auditor wish-list items are, in substance, a desire for the <strong>Audit Log to be extended and enriched</strong> — appropriate for Intuit's product, not for NGAME.</p>
+
+    <div class="callout callout-warn" style="margin-top:10px;">
+      <strong>NGAME is a companion application, not a QuickBooks Online add-on.</strong> It runs on a separate surveillance workstation, reads company data through Intuit's <strong>read-only</strong> API, and presents its own dashboard. It does not install inside QBO, extend QBO screens, or replace QBO workflows. It is not marketed or licensed as a QBO marketplace extension.<br><br>
+        <strong>NGAME is not an Audit Log substitute.</strong> Attribution ("who changed what, when"), void/delete audit trails, and authoritative field-level change history are <strong>Intuit's domain</strong>. NGAME deliberately defers those questions to human review of the QBO Audit Log (or auditor-built SQL over audit exports). <strong>Strategic intent:</strong> remain well separated from Audit Log functionality so NGAME is not viewed as a competitor to Intuit. NGAME's role is early statistical triage on aggregate churn patterns; the Audit Log remains the system of record for transactional forensics.
+    </div>
+
+    <p class="sub-block" style="margin-top:10px;"><strong>Platform note:</strong> No QBO Audit Log API exists (confirmed Intuit developer forums; June 2026).</p>
+
+    <p class="sub-block" style="margin-top:14px;"><strong>Operational handoff (by design):</strong> Bookkeeper posts in QBO → NGAME (read-only API) emits category-level "unusual today" signals → FRP or auditor reviews QBO <strong>Audit Log</strong> in browser for who / what / when / field-level detail.</p>
+
+    <p class="sub-block" style="margin-top:10px;"><strong>What NGAME is built to do:</strong> Almost stateless surveillance — primary memory is <code>Yesterday.ttl</code> vs <code>Today.ttl</code>; secondary memory is a 30-day training baseline (μ, σ per transaction type) and an optional rolling buffer of <em>aggregate</em> CPI arrays (~30 days). Alert voice is <strong>general</strong> (18 φ categories, not named entities). NGAME does not prove fraud; flags mean statistically unusual vs the trained baseline.</p>
+
+    <table style="margin-top:14px;">
+      <thead><tr><th style="width:44px">ID</th><th style="width:24%">Auditor use case</th><th style="width:12%">Scope</th><th>Detail &amp; resolution</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="id-col">G-N1</td>
+          <td class="title-col">Per-vendor report: payments to recently-added vendors</td>
+          <td class="scope-out">Out</td>
+          <td>
+            Requires longitudinal vendor registry (creation dates), per-entity payment rollups, and cross-entity joins. NGAME retains day-pair churn and type-level z-scores only — not "vendor age × payment history." May <em>indirectly</em> sense a related pattern (Vendors + Bill_Payments CPI spikes) but emits a category alert, not a vendor roster.
+            <div class="sub-block"><strong>Resolution:</strong> QBO Audit Log (vendor Created + payment events) or SQL over QBO entity/transaction exports.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="id-col">G-N2</td>
+          <td class="title-col">Show deleted transactions (manifest)</td>
+          <td class="scope-out">Out</td>
+          <td>
+            NGAME <strong>measures</strong> deletions structurally (Layer 1 Removed / δ; <code>deletion_rate_array</code>) and heavy deletion can drive category-level HIGH alerts. It does <strong>not</strong> list which records were deleted (doc #, amount, payee, who deleted) or rank alerts on deletion rate δ as a first-class FRP panel.
+            <div class="sub-block"><strong>In scope (aggregate only):</strong> "More deletion churn than usual" via CPI z-scores. <strong>Out of scope:</strong> enumerating deleted transactions — functionally Audit Log enrichment.</div>
+            <div class="sub-block"><strong>Resolution:</strong> QBO Audit Log filtered for deletions/voids; auditor SQL over audit export tables.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="id-col">G-N3</td>
+          <td class="title-col">Show exactly what changed (mutations, forensic)</td>
+          <td class="scope-out">Out</td>
+          <td>
+            Auditors asking for attributed, authoritative field-level history need the Audit Log. NGAME's property-mutation diff (same ID, field yesterday → today) is a <strong>separate structural signal</strong> from CPI; wiring into alarms is a separate design thread (A3/A4). It lacks user attribution, session context, and full QBO field coverage (<code>MetaData.CreateTime</code> not extracted today).
+            <div class="sub-block"><strong>Acceptable boundary (A4):</strong> supplementary panel of <em>anonymous</em> structural diffs that <strong>point to</strong> Audit Log review — not replace it.</div>
+            <div class="sub-block"><strong>Resolution:</strong> Audit Log for attributed field history.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="id-col">G-N4</td>
+          <td class="title-col">Who created, edited, voided, or deleted a record</td>
+          <td class="scope-out">Out</td>
+          <td>Not extracted; explicitly deferred to QBO Audit Log in FRP documentation. Do not build Audit Log API parity (see C1). Intuit relationship test: would read as competing with Audit Log.</td>
+        </tr>
+        <tr>
+          <td class="id-col">G-N5</td>
+          <td class="title-col">Line-level edits on unchanged record ID</td>
+          <td class="scope-partial">Partial</td>
+          <td>May affect mutation stats or leave CPI stable (e.g. invoice amount edit, CPI = 1.0). FRP guides direct users to Audit Log for line edits. Mutation instrumentation (A3) is supplementary triage only.</td>
+        </tr>
+        <tr>
+          <td class="id-col">G-IN1</td>
+          <td class="title-col">Category churn unusual vs 30-day baseline</td>
+          <td class="scope-in">In</td>
+          <td>Core Layer 1–2: CPI, z-scores, Top Anomalies, Management Warnings. Each dashboard row is a <strong>category</strong> (Vendors, Bills, …), not one invoice or one person.</td>
+        </tr>
+        <tr>
+          <td class="id-col">G-IN2</td>
+          <td class="title-col">Sustained slow-burn churn (multi-day)</td>
+          <td class="scope-in">In</td>
+          <td>Sequence CPI over rolling buffer (~5 days default) — still per <strong>type</strong>, not per entity. Multi-Day Pattern Alert; premium window controls (D1–D2).</td>
+        </tr>
+        <tr>
+          <td class="id-col">G-IN3</td>
+          <td class="title-col">Today's credit card activity flags</td>
+          <td class="scope-in">In</td>
+          <td>Credit Card Watch — today's card transactions with risk heuristics. Not a full card audit trail.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="sub-block" style="margin-top:16px;"><strong>General principle — who answers what:</strong></p>
+    <table>
+      <thead><tr><th>Auditor request pattern</th><th>NGAME</th><th>Audit Log / SQL</th></tr></thead>
+      <tbody>
+        <tr><td>"Is something <strong>unusual</strong> today vs our learned normal?"</td><td>Yes — category z-scores</td><td>Overkill</td></tr>
+        <tr><td>"<strong>Which</strong> records were added, removed, or paid?"</td><td>No — counts at type level only</td><td>Yes</td></tr>
+        <tr><td>"<strong>Who</strong> did it and <strong>what exactly</strong> changed?"</td><td>No</td><td>Yes</td></tr>
+        <tr><td>"<strong>Report</strong> per vendor / per employee / per period?"</td><td>No</td><td>Yes</td></tr>
+      </tbody>
+    </table>
+
+    <p class="sub-block" style="margin-top:16px;"><strong>Backlog guardrails</strong> — apply before accepting any "auditor feature":</p>
+    <table>
+      <thead><tr><th style="width:28%">Test</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td class="title-col">Companion test</td><td>Can this ship without embedding in QBO or duplicating Audit Log screens?</td></tr>
+        <tr><td class="title-col">Attribution test</td><td>Requires <strong>who</strong> changed a record? → Defer to Audit Log (non-goal).</td></tr>
+        <tr><td class="title-col">Manifest test</td><td>Requires listing <strong>named entities</strong> across time? → Defer to Audit Log / SQL.</td></tr>
+        <tr><td class="title-col">State test</td><td>Requires history beyond yesterday + trained μ/σ + CPI rolling buffer? → Likely out unless narrowly aggregate-only.</td></tr>
+        <tr><td class="title-col">Intuit relationship test</td><td>Would a reasonable Intuit PM read this as <strong>competing with Audit Log</strong>? → Do not build.</td></tr>
+      </tbody>
+    </table>
+    <p class="sub-block">Acceptable enhancements near the boundary: <strong>aggregate</strong> deletion or mutation <strong>rates</strong> as supplementary triage that increase urgency of Audit Log review — never manifests with user attribution.</p>
+
+    <p class="sub-block" style="margin-top:16px;"><strong>External language:</strong></p>
+    <table>
+      <thead><tr><th style="width:12%">Do</th><th>Say</th><th style="width:12%">Avoid</th><th>Do not say</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="scope-in">✓</td>
+          <td>"NGAME is a <strong>companion</strong> churn-surveillance tool beside QuickBooks."</td>
+          <td class="scope-out">✗</td>
+          <td>"NGAME add-on for QuickBooks" or in-product integration / Audit Log parity.</td>
+        </tr>
+        <tr>
+          <td class="scope-in">✓</td>
+          <td>"NGAME flags <strong>unusual patterns by category</strong>; auditor uses <strong>QBO Audit Log</strong> for detail."</td>
+          <td class="scope-out">✗</td>
+          <td>"NGAME shows deleted transactions" or "replaces audit trail review."</td>
+        </tr>
+        <tr>
+          <td class="scope-in">✓</td>
+          <td>"NGAME is <strong>read-only</strong> and does not modify QuickBooks."</td>
+          <td class="scope-out">✗</td>
+          <td>NGAME <strong>confirms</strong> fraud or <strong>identifies</strong> perpetrators.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <div class="footer">
+    <p>Sources: README.md (Known Risks); NGAME_Churn_Walkthrough.md; NGAME_FRP_PhaseII_Dashboard_Guide.md; NGAME_PREMIUM_MultiDay_Window_Dashboard_UI_Outline.md; DSRM Evaluation canvas (ngame-dsrm-evaluation-draft.canvas.tsx); DSRM Outline canvas (ngame-dsrm-paper-outline.canvas.tsx); NGAME Deployment Plan chat; docs/drafts/NGAME_Auditor_Use_Cases_Scope.md; auditor scope review (June 2026).</p>
+    <p style="margin-top:4px;">Frozen baseline: NGAME_FREEZE_v1_2026-05-05 &nbsp;|&nbsp; This backlog document: June 2026.</p>
+  </div>
+
+</div>
+</body>
+</html>

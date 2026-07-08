@@ -1,0 +1,1126 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+<title>NGAME_CPI_wCPI_Derivation.md</title>
+<style type='text/css'>:root {
+  /* Base Light */
+  --textPrimary: #24292E;
+  --background: #ffffff;
+  --body-border-color: #dfdfdf;
+  --link: #0366d6;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #f7f7f9;
+  --hr-background: #e3e4e8;
+  --thead-background: #f7f7f9;
+  --thead-border: #e3e4e8;
+  --tr-border: #bfc1c9; /* unused variable */
+  --tr-alt-background: #f7f7f9;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #d6d7dc;
+  --blockquote-color: #6a6d7c;
+  --blockquote-border: #e3e4e8;
+  --heading-color: #17181a;
+  --header-bottom-border: #e3e4e8;
+  --h6-color: #6a6d7c;
+  --frame-border: #e3e4e8;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58; /* unused variable */
+  --email-toggle-background: #e3e4e8; /* unused variable */
+  --email-quoted-color: #6a6d7c; /* unused variable */
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+  
+  /* Highlight Light */
+  --hl_Background: #F6F8FA ;
+  --hl_Number: #005cc5 ;
+  --hl_Escape: #032f62 ;
+  --hl_String: #032f62 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #6a737d ;
+  --hl_Line_Comment: #6a737d ;
+  --hl_Pre_Processor: #d73a49 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #032f62 ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #d73a49 ; /* import | func */
+  --hl_Keyword-2: #d73a49 ; /* int | str */
+  --hl_Keyword-3: #24292e ; /* ??? */
+  --hl_Keyword-4: #6f42c1 ; /* ??? */
+  --hl_Keyword-5: #d73a49 ; /* ??? */
+  --hl_Keyword-6: #d73a49 ; /* ??? */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Base Dark */
+  --textPrimary: #c9d1d9;
+  --background: #0d1117;
+  --body-border-color: #31363C;
+  --link: #58a6ff;
+  --link-highlight: rgba(3, 102, 214, 0.08);
+  --code-background: #2f3438;
+  --hr-background: #30363d;
+  --thead-background: #f7f7f9;
+  --thead-border: #3b434b;
+  --tr-border: #3b434b; /* unused variable */
+  --tr-alt-background: #161c23;
+  --kbd-background: #f7f7f9;
+  --kbd-color: #4b4d58;
+  --kbd-border: #050505;
+  --blockquote-color: #8b949e;
+  --blockquote-border: #3D434A;
+  --heading-color: #17181a;
+  --header-bottom-border: #21272c;
+  --h6-color: #6a6d7c;
+  --frame-border: #ff08d6;
+  --frame-color: #242528;
+  --mention-color: #242528;
+  --email-toggle-color: #4b4d58;
+  --email-toggle-background: #e3e4e8;
+  --email-quoted-color: #6a6d7c;
+  --keyword-color: #9194a1;
+  --code-font: ui-monospace, Menlo, monospace;
+
+  /* Highlight Dark */
+  --hl_Background: #161b22 ;
+  --hl_Number: #79c0ff ;
+  --hl_Escape: #a5d6ff ;
+  --hl_String: #549ef1 ;
+  --hl_String_Pre_Processor: #549ef1 ;
+  --hl_Block_Comment: #8b949e ;
+  --hl_Line_Comment: #8b949e ;
+  --hl_Pre_Processor: #FF7B72 ; /* #include */
+  --hl_Line_Number:  #52565C ;
+  --hl_Operator: #79c0ff ; /* +,-,(){} */
+  --hl_Interpolation:  #79c0ff ;
+  --hl_Keyword-1: #FF7B72 ; /* import | func */
+  --hl_Keyword-2: #FF7B72 ; /* int | str */
+  --hl_Keyword-3: #c9d1d9 ; /* ??? */
+  --hl_Keyword-4: #eea8ff ; /* ??? */
+  --hl_Keyword-5: #FF7B72 ; /* ??? */
+  --hl_Keyword-6: #FF7B72 ; /* ??? */
+  }
+}
+
+/*Syntax Highlight*/
+pre.hl	{ background-color: var(--hl_Background);}
+.hl.num { color: var(--hl_Number); font-weight: normal;}
+.hl.esc { color: var(--hl_Escape); font-weight: normal;}
+.hl.str { color: var(--hl_String); font-weight: normal;}
+.hl.pps { color: var(--hl_String_Pre_Processor); font-weight: normal;}
+.hl.com { color: var(--hl_Block_Comment); font-weight: normal;}
+.hl.slc { color: var(--hl_Line_Comment); font-weight: normal;}
+.hl.ppc { color: var(--hl_Pre_Processor); font-weight: normal;}
+.hl.lin { color: var(--hl_Line_Number); font-weight: normal;}
+.hl.opt { color: var(--hl_Operator); font-weight: normal;}
+.hl.ipl { color: var(--hl_Interpolation); font-weight: normal;}
+.hl.kwa { color: var(--hl_Keyword-1); font-weight: normal;}
+.hl.kwb { color: var(--hl_Keyword-2); font-weight: normal;}
+.hl.kwc { color: var(--hl_Keyword-3); font-weight: normal;}
+.hl.kwd { color: var(--hl_Keyword-4); font-weight: normal;}
+.hl.kwe { color: var(--hl_Keyword-5); font-weight: normal;}
+.hl.kwf { color: var(--hl_Keyword-6); font-weight: normal;}
+
+
+pre {
+  max-width: 902px;
+}
+* {
+  box-sizing: border-box;
+}
+
+input:disabled {
+  touch-action: none;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji, Segoe UI Emoji;
+}
+
+body {
+  margin: 0;
+  /* padding: 1em; */
+  color: var(--textPrimary);
+  background-color: var(--background);
+}
+
+/* If the window is bigger than 902 pixels, the border will be visible. */
+@media (min-width: 902px) {
+  article {
+    border-radius: 8px;
+    border-width: 1px;  
+    border-style: solid;
+    border-color: var(--body-border-color);
+  }
+}
+
+article {
+  margin: auto;
+  max-width: 902px;
+  font-size: inherit;
+  line-height: 1.5;
+  word-wrap: break-word;
+  padding: 32px;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  -webkit-tap-highlight-color: var(--link-highlight);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+details summary {
+  outline: 0;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+blockquote {
+  margin: 0;
+}
+
+table, table *, pre {
+  touch-action: pan-x;
+}
+
+.markdown-body ul.contains-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+pre, code, kbd {
+  font-size: 1em;
+  font-family: var(--code-font);
+}
+
+.issue-keyword {
+  border-bottom: 1px dotted var(--keyword-color);
+}
+
+.team-mention, .user-mention {
+  font-weight: 600;
+  color: var(--mention-color);
+  white-space: nowrap;
+}
+
+.email-hidden-toggle, .email-hidden-reply {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="checkbox"] {
+    filter: invert(85%) brightness(1.5);
+  }
+}
+/* Fix checkboxes looking cut off when they render larger than the default size */
+input[type="checkbox"] {
+  transform: translate(0px);
+  width: 14px; height: 14px;
+}
+
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 0.18em 0.31em;
+  font-size: 0.7em;
+  line-height: 1.2em;
+  color: var(--kbd-color);
+  vertical-align: middle;
+  background-color: var(--kbd-background);
+  border: 1px solid var(--kbd-border);
+  border-radius: 0.25em;
+  box-shadow: inset 0 -1px 0 var(--kbd-border);
+  margin-right: 2px;
+}
+
+.markdown-body:after, .markdown-body:before {
+  display: table;
+  content: ""
+}
+
+.markdown-body:after {
+  clear: both;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .absent {
+  color: var(--red-600);
+}
+
+.markdown-body .anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body blockquote, .markdown-body details, .markdown-body dl, .markdown-body ol, .markdown-body p, .markdown-body pre, .markdown-body table, .markdown-body ul {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body table table {
+    margin-bottom: 0;
+}
+
+.markdown-body hr {
+  height: .25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: var(--hr-background);
+  border: 0;
+}
+
+.markdown-body blockquote {
+  padding-left: 1em;
+  color: var(--blockquote-color);
+  border-left: .25em solid var(--blockquote-border);
+}
+
+.markdown-body blockquote > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body h1 .octicon-link, .markdown-body h2 .octicon-link, .markdown-body h3 .octicon-link, .markdown-body h4 .octicon-link, .markdown-body h5 .octicon-link, .markdown-body h6 .octicon-link {
+  color: var(--heading-color);
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor, .markdown-body h2:hover .anchor, .markdown-body h3:hover .anchor, .markdown-body h4:hover .anchor, .markdown-body h5:hover .anchor, .markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link, .markdown-body h2:hover .anchor .octicon-link, .markdown-body h3:hover .anchor .octicon-link, .markdown-body h4:hover .anchor .octicon-link, .markdown-body h5:hover .anchor .octicon-link, .markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 code, .markdown-body h1 tt, .markdown-body h2 code, .markdown-body h2 tt, .markdown-body h3 code, .markdown-body h3 tt, .markdown-body h4 code, .markdown-body h4 tt, .markdown-body h5 code, .markdown-body h5 tt, .markdown-body h6 code, .markdown-body h6 tt {
+  font-size: inherit;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+}
+
+.markdown-body h1, .markdown-body h2 {
+  padding-bottom: .3em;
+  border-bottom: 1px solid var(--header-bottom-border);
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1em;
+}
+
+.markdown-body h5 {
+  font-size: .875em;
+}
+
+.markdown-body h6 {
+  font-size: .85em;
+  color: var(--h6-color);
+}
+
+.markdown-body ol, .markdown-body ul {
+  padding-left: 1.5em;
+}
+
+.markdown-body ol.no-list, .markdown-body ul.no-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.markdown-body ol ol, .markdown-body ol ul, .markdown-body ul ol, .markdown-body ul ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li {
+  word-wrap: break-all;
+}
+
+.markdown-body li > p {
+  margin-top: 16px;
+}
+
+.markdown-body li + li {
+  margin-top: .25em;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.markdown-body table th {
+  font-weight: 600;
+}
+
+.markdown-body table td, .markdown-body table th {
+  padding: 6px 13px;
+  border: 1px solid var(--thead-border);
+}
+
+.markdown-body table tr {
+  background-color: var(--background);
+  border-top: 1px solid var(--tr-border); /* unused variable */
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: var(--tr-alt-background);
+}
+
+.markdown-body table img {
+  background-color: initial;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  box-sizing: initial;
+  background-color: var(--background);
+}
+
+.markdown-body img[align=right] {
+  padding-left: 20px;
+}
+
+.markdown-body img[align=left] {
+  padding-right: 20px;
+}
+
+.markdown-body .emoji {
+  max-width: none;
+  vertical-align: text-top;
+  background-color: initial;
+}
+
+.markdown-body img.emoji {
+    max-width: 18px;
+}
+
+.markdown-body span.frame {
+  display: block;
+  overflow: hidden;
+}
+
+.markdown-body span.frame > span {
+  display: block;
+  float: left;
+  width: auto;
+  padding: 7px;
+  margin: 13px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--frame-border);
+}
+
+.markdown-body span.frame span img {
+  display: block;
+  float: left;
+}
+
+.markdown-body span.frame span span {
+  display: block;
+  padding: 5px 0 0;
+  clear: both;
+  color: var(--frame-color);
+}
+
+.markdown-body span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-center > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.markdown-body span.align-center span img {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.markdown-body span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both;
+}
+
+.markdown-body span.align-right > span {
+  display: block;
+  margin: 13px 0 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body span.align-right span img {
+  margin: 0;
+  text-align: right;
+}
+
+.markdown-body span.float-left {
+  display: block;
+  float: left;
+  margin-right: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-left span {
+  margin: 13px 0 0;
+}
+
+.markdown-body span.float-right {
+  display: block;
+  float: right;
+  margin-left: 13px;
+  overflow: hidden;
+}
+
+.markdown-body span.float-right > span {
+  display: block;
+  margin: 13px auto 0;
+  overflow: hidden;
+  text-align: right;
+}
+
+.markdown-body code, .markdown-body tt {
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: var(--code-background);
+  border-radius: 6px;
+}
+
+.markdown-body code br, .markdown-body tt br {
+  display: none;
+}
+
+.markdown-body del code {
+  text-decoration: inherit;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre > code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body .highlight pre, .markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: var(--hl_Background);
+  border-radius: 6px;
+}
+
+.markdown-body pre code, .markdown-body pre tt {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: initial;
+  border: 0;
+}
+
+.markdown-body .csv-data td, .markdown-body .csv-data th {
+  padding: 5px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-body .csv-data .blob-num {
+  padding: 10px 8px 9px;
+  text-align: right;
+  background: var(--background);
+  border: 0;
+}
+
+.markdown-body .csv-data tr {
+  border-top: 0;
+}
+
+.markdown-body .csv-data th {
+  font-weight: 600;
+  background: var(--thead-background);
+  border-top: 0;
+}
+
+.markdown-body mark {
+    padding: .2em;
+    background-color: #fcf1b5;
+}
+
+@media (prefers-color-scheme: dark) {
+    .markdown-body mark {
+        padding: .2em;
+        background-color: #fcf8e3;
+    }
+}
+
+/* Mermaid diagrams */
+.mermaid {
+    text-align: center;
+    margin: 16px 0;
+    background-color: transparent;
+}
+
+.mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    .mermaid {
+        background-color: transparent;
+    }
+}
+
+</style>
+
+<script type="text/javascript">
+MathJax = {
+  options: {
+    enableMenu: false,
+  },
+  tex: {
+    // packages: ['base'],        // extensions to use
+    inlineMath: [              // start/end delimiter pairs for in-line math
+      ['$', '$']
+      // , ['\(', '\)']
+    ],
+    displayMath: [             // start/end delimiter pairs for display math
+      ['$$', '$$']
+      //, ['\[', '\]']
+    ],
+    processEscapes: true,       // use \$ to produce a literal dollar sign
+    processEnvironments: false
+  }
+};
+</script>
+</head>
+<body>
+<article class='markdown-body'>
+<hr />
+<h2 id="title-ngame-churn-persistence-index-cpi-and-dollar-weighted-cpi-wcpi-full-derivationsubtitle-per-transaction-daily-measures-rolled-up-into-composite-cpi-wcpi-and-scored-against-a-trained-baselinedate-july-6-2026">title: “NGAME Churn Persistence Index (CPI) and Dollar-Weighted CPI (wCPI): Full Derivation”
+subtitle: “Per-transaction daily measures rolled up into composite CPI / wCPI and scored against a trained baseline”
+date: “July 6, 2026”</h2>
+<h1 id="ngame-cpi-wcpi-full-derivation">NGAME CPI / wCPI — Full Derivation</h1>
+<p>This document gives the end-to-end computation NGAME uses for each transaction
+type’s daily measures — the Churn Persistence Index (CPI), its dollar-weighted
+variant (wCPI), the trained baseline (
+<span class='hl math'>$\mu$</span>
+, 
+<span class='hl math'>$\sigma$</span>
+), and the 
+<span class='hl math'>$z$</span>
+-scores and
+sequence roll-ups that drive dashboard warnings. NGAME tracks <strong>18 transaction
+types</strong> (Customers through Vendors); pipeline output labels them 
+<span class='hl math'>$\varphi_1
+\ldots \varphi_{18}$</span>
+ for indexing only.</p>
+<hr />
+<h2 id="1-daily-set-up-the-per-type-contingency-counts">1. Daily set-up — the per-type contingency counts</h2>
+<p>For each transaction type 
+<span class='hl math'>$k$</span>
+, <code>NGameCpiAnalysisAgent</code> compares yesterday’s URI
+set 
+<span class='hl math'>$Y_k$</span>
+ (from <code>Yesterday.ttl</code>) against today’s URI set 
+<span class='hl math'>$T_k$</span>
+ (from
+<code>Today.ttl</code>).</p>
+<blockquote>
+<p><strong>URI (Uniform Resource Identifier).</strong> NGAME operates on RDF/OWL ontology
+snapshots in which <strong>every individual transaction is named by a unique URI</strong>
+— e.g. <code>qb:Invoice_4821</code>. The URI is the stable identity used to decide
+whether a transaction observed today is the <em>same</em> transaction seen yesterday.
+The sets 
+<span class='hl math'>$Y_k$</span>
+ and 
+<span class='hl math'>$T_k$</span>
+ are sets of transaction URIs of type 
+<span class='hl math'>$k$</span>
+; every count
+below is a count of URIs.</p>
+<p><strong>QuickBooks-specific caveat.</strong> The metric is only as reliable as QuickBooks’
+URI assignment. QuickBooks mints a new identifier when a transaction is
+<em>deleted and recreated</em> (or voided and re-entered) rather than edited in
+place. The original URI is counted in 
+<span class='hl math'>$b_k$</span>
+ (removed) and the replacement in
+
+<span class='hl math'>$c_k$</span>
+ (added) — registering as churn even when the transaction is
+economically unchanged. An <em>in-place</em> edit (amount or memo changed without a
+new URI) leaves set membership intact, so count-based 
+<span class='hl math'>$\mathrm{CPI}_k$</span>
+ may not
+move; such edits can surface through dollar-weighted 
+<span class='hl math'>$\mathrm{wCPI}_k$</span>
+ (§3).
+The AdditionRate / DeletionRate split (§2) distinguishes directional churn
+(additions vs. removals).</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Definition</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$a_k$</td>
+<td>$\lvert Y_k \cap T_k \rvert$</td>
+<td>Present in <strong>both</strong> snapshots (retained)</td>
+</tr>
+<tr>
+<td>$b_k$</td>
+<td>$\lvert Y_k \setminus T_k \rvert$</td>
+<td>Yesterday <strong>only</strong> (removed)</td>
+</tr>
+<tr>
+<td>$c_k$</td>
+<td>$\lvert T_k \setminus Y_k \rvert$</td>
+<td>Today <strong>only</strong> (new additions)</td>
+</tr>
+<tr>
+<td>$n_k$</td>
+<td>$a_k + b_k + c_k$</td>
+<td>Total unique transactions across both days</td>
+</tr>
+</tbody>
+</table>
+<p>Cell 
+<span class='hl math'>$d$</span>
+ (transactions absent from both days) is <strong>not used</strong>: the universe of
+non-occurring transactions is undefined for financial ledger data.</p>
+<hr />
+<h2 id="2-daily-per-type-measures-cpi-and-directional-rates">2. Daily per-type measures — CPI and directional rates</h2>
+<p>The <strong>Churn Persistence Index</strong> is the <strong>Jaccard similarity</strong> of the two URI
+populations, with two directional companions that sum to 
+<span class='hl math'>$1$</span>
+:</p>
+<p>
+<div class='hl math'>$$
+\boxed{\;\mathrm{CPI}_k \;=\; \frac{a_k}{a_k + b_k + c_k} \;=\; \frac{a_k}{n_k}\;}
+$$</div>
+</p>
+<p>
+<div class='hl math'>$$
+\mathrm{AdditionRate}_k = \frac{c_k}{n_k}, \qquad
+\mathrm{DeletionRate}_k = \frac{b_k}{n_k},
+$$</div>
+</p>
+<p>
+<div class='hl math'>$$
+\mathrm{CPI}_k + \mathrm{AdditionRate}_k + \mathrm{DeletionRate}_k = 1.0 .
+$$</div>
+</p>
+<p>If 
+<span class='hl math'>$n_k = 0$</span>
+ (no transactions of type 
+<span class='hl math'>$k$</span>
+ in either snapshot), then
+
+<span class='hl math'>$\mathrm{CPI}_k = 1.0$</span>
+ by convention (“absence is stable”).</p>
+<p>The triplet 
+<span class='hl math'>$(\mathrm{CPI}_k,\ \mathrm{AdditionRate}_k,\ \mathrm{DeletionRate}_k)$</span>
+
+characterises the day’s dynamics for type 
+<span class='hl math'>$k$</span>
+. A <strong>low</strong> CPI (high churn) is the
+primary fraud concern; a <strong>high</strong> AdditionRate flags bulk insertion; a <strong>high</strong>
+DeletionRate flags retroactive deletion.</p>
+<h3 id="worked-example-single-day-cpi">Worked example — single-day CPI</h3>
+<p><strong>Customers: one record added.</strong></p>
+<p>
+<div class='hl math'>$$
+\text{Before:}\quad a=50,\ b=0,\ c=0 \;\Rightarrow\; \mathrm{CPI} = \tfrac{50}{50} = 1.000
+$$</div>
+
+
+<div class='hl math'>$$
+\text{After:}\quad a=50,\ b=0,\ c=1 \;\Rightarrow\; \mathrm{CPI} = \tfrac{50}{51} = 0.980
+$$</div>
+</p>
+<p><strong>Partial churn (illustrative), 
+<span class='hl math'>$a=2,\ b=2,\ c=1,\ n=5$</span>
+:</strong></p>
+<p>
+<div class='hl math'>$$
+\mathrm{CPI} = \tfrac{2}{5} = 0.400, \quad
+\mathrm{DeletionRate} = \tfrac{2}{5} = 0.400, \quad
+\mathrm{AdditionRate} = \tfrac{1}{5} = 0.200,
+$$</div>
+</p>
+<p>with 
+<span class='hl math'>$\mathrm{CPI} + \mathrm{AdditionRate} + \mathrm{DeletionRate} = 1.000$</span>
+.</p>
+<hr />
+<h2 id="3-dollar-weighted-cpi-wcpi">3. Dollar-weighted CPI (wCPI)</h2>
+<p>Unweighted CPI treats a $50 expense identically to a $500{,}000 wire. The
+weighted form keeps the Jaccard structure but replaces set cardinality with the
+sum of transaction amounts 
+<span class='hl math'>$w_i$</span>
+ (from <code>qb:hasTotalAmount</code>; entity-type records
+with no dollar amount default to 
+<span class='hl math'>$w_i = \$1$</span>
+):</p>
+<p>
+<div class='hl math'>$$
+\mathrm{wCPI}_k \;=\;
+\frac{\displaystyle\sum_{i \,\in\, Y_k \cap T_k} w_i}
+{\displaystyle\sum_{i \,\in\, Y_k \cup T_k} w_i}
+\;=\;
+\frac{\text{retained dollars}}{\text{total dollars in play}} .
+$$</div>
+</p>
+<p>Retained URIs use <strong>today’s</strong> amount; removed URIs use <strong>yesterday’s</strong> amount.</p>
+<h3 id="worked-example-a-50000-expense-hidden-in-a-normal-day">Worked example — a $50,000 expense hidden in a normal day</h3>
+<p>Twenty transactions: 19 of $50 retained, plus one new $50{,}000 expense (
+<span class='hl math'>$a=19,
+b=0, c=1$</span>
+).</p>
+<p>
+<div class='hl math'>$$
+\text{Unweighted:}\quad \mathrm{CPI} = \frac{19}{20} = 0.9500 \quad(\text{looks normal})
+$$</div>
+</p>
+<p>
+<div class='hl math'>$$
+\text{Weighted:}\quad
+\text{retained } \$ = 19 \times \$50 = \$950, \qquad
+\text{union } \$ = \$950 + \$50{,}000 = \$50{,}950,
+$$</div>
+</p>
+<p>
+<div class='hl math'>$$
+\mathrm{wCPI} = \frac{950}{50{,}950} = 0.0186 \quad(\text{alarm fires}),
+$$</div>
+</p>
+<p>
+<div class='hl math'>$$
+\text{Divergence} = \lvert \mathrm{CPI} - \mathrm{wCPI} \rvert
+= \lvert 0.9500 - 0.0186 \rvert = 0.931 \;\rightarrow\; \textbf{HIGH}.
+$$</div>
+</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+<th>Reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unweighted CPI</td>
+<td>$0.9500$</td>
+<td>Looks normal (19 of 20 URIs retained)</td>
+</tr>
+<tr>
+<td>Dollar-weighted wCPI</td>
+<td>$0.0186$</td>
+<td>Exposure is overwhelmingly new dollars</td>
+</tr>
+<tr>
+<td>Divergence</td>
+<td>$0.931$</td>
+<td><strong>HIGH</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Dollar-alarm thresholds on divergence: 
+<span class='hl math'>$>0.30 =$</span>
+ HIGH, 
+<span class='hl math'>$>0.15 =$</span>
+ MEDIUM. A
+parallel <strong>dollar 
+<span class='hl math'>$z$</span>
+-score</strong> (today’s wCPI vs. trained 
+<span class='hl math'>$\mu_w$</span>
+, 
+<span class='hl math'>$\sigma_w$</span>
+) is
+also computed when wCPI baselines exist in the matrix.</p>
+<hr />
+<h2 id="4-the-trained-baseline-daily-mu-and-sigma-per-type">4. The trained baseline — daily 
+<span class='hl math'>$\mu$</span>
+ and 
+<span class='hl math'>$\sigma$</span>
+ per type</h2>
+<p>Over an 
+<span class='hl math'>$N$</span>
+-day training window, each type accumulates a distribution of daily
+CPI values. The Training Matrix stores <strong>Mean CPI (
+<span class='hl math'>$\mu$</span>
+)</strong> and <strong>Std Dev CPI (
+<span class='hl math'>$\sigma$</span>
+)</strong>
+per row (columns B and C), plus daily CPI values in columns Day 1 … Day 
+<span class='hl math'>$N$</span>
+.</p>
+<p>
+<div class='hl math'>$$
+\mu_k = \frac{1}{N} \sum_{t=1}^{N} \mathrm{CPI}_k^{(t)},
+\qquad
+\sigma_k = \sqrt{\frac{1}{N-1} \sum_{t=1}^{N}\left(\mathrm{CPI}_k^{(t)} - \mu_k\right)^2}.
+$$</div>
+</p>
+<p>A separate <strong>wCPI_Baseline</strong> sheet stores 
+<span class='hl math'>$(\mu_w, \sigma_w)$</span>
+ for dollar-weighted
+CPI. Optional day-of-week stratification computes separate 
+<span class='hl math'>$(\mu_k, \sigma_k)$</span>
+
+per weekday (requires roughly 60–90 training days for a stable 
+<span class='hl math'>$\sigma$</span>
+).</p>
+<hr />
+<h2 id="5-daily-anomaly-score-z-against-the-trained-distribution">5. Daily anomaly score — 
+<span class='hl math'>$z$</span>
+ against the trained distribution</h2>
+<p><code>NGameChurnComparisonAgent</code> compares today’s CPI array to the matrix baseline:</p>
+<p>
+<div class='hl math'>$$
+z_k = \frac{\mathrm{CPI}_k^{\text{today}} - \mu_k}{\sigma_k}.
+$$</div>
+</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Level</th>
+<th>Statistical meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\lvert z_k \rvert \le 2.0$</td>
+<td>LOW</td>
+<td>Within roughly 95% of training distribution</td>
+</tr>
+<tr>
+<td>$2.0 &lt; \lvert z_k \rvert \le 3.0$</td>
+<td>MEDIUM</td>
+<td>Outside 95%, within 99.7%</td>
+</tr>
+<tr>
+<td>$\lvert z_k \rvert &gt; 3.0$</td>
+<td>HIGH</td>
+<td>Beyond $3\sigma$ — rare under normal operations</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Percent deviation</strong> (secondary dashboard readout):</p>
+<p>
+<div class='hl math'>$$
+\text{percent\_deviation}_k
+= \frac{\lvert \mathrm{CPI}_k^{\text{today}} - \mu_k \rvert}{\mu_k} \times 100 .
+$$</div>
+</p>
+<p><strong>Composite alarm</strong> fires when deviation level is HIGH or MEDIUM, or when the
+dollar signal (divergence or dollar 
+<span class='hl math'>$z$</span>
+-score) is elevated.</p>
+<h3 id="worked-example-chartofaccounts">Worked example — ChartOfAccounts</h3>
+<p>With today’s 
+<span class='hl math'>$\mathrm{CPI} = 0.065$</span>
+ against trained 
+<span class='hl math'>$\mu = 0.049,\ \sigma = 0.004$</span>
+:</p>
+<p>
+<div class='hl math'>$$
+z = \frac{0.065 - 0.049}{0.004} = 4.0 \;\rightarrow\; \textbf{HIGH}.
+$$</div>
+</p>
+<hr />
+<h2 id="6-composite-roll-up-multi-day-sequence-scpi-weighted-scpi">6. Composite roll-up — multi-day sequence (SCPI / weighted SCPI)</h2>
+<p>A slow-burn pattern spreads small daily moves that never trip a single-day alarm.
+<code>NGameSequenceCpiAgent</code> computes the <strong>geometric mean</strong> of the last 
+<span class='hl math'>$L$</span>
+ daily
+CPIs (default 
+<span class='hl math'>$L=5$</span>
+), scored with a 
+<span class='hl math'>$\sqrt{L}$</span>
+-tightened 
+<span class='hl math'>$z$</span>
+:</p>
+<p>
+<div class='hl math'>$$
+\mathrm{SCPI}_k(t, L) = \left(\prod_{i=1}^{L} \mathrm{CPI}_k(t - i + 1)\right)^{1/L},
+$$</div>
+</p>
+<p>
+<div class='hl math'>$$
+z_k^{\text{seq}} = \frac{\mathrm{SCPI}_k - \mu_k}{\sigma_k / \sqrt{L}}.
+$$</div>
+</p>
+<p>The same 
+<span class='hl math'>$\mu_k, \sigma_k$</span>
+ from the Training Matrix are used — no schema change.
+Weighted SCPI applies the same construction over the daily wCPI buffer.</p>
+<p>A type drifting at only 
+<span class='hl math'>$-2\sigma/\text{day}$</span>
+ (MEDIUM at most on any single day)
+can score 
+<span class='hl math'>$z^{\text{seq}} \approx -4.47$</span>
+ on day 5 — a HIGH alert the per-day
+detector would not raise alone.</p>
+<p>The rolling buffer (<code>NGAME_CPI_Rolling_Buffer.json</code>) retains up to <strong>30 days</strong>
+of 18-element CPI (and wCPI) arrays — a storage ceiling set independently of
+the sequence window. The sequence path returns <code>ready=False</code> until at least 
+<span class='hl math'>$L$</span>
+
+days are present; 
+<span class='hl math'>$L$</span>
+ (default 5) controls which window length SCPI is computed
+over and can be changed at any time without reconfiguring the buffer. The 30-day
+capacity means any window from 
+<span class='hl math'>$L=2$</span>
+ up to 
+<span class='hl math'>$L=30$</span>
+ can be served from the same
+file without waiting for a new accumulation period.</p>
+<hr />
+<h2 id="7-core-implementation-ngamecpianalysisagentpy">7. Core implementation (<code>ngame_cpi_analysis_agent.py</code>)</h2>
+<p>Per-type CPI from <code>_calculate_cpi_for_transaction_type</code>:</p>
+<pre class='hl'><code class="language-python">a <span class="hl opt">=</span> <span class="hl kwb">len</span><span class="hl opt">(</span>yesterday_uris <span class="hl opt">&amp;</span> today_uris<span class="hl opt">)</span>   <span class="hl slc"># retained</span>
+b <span class="hl opt">=</span> <span class="hl kwb">len</span><span class="hl opt">(</span>yesterday_uris <span class="hl opt">-</span> today_uris<span class="hl opt">)</span>   <span class="hl slc"># removed</span>
+c <span class="hl opt">=</span> <span class="hl kwb">len</span><span class="hl opt">(</span>today_uris <span class="hl opt">-</span> yesterday_uris<span class="hl opt">)</span>   <span class="hl slc"># added</span>
+n <span class="hl opt">=</span> a <span class="hl opt">+</span> b <span class="hl opt">+</span> c                          <span class="hl slc"># total unique</span>
+
+<span class="hl kwa">if</span> n <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">:</span>                             <span class="hl slc"># stable by convention</span>
+    <span class="hl kwa">return</span> <span class="hl opt">{</span><span class="hl sng">&#39;cpi&#39;</span><span class="hl opt">:</span> <span class="hl num">1.0</span><span class="hl opt">,</span> <span class="hl sng">&#39;addition_rate&#39;</span><span class="hl opt">:</span> <span class="hl num">0.0</span><span class="hl opt">,</span> <span class="hl sng">&#39;deletion_rate&#39;</span><span class="hl opt">:</span> <span class="hl num">0.0</span><span class="hl opt">,</span>
+            <span class="hl sng">&#39;retained&#39;</span><span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl sng">&#39;added&#39;</span><span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl sng">&#39;removed&#39;</span><span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">}</span>
+
+<span class="hl kwa">return</span> <span class="hl opt">{</span>
+    <span class="hl sng">&#39;cpi&#39;</span><span class="hl opt">:</span>           a <span class="hl opt">/</span> n<span class="hl opt">,</span>
+    <span class="hl sng">&#39;addition_rate&#39;</span><span class="hl opt">:</span> c <span class="hl opt">/</span> n<span class="hl opt">,</span>
+    <span class="hl sng">&#39;deletion_rate&#39;</span><span class="hl opt">:</span> b <span class="hl opt">/</span> n<span class="hl opt">,</span>
+    <span class="hl sng">&#39;retained&#39;</span><span class="hl opt">:</span> a<span class="hl opt">,</span> <span class="hl sng">&#39;added&#39;</span><span class="hl opt">:</span> c<span class="hl opt">,</span> <span class="hl sng">&#39;removed&#39;</span><span class="hl opt">:</span> b<span class="hl opt">,</span>
+<span class="hl opt">}</span>
+</code></pre>
+<p>Dollar-weighted CPI: <code>_calculate_weighted_cpi_for_transaction_type</code>. Comparison
+and alarms: <code>ngame_churn_comparison_agent.py</code>. Sequence path:
+<code>ngame_sequence_cpi_agent.py</code>.</p>
+<hr />
+<p><em>Verified against NGAME POC codebase and <code>NGAME_Training_Matrix.xlsx</code> (Training
+Matrix + wCPI_Baseline sheets). The $50{,}000 wCPI example is from agent test W2.</em></p>
+<div style='font-size: 72%; margin-top: 1.5em; padding-top: .5em; -webkit-user-select: none;'><hr style='height: 0; border: none; border-top: 1px solid rgba(0,0,0,.5); box-shadow: 0 1px 1px rgba(255, 255, 255, .5)'/><a href='https://github.com/sbarex/QLMarkdown'>QLMarkdown</a>, version 1.0.24 (50).<br />
+Developed by SBAREX 2020 - 2025 with <span style='font-style: normal'>❤️</span>.<br/>
+If you like this app, <a href='https://www.buymeacoffee.com/sbarex'><strong>buy me a coffee</strong></a>!</div>
+<!--
+
+File generated with QLMarkdown [https://github.com/sbarex/QLMarkdown] - QLMarkdown, version 1.0.24 (50).
+Developed by SBAREX 2020 - 2025 with ❤️
+
+-->
+
+</article>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</body>
+</html>

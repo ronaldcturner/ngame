@@ -28,6 +28,11 @@ load_ngame_dotenv()
 from quickbooks_chart_of_accounts_extractor import ChartOfAccountsExtractor, OntologyConverter
 from quickbooks_chart_of_accounts_creator import OntologyChartExtractor, ChartOfAccountsCreator
 from ngame_ontology_workflow import NGAMEOntologyWorkflow
+from ngame_dashboard_alerts import (
+    build_dollar_alarm_alerts,
+    filter_top_anomalies_for_display,
+    merge_full_fraud_comparison,
+)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ngame-secret-key-2024'
@@ -94,6 +99,13 @@ def _load_latest_artifacts() -> Dict[str, Any]:
     management_dashboard = loaded.get("management_dashboard") or {}
     fraud = loaded.get("fraud_analysis") or {}
 
+    fraud = merge_full_fraud_comparison(
+        loaded.get("fraud_analysis") or {},
+        _try_load_json,
+        root,
+        fallbacks,
+    )
+
     management_summary = (management_dashboard.get("management_summary") or
                           fraud.get("warning_result", {}).get("management_summary") or {})
     warnings = management_dashboard.get("warnings") or fraud.get("warning_result", {}).get("warnings") or []
@@ -101,7 +113,10 @@ def _load_latest_artifacts() -> Dict[str, Any]:
                     fraud.get("summary", {}).get("overall_risk_level") or
                     fraud.get("warning_result", {}).get("overall_risk_level") or
                     "UNKNOWN")
-    top_anomalies = (fraud.get("anomaly_result", {}) or {}).get("top_anomalies") or []
+    top_anomalies = filter_top_anomalies_for_display(
+        (fraud.get("anomaly_result", {}) or {}).get("top_anomalies") or []
+    )
+    dollar_alarm_alerts = build_dollar_alarm_alerts(fraud)
 
     last_updated = management_dashboard.get("last_updated") or management_dashboard.get("management_summary", {}).get("summary_timestamp")
     execution_time = fraud.get("execution_time")
@@ -114,6 +129,11 @@ def _load_latest_artifacts() -> Dict[str, Any]:
             "overall_risk_level": overall_risk,
             "warnings_count": len(warnings),
             "top_anomalies_count": len(top_anomalies),
+            "dollar_alarm_count": len(dollar_alarm_alerts),
+            "dollar_alarm_high_count": sum(
+                1 for a in dollar_alarm_alerts
+                if (a.get("dollar_alarm_level") or "").upper() == "HIGH"
+            ),
             "last_updated": last_updated,
             "execution_time": execution_time,
         },
@@ -126,6 +146,7 @@ def _load_latest_artifacts() -> Dict[str, Any]:
         "fraud_analysis": {
             "execution_time": execution_time,
             "anomaly_result": {"top_anomalies": top_anomalies[:10]},
+            "dollar_alarm_alerts": dollar_alarm_alerts[:10],
             "llm_result": fraud.get("llm_result", {}),
             "summary": fraud.get("summary", {}),
         },

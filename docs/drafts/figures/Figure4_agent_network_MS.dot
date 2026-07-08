@@ -1,0 +1,44 @@
+/* Figure 4 — MS insertion variant (2x2 macro-blocks, large type for Word) */
+digraph NGAME_Fig4_MS {
+    rankdir=TB;
+    bgcolor="white";
+    splines=polyline;
+    nodesep=0.75;
+    ranksep=0.90;
+    pad=0.50;
+    fontname="Helvetica";
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=24,
+          margin="0.30,0.22"];
+    edge [fontname="Helvetica-Bold", fontsize=19, color="#333333", arrowsize=1.0];
+
+    ORCH [label="Orchestration\n\n• Phase 1 Director Agent (training run)\n• Fraud Analysis Flow Manager (daily run)",
+          fillcolor="#FBFBE7", color="#C9C97A", width=4.2, height=1.6];
+
+    SRC [label="Data & Knowledge Sources\n\n• QuickBooks Online API (read-only OAuth)\n• Today.ttl / Yesterday.ttl (OWL snapshots)\n• Training Matrix (mean, std, daily columns)\n• CPI Rolling Buffer (last 30 days)\n• Misappropriation taxonomy + transaction types (ACFE)",
+         fillcolor="#FBFBE7", color="#C9C97A", width=4.2, height=2.4];
+
+    STAT [label="Statistical Detection — Layers 1–2\n(18 transaction types)\n\n• Data Extraction Agent\n• Anomaly Injection Agent (demo / test only)\n• CPI Analysis Agent (Jaccard + wCPI)\n• Sequence CPI Agent (slow-burn detector)\n• Churn Comparison Agent (z-score)\n• Anomaly Identification Agent (top-3)",
+          fillcolor="#EEF6EE", color="#9CC79C", width=4.2, height=2.8];
+
+    ALERT [label="Interpretation & Alerting — Layers 3–4\n\n• Account Mapping Agent\n• LLM Analysis Agent (Ollama RAG)\n• Misappropriation Mapping & Scoring (ACFE anchor)\n• Credit-Card Watch Agent\n• Management Warning Agent (HIGH / MEDIUM / LOW)",
+           fillcolor="#FBEFEF", color="#D6A3A3", width=4.2, height=2.6];
+
+    FRP [label="FRP — Dashboard / Email Alerts",
+         fillcolor="#FFF3CD", color="#C9A227", fontsize=24, width=3.8, height=0.7];
+
+    /* 2x2 placement */
+    { rank=same; ORCH; SRC; }
+    { rank=same; STAT; ALERT; }
+
+    ORCH  -> STAT  [style=invis];
+    SRC   -> ALERT [style=invis];
+    ORCH  -> SRC   [style=invis];
+    STAT  -> ALERT [style=invis];
+
+    /* primary flow */
+    ORCH  -> STAT  [label="  orchestrates  ", constraint=false];
+    STAT  -> ALERT [label="  top-3 anomalies  "];
+    SRC   -> STAT  [label="  feeds  ", constraint=false];
+    SRC   -> ALERT [label="  taxonomy + QBO  ", constraint=false];
+    ALERT -> FRP   [label="  alerts  "];
+}

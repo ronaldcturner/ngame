@@ -12,6 +12,10 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 import logging
 
+from ngame_contractor_extraction import (
+    build_contractor_payment_records,
+    contractor_vendor_ids,
+)
 from ngame_quickbooks_oauth import (
     QuickBooksOAuthError,
     default_quickbooks_config_path,
@@ -288,7 +292,7 @@ class NGameDataExtractionAgent:
                 'PurchaseOrders': ('quickbooks.objects.purchaseorder', 'PurchaseOrder'),
                 'Receipts': ('quickbooks.objects.receipt', 'Receipt'),
                 'Recurring_Transactions': ('quickbooks.objects.recurringtransaction', 'RecurringTransaction'),
-                'Contractors': ('quickbooks.objects.vendor', 'Vendor'),
+                # Contractors (φ14) populated after loop — payment txns to 1099 vendors
                 'Mileage': ('quickbooks.objects.vehicle', 'Vehicle'),
                 'ChartOfAccounts': ('quickbooks.objects.account', 'Account'),
                 'CreditCardTransactions': ('quickbooks.objects.creditcardpayment', 'CreditCardPayment'),
@@ -309,6 +313,8 @@ class NGameDataExtractionAgent:
             
             # Retrieve data for each transaction type
             for tx_type, info in transaction_types.items():
+                if tx_type == 'Contractors':
+                    continue
                 if tx_type in api_mappings:
                     module_name, class_name = api_mappings[tx_type]
                     try:
@@ -346,7 +352,10 @@ class NGameDataExtractionAgent:
                         'record_count': 0,
                         'error': 'No API mapping available'
                     }
-            
+
+            if 'Contractors' in transaction_types:
+                self._populate_contractors_row(data, extraction_stats)
+
             logger.info(f"✅ {self.name}: Data extraction completed - {extraction_stats['total_records']} total records")
             return {
                 'success': True,
@@ -364,6 +373,40 @@ class NGameDataExtractionAgent:
                 'stats': {}
             }
     
+    def _populate_contractors_row(
+        self,
+        data: Dict[str, List[Dict[str, Any]]],
+        extraction_stats: Dict[str, Any],
+    ) -> None:
+        """
+        φ14 Contractors: payment transactions to vendors flagged Vendor1099.
+        φ18 Vendors (all vendor master records) is populated separately in the main loop.
+        """
+        vendors = data.get('vendors') or []
+        contractor_ids = contractor_vendor_ids(vendors)
+        contractor_records = build_contractor_payment_records(
+            contractor_ids,
+            purchases=data.get('expenses') or [],
+            bill_payments=data.get('bill_payments') or [],
+            bills=data.get('bills') or [],
+        )
+        data['contractors'] = contractor_records
+        record_count = len(contractor_records)
+        extraction_stats['total_records'] += record_count
+        extraction_stats['successful_extractions'] += 1
+        extraction_stats['extraction_details']['Contractors'] = {
+            'success': True,
+            'record_count': record_count,
+            'error': None,
+            'contractor_vendor_count': len(contractor_ids),
+            'source': '1099_vendor_payments',
+        }
+        logger.info(
+            f"✅ Contractors (φ14): {record_count} payment record(s) "
+            f"from {len(contractor_ids)} Vendor1099 vendor(s); "
+            f"Vendors (φ18): {len(vendors)} master record(s)"
+        )
+
     def load_curated_transaction_types(self) -> Dict[str, Any]:
         """Load curated transaction types from TTL file."""
         logger.info(f"📚 {self.name}: Loading curated transaction types")
@@ -517,6 +560,10 @@ class NGameDataExtractionAgent:
             ("qb:hasGivenName", "GivenName", "First name"),
             ("qb:hasFamilyName", "FamilyName", "Last name"),
             ("qb:hasPaymentMethod", "PaymentMethod", "Payment method"),
+            ("qb:hasPaymentType", "PaymentType", "Payment type (e.g., Cash, Check, CreditCard)"),
+            ("qb:hasVendorName", "VendorName", "Vendor / payee name on the transaction"),
+            ("qb:hasGLAccount", "GLAccount", "GL account name or reference for the transaction"),
+            ("qb:hasPrivateNote", "PrivateNote", "Private note / memo field"),
             ("qb:hasUnappliedAmount", "UnappliedAmount", "Unapplied amount"),
             ("qb:hasHours", "Hours", "Hours worked"),
             ("qb:hasMinutes", "Minutes", "Minutes worked"),
@@ -577,6 +624,31 @@ class NGameDataExtractionAgent:
                         properties.append(f"    qb:hasUnappliedAmount {item['UnappliedAmt']}")
                     if item.get('PaymentMethodRef'):
                         properties.append(f"    qb:hasPaymentMethod \"{item['PaymentMethodRef']}\"")
+                    if item.get('PaymentType'):
+                        properties.append(f"    qb:hasPaymentType \"{item['PaymentType']}\"")
+                    # Purchase / expense records often store payee and account as nested refs
+                    entity_ref = item.get('EntityRef')
+                    if isinstance(entity_ref, dict):
+                        vendor_name = entity_ref.get('name') or entity_ref.get('value')
+                        if vendor_name:
+                            properties.append(f"    qb:hasVendorName \"{vendor_name}\"")
+                    elif entity_ref:
+                        properties.append(f"    qb:hasVendorName \"{entity_ref}\"")
+
+                    account_ref = item.get('AccountRef')
+                    if isinstance(account_ref, dict):
+                        gl_name = account_ref.get('name') or account_ref.get('value')
+                        if gl_name:
+                            properties.append(f"    qb:hasGLAccount \"{gl_name}\"")
+                    elif account_ref:
+                        properties.append(f"    qb:hasGLAccount \"{account_ref}\"")
+
+                    private_note = item.get('PrivateNote')
+                    if private_note:
+                        # Escape quotes to avoid breaking Turtle literals
+                        safe_note = str(private_note).replace('"', "'").strip()
+                        if safe_note:
+                            properties.append(f"    qb:hasPrivateNote \"{safe_note}\"")
                     if item.get('Hours'):
                         properties.append(f"    qb:hasHours {item['Hours']}")
                     if item.get('Minutes'):

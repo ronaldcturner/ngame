@@ -185,6 +185,16 @@ CC_CHARGE_CLASSES = [
 CC_CREDIT_CLASSES = [
     'CreditCardCredit', 'Credit_Card_Credit', 'CreditCard_Credit',
 ]
+# NGAME TTL stores QBO Purchases as Expenses / ExpenseTransaction (PaymentType=CreditCard).
+EXPENSE_LIKE_CLASSES = [
+    'Expenses', 'ExpenseTransaction', 'CreditCardTransactions',
+]
+PAYMENT_TYPE_PROPS = ['hasPaymentType', 'hasPaymentMethod', 'PaymentType']
+CC_PAYMENT_HINTS = ('creditcard', 'credit card', 'credit_card')
+CC_ACCOUNT_HINTS = (
+    'visa', 'mastercard', 'amex', 'american express', 'discover',
+    'credit card', 'company card', 'corp card', 'chase card', 'capital one',
+)
 
 # Property name variants tried in order
 VENDOR_PROPS    = ['hasVendorName', 'hasPayeeName', 'hasVendor', 'hasPayee',
@@ -294,8 +304,10 @@ class NGameCreditCardWatchAgent:
 
     def _extract_cc_transactions(self) -> List[Dict]:
         """
-        Load all CreditCardCharge and CreditCardCredit individuals from Today.ttl.
-        Returns a list of dicts with vendor_name, gl_account, amount, date, memo.
+        Load credit-card transactions from Today.ttl.
+
+        Supports dedicated CC classes and QBO Purchase rows stored as Expenses
+        with qb:hasPaymentType \"CreditCard\".
         """
         logger.info(f"📖 {self.name}: Parsing CC transactions from {self.today_file}")
 
@@ -308,28 +320,31 @@ class NGameCreditCardWatchAgent:
             qbo = Namespace("http://www.semanticweb.org/quickbooks/ontology#")
 
             transactions: List[Dict] = []
-            target_classes = CC_CHARGE_CLASSES + CC_CREDIT_CLASSES
+            seen_uris: set = set()
+            dedicated_classes = CC_CHARGE_CLASSES + CC_CREDIT_CLASSES
 
-            for class_name in target_classes:
+            def _add_tx(subject, class_name: str, props: Dict[str, str]) -> None:
+                uri = str(subject)
+                if uri in seen_uris:
+                    return
+                if class_name in EXPENSE_LIKE_CLASSES and not self._looks_like_credit_card(props):
+                    return
+                seen_uris.add(uri)
+                transactions.append(
+                    self._transaction_from_props(
+                        uri, class_name, props,
+                        is_credit=class_name in CC_CREDIT_CLASSES,
+                    )
+                )
+
+            for class_name in dedicated_classes + EXPENSE_LIKE_CLASSES:
                 class_uri = qbo[class_name]
-                for s, _, _ in g.triples((None, RDF.type, class_uri)):
-                    props = {}
-                    for _, prop_p, prop_o in g.triples((s, None, None)):
+                for subject, _, _ in g.triples((None, RDF.type, class_uri)):
+                    props: Dict[str, str] = {}
+                    for _, prop_p, prop_o in g.triples((subject, None, None)):
                         pname = str(prop_p).split('#')[-1]
                         props[pname] = str(prop_o)
-
-                    tx = {
-                        'uri':          str(s),
-                        'tx_class':     class_name,
-                        'is_credit':    class_name in CC_CREDIT_CLASSES,
-                        'vendor_name':  self._pick(props, VENDOR_PROPS,  ''),
-                        'gl_account':   self._pick(props, ACCOUNT_PROPS, ''),
-                        'amount':       self._to_float(self._pick(props, AMOUNT_PROPS, '0')),
-                        'date':         self._pick(props, DATE_PROPS,    ''),
-                        'memo':         self._pick(props, MEMO_PROPS,    ''),
-                        'raw_props':    props,
-                    }
-                    transactions.append(tx)
+                    _add_tx(subject, class_name, props)
 
             logger.info(
                 f"✅ {self.name}: Extracted {len(transactions)} CC transaction(s)"
@@ -339,6 +354,36 @@ class NGameCreditCardWatchAgent:
         except Exception as e:
             logger.error(f"❌ {self.name}: Error parsing TTL for CC transactions: {e}")
             return []
+
+    @staticmethod
+    def _transaction_from_props(
+        uri: str,
+        class_name: str,
+        props: Dict[str, str],
+        is_credit: bool = False,
+    ) -> Dict[str, Any]:
+        return {
+            'uri': uri,
+            'tx_class': class_name,
+            'is_credit': is_credit,
+            'vendor_name': NGameCreditCardWatchAgent._pick(props, VENDOR_PROPS, ''),
+            'gl_account': NGameCreditCardWatchAgent._pick(props, ACCOUNT_PROPS, ''),
+            'amount': NGameCreditCardWatchAgent._to_float(
+                NGameCreditCardWatchAgent._pick(props, AMOUNT_PROPS, '0')
+            ),
+            'date': NGameCreditCardWatchAgent._pick(props, DATE_PROPS, ''),
+            'memo': NGameCreditCardWatchAgent._pick(props, MEMO_PROPS, ''),
+            'payment_type': NGameCreditCardWatchAgent._pick(props, PAYMENT_TYPE_PROPS, ''),
+            'raw_props': props,
+        }
+
+    @staticmethod
+    def _looks_like_credit_card(props: Dict[str, str]) -> bool:
+        payment = NGameCreditCardWatchAgent._pick(props, PAYMENT_TYPE_PROPS, '').lower()
+        if any(hint in payment.replace('_', '').replace(' ', '') for hint in CC_PAYMENT_HINTS):
+            return True
+        gl_account = NGameCreditCardWatchAgent._pick(props, ACCOUNT_PROPS, '').lower()
+        return any(hint in gl_account for hint in CC_ACCOUNT_HINTS)
 
     # ── Vendor Classification ─────────────────────────────────────────────────
 

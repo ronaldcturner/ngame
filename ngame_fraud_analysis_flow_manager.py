@@ -286,6 +286,7 @@ class NGameFraudAnalysisFlowManager:
                     'sequence_high_count':           seq_high,
                     'sequence_medium_count':         seq_medium,
                     'cc_watch_flagged':              _cc_sum.get('total_flagged', 0),
+                    'cc_watch_transactions':         _cc_sum.get('total_cc_transactions', 0),
                     'cc_watch_critical':             _cc_sum.get('critical_count', 0),
                     'cc_watch_high':                 _cc_sum.get('high_count', 0),
                     'cc_watch_structuring':          _cc_sum.get('structuring_flags', 0),
@@ -354,14 +355,14 @@ class NGameFraudAnalysisFlowManager:
                 # Convert differences to 1-based indexing
                 if 'differences' in comparison:
                     for diff in comparison['differences']:
-                        diff['cpi_index_readable'] = f"φ{diff['index'] + 1}"
+                        diff['cpi_index_readable'] = f"φ{diff['index']}"
             
             # Convert top anomalies to 1-based indexing
             if 'anomaly_result' in readable_result and readable_result['anomaly_result']['success']:
                 anomaly_result = readable_result['anomaly_result']
                 if 'top_anomalies' in anomaly_result:
                     for anomaly in anomaly_result['top_anomalies']:
-                        anomaly['cpi_index_readable'] = f"φ{anomaly['index'] + 1}"
+                        anomaly['cpi_index_readable'] = f"φ{anomaly['index']}"
             
             # Save readable version
             readable_file = self.fraud_analysis_file.replace('.json', '_readable.json')
@@ -486,7 +487,7 @@ class NGameFraudAnalysisFlowManager:
                     clean_differences = []
                     for diff in comparison['differences']:
                         clean_diff = {
-                            'cpi_index': f"φ{diff['index'] + 1}",
+                            'cpi_index': f"φ{diff['index']}",
                             'today_value': diff['today_value'],
                             'average_value': diff['average_value'],
                             'absolute_difference': diff['absolute_difference'],
@@ -516,7 +517,7 @@ class NGameFraudAnalysisFlowManager:
                     clean_ranked_differences = []
                     for diff in ranking['ranked_differences']:
                         clean_diff = {
-                            'cpi_index': f"φ{diff['index'] + 1}",
+                            'cpi_index': f"φ{diff['index']}",
                             'today_value': diff['today_value'],
                             'average_value': diff['average_value'],
                             'absolute_difference': diff['absolute_difference'],
@@ -546,7 +547,7 @@ class NGameFraudAnalysisFlowManager:
                     clean_top_anomalies = []
                     for anomaly in anomaly_result['top_anomalies']:
                         clean_anomaly = {
-                            'cpi_index': f"φ{anomaly['index'] + 1}",
+                            'cpi_index': f"φ{anomaly['index']}",
                             'transaction_type': anomaly['transaction_type'],
                             'today_value': anomaly['today_value'],
                             'average_value': anomaly['average_value'],
@@ -568,6 +569,16 @@ class NGameFraudAnalysisFlowManager:
             for key in ['account_result', 'llm_result', 'warning_result', 'summary']:
                 if key in readable_result:
                     clean_data[key] = readable_result[key]
+
+            # Credit Card Watch — keep summary + top flags for dashboard display
+            if readable_result.get('cc_watch_result'):
+                ccwr = readable_result['cc_watch_result']
+                clean_data['cc_watch_result'] = {
+                    'success': ccwr.get('success'),
+                    'summary': ccwr.get('summary') or {},
+                    'cc_flags': (ccwr.get('cc_flags') or [])[:20],
+                    'scan_timestamp': ccwr.get('scan_timestamp'),
+                }
             
             # Save truly clean version
             clean_file = self.fraud_analysis_file.replace('.json', '_readable_truly_clean.json')

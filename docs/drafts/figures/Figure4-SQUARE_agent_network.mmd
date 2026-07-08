@@ -1,0 +1,63 @@
+%% Figure 4' (SQUARE / 2x2 variant) — NGAME Agent Interaction Network
+flowchart TB
+    subgraph ORCH["Orchestration"]
+        direction TB
+        P1["Phase 1 Director Agent<br/>(Training run)"]
+        FAM["Fraud Analysis Flow Manager<br/>(Daily run)"]
+    end
+
+    subgraph SRC["Data & Knowledge Sources"]
+        direction TB
+        QBO["QuickBooks Online API<br/>OAuth 2.0, read-only"]
+        TTL["Today.ttl / Yesterday.ttl<br/>OWL snapshots"]
+        MTX["Training Matrix .xlsx<br/>μ col B, σ col C, daily cols"]
+        BUF["CPI Rolling Buffer<br/>last 30 days"]
+        TAX["Asset_Misappropriation.ttl +<br/>Curated Transaction Types.ttl<br/>(ACFE Fraud Tree)"]
+    end
+
+    subgraph STAT["Statistical Detection — Layers 1-2 (18 transaction types)"]
+        direction TB
+        DE["Data Extraction Agent"]
+        INJ["Anomaly Injection Agent<br/>(demo / test only)"]
+        CPI["CPI Analysis Agent<br/>Jaccard persistence + dollar-weighted wCPI"]
+        SCPI["Sequence CPI Agent<br/>slow-burn, window L"]
+        CC["Churn Comparison Agent<br/>z-score vs μ/σ"]
+        AID["Anomaly Identification Agent<br/>top-3 by |z|"]
+    end
+
+    subgraph ALERT["Interpretation & Alerting — Layers 3-4"]
+        direction TB
+        AM["Account Mapping Agent<br/>Chart of Accounts"]
+        LLM["LLM Analysis Agent<br/>Ollama llama3.1:8b, RAG"]
+        MAP["Misappropriation Mapping & Scoring<br/>deterministic ACFE anchor"]
+        CCW["Credit-Card Watch Agent<br/>personal-use / structuring"]
+        MW["Management Warning Agent<br/>HIGH / MEDIUM / LOW"]
+    end
+
+    FRP["FRP — Dashboard / Email Alerts"]
+
+    %% rank hints to encourage a 2x2 grid
+    ORCH ~~~ SRC
+    STAT ~~~ ALERT
+
+    P1 -->|training| DE
+    FAM -->|daily| DE
+    QBO --> DE --> TTL
+    TTL --> CPI
+    INJ -. test .-> TTL
+    CPI --> MTX
+    CPI --> BUF --> SCPI
+    CPI --> CC
+    SCPI --> CC
+    MTX --> CC
+    CC --> AID --> AM
+    TTL --> AM
+    AM --> LLM
+    AM --> MAP
+    TAX --> LLM
+    TAX --> MAP
+    QBO --> CCW
+    LLM --> MW
+    MAP --> MW
+    CCW --> MW
+    MW --> FRP

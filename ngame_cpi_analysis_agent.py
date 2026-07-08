@@ -393,15 +393,13 @@ class NGameCpiAnalysisAgent:
         All arrays are positionally aligned: index 0 = Customers, …, index 17 = Vendors.
         Default for a type absent from both snapshots: CPI=1.0, rates=0.0.
         """
-        logger.info(f"📊 {self.name}: Generating CPI arrays")
+        from ngame_transaction_types import (
+            STANDARD_TRANSACTION_TYPES,
+            resolve_cpi_coefficient,
+            resolve_weighted_cpi_coefficient,
+        )
 
-        standard_transaction_types = [
-            'Customers', 'Recurring_payments', 'Invoices', 'Payments', 'Time_Activities',
-            'Bills', 'Bill_Payments', 'Expenses', 'Bank_Transactions', 'Sales_transactions',
-            'Products', 'PurchaseOrders', 'Recurring_Transactions', 'Contractors',
-            'Mileage', 'ChartOfAccounts', 'EmployeePayroll',
-            'Vendors',          # φ18 — high-risk fraud hot-spot
-        ]
+        logger.info(f"📊 {self.name}: Generating CPI arrays")
 
         _absent          = {'cpi': 1.0, 'addition_rate': 0.0, 'deletion_rate': 0.0}
         _absent_weighted = {'w_cpi': 1.0}
@@ -411,14 +409,16 @@ class NGameCpiAnalysisAgent:
         deletion_rate_array = []
         weighted_cpi_array  = []
 
-        for tx_type in standard_transaction_types:
-            coeff = cpi_coefficients.get(tx_type, _absent)
+        for tx_type in STANDARD_TRANSACTION_TYPES:
+            coeff = resolve_cpi_coefficient(cpi_coefficients, tx_type, _absent)
             cpi_array.append(coeff['cpi'])
             addition_rate_array.append(coeff['addition_rate'])
             deletion_rate_array.append(coeff['deletion_rate'])
 
             if weighted_cpi_coefficients is not None:
-                wcoeff = weighted_cpi_coefficients.get(tx_type, _absent_weighted)
+                wcoeff = resolve_weighted_cpi_coefficient(
+                    weighted_cpi_coefficients, tx_type, _absent_weighted
+                )
                 weighted_cpi_array.append(wcoeff['w_cpi'])
             else:
                 weighted_cpi_array.append(coeff['cpi'])   # fall back to unweighted

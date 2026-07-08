@@ -1,0 +1,71 @@
+{
+  "success": true,
+  "top_anomalies": [
+    {
+      "index": 1,
+      "phi_index": "\u03c61",
+      "transaction_type": "Customers",
+      "today_value": 0.8,
+      "average_value": 0.3,
+      "absolute_difference": 0.5,
+      "percent_deviation": 166.67,
+      "deviation_level": "HIGH",
+      "z_score": 10.0,
+      "abs_z_score": 10.0,
+      "dollar_alarm_level": "LOW",
+      "dollar_alarm": false,
+      "dollar_z_score": 0.0,
+      "dollar_abs_z_score": 0.0,
+      "composite_alarm": false,
+      "rank": 1
+    },
+    {
+      "index": 6,
+      "phi_index": "\u03c66",
+      "transaction_type": "Bills",
+      "today_value": 0.6,
+      "average_value": 0.4,
+      "absolute_difference": 0.2,
+      "percent_deviation": 50.0,
+      "deviation_level": "HIGH",
+      "z_score": 4.0,
+      "abs_z_score": 4.0,
+      "dollar_alarm_level": "LOW",
+      "dollar_alarm": false,
+      "dollar_z_score": 0.0,
+      "dollar_abs_z_score": 0.0,
+      "composite_alarm": false,
+      "rank": 2
+    },
+    {
+      "index": 11,
+      "phi_index": "\u03c611",
+      "transaction_type": "Products",
+      "today_value": 0.3,
+      "average_value": 0.2,
+      "absolute_difference": 0.1,
+      "percent_deviation": 50.0,
+      "deviation_level": "MEDIUM",
+      "z_score": 2.0,
+      "abs_z_score": 2.0,
+      "dollar_alarm_level": "LOW",
+      "dollar_alarm": false,
+      "dollar_z_score": 0.0,
+      "dollar_abs_z_score": 0.0,
+      "composite_alarm": false,
+      "rank": 3
+    }
+  ],
+  "anomaly_stats": {
+    "count": 3,
+    "mean_deviation": 88.88999999999999,
+    "std_deviation": 54.99876544068966,
+    "max_deviation": 166.67,
+    "min_deviation": 50.0,
+    "deviation_levels": {
+      "HIGH": 2,
+      "MEDIUM": 1
+    }
+  },
+  "identification_timestamp": "2026-06-24T13:55:19.904129"
+}

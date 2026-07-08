@@ -1,0 +1,32 @@
+/* Figure 7 - Panel B: NGAME Daily Fraud Analysis - Interpretation & Alerting (Layers 3-4) */
+digraph NGAME_Fig7B {
+    rankdir=TB;
+    bgcolor="white";
+    splines=polyline;
+    nodesep=0.30;
+    ranksep=0.38;
+    pad=0.15;
+    fontname="Helvetica";
+    node [shape=box, style="rounded,filled", fillcolor="white",
+          color="black", fontname="Helvetica", fontsize=14,
+          margin="0.16,0.10"];
+    edge [fontname="Helvetica", fontsize=12, color="black", arrowsize=0.8];
+
+    FROMA   [label="From Panel A:\ntop-3 anomalies",
+             style="rounded,filled,dashed", fillcolor="#E8E8E8", color="black"];
+    FROMACC [label="From Panel A:\ncredit-card flags",
+             style="rounded,filled,dashed", fillcolor="#E8E8E8", color="black"];
+    AM  [label="Account Mapping\ntop-3 types -> Chart of Accounts"];
+    LLM [label="Step 6 - LLM Analysis (RAG)\nOllama llama3.1:8b +\nAsset_Misappropriation.ttl"];
+    MAP [label="Deterministic anchor\nACFE scheme priors\n(reproducible cross-check)"];
+    MW  [label="Step 7 - Management Warning\nrisk level + confidence\ndashboard / email"];
+    FRP [label="FRP", fillcolor="#DDDDDD", color="black"];
+
+    FROMA   -> AM;
+    AM  -> LLM;
+    AM  -> MAP;
+    LLM -> MW;
+    MAP -> MW;
+    FROMACC -> MW;
+    MW  -> FRP;
+}
