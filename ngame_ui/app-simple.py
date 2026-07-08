@@ -60,17 +60,21 @@ TRAINING_TARGET_DAYS = 30
 FRP_MODE = os.environ.get("NGAME_UI_FRP_MODE", "1").lower() not in ("0", "false", "no")
 
 
-def _ui_feature_visible(env_var: str) -> bool:
-    """Visible in consultant mode unless overridden; hidden on FRP / earliest installs."""
+def _ui_feature_visible(env_var: str, *, frp_default: bool | None = None) -> bool:
+    """Feature visibility; env var overrides. frp_default applies when FRP_MODE and env unset."""
     val = os.environ.get(env_var, "").lower()
     if val in ("1", "true", "yes"):
         return True
     if val in ("0", "false", "no"):
         return False
+    if FRP_MODE and frp_default is not None:
+        return frp_default
     return not FRP_MODE
 
 
-SHOW_MANAGEMENT_WARNINGS = _ui_feature_visible("NGAME_UI_SHOW_MANAGEMENT_WARNINGS")
+SHOW_MANAGEMENT_WARNINGS = _ui_feature_visible(
+    "NGAME_UI_SHOW_MANAGEMENT_WARNINGS", frp_default=True
+)
 SHOW_TOTAL_ANALYSES = _ui_feature_visible("NGAME_UI_SHOW_TOTAL_ANALYSES")
 SHOW_ACTIVE_ALERTS = _ui_feature_visible("NGAME_UI_SHOW_ACTIVE_ALERTS")
 

@@ -894,7 +894,7 @@
             else riskEl.classList.add('text-info');
             }
 
-            // Warnings (consultant installs only)
+            // Management Warnings (shown for FRP by default)
             if (SHOW_MANAGEMENT_WARNINGS) {
                 const warnings = (data.management_dashboard && data.management_dashboard.warnings) ? data.management_dashboard.warnings : [];
                 const badge = document.getElementById('warningsCountBadge');

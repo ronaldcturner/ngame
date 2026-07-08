@@ -41,22 +41,26 @@ NGAME does **not** install on the bookkeeper's computer.
 
 1. Surveillance computer **on**, **internet** working.
 2. Click your **NGAME Dashboard** bookmark (your technical contact creates this — usually `http://localhost:5001/dashboard`).
-3. If the page will not load, call your **NGAME technical contact**. Do not open Terminal or reinstall software.
+3. The page title is **NGAME Daily Monitoring**. You see a simple layout — one main **Dashboard** link in the menu, not consultant-only pages (Analysis, Settings, Demo Scenario, and similar).
+4. If the page will not load, call your **NGAME technical contact**. Do not open Terminal or reinstall software.
 
 ---
 
 ## Which button to click
 
-On the dashboard, scroll to **NGAME Operations**.
+Scroll to **NGAME Operations**. Your dashboard shows **one large green button** — NGAME picks training vs. fraud automatically from your phase.
 
-| Your phase | What you see at the top | Button to use |
-|------------|-------------------------|---------------|
-| **Phase I** (days 1–30) | **Training Progress** and a progress bar | Large green **Run Today's Training Day** — *or* green **Run Training Day** in the Training box |
-| **Phase II** (day 31+) | **Daily Fraud Monitoring** | Large green **Run Today's Fraud Check** — *or* blue **Run Churn Analysis** in the Daily Churn box |
+| Your phase | Banner at top | Phase badge | Button label |
+|------------|---------------|-------------|--------------|
+| **Phase I** (days 1–30) | **Training Progress** + progress bar | **Phase I** (green) | **Run Today's Training Day** |
+| **Phase II** (day 31+) | **Daily Fraud Monitoring** + progress bar | **Phase II** (blue) | **Run Today's Fraud Check** |
 
-Use **one** button per day — the large top button is enough. The smaller buttons do the same kind of run if your contact prefers them.
+Click **that one button** once per business day. You do **not** see separate Training Mode or Daily Churn boxes — those are for your technical contact’s consultant view only.
 
-When the progress bar shows **30 of 30**, you are in Phase II from the **next** business day onward.
+Progress text examples:
+
+- Phase I: `Day 8 of 30 recorded — 22 business day(s) remaining in Phase I.`
+- After day 30: `Training complete (30 of 30 business days). Use Daily Fraud Check each business day.` — **tomorrow** the button reads **Run Today's Fraud Check**.
 
 ---
 
@@ -65,7 +69,7 @@ When the progress bar shows **30 of 30**, you are in Phase II from the **next** 
 | Check | What to do |
 |-------|------------|
 | Internet | Open any website; if it loads, you are connected |
-| Ollama (Phase II) | On Mac: Ollama icon in menu bar, or open **Ollama** from Applications and wait ~30 seconds. Required for fraud checks after training |
+| Ollama (Phase II) | **Mac:** Ollama icon in menu bar, or open **Ollama** from Applications and wait ~30 seconds. **Windows:** llama icon in the system tray, or open **Ollama** from the Start menu. Required for fraud checks after training |
 | Audit Log (Phase I) | At least weekly during days 1–30 (see [Audit Log protocol](#quickbooks-audit-log-protocol)). If the log looks suspicious **today**, call your technical contact **before** running training |
 
 ---
@@ -76,11 +80,11 @@ When the progress bar shows **30 of 30**, you are in Phase II from the **next** 
 
 1. Open **NGAME Dashboard** bookmark.
 2. Scroll to **NGAME Operations**.
-3. Click **Run Today's Training Day** (large green) or **Run Training Day**.
-4. Watch the **live output** panel until the run **finishes** (about 1–3 minutes). Do not close the tab while it runs.
-5. Confirm success — e.g. `Day 8 recorded successfully` and days remaining.
-6. On day 30 completion, note that training is complete; **tomorrow** use Phase II buttons.
-7. Glance at **Overall Risk**, **Management Warnings**, and **Top Anomalies** if shown.
+3. Click the large green **Run Today's Training Day** button.
+4. A **live output** panel opens. Watch until the title shows **finished** (about 1–3 minutes). Do not close the tab while it runs.
+5. Confirm success in the log — e.g. `✅ Day 8 recorded successfully.` and `📅 22 day(s) remaining.` On day 30: `🎉 All 30 training days collected!`
+6. When training is complete, **tomorrow** the same button reads **Run Today's Fraud Check** (Phase II).
+7. Glance at **Overall Risk**, **Top Anomalies**, and (in Phase II) **Management Warnings**. Quiet training days may show no anomalies — that is normal.
 8. Close the browser when done.
 
 ---
@@ -91,8 +95,8 @@ When the progress bar shows **30 of 30**, you are in Phase II from the **next** 
 
 1. Open **NGAME Dashboard** bookmark.
 2. Scroll to **NGAME Operations**.
-3. Click **Run Today's Fraud Check** (large green) or **Run Churn Analysis** (blue).
-4. Wait until live output shows **finished**.
+3. Click the large green **Run Today's Fraud Check** button.
+4. Wait until the live output title shows **Today's NGAME Check — finished** (or similar **finished** wording).
 5. Use this table:
 
 | What you see | Meaning | What you do |
@@ -110,17 +114,21 @@ When the progress bar shows **30 of 30**, you are in Phase II from the **next** 
 
 | Section | What it tells you |
 |---------|-------------------|
-| **Training Progress** | Phase, days recorded (e.g. 8 of 30), progress bar |
-| **Overall Risk** | LOW, MEDIUM, HIGH, or similar |
-| **Multi-Day Pattern Alert** | Unusual pattern over several business days (slow-burn schemes) |
-| **Credit Card Watch** | Flags on today's card activity |
-| **Management Warnings** | Plain-language summary |
-| **Top Anomalies** | Most unusual categories **today** |
-| **Last Updated** | When results were generated |
+| **Training Progress** | Phase badge (I or II), days recorded (e.g. 8 of 30), progress bar |
+| **Overall Risk** | LOW, MEDIUM, HIGH, or UNKNOWN (UNKNOWN is common early in Phase I) |
+| **Last Updated** | When results were last generated |
+| **Multi-Day Pattern Alert** | Slow-burn patterns over a rolling window (~5 business days in Phase II). Badge **Building** until enough history exists |
+| **Credit Card Watch** | Card-misuse scan — runs automatically with each Phase II fraud check |
+| **Management Warnings** | Plain-language summary (Phase II; may be empty on quiet days) |
+| **Top Anomalies** | Elevated categories **today** (HIGH/MEDIUM only — quiet days may show **none**) |
+| **Category Activity (Today vs Yesterday)** | Record IDs added or removed overnight by transaction type |
+| **Dollar-Weighted Alerts** | Large dollar amounts out of proportion with record-count churn |
+| **Analysis Trends** | Chart of daily churn over training / surveillance history |
+| **Recent Activity** | Short log of recent runs |
 
-**Multi-day vs. single-day:** **Top Anomalies** is today's snapshot. **Multi-Day Pattern Alert** looks at a rolling window (often ~5 business days) and can flag gradual schemes when today alone looks normal.
+**Multi-day vs. single-day:** **Top Anomalies** and **Dollar-Weighted Alerts** are today's snapshot. **Multi-Day Pattern Alert** looks across several business days and can flag gradual schemes when today alone looks normal.
 
-The **live output** panel confirms the run you just started has finished.
+The **live output** panel under **NGAME Operations** confirms the run you just started has finished.
 
 ---
 
@@ -160,7 +168,7 @@ The Audit Log is **not** in NGAME. Review it in **QuickBooks Online** in your br
 
 ### Why it matters in training
 
-NGAME's baseline is your first **30 business days**. If misappropriation happened during training and you train on it, that activity can become "normal." The Audit Log checks books were legitimate **before** you click **Run Training Day**.
+NGAME's baseline is your first **30 business days**. If misappropriation happened during training and you train on it, that activity can become "normal." The Audit Log checks books were legitimate **before** you click **Run Today's Training Day**.
 
 ### How to open the Audit Log
 
@@ -214,7 +222,7 @@ Do **not** reinstall, use Terminal, or delete files. Call your **NGAME technical
 - Use Terminal or command windows for NGAME
 - Move, rename, or copy NGAME folders (backups are your technical contact's job)
 - Tell the bookkeeper about flagged accounts before your designated contact says to (especially HIGH)
-- Use **Demo Scenario** unless technical contact authorized a demo
+- Use **Demo Scenario** (not shown on your FRP dashboard — consultant/lab only)
 - Install NGAME on the bookkeeper's computer
 
 ---
@@ -231,10 +239,10 @@ Do **not** reinstall, use Terminal, or delete files. Call your **NGAME technical
 
 *Print and post near the surveillance computer.*
 
-| Phase | Button (either is fine) | When |
-|-------|-------------------------|------|
-| **I** (days 1–30) | **Run Today's Training Day** or **Run Training Day** | End of each business day |
-| **II** (day 31+) | **Run Today's Fraud Check** or **Run Churn Analysis** | End of each business day |
+| Phase | Button (one green button in NGAME Operations) | When |
+|-------|--------------------------------------------------|------|
+| **I** (days 1–30) | **Run Today's Training Day** | End of each business day |
+| **II** (day 31+) | **Run Today's Fraud Check** | End of each business day |
 
 **Open:** **NGAME Dashboard** bookmark only.
 
