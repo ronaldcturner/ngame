@@ -10,12 +10,11 @@
 
 | Document | Who reads it | What it covers |
 |----------|--------------|----------------|
-| **This file (`IMPLEMENTATION_GUIDE.md`)** | Technical consultant | Clone, Python env, credentials, Ollama, dashboard service, verification, FRP handoff |
+| **This file (`README.md` / `IMPLEMENTATION_GUIDE.md`)** | Technical consultant | Clone, Python env, credentials, Ollama, dashboard service, verification, FRP handoff — **same content in both filenames** |
 | **[FRP_OPERATIONS_GUIDE.md](FRP_OPERATIONS_GUIDE.md)** / **[.html](FRP_OPERATIONS_GUIDE.html)** | FRP | Bookmark, daily training/fraud checks, warnings, QuickBooks Audit Log |
-| **[README.md](README.md)** | Developers / consultants | Architecture, pipeline modules, CLI reference |
 | **[ngame_ui/README.md](ngame_ui/README.md)** | Consultants | Dashboard URLs, API endpoints, UI troubleshooting |
-
-Historical guides (CLI-era FRP workflow) are in **[docs/archive/](docs/archive/)** — not for new deployments.
+| **[ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md)** | Consultants | Dashboard failures and common fixes |
+| **[ANOMALY_INJECTION_AGENT_README.md](ANOMALY_INJECTION_AGENT_README.md)** | Technical validator | Optional injection harness (not for daily FRP use) |
 
 ### Surveillance computer architecture
 
@@ -60,7 +59,7 @@ Use this order. Check off each item before handoff.
 
 1. [ ] Install prerequisites (Python 3.10+, Git, accounting API access)
 2. [ ] Clone repo and create `.venv` at **repository root**
-3. [ ] `pip install -r requirements.txt`
+3. [ ] `pip install -r requirements.txt` and `pip install -r ngame_ui/requirements.txt`
 4. [ ] Copy and fill `wave_config.json` and/or `quickbooks_config.json` (or `.env`); for QBO live pulls: complete [QuickBooks Online OAuth](#quickbooks-online) (redirect URI + one-time authorization)
 5. [ ] Complete [§ 6 — Ollama](#6--ollama-before-phase-ii--fraud-analysis) (required before Phase II / Day 31)
 6. [ ] Smoke-test CLI: `python3 run_training_flow.py` from repo root (optional if dashboard works)
@@ -75,7 +74,7 @@ Use this order. Check off each item before handoff.
 
 ## Windows surveillance PC — trial install (start here)
 
-**This file is the single implementation guide.** You do not need this chat, older root-level guides, or anything under **[docs/archive/](docs/archive/)** for a new Windows trial.
+**This file is the single implementation guide** (`README.md` and `IMPLEMENTATION_GUIDE.md` are identical). You do not need internal research drafts or marketing materials for a new Windows trial.
 
 ### Before you install on the surveillance PC
 
@@ -93,7 +92,7 @@ Use **PowerShell**. Follow the sections in this order:
 | Step | What to do | Section below |
 |------|------------|-----------------|
 | 1 | Python 3.10+, Git, stable internet | [Prerequisites](#prerequisites) |
-| 2 | Clone repo, create `.venv`, `pip install -r requirements.txt` | [Windows installation](#windows-installation) §§ 1–4 |
+| 2 | Clone repo, create `.venv`, install root + `ngame_ui` requirements | [Windows installation](#windows-installation) §§ 1–4 |
 | 3 | `quickbooks_config.json` and/or `wave_config.json`; QBO: [OAuth prerequisite](#quickbooks-online) | [Credentials and configuration](#credentials-and-configuration) |
 | 4 | Complete Ollama setup (needed before Phase II / Day 31) | [Windows installation](#windows-installation) § 6 |
 | 5 | Optional smoke test: `python run_training_flow.py` | [Windows installation](#windows-installation) § 7 |
@@ -114,9 +113,10 @@ python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+python -m pip install -r ngame_ui/requirements.txt
 ```
 
-If PowerShell blocks activation, see [Troubleshooting](#troubleshooting). Substitute your actual **INSTALL_PATH** everywhere the [Windows auto-start](#windows--auto-start-at-login) batch file shows `C:\Users\you\Documents\ngame`.
+If PowerShell blocks activation, see [Troubleshooting](#troubleshooting). The repo includes **`start-dashboard.bat`** at the root (relative paths). Point Task Scheduler at that file after [Windows auto-start](#windows--auto-start-at-login).
 
 ### What the FRP uses (not this file)
 
@@ -135,15 +135,14 @@ git pull origin main
 .venv\Scripts\Activate.ps1
 ```
 
-Restart the dashboard (sign out/in if Task Scheduler starts it, or run `app-simple.py` once to test). Do **not** follow archived CLI daily workflows in **docs/archive/**.
+Restart the dashboard (sign out/in if Task Scheduler starts it, or run `app-simple.py` from `ngame_ui/` once to test).
 
 ### Related docs (installer only)
 
 | Need | Document |
 |------|----------|
 | Dashboard URLs / UI issues | [ngame_ui/README.md](ngame_ui/README.md), [ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md) |
-| Wave API setup | [NGAME_WAVE_GRAPHQL_README.md](NGAME_WAVE_GRAPHQL_README.md) |
-| Architecture / developers | [README.md](README.md) |
+| Wave API (optional) | Copy `wave_config.example.json` → `wave_config.json`; token and business ID from [developer.waveapps.com](https://developer.waveapps.com) |
 
 ---
 
@@ -232,9 +231,10 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
+pip install -r ngame_ui/requirements.txt
 ```
 
-Allow 2–5 minutes on first install.
+Allow 2–5 minutes on first install. Root `requirements.txt` includes Flask for the dashboard; `ngame_ui/requirements.txt` pins the full UI set — install both.
 
 ### 5 — Credentials
 
@@ -399,6 +399,7 @@ With the venv active (`(.venv)` in the prompt), use **`python -m pip`** — not 
 ```powershell
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+python -m pip install -r ngame_ui/requirements.txt
 ```
 
 If install fails with **compiler** errors, install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) and retry.
@@ -532,7 +533,7 @@ cp wave_config.example.json wave_config.json
 Copy-Item wave_config.example.json wave_config.json
 ```
 
-Edit `wave_config.json` — token and business ID from [developer.waveapps.com](https://developer.waveapps.com). Details: **[NGAME_WAVE_GRAPHQL_README.md](NGAME_WAVE_GRAPHQL_README.md)**.
+Edit `wave_config.json` — set `access_token` and `business_id` from [developer.waveapps.com](https://developer.waveapps.com). Optional CLI: `python3 run_wave_extraction.py` (repo root, venv active).
 
 ### QuickBooks Online
 
@@ -662,7 +663,7 @@ A **UI-only demo** (no live QBO) may show the dashboard without OAuth—that is 
 | Students / bookkeepers | May post transactions in QBO UI; they do **not** run NGAME OAuth on the surveillance PC |
 | Developer portal login | For app keys and redirect URIs only—do not give students the developer password |
 
-Lab context: **[NGAME_Lab_QBO_Sandbox_Access.md](Training,%20Marketing,%20and%20Documentation/NGAME_Lab_QBO_Sandbox_Access.md)**.
+For a university lab sandbox, authorize as Company Admin on the sandbox company; students may post QBO data but do not run OAuth on the surveillance PC.
 
 #### QuickBooks OAuth troubleshooting
 
@@ -696,7 +697,7 @@ FRP browser  →  http://localhost:5001/dashboard  (app-simple.py)
                                            └─ tokens saved → live QBO API (sandbox or production)
 ```
 
-**Consultant order (QuickBooks):** (1) `quickbooks_config.json` → (2) register redirect URI in portal → (3) complete OAuth once → (4) start dashboard and verify → (5) [Dashboard service](#dashboard-service-required-for-frp) auto-start and FRP bookmark → (6) build training baseline via **Run Training Day** or **[NGAME_Training_Matrix_Build_Guide.html](NGAME_Training_Matrix_Build_Guide.html)**.
+**Consultant order (QuickBooks):** (1) `quickbooks_config.json` → (2) register redirect URI in portal → (3) complete OAuth once → (4) start dashboard and verify → (5) [Dashboard service](#dashboard-service-required-for-frp) auto-start and FRP bookmark → (6) build training baseline via **Run Training Day** (30 business days).
 
 **Fast demo without live QBO posting:** `python3 run_training_flow.py --demo` replays from `NGAME_Training_Matrix_SAVED.xlsx`—does not replace OAuth for live pulls.
 
@@ -866,12 +867,12 @@ launchctl load ~/Library/LaunchAgents/com.ngame.dashboard.plist
 
 **What you are building:** two pieces:
 
-1. A **batch file** (`.bat`) in your NGAME folder that starts the dashboard.
+1. The **`start-dashboard.bat`** file that ships at repository root (relative paths — works after any `git clone` without editing).
 2. A **Task Scheduler** job — a built-in Windows tool that runs that batch file at sign-in.
 
 | Item | Value |
 |------|--------|
-| **Batch file name** | `start-dashboard.bat` |
+| **Batch file name** | `start-dashboard.bat` (included in the repo) |
 | **Example location** | `C:\Users\you\Documents\ngame\start-dashboard.bat` |
 | **Task Scheduler task name** | `NGAME Dashboard` (you choose this in the wizard; use something recognizable) |
 
@@ -880,7 +881,7 @@ The batch file lives **inside your NGAME install folder** (repository root), nex
 **Before you start:**
 
 - [Start manually (testing)](#start-manually-testing) succeeded — **http://localhost:5001/dashboard** loads.
-- You know where you cloned NGAME: the **repository root** (folder containing `.venv`, `ngame_ui`, and `requirements.txt`).
+- You know where you cloned NGAME: the **repository root** (folder containing `.venv`, `ngame_ui`, `start-dashboard.bat`, and `requirements.txt`).
 
 #### Step 1 — Write down your install path
 
@@ -893,57 +894,40 @@ Get-Location
 
 Example output: `C:\Users\you\Documents\ngame`
 
-Use that string everywhere below as **INSTALL_PATH**. All paths in the batch file must match this exactly (backslashes `\`, not forward slashes).
+Use that string as **INSTALL_PATH** when pointing Task Scheduler at `start-dashboard.bat`.
 
-#### Step 2 — Create the logs folder
-
-Replace the example with your **INSTALL_PATH**:
+#### Step 2 — Confirm `logs` and the shipped batch file
 
 ```powershell
-New-Item -ItemType Directory -Force -Path "C:\Users\you\Documents\ngame\logs"
+New-Item -ItemType Directory -Force -Path ".\logs"
+Get-Item .\start-dashboard.bat
 ```
 
-#### Step 3 — Create `start-dashboard.bat`
-
-You are creating a new text file named **`start-dashboard.bat`** in **INSTALL_PATH** (repository root). Its entire contents are the block below — nothing else in the file.
-
-**Notepad (recommended):**
-
-1. Open **Notepad**.
-2. Paste the batch file contents (with your paths substituted).
-3. **File → Save As…**
-4. Navigate to your **INSTALL_PATH** folder (e.g. `C:\Users\you\Documents\ngame`).
-5. **Save as type:** **All Files (\*.\*)**
-6. **File name:** `start-dashboard.bat` (include the `.bat` extension — not `.bat.txt`).
-7. Click **Save**.
-
-**PowerShell alternative:**
-
-```powershell
-notepad "C:\Users\you\Documents\ngame\start-dashboard.bat"
-```
-
-(If Notepad asks to create a new file, click **Yes**.)
-
-**File contents** (substitute your **INSTALL_PATH** for the example path in all three lines):
+**Shipped file contents** (relative paths — do not hard-code a user folder unless you have a special layout):
 
 ```bat
 @echo off
-cd /d C:\Users\you\Documents\ngame\ngame_ui
-C:\Users\you\Documents\ngame\.venv\Scripts\pythonw.exe app-simple.py >> C:\Users\you\Documents\ngame\logs\dashboard.log 2>> C:\Users\you\Documents\ngame\logs\dashboard.err.log
+REM NGAME dashboard auto-start — place at repository root (ships with the repo).
+REM Double-click to test; Task Scheduler should run this file at logon.
+cd /d "%~dp0"
+if not exist "logs" mkdir logs
+cd /d "%~dp0ngame_ui"
+"%~dp0.venv\Scripts\pythonw.exe" app-simple.py >> "%~dp0logs\dashboard.log" 2>> "%~dp0logs\dashboard.err.log"
 ```
 
 | Part of the batch file | Points to |
 |------------------------|-----------|
-| `cd /d …\ngame_ui` | Dashboard working directory (same as [manual start](#start-manually-testing)) |
+| `%~dp0` | Folder containing the `.bat` (repository root) |
+| `…\ngame_ui` | Dashboard working directory (same as [manual start](#start-manually-testing)) |
 | `…\.venv\Scripts\pythonw.exe` | Python from the venv — **`pythonw.exe`** runs without a visible console window |
 | `app-simple.py` | Dashboard script |
-| `>> …\logs\dashboard.log` | Normal output log |
-| `2>> …\logs\dashboard.err.log` | Error log |
+| `…\logs\dashboard.log` / `.err.log` | Output logs |
 
-**Quick test:** Double-click `start-dashboard.bat` in File Explorer once. Wait a few seconds, then open **http://localhost:5001/dashboard**. If it loads, stop the test (close any running dashboard from Task Manager or reboot) before continuing to Step 4.
+If `start-dashboard.bat` is missing (old clone), create it with the contents above.
 
-#### Step 4 — Create the Task Scheduler job
+**Quick test:** Double-click `start-dashboard.bat` in File Explorer once. Wait a few seconds, then open **http://localhost:5001/dashboard**. If it loads, stop the test (close any running dashboard from Task Manager or reboot) before continuing to Step 3.
+
+#### Step 3 — Create the Task Scheduler job
 
 1. Press the **Windows key**, type **Task Scheduler**, press **Enter**.
 2. In the right **Actions** pane, click **Create Basic Task…**
@@ -965,14 +949,14 @@ In the **Properties** window that opens:
 11. **Settings** tab: uncheck **Stop the task if it runs longer than** — the dashboard is meant to run all day.
 12. Click **OK**. Enter your Windows password if prompted.
 
-#### Step 5 — Verify
+#### Step 4 — Verify
 
 1. Stop any dashboard you started manually for testing (**Ctrl+C** in that PowerShell window).
 2. Sign **out** and sign **back in** (or restart the PC).
 3. Wait 10–15 seconds after the desktop appears.
 4. Open **http://localhost:5001/dashboard** — the page should load **without** you opening PowerShell or double-clicking the batch file.
 
-**If it fails:** read `INSTALL_PATH\logs\dashboard.err.log` first. Common fixes: wrong **INSTALL_PATH** in the `.bat` file, `.venv` not created at repo root, Task Scheduler task points to the wrong file, or dashboard not yet tested manually.
+**If it fails:** read `INSTALL_PATH\logs\dashboard.err.log` first. Common fixes: `.venv` not created at repo root, Task Scheduler task points to the wrong file, or dashboard not yet tested manually.
 
 **Consultant fallback:** double-click `start-dashboard.bat` in the repo root until Task Scheduler is fixed — do not leave that as the FRP's daily workflow.
 

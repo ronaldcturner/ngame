@@ -10,12 +10,11 @@
 
 | Document | Who reads it | What it covers |
 |----------|--------------|----------------|
-| **This file (`IMPLEMENTATION_GUIDE.md`)** | Technical consultant | Clone, Python env, credentials, Ollama, dashboard service, verification, FRP handoff |
+| **This file (`README.md` / `IMPLEMENTATION_GUIDE.md`)** | Technical consultant | Clone, Python env, credentials, Ollama, dashboard service, verification, FRP handoff — **same content in both filenames** |
 | **[FRP_OPERATIONS_GUIDE.md](FRP_OPERATIONS_GUIDE.md)** / **[.html](FRP_OPERATIONS_GUIDE.html)** | FRP | Bookmark, daily training/fraud checks, warnings, QuickBooks Audit Log |
-| **[README.md](README.md)** | Developers / consultants | Architecture, pipeline modules, CLI reference |
 | **[ngame_ui/README.md](ngame_ui/README.md)** | Consultants | Dashboard URLs, API endpoints, UI troubleshooting |
-
-Historical guides (CLI-era FRP workflow) are in **[docs/archive/](docs/archive/)** — not for new deployments.
+| **[ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md)** | Consultants | Dashboard failures and common fixes |
+| **[ANOMALY_INJECTION_AGENT_README.md](ANOMALY_INJECTION_AGENT_README.md)** | Technical validator | Optional injection harness (not for daily FRP use) |
 
 ### Surveillance computer architecture
 
@@ -60,8 +59,8 @@ Use this order. Check off each item before handoff.
 
 1. [ ] Install prerequisites (Python 3.10+, Git, accounting API access)
 2. [ ] Clone repo and create `.venv` at **repository root**
-3. [ ] `pip install -r requirements.txt`
-4. [ ] Copy and fill `wave_config.json` and/or `quickbooks_config.json` (or `.env`)
+3. [ ] `pip install -r requirements.txt` and `pip install -r ngame_ui/requirements.txt`
+4. [ ] Copy and fill `wave_config.json` and/or `quickbooks_config.json` (or `.env`); for QBO live pulls: complete [QuickBooks Online OAuth](#quickbooks-online) (redirect URI + one-time authorization)
 5. [ ] Complete [§ 6 — Ollama](#6--ollama-before-phase-ii--fraud-analysis) (required before Phase II / Day 31)
 6. [ ] Smoke-test CLI: `python3 run_training_flow.py` from repo root (optional if dashboard works)
 7. [ ] Start dashboard; confirm **http://localhost:5001/dashboard** loads
@@ -75,7 +74,7 @@ Use this order. Check off each item before handoff.
 
 ## Windows surveillance PC — trial install (start here)
 
-**This file is the single implementation guide.** You do not need this chat, older root-level guides, or anything under **[docs/archive/](docs/archive/)** for a new Windows trial.
+**This file is the single implementation guide** (`README.md` and `IMPLEMENTATION_GUIDE.md` are identical). You do not need internal research drafts or marketing materials for a new Windows trial.
 
 ### Before you install on the surveillance PC
 
@@ -93,8 +92,8 @@ Use **PowerShell**. Follow the sections in this order:
 | Step | What to do | Section below |
 |------|------------|-----------------|
 | 1 | Python 3.10+, Git, stable internet | [Prerequisites](#prerequisites) |
-| 2 | Clone repo, create `.venv`, `pip install -r requirements.txt` | [Windows installation](#windows-installation) §§ 1–4 |
-| 3 | `quickbooks_config.json` and/or `wave_config.json` | [Credentials and configuration](#credentials-and-configuration) |
+| 2 | Clone repo, create `.venv`, install root + `ngame_ui` requirements | [Windows installation](#windows-installation) §§ 1–4 |
+| 3 | `quickbooks_config.json` and/or `wave_config.json`; QBO: [OAuth prerequisite](#quickbooks-online) | [Credentials and configuration](#credentials-and-configuration) |
 | 4 | Complete Ollama setup (needed before Phase II / Day 31) | [Windows installation](#windows-installation) § 6 |
 | 5 | Optional smoke test: `python run_training_flow.py` | [Windows installation](#windows-installation) § 7 |
 | 6 | Start dashboard; confirm **http://localhost:5001/dashboard** | [Dashboard service](#dashboard-service-required-for-frp) |
@@ -114,9 +113,10 @@ python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+python -m pip install -r ngame_ui/requirements.txt
 ```
 
-If PowerShell blocks activation, see [Troubleshooting](#troubleshooting). Substitute your actual **INSTALL_PATH** everywhere the [Windows auto-start](#windows--auto-start-at-login) batch file shows `C:\Users\you\Documents\ngame`.
+If PowerShell blocks activation, see [Troubleshooting](#troubleshooting). The repo includes **`start-dashboard.bat`** at the root (relative paths). Point Task Scheduler at that file after [Windows auto-start](#windows--auto-start-at-login).
 
 ### What the FRP uses (not this file)
 
@@ -135,15 +135,14 @@ git pull origin main
 .venv\Scripts\Activate.ps1
 ```
 
-Restart the dashboard (sign out/in if Task Scheduler starts it, or run `app-simple.py` once to test). Do **not** follow archived CLI daily workflows in **docs/archive/**.
+Restart the dashboard (sign out/in if Task Scheduler starts it, or run `app-simple.py` from `ngame_ui/` once to test).
 
 ### Related docs (installer only)
 
 | Need | Document |
 |------|----------|
 | Dashboard URLs / UI issues | [ngame_ui/README.md](ngame_ui/README.md), [ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md) |
-| Wave API setup | [NGAME_WAVE_GRAPHQL_README.md](NGAME_WAVE_GRAPHQL_README.md) |
-| Architecture / developers | [README.md](README.md) |
+| Wave API (optional) | Copy `wave_config.example.json` → `wave_config.json`; token and business ID from [developer.waveapps.com](https://developer.waveapps.com) |
 
 ---
 
@@ -232,9 +231,10 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
+pip install -r ngame_ui/requirements.txt
 ```
 
-Allow 2–5 minutes on first install.
+Allow 2–5 minutes on first install. Root `requirements.txt` includes Flask for the dashboard; `ngame_ui/requirements.txt` pins the full UI set — install both.
 
 ### 5 — Credentials
 
@@ -399,6 +399,7 @@ With the venv active (`(.venv)` in the prompt), use **`python -m pip`** — not 
 ```powershell
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+python -m pip install -r ngame_ui/requirements.txt
 ```
 
 If install fails with **compiler** errors, install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) and retry.
@@ -532,16 +533,175 @@ cp wave_config.example.json wave_config.json
 Copy-Item wave_config.example.json wave_config.json
 ```
 
-Edit `wave_config.json` — token and business ID from [developer.waveapps.com](https://developer.waveapps.com). Details: **[NGAME_WAVE_GRAPHQL_README.md](NGAME_WAVE_GRAPHQL_README.md)**.
+Edit `wave_config.json` — set `access_token` and `business_id` from [developer.waveapps.com](https://developer.waveapps.com). Optional CLI: `python3 run_wave_extraction.py` (repo root, venv active).
 
 ### QuickBooks Online
+
+The default deployment uses the **dashboard** (`app-simple.py` at **http://localhost:5001/dashboard**) to pull **live QuickBooks Online data** (sandbox for lab/POC; production when deployed). OAuth must succeed before **Run Training Day**, **Run Churn Analysis**, or any live QBO API pull will work. The dashboard can load without OAuth; live data cannot.
+
+Create the config file at repository root:
 
 ```bash
 cp quickbooks_config.example.json quickbooks_config.json   # macOS
 Copy-Item quickbooks_config.example.json quickbooks_config.json   # Windows
 ```
 
-OAuth fields from [developer.intuit.com](https://developer.intuit.com).
+#### Why OAuth and the redirect URI matter
+
+NGAME does not store the bookkeeper’s QBO password. It uses **OAuth 2.0**: a one-time browser authorization on the surveillance machine, then **access and refresh tokens** in `quickbooks_config.json`. When tokens expire or are revoked, NGAME opens Intuit again and completes the same flow.
+
+Intuit only redirects the browser back to **URIs you register** in the Developer Portal. If the registered URI does not **exactly** match what NGAME sends, authorization fails (often: *“Sorry, but [app name] didn’t connect”*).
+
+This procedure is a **required prerequisite** for operating NGAME with real (or sandbox) QBO data—not for merely opening the dashboard in a browser.
+
+#### Two URLs — do not confuse them
+
+| URL | Port | Role | Register in Intuit? |
+|-----|------|------|---------------------|
+| **http://localhost:5001/dashboard** | 5001 | NGAME web UI (`app-simple.py`). FRP bookmark. | **No** |
+| **http://localhost:8000/callback** | 8000 | OAuth callback. Intuit redirects here after **Connect**. NGAME’s local listener captures the code. | **Yes** (Development / sandbox) |
+
+- The **dashboard** can start and display without OAuth.
+- **Live QBO pulls** require valid OAuth tokens, which require the **callback URI** to be registered and to match `quickbooks_config.json`.
+
+Default in repo: `quickbooks_config.example.json` → `"redirect_uri": "http://localhost:8000/callback"`. Older notes sometimes mention port **8080**; portal and config must agree on **one** value (NGAME standard: **8000**).
+
+#### Before you start (QuickBooks)
+
+- [ ] Intuit **Developer** account access to the NGAME app, not only a QBO bookkeeper login.
+- [ ] `quickbooks_config.json` with **Development** Client ID and Client Secret.
+- [ ] `"environment": "sandbox"` for lab/POC (`"production"` only with production keys and a live company).
+- [ ] Sandbox company available; authorize as **Company Administrator** or **Master Administrator** (Standard users cannot complete app OAuth).
+- [ ] Python venv active at repo root; `intuit-oauth` installed (`requirements.txt`).
+
+#### Register the redirect URI (Intuit Developer Portal)
+
+Official reference: [Set app redirect URIs](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri).
+
+1. Sign in at [developer.intuit.com](https://developer.intuit.com).
+2. Open your app (e.g. Safe Landing).
+3. Work in **Development** (sandbox), not Production, unless you are configuring a live deployment.
+
+| Screen / field | Purpose | Use for NGAME localhost OAuth? |
+|----------------|---------|--------------------------------|
+| **Settings → Redirect URIs → Development** | Allowed OAuth callback URLs | **Yes** — add `http://localhost:8000/callback` here |
+| **Keys & credentials → Development** | Client ID, Client Secret | Copy into `quickbooks_config.json`; redirect list may also appear under **Keys & OAuth** on some portal versions |
+| **Launch URL / Host Domain** | Where users start your product | **No** — not the OAuth callback |
+| `https://developer.intuit.com/v2/OAuth2Playground/RedirectUrl` | OAuth 2.0 Playground only | **No** — leave unchanged; do not replace with localhost |
+
+**Add and save the URI:**
+
+1. Go to **Settings** → **Redirect URIs** → **Development** (or **Development → Keys & OAuth** if **Redirect URIs** appears there).
+2. Click **Add URI**.
+3. Enter exactly: `http://localhost:8000/callback`
+4. Click **Save** for that row.
+
+**Save is easy to miss:** it is often to the **right** of the URI field (between the text box and the trash icon). Widen the window or scroll horizontally if you only see the trash can. Changes do **not** persist if you tab away without **Save**. Success may show: *“Changes saved here and in your settings.”*
+
+5. **Refresh the page** and confirm `http://localhost:8000/callback` is still listed.
+
+Do **not** paste localhost into the Playground-only URL field. Localhost is for Development/sandbox only (per Intuit); production callbacks require **https**.
+
+#### Align `quickbooks_config.json`
+
+Under `quickbooks_api`, confirm:
+
+| Field | Sandbox / lab value |
+|-------|---------------------|
+| `client_id` | Development Client ID from portal |
+| `client_secret` | Development Client Secret |
+| `redirect_uri` | `http://localhost:8000/callback` (must match portal **exactly**) |
+| `environment` | `sandbox` |
+| `realm_id`, `access_token`, `refresh_token` | Filled by OAuth (may be empty before first run) |
+
+Optional overrides via `.env`: `QBO_CLIENT_ID`, `QBO_CLIENT_SECRET`, `QBO_REDIRECT_URI`, `QBO_ENVIRONMENT` (see `.env.example`).
+
+#### Complete OAuth once on the surveillance machine
+
+Run from **repository root** with venv active. Either method refreshes tokens; use one after portal or config changes.
+
+**Recommended — dedicated OAuth / extraction test:**
+
+```bash
+cd /path/to/NGAME-POC          # your INSTALL_PATH
+source .venv/bin/activate      # macOS/Linux
+# .venv\Scripts\Activate.ps1   # Windows
+python3 run_data_extraction.py # Windows: python run_data_extraction.py
+```
+
+A browser opens to Intuit. Sign in, select the **sandbox company** (if `environment` is `sandbox`), click **Connect** / **Authorize**.
+
+**Success:** browser shows **“NGAME: OAuth complete. You can close this tab.”** Terminal shows ✅ lines. `quickbooks_config.json` has updated `access_token`, `refresh_token`, and `realm_id`.
+
+**Keep the Terminal session open** until the callback page appears (NGAME listens on port **8000** for up to ~3 minutes).
+
+**Alternative — from the dashboard:**
+
+1. `cd ngame_ui` → `python3 app-simple.py` (Windows: `python app-simple.py`)
+2. Open **http://localhost:5001/dashboard**
+3. Click **Run Training Day** (or the primary green training button)
+
+If tokens are invalid, the same OAuth browser flow runs in the background. Stopping the dashboard with **Ctrl+C** does not invalidate saved tokens; restart the dashboard when finished.
+
+#### Verify live QuickBooks connection (consultant)
+
+| Step | Check |
+|------|--------|
+| 1 | `quickbooks_config.json` contains non-empty `access_token`, `refresh_token`, `realm_id` |
+| 2 | Dashboard loads at **http://localhost:5001/dashboard** |
+| 3 | **Run Training Day** completes without Intuit “didn’t connect” error |
+| 4 | `NGAME_Training_Matrix.xlsx` appears or updates in repo root (after at least one successful training run) |
+
+A **UI-only demo** (no live QBO) may show the dashboard without OAuth—that is not the default model in this guide.
+
+#### Sandbox authorization rules
+
+| Requirement | Detail |
+|-------------|--------|
+| Login target | [sandbox.qbo.intuit.com](https://sandbox.qbo.intuit.com) for sandbox apps—not [qbo.intuit.com](https://qbo.intuit.com) unless `environment` is `production` |
+| Role | **Company Admin** or **Master Admin** on the company being connected |
+| Students / bookkeepers | May post transactions in QBO UI; they do **not** run NGAME OAuth on the surveillance PC |
+| Developer portal login | For app keys and redirect URIs only—do not give students the developer password |
+
+For a university lab sandbox, authorize as Company Admin on the sandbox company; students may post QBO data but do not run OAuth on the surveillance PC.
+
+#### QuickBooks OAuth troubleshooting
+
+| Symptom | Likely cause | Action |
+|---------|----------------|--------|
+| “[App] didn’t connect” on Intuit | Redirect URI mismatch or wrong environment | Portal **Development** list includes `http://localhost:8000/callback`; matches `quickbooks_config.json`; Save and refresh portal |
+| “Please enter a unique valid redirect URI” | Duplicate or invalid paste | URI already listed—use existing row; or edit `8080` → `8000`; no trailing spaces |
+| Only Playground URL visible | Wrong settings tab | **Settings → Redirect URIs → Development**, not Playground-only field |
+| No Save button | Save off-screen | Scroll right / widen window; save per row |
+| URI reverts after refresh | Did not click Save | Save explicitly; look for confirmation message |
+| OAuth completes but training fails | Wrong company or expired tokens | Re-run `run_data_extraction.py`; confirm `realm_id` matches intended sandbox company |
+| Port / callback timeout | 8000 blocked or Terminal closed | Free port 8000; keep Terminal open until callback message |
+| Dashboard works; QBO fails | OAuth never completed | Complete OAuth above; do not rely on simulated QuickBooks page in UI |
+
+Token refresh failures (`invalid_grant`): re-run OAuth. In CI/unattended environments, interactive OAuth is disabled—complete authorization once on the surveillance machine.
+
+#### How this fits the dashboard-first deployment
+
+```
+FRP browser  →  http://localhost:5001/dashboard  (app-simple.py)
+                      │
+                      ├─ UI only: no Intuit redirect URI required
+                      │
+                      └─ Run Training Day / Run Churn Analysis
+                             │
+                             └─ NGAME pipeline → ensure_quickbooks_auth()
+                                    │
+                                    ├─ refresh token OR
+                                    └─ browser OAuth → Intuit → http://localhost:8000/callback
+                                           │
+                                           └─ tokens saved → live QBO API (sandbox or production)
+```
+
+**Consultant order (QuickBooks):** (1) `quickbooks_config.json` → (2) register redirect URI in portal → (3) complete OAuth once → (4) start dashboard and verify → (5) [Dashboard service](#dashboard-service-required-for-frp) auto-start and FRP bookmark → (6) build training baseline via **Run Training Day** (30 business days).
+
+**Fast demo without live QBO posting:** `python3 run_training_flow.py --demo` replays from `NGAME_Training_Matrix_SAVED.xlsx`—does not replace OAuth for live pulls.
+
+Implementation details: `ngame_quickbooks_oauth.py`, `quickbooks_config.example.json`.
 
 ### Environment variables
 
@@ -707,12 +867,12 @@ launchctl load ~/Library/LaunchAgents/com.ngame.dashboard.plist
 
 **What you are building:** two pieces:
 
-1. A **batch file** (`.bat`) in your NGAME folder that starts the dashboard.
+1. The **`start-dashboard.bat`** file that ships at repository root (relative paths — works after any `git clone` without editing).
 2. A **Task Scheduler** job — a built-in Windows tool that runs that batch file at sign-in.
 
 | Item | Value |
 |------|--------|
-| **Batch file name** | `start-dashboard.bat` |
+| **Batch file name** | `start-dashboard.bat` (included in the repo) |
 | **Example location** | `C:\Users\you\Documents\ngame\start-dashboard.bat` |
 | **Task Scheduler task name** | `NGAME Dashboard` (you choose this in the wizard; use something recognizable) |
 
@@ -721,7 +881,7 @@ The batch file lives **inside your NGAME install folder** (repository root), nex
 **Before you start:**
 
 - [Start manually (testing)](#start-manually-testing) succeeded — **http://localhost:5001/dashboard** loads.
-- You know where you cloned NGAME: the **repository root** (folder containing `.venv`, `ngame_ui`, and `requirements.txt`).
+- You know where you cloned NGAME: the **repository root** (folder containing `.venv`, `ngame_ui`, `start-dashboard.bat`, and `requirements.txt`).
 
 #### Step 1 — Write down your install path
 
@@ -734,57 +894,40 @@ Get-Location
 
 Example output: `C:\Users\you\Documents\ngame`
 
-Use that string everywhere below as **INSTALL_PATH**. All paths in the batch file must match this exactly (backslashes `\`, not forward slashes).
+Use that string as **INSTALL_PATH** when pointing Task Scheduler at `start-dashboard.bat`.
 
-#### Step 2 — Create the logs folder
-
-Replace the example with your **INSTALL_PATH**:
+#### Step 2 — Confirm `logs` and the shipped batch file
 
 ```powershell
-New-Item -ItemType Directory -Force -Path "C:\Users\you\Documents\ngame\logs"
+New-Item -ItemType Directory -Force -Path ".\logs"
+Get-Item .\start-dashboard.bat
 ```
 
-#### Step 3 — Create `start-dashboard.bat`
-
-You are creating a new text file named **`start-dashboard.bat`** in **INSTALL_PATH** (repository root). Its entire contents are the block below — nothing else in the file.
-
-**Notepad (recommended):**
-
-1. Open **Notepad**.
-2. Paste the batch file contents (with your paths substituted).
-3. **File → Save As…**
-4. Navigate to your **INSTALL_PATH** folder (e.g. `C:\Users\you\Documents\ngame`).
-5. **Save as type:** **All Files (\*.\*)**
-6. **File name:** `start-dashboard.bat` (include the `.bat` extension — not `.bat.txt`).
-7. Click **Save**.
-
-**PowerShell alternative:**
-
-```powershell
-notepad "C:\Users\you\Documents\ngame\start-dashboard.bat"
-```
-
-(If Notepad asks to create a new file, click **Yes**.)
-
-**File contents** (substitute your **INSTALL_PATH** for the example path in all three lines):
+**Shipped file contents** (relative paths — do not hard-code a user folder unless you have a special layout):
 
 ```bat
 @echo off
-cd /d C:\Users\you\Documents\ngame\ngame_ui
-C:\Users\you\Documents\ngame\.venv\Scripts\pythonw.exe app-simple.py >> C:\Users\you\Documents\ngame\logs\dashboard.log 2>> C:\Users\you\Documents\ngame\logs\dashboard.err.log
+REM NGAME dashboard auto-start — place at repository root (ships with the repo).
+REM Double-click to test; Task Scheduler should run this file at logon.
+cd /d "%~dp0"
+if not exist "logs" mkdir logs
+cd /d "%~dp0ngame_ui"
+"%~dp0.venv\Scripts\pythonw.exe" app-simple.py >> "%~dp0logs\dashboard.log" 2>> "%~dp0logs\dashboard.err.log"
 ```
 
 | Part of the batch file | Points to |
 |------------------------|-----------|
-| `cd /d …\ngame_ui` | Dashboard working directory (same as [manual start](#start-manually-testing)) |
+| `%~dp0` | Folder containing the `.bat` (repository root) |
+| `…\ngame_ui` | Dashboard working directory (same as [manual start](#start-manually-testing)) |
 | `…\.venv\Scripts\pythonw.exe` | Python from the venv — **`pythonw.exe`** runs without a visible console window |
 | `app-simple.py` | Dashboard script |
-| `>> …\logs\dashboard.log` | Normal output log |
-| `2>> …\logs\dashboard.err.log` | Error log |
+| `…\logs\dashboard.log` / `.err.log` | Output logs |
 
-**Quick test:** Double-click `start-dashboard.bat` in File Explorer once. Wait a few seconds, then open **http://localhost:5001/dashboard**. If it loads, stop the test (close any running dashboard from Task Manager or reboot) before continuing to Step 4.
+If `start-dashboard.bat` is missing (old clone), create it with the contents above.
 
-#### Step 4 — Create the Task Scheduler job
+**Quick test:** Double-click `start-dashboard.bat` in File Explorer once. Wait a few seconds, then open **http://localhost:5001/dashboard**. If it loads, stop the test (close any running dashboard from Task Manager or reboot) before continuing to Step 3.
+
+#### Step 3 — Create the Task Scheduler job
 
 1. Press the **Windows key**, type **Task Scheduler**, press **Enter**.
 2. In the right **Actions** pane, click **Create Basic Task…**
@@ -806,14 +949,14 @@ In the **Properties** window that opens:
 11. **Settings** tab: uncheck **Stop the task if it runs longer than** — the dashboard is meant to run all day.
 12. Click **OK**. Enter your Windows password if prompted.
 
-#### Step 5 — Verify
+#### Step 4 — Verify
 
 1. Stop any dashboard you started manually for testing (**Ctrl+C** in that PowerShell window).
 2. Sign **out** and sign **back in** (or restart the PC).
 3. Wait 10–15 seconds after the desktop appears.
 4. Open **http://localhost:5001/dashboard** — the page should load **without** you opening PowerShell or double-clicking the batch file.
 
-**If it fails:** read `INSTALL_PATH\logs\dashboard.err.log` first. Common fixes: wrong **INSTALL_PATH** in the `.bat` file, `.venv` not created at repo root, Task Scheduler task points to the wrong file, or dashboard not yet tested manually.
+**If it fails:** read `INSTALL_PATH\logs\dashboard.err.log` first. Common fixes: `.venv` not created at repo root, Task Scheduler task points to the wrong file, or dashboard not yet tested manually.
 
 **Consultant fallback:** double-click `start-dashboard.bat` in the repo root until Task Scheduler is fixed — do not leave that as the FRP's daily workflow.
 
@@ -828,10 +971,11 @@ Complete **before** FRP handoff.
 | # | Check | How |
 |---|--------|-----|
 | 1 | Dashboard loads | Open **http://localhost:5001/dashboard** (empty results OK until first run) |
-| 2 | Training via UI | **NGAME Operations** → **Run Training Day** (or primary green **Run Today's Training Day**) → live output shows success / day recorded |
-| 3 | Matrix file | `NGAME_Training_Matrix.xlsx` exists in repo root |
-| 4 | Ollama (before Day 31) | `ollama list` shows your model; `model_name` aligned in `ngame_llm_analysis_agent.py`; when 30 training days complete, test `python run_training_flow.py` / `python3 run_fraud_analysis.py` or dashboard **Run Churn Analysis** |
-| 5 | CLI fallback (optional) | `python3 run_training_flow.py` only if dashboard run failed — for debugging |
+| 2 | QuickBooks OAuth (if using QBO) | [QuickBooks Online](#quickbooks-online) complete; `quickbooks_config.json` has tokens; **Run Training Day** does not show Intuit “didn’t connect” |
+| 3 | Training via UI | **NGAME Operations** → **Run Training Day** (or primary green **Run Today's Training Day**) → live output shows success / day recorded |
+| 4 | Matrix file | `NGAME_Training_Matrix.xlsx` exists in repo root |
+| 5 | Ollama (before Day 31) | `ollama list` shows your model; `model_name` aligned in `ngame_llm_analysis_agent.py`; when 30 training days complete, test `python run_training_flow.py` / `python3 run_fraud_analysis.py` or dashboard **Run Churn Analysis** |
+| 6 | CLI fallback (optional) | `python3 run_training_flow.py` only if dashboard run failed — for debugging |
 
 ---
 
@@ -891,7 +1035,8 @@ For **consultant, lab, or unattended** machines — not for dashboard-only FRP o
 | Ollama very slow or PC freezes | Use a smaller model (`gemma2:2b`); close browsers; see [§ 6 — Ollama](#6--ollama-before-phase-ii--fraud-analysis) |
 | Fraud blocked: training incomplete | Need **30** day columns in `NGAME_Training_Matrix.xlsx` |
 | `No module named 'quickbooks'` (Windows) | `python -m pip install python-quickbooks intuit-oauth` or re-run `python -m pip install -r requirements.txt` |
-| QBO / Wave auth error | Refresh tokens in config JSON or `.env` |
+| QBO “didn’t connect” / auth error | [QuickBooks Online OAuth](#quickbooks-online): redirect URI `http://localhost:8000/callback`, sandbox admin login, re-run `run_data_extraction.py` |
+| QBO / Wave token refresh (`invalid_grant`) | Re-run OAuth on surveillance PC ([Complete OAuth once](#complete-oauth-once-on-the-surveillance-machine)); refresh tokens in config JSON or `.env` |
 | Terminal flooded with `GET /api/...` | Normal — dashboard auto-refresh; stop server with Ctrl+C when testing |
 
 UI details: **[ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md)**.
