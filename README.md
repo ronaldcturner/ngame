@@ -352,10 +352,36 @@ git --version
 
 ### 3 — Clone
 
-Run these in **PowerShell** (not Command Prompt). Quote the path — without quotes, `\D` in `\Documents` is parsed as an escape and `cd` fails.
+Run these in **PowerShell** (not Command Prompt).
+
+**Do not type** `$USERPROFILE` (that is bash). In PowerShell the home folder is **`$env:USERPROFILE`**, and you must wrap it as **`$($env:USERPROFILE)`** before `\Documents`. If you write `"$env:USERPROFILE\Documents"`, PowerShell may treat `USERPROFILE\Documents` as one empty name and you get an error about **`C:\Documents`**.
+
+1. Show your user folder (must look like `C:\Users\YourName` — not blank):
 
 ```powershell
-cd "$env:USERPROFILE\Documents"
+$env:USERPROFILE
+```
+
+2. Go to Documents (use this exact line):
+
+```powershell
+cd "$($env:USERPROFILE)\Documents"
+```
+
+**Expected:** The prompt path ends in `\Documents`. If you still get an error, use either of these instead:
+
+```powershell
+cd (Join-Path $env:USERPROFILE 'Documents')
+```
+
+```powershell
+cd ~
+cd Documents
+```
+
+3. Clone and enter the repo:
+
+```powershell
 git clone https://github.com/ronaldcturner/ngame.git
 cd ngame
 ```
@@ -1044,7 +1070,7 @@ The batch file lives **inside your NGAME install folder** (repository root), nex
 In **PowerShell**, `cd` to your NGAME folder and print the full path:
 
 ```powershell
-cd "$env:USERPROFILE\Documents\ngame"    # or wherever you ran git clone
+cd "$($env:USERPROFILE)\Documents\ngame"    # or wherever you ran git clone
 Get-Location
 ```
 
@@ -1268,7 +1294,8 @@ For **consultant, lab, or unattended** machines — not for dashboard-only FRP o
 
 | Symptom | Resolution |
 |---------|------------|
-| `cd $env:USERPROFILE\Documents` — “filename, directory name, or volume label syntax is incorrect” | Use **PowerShell** and quote the path: `cd "$env:USERPROFILE\Documents"` (or `cd "$env:USERPROFILE/Documents"`) |
+| `cd …` fails with path **`C:\Documents`** does not exist | PowerShell ate the user folder. Use `cd "$($env:USERPROFILE)\Documents"` or `cd (Join-Path $env:USERPROFILE 'Documents')` — not `"$env:USERPROFILE\Documents"` and not bash `$USERPROFILE` |
+| `cd $env:USERPROFILE\Documents` — “filename, directory name, or volume label syntax is incorrect” | Use **PowerShell** and: `cd "$($env:USERPROFILE)\Documents"` |
 | `python3` / `python` not found | Reinstall Python; on Windows enable **Add to PATH** |
 | `pip install` → *not a valid application for this OS platform* (Windows) | Use `python -m pip install ...` with venv active; see [§ 4 — Virtual environment](#4--virtual-environment) |
 | `pip install` compiler error (Windows) | Install Microsoft C++ Build Tools; retry |
