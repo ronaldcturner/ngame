@@ -354,34 +354,28 @@ git --version
 
 Run these in **PowerShell** (not Command Prompt).
 
-**Do not type** `$USERPROFILE` (that is bash). In PowerShell the home folder is **`$env:USERPROFILE`**, and you must wrap it as **`$($env:USERPROFILE)`** before `\Documents`. If you write `"$env:USERPROFILE\Documents"`, PowerShell may treat `USERPROFILE\Documents` as one empty name and you get an error about **`C:\Documents`**.
-
-1. Show your user folder (must look like `C:\Users\YourName` — not blank):
+PowerShell treated `"$env:USERPROFILE\Documents"` as an empty name, so it tried `C:\Documents`. Use this instead:
 
 ```powershell
 $env:USERPROFILE
-```
-
-2. Go to Documents (use this exact line):
-
-```powershell
 cd "$($env:USERPROFILE)\Documents"
+git clone https://github.com/ronaldcturner/ngame.git
+cd ngame
 ```
 
-**Expected:** The prompt path ends in `\Documents`. If you still get an error, use either of these instead:
+`$env:USERPROFILE` should print something like `C:\Users\YourName` (not blank). After `cd`, the prompt should end in `\Documents`.
+
+**If `cd` still fails**, use:
 
 ```powershell
 cd (Join-Path $env:USERPROFILE 'Documents')
 ```
 
-```powershell
-cd ~
-cd Documents
-```
-
-3. Clone and enter the repo:
+**If clone says** `destination path 'ngame' already exists and is not an empty directory`, that folder is already present under Documents. Rename or remove it, then run `git clone` again:
 
 ```powershell
+Rename-Item ngame ngame-clone-old
+# or: Remove-Item -Recurse -Force .\ngame
 git clone https://github.com/ronaldcturner/ngame.git
 cd ngame
 ```
@@ -1294,7 +1288,8 @@ For **consultant, lab, or unattended** machines — not for dashboard-only FRP o
 
 | Symptom | Resolution |
 |---------|------------|
-| `cd …` fails with path **`C:\Documents`** does not exist | PowerShell ate the user folder. Use `cd "$($env:USERPROFILE)\Documents"` or `cd (Join-Path $env:USERPROFILE 'Documents')` — not `"$env:USERPROFILE\Documents"` and not bash `$USERPROFILE` |
+| `cd …` fails with path **`C:\Documents`** does not exist | PowerShell treated `"$env:USERPROFILE\Documents"` as an empty name. Use `$env:USERPROFILE` then `cd "$($env:USERPROFILE)\Documents"` (see [§ 3 — Clone](#3--clone)) |
+| `destination path 'ngame' already exists…` | Rename or remove `Documents\ngame`, then `git clone` again (see [§ 3 — Clone](#3--clone)) |
 | `cd $env:USERPROFILE\Documents` — “filename, directory name, or volume label syntax is incorrect” | Use **PowerShell** and: `cd "$($env:USERPROFILE)\Documents"` |
 | `python3` / `python` not found | Reinstall Python; on Windows enable **Add to PATH** |
 | `pip install` → *not a valid application for this OS platform* (Windows) | Use `python -m pip install ...` with venv active; see [§ 4 — Virtual environment](#4--virtual-environment) |
