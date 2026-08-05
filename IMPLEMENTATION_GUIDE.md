@@ -53,133 +53,87 @@ The bookkeeper does not need to change how they use QuickBooks. NGAME does not w
 
 ---
 
-## Consultant checklist (end to end)
-
-Use this order. Check off each item before handoff.
-
-1. [ ] Install prerequisites (Python 3.10+, Git, accounting API access)
-2. [ ] Clone repo and create `.venv` at **repository root**
-3. [ ] `pip install -r requirements.txt` and `pip install -r ngame_ui/requirements.txt`
-4. [ ] Copy and fill `wave_config.json` and/or `quickbooks_config.json` (or `.env`); for QBO live pulls: complete [QuickBooks Online OAuth](#quickbooks-online) (redirect URI + one-time authorization)
-5. [ ] Complete [§ 6 — Ollama](#6--ollama-before-phase-ii--fraud-analysis) (required before Phase II / Day 31)
-6. [ ] Smoke-test CLI: `python3 run_training_flow.py` from repo root (optional if dashboard works)
-7. [ ] Start dashboard; confirm **http://localhost:5001/dashboard** loads
-8. [ ] Configure LaunchAgent (macOS) or Task Scheduler (Windows) so dashboard survives reboot
-9. [ ] Run **one** training day from dashboard; confirm `NGAME_Training_Matrix.xlsx` appears
-10. [ ] Print/PDF FRP guide; fill contact blanks; create **NGAME Dashboard** bookmark on surveillance PC
-11. [ ] Supervise FRP through one **Run Training Day** (or primary green button in Phase I)
-12. [ ] Hand off — FRP gets guide + bookmark only (no Terminal instructions for daily use)
-
----
-
-## Windows surveillance PC — trial install (start here)
-
-**This file is the single implementation guide** (`README.md` and `IMPLEMENTATION_GUIDE.md` are identical). You do not need internal research drafts or marketing materials for a new Windows trial.
-
-### Before you install on the surveillance PC
-
-On the machine where you develop NGAME (for example your Mac):
-
-1. Commit any doc or code changes.
-2. Run `git push origin main` so **GitHub** has the latest version.
-
-The Windows PC **downloads** the project with `git clone` (below). Pushing updates GitHub; the surveillance machine **pulls** when you need a newer copy later.
-
-### On the Windows PC (fresh machine, no prior NGAME)
-
-Use **PowerShell**. Follow the sections in this order:
-
-| Step | What to do | Section below |
-|------|------------|-----------------|
-| 1 | Python 3.10+, Git, stable internet | [Prerequisites](#prerequisites) |
-| 2 | Clone repo, create `.venv`, install root + `ngame_ui` requirements | [Windows installation](#windows-installation) §§ 1–4 |
-| 3 | `quickbooks_config.json` and/or `wave_config.json`; QBO: [OAuth prerequisite](#quickbooks-online) | [Credentials and configuration](#credentials-and-configuration) |
-| 4 | Complete Ollama setup (needed before Phase II / Day 31) | [Windows installation](#windows-installation) § 6 |
-| 5 | Optional smoke test: `python run_training_flow.py` | [Windows installation](#windows-installation) § 7 |
-| 6 | Start dashboard; confirm **http://localhost:5001/dashboard** | [Dashboard service](#dashboard-service-required-for-frp) |
-| 7 | Task Scheduler auto-start at logon | [Windows — auto-start at login](#windows--auto-start-at-login) |
-| 8 | One **Run Training Day** from dashboard; confirm `NGAME_Training_Matrix.xlsx` | [Verify installation](#verify-installation) |
-| 9 | Print FRP guide, bookmark, supervised handoff | [Hand off to the FRP](#hand-off-to-the-frp) |
-
-Also use the [Consultant checklist](#consultant-checklist-end-to-end) above and check off each box before you leave the site.
-
-**Clone (default path on Windows):**
-
-```powershell
-cd "$env:USERPROFILE\Documents"
-git clone https://github.com/ronaldcturner/ngame.git
-cd ngame
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-python -m pip install -r ngame_ui/requirements.txt
-```
-
-If PowerShell blocks activation, see [Troubleshooting](#troubleshooting). The repo includes **`start-dashboard.bat`** at the root (relative paths). Point Task Scheduler at that file after [Windows auto-start](#windows--auto-start-at-login).
-
-### What the FRP uses (not this file)
-
-| Deliverable | File / URL |
-|-------------|------------|
-| Daily operations (print/PDF) | **[FRP_OPERATIONS_GUIDE.html](FRP_OPERATIONS_GUIDE.html)** |
-| Browser bookmark | `http://localhost:5001/dashboard` |
-
-The FRP does **not** use Terminal, `git`, or `pip` for daily work.
-
-### Updating NGAME on the surveillance PC later
-
-```powershell
-cd C:\path\to\ngame
-git pull origin main
-.venv\Scripts\Activate.ps1
-```
-
-Restart the dashboard (sign out/in if Task Scheduler starts it, or run `app-simple.py` from `ngame_ui/` once to test).
-
-### Related docs (installer only)
-
-| Need | Document |
-|------|----------|
-| Dashboard URLs / UI issues | [ngame_ui/README.md](ngame_ui/README.md), [ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md) |
-| Wave API (optional) | Copy `wave_config.example.json` → `wave_config.json`; token and business ID from [developer.waveapps.com](https://developer.waveapps.com) |
-
----
-
-## Where to run commands
-
-| Location | Use for |
-|----------|---------|
-| **Repository root** (`ngame/` or `NGAME-POC/`) | `git`, `pip install`, `run_training_flow.py`, config files, credentials |
-| **`ngame_ui/`** subfolder | `python3 app-simple.py` (dashboard server only) |
-
-After `cd` to the repo root, activate the virtual environment **once per Terminal session**:
-
-```bash
-# macOS / Linux
-source .venv/bin/activate
-
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
-```
-
-Your prompt shows `(.venv)` when active. Dashboard logs (`GET /api/...`) in Terminal are normal — they mean the browser is refreshing, not an error.
-
----
-
 ## Contents
 
-- [Windows surveillance PC — trial install (start here)](#windows-surveillance-pc--trial-install-start-here)
-- [Surveillance computer architecture](#surveillance-computer-architecture)
+- [Choose your platform](#choose-your-platform)
+- [macOS cookbook](#macos-cookbook)
+- [Windows cookbook](#windows-cookbook)
 - [Prerequisites](#prerequisites)
-- [macOS installation](#macos-installation)
-- [Windows installation](#windows-installation)
+- [macOS installation (detail)](#macos-installation-detail)
+- [Windows installation (detail)](#windows-installation-detail)
 - [Credentials and configuration](#credentials-and-configuration)
-- [Dashboard service (required for FRP)](#dashboard-service-required-for-frp)
+  - [Choose your QuickBooks track](#choose-your-quickbooks-track)
+  - [Track A — Development / sandbox](#quickbooks-online--track-a-development--sandbox)
+  - [Track B — Customer Go-Live](#quickbooks-online--track-b-customer-go-live)
+- [Dashboard service](#dashboard-service-required-for-frp)
+  - [Start manually](#start-manually-testing)
+  - [macOS — auto-start at login](#macos--auto-start-at-login)
+  - [Windows — auto-start at login](#windows--auto-start-at-login)
 - [Verify installation](#verify-installation)
 - [Hand off to the FRP](#hand-off-to-the-frp)
+- [Leave-site checklist](#leave-site-checklist)
+- [Appendix: Developer — publish before remote clone](#appendix-developer--publish-before-remote-clone)
+- [Appendix: Where to run commands](#appendix-where-to-run-commands)
+- [Appendix: Updating NGAME later](#appendix-updating-ngame-later)
 - [Optional: CLI and scheduled runs](#optional-cli-and-scheduled-runs)
 - [Troubleshooting](#troubleshooting)
+
+---
+
+## Choose your platform
+
+This guide has **two** top-level cookbooks — one per OS. Pick the surveillance computer’s OS and follow **only** that cookbook’s Steps 1–9.
+
+| Surveillance PC OS | Open this cookbook |
+|--------------------|--------------------|
+| macOS | [macOS cookbook](#macos-cookbook) |
+| Windows 10 / 11 | [Windows cookbook](#windows-cookbook) |
+
+Detail sections farther down are shared or OS-specific. Each detail block ends with **← Back** links so you return to Steps 1–9 without scrolling.
+
+---
+
+## macOS cookbook
+
+**Audience:** Technical consultant installing NGAME on a **macOS** surveillance computer. Use **Terminal**.
+
+Follow Steps 1–9 in order. Open each **Detail** link, finish that section, then use **← Back to macOS cookbook** at the bottom of the detail to return here for the next step. Do not rely on scrolling.
+
+| Step | What to do | Detail |
+|------|------------|--------|
+| 1 | Confirm Python 3.10+, Git, internet, accounting access | [Prerequisites](#prerequisites) |
+| 2 | Clone repo, create `.venv`, install requirements | [macOS installation — §§ 1–4](#macos-installation-detail) |
+| 3 | Credentials; QBO [Track A](#quickbooks-online--track-a-development--sandbox) or [Track B](#quickbooks-online--track-b-customer-go-live) | [Credentials](#credentials-and-configuration) |
+| 4 | Ollama (before Phase II / Day 31) | [macOS installation — § 6](#macos-ollama) |
+| 5 | Optional smoke test | [macOS installation — § 7](#macos-smoke-test) |
+| 6 | Start dashboard; open http://localhost:5001/dashboard | [Start manually](#start-manually-testing) |
+| 7 | LaunchAgent auto-start at login | [macOS — auto-start at login](#macos--auto-start-at-login) |
+| 8 | One Run Training Day; confirm matrix file | [Verify installation](#verify-installation) |
+| 9 | FRP guide, bookmark, supervised handoff | [Hand off to the FRP](#hand-off-to-the-frp) |
+
+When Step 9 is done, use the [Leave-site checklist](#leave-site-checklist).
+
+---
+
+## Windows cookbook
+
+**Audience:** Technical consultant installing NGAME on a **Windows** surveillance computer. Use **PowerShell** (not Command Prompt).
+
+Follow Steps 1–9 in order. Open each **Detail** link, finish that section, then use **← Back to Windows cookbook** at the bottom of the detail to return here for the next step. Do not rely on scrolling.
+
+| Step | What to do | Detail |
+|------|------------|--------|
+| 1 | Confirm Python 3.10+, Git, internet, accounting access | [Prerequisites](#prerequisites) |
+| 2 | Clone repo, create `.venv`, install requirements | [Windows installation — §§ 1–4](#windows-installation-detail) |
+| 3 | Credentials; QBO [Track A](#quickbooks-online--track-a-development--sandbox) or [Track B](#quickbooks-online--track-b-customer-go-live) | [Credentials](#credentials-and-configuration) |
+| 4 | Ollama (before Phase II / Day 31) | [Windows installation — § 6](#windows-ollama) |
+| 5 | Optional smoke test | [Windows installation — § 7](#windows-smoke-test) |
+| 6 | Start dashboard; open http://localhost:5001/dashboard | [Start manually](#start-manually-testing) |
+| 7 | Task Scheduler auto-start at logon | [Windows — auto-start at login](#windows--auto-start-at-login) |
+| 8 | One Run Training Day; confirm matrix file | [Verify installation](#verify-installation) |
+| 9 | FRP guide, bookmark, supervised handoff | [Hand off to the FRP](#hand-off-to-the-frp) |
+
+When Step 9 is done, use the [Leave-site checklist](#leave-site-checklist).
 
 ---
 
@@ -194,8 +148,15 @@ Your prompt shows `(.venv)` when active. Dashboard logs (`GET /api/...`) in Term
 | Surveillance computer | Dedicated machine the FRP can reach daily; stable internet |
 
 ---
+**Return to cookbook:** [← macOS Steps 1–9](#macos-cookbook) · [← Windows Steps 1–9](#windows-cookbook)  
+**Next:** [Step 2 — macOS install detail](#macos-installation-detail) or [Step 2 — Windows install detail](#windows-installation-detail)
 
-## macOS installation
+---
+
+## macOS installation (detail)
+
+<a id="macos-installation-detail"></a>
+
 
 Tested on macOS 12 Monterey and later. All commands assume **repository root** unless noted.
 
@@ -236,9 +197,15 @@ pip install -r ngame_ui/requirements.txt
 
 Allow 2–5 minutes on first install. Root `requirements.txt` includes Flask for the dashboard; `ngame_ui/requirements.txt` pins the full UI set — install both.
 
+
+---
+**macOS cookbook:** [← Back to Steps 1–9](#macos-cookbook) · **Next:** [Step 3 — Credentials](#credentials-and-configuration)
+
 ### 5 — Credentials
 
 See [Credentials and configuration](#credentials-and-configuration).
+
+<a id="macos-ollama"></a>
 
 ### 6 — Ollama (before Phase II / fraud analysis)
 
@@ -339,6 +306,12 @@ Answer **`y`** when prompted. Expect several minutes (QBO extract → CPI → ch
 
 **FRP:** Does not install Ollama or edit `model_name`. The FRP only presses dashboard buttons; the technical contact completes this section.
 
+
+---
+**macOS cookbook:** [← Back to Steps 1–9](#macos-cookbook) · **Next:** [Step 5 — Smoke test](#macos-smoke-test)
+
+<a id="macos-smoke-test"></a>
+
 ### 7 — Quick smoke test (optional)
 
 ```bash
@@ -349,7 +322,14 @@ No errors → core pipeline is reachable. Full verification is in [Verify instal
 
 ---
 
-## Windows installation
+---
+**macOS cookbook:** [← Back to Steps 1–9](#macos-cookbook) · **Next:** [Step 6 — Dashboard](#start-manually-testing)
+
+
+## Windows installation (detail)
+
+<a id="windows-installation-detail"></a>
+
 
 Tested on Windows 10 (1909+) and Windows 11. Use **PowerShell** unless you prefer Git Bash. Even if you are familiar with "raw" Terminal CLI editing, use **PowerShell** or Git Bash instead. The script below will not work with "raw" CLI.
 
@@ -404,9 +384,15 @@ python -m pip install -r ngame_ui/requirements.txt
 
 If install fails with **compiler** errors, install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) and retry.
 
+
+---
+**Windows cookbook:** [← Back to Steps 1–9](#windows-cookbook) · **Next:** [Step 3 — Credentials](#credentials-and-configuration)
+
 ### 5 — Credentials
 
 See [Credentials and configuration](#credentials-and-configuration).
+
+<a id="windows-ollama"></a>
 
 ### 6 — Ollama (before Phase II / fraud analysis)
 
@@ -511,6 +497,12 @@ Outputs to confirm in repo root: `management_dashboard.json`, `NGAME_Fraud_Analy
 
 **FRP:** Does not install Ollama, run `ollama pull`, or edit `model_name`. The FRP uses dashboard buttons only.
 
+
+---
+**Windows cookbook:** [← Back to Steps 1–9](#windows-cookbook) · **Next:** [Step 5 — Smoke test](#windows-smoke-test)
+
+<a id="windows-smoke-test"></a>
+
 ### 7 — Quick smoke test (optional)
 
 ```powershell
@@ -518,6 +510,10 @@ python run_training_flow.py
 ```
 
 ---
+
+---
+**Windows cookbook:** [← Back to Steps 1–9](#windows-cookbook) · **Next:** [Step 6 — Dashboard](#start-manually-testing)
+
 
 ## Credentials and configuration
 
@@ -535,7 +531,22 @@ Copy-Item wave_config.example.json wave_config.json
 
 Edit `wave_config.json` — set `access_token` and `business_id` from [developer.waveapps.com](https://developer.waveapps.com). Optional CLI: `python3 run_wave_extraction.py` (repo root, venv active).
 
-### QuickBooks Online
+### Choose your QuickBooks track
+
+The **software install** (Python, Git, clone, `.venv`, dashboard, auto-start) is **identical** for practice and for customer go-live. Only the **QuickBooks Online** connection forks.
+
+| Track | When to use | QBO company | Intuit keys | `environment` in `quickbooks_config.json` |
+|-------|-------------|-------------|-------------|-------------------------------------------|
+| **A — Development (practice / lab)** | Cold install; university lab; Safe Landing–style sandbox | Intuit **sandbox** company | **Development** Client ID / Secret | `sandbox` |
+| **B — Customer Go-Live** | Customer’s surveillance PC for the FRP | Customer’s **live** QBO company | **Production** Client ID / Secret | `production` |
+
+- Track A: [QuickBooks Online — Track A (Development / sandbox)](#quickbooks-online--track-a-development--sandbox)
+- Track B: [QuickBooks Online — Track B (Customer Go-Live)](#quickbooks-online--track-b-customer-go-live) — do **not** reuse Development keys or a sandbox company on a go-live machine.
+
+### QuickBooks Online — Track A (Development / sandbox)
+
+**Practice / lab track.** For the customer’s live ledger, skip this section and use **Track B** instead.
+
 
 The default deployment uses the **dashboard** (`app-simple.py` at **http://localhost:5001/dashboard**) to pull **live QuickBooks Online data** (sandbox for lab/POC; production when deployed). OAuth must succeed before **Run Training Day**, **Run Churn Analysis**, or any live QBO API pull will work. The dashboard can load without OAuth; live data cannot.
 
@@ -703,6 +714,137 @@ FRP browser  →  http://localhost:5001/dashboard  (app-simple.py)
 
 Implementation details: `ngame_quickbooks_oauth.py`, `quickbooks_config.example.json`.
 
+
+### QuickBooks Online — Track B (Customer Go-Live)
+
+**Goal:** On the **customer’s surveillance PC**, connect NGAME to the customer’s **own live QuickBooks Online company** (not a sandbox). The FRP then uses the local dashboard against that ledger.
+
+**Do not use Track A values** (Development keys, `"environment": "sandbox"`, Safe Landing / other sandbox companies) on a go-live machine.
+
+#### B.0 — What is the same as Track A
+
+| Step | Same as Track A? |
+|------|------------------|
+| Install Python, Git, clone repo, `.venv`, `pip install` | **Yes** |
+| Start dashboard / auto-start / FRP bookmark | **Yes** |
+| OAuth concept (browser authorize once → tokens in `quickbooks_config.json`) | **Yes** |
+| Intuit Developer Portal **Development** keys and sandbox company | **No — use Production** |
+| `"environment": "sandbox"` | **No — use `production`** |
+| `http://localhost:8000/callback` as Production redirect URI | **No — Intuit rejects localhost / http for Production** |
+
+#### B.1 — Before you start (go-live checklist)
+
+- [ ] Customer has approved NGAME read-only API access to their live QBO company.
+- [ ] You have Intuit **Developer** access to the NGAME app (or the customer’s app) — not only a bookkeeper QBO login.
+- [ ] You can open **Keys & credentials → Production** (Client ID and Client Secret).
+- [ ] A **Company Administrator** or **Master Administrator** of the **live** company will complete the one-time Connect/Authorize click (Standard users cannot finish app OAuth).
+- [ ] Surveillance PC has stable internet; Python venv already created (OS installation §§ 1–4 done).
+- [ ] You understand Production OAuth needs a temporary **https** callback (see B.3) — not the Track A localhost URI alone.
+
+#### B.2 — Create / align `quickbooks_config.json` for Production
+
+From repository root:
+
+```bash
+# macOS
+cp quickbooks_config.example.json quickbooks_config.json
+
+# Windows PowerShell
+Copy-Item quickbooks_config.example.json quickbooks_config.json
+```
+
+Edit `quickbooks_config.json` and set **`quickbooks_api`** fields:
+
+| Field | Customer Go-Live value |
+|-------|------------------------|
+| `client_id` | **Production** Client ID from Intuit Developer Portal |
+| `client_secret` | **Production** Client Secret |
+| `environment` | `production` |
+| `redirect_uri` | Your **https** Production redirect URI from B.3 (exact string) |
+| `realm_id`, `access_token`, `refresh_token` | Leave empty until OAuth succeeds |
+
+Save the file. Keep it only on the surveillance PC (it is gitignored).
+
+#### B.3 — Production redirect URI (required by Intuit)
+
+Intuit rules for **Production** (see [Set app redirect URIs](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri)):
+
+- Redirect URI must start with **`https://`**
+- **`localhost` is not allowed**
+- IP addresses are not allowed
+
+NGAME still needs a **one-time** (or re-auth) browser redirect that lands on a listener on the surveillance PC. After tokens exist, daily work uses **token refresh** — no redirect — until tokens are revoked or expire beyond refresh.
+
+NGAME binds the OAuth callback listener on **`127.0.0.1:8000`** while Intuit redirects to your public **https** URI. A temporary tunnel bridges them.
+
+**Consultant method (temporary HTTPS tunnel for the OAuth session only):**
+
+1. On the surveillance PC, start a tunnel that forwards public HTTPS to local port **8000** (example: [ngrok](https://ngrok.com/) — `ngrok http 8000`).
+2. Copy the tunnel’s **https** base URL (example shape: `https://<random>.ngrok-free.app`).
+3. In Intuit Developer Portal → your app → **Settings → Redirect URIs → Production**:
+   - **Add URI** exactly: `https://<random>.ngrok-free.app/callback`
+   - Click **Save** on that row; refresh and confirm it remains listed.
+4. Put the **same** string in `quickbooks_config.json` → `redirect_uri`.
+5. Keep the tunnel **running** until OAuth completes (B.4). You may stop the tunnel afterward.
+
+Do **not** paste a Production URI into Development-only fields, and do **not** use the OAuth Playground URL as NGAME’s runtime `redirect_uri` unless you are following a separate manual-token procedure (not the default dashboard flow).
+
+#### B.4 — Complete OAuth once against the live company
+
+1. Leave the HTTPS tunnel running (B.3).
+2. From repository root with venv active:
+
+```bash
+# macOS
+source .venv/bin/activate
+python3 run_data_extraction.py
+
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+python run_data_extraction.py
+```
+
+3. Browser opens to Intuit. Sign in to the **live** QBO company ([qbo.intuit.com](https://qbo.intuit.com) — not sandbox).
+4. Select the **customer’s live company** (not a sandbox company).
+5. Click **Connect** / **Authorize** as Company Admin / Master Admin.
+6. **Success:** browser shows **“NGAME: OAuth complete. You can close this tab.”** Terminal shows success lines. `quickbooks_config.json` now has non-empty `access_token`, `refresh_token`, and `realm_id`.
+7. Stop the tunnel. Daily dashboard use does not need it while refresh tokens remain valid.
+
+**Alternative:** With the dashboard already running, **Run Training Day** will trigger the same OAuth flow if tokens are missing — still requires the tunnel and matching Production redirect URI for the interactive step.
+
+#### B.5 — Verify live customer ledger (not sandbox)
+
+| Step | Check |
+|------|--------|
+| 1 | `quickbooks_config.json` has `"environment": "production"` and Production client id/secret |
+| 2 | `realm_id` matches the customer’s live company (confirm in Intuit / QBO company settings if unsure) |
+| 3 | Dashboard at **http://localhost:5001/dashboard** |
+| 4 | **Run Training Day** completes without “didn’t connect”; matrix updates |
+| 5 | Spot-check extracted entity counts against what the FRP/bookkeeper expects for the **live** books |
+
+#### B.6 — Go-live authorization rules
+
+| Requirement | Detail |
+|-------------|--------|
+| Login target | Live QBO ([qbo.intuit.com](https://qbo.intuit.com)), not sandbox |
+| Role | Company Admin or Master Admin on the **live** company |
+| Bookkeeper | Continues normal QBO browser use; does **not** run NGAME OAuth |
+| FRP | Dashboard only after consultant finishes OAuth and auto-start |
+| Secrets | Production Client Secret and tokens stay on the surveillance PC only |
+
+#### B.7 — Re-authorization later
+
+If refresh fails (`invalid_grant`) or the customer revokes the app:
+
+1. Start the HTTPS tunnel again (or register a new Production redirect URI if the tunnel URL changed).
+2. Align `redirect_uri` in portal and `quickbooks_config.json`.
+3. Re-run `run_data_extraction.py` (or trigger OAuth from the dashboard).
+4. Stop the tunnel after success.
+
+#### B.8 — Continue after QBO works
+
+Continue with your OS cookbook from **Step 6** (dashboard) onward. Give the FRP only the operations guide and the dashboard bookmark — not Developer Portal access.
+
 ### Environment variables
 
 Alternatively: copy `.env.example` to `.env` and set variables listed there.
@@ -710,6 +852,11 @@ Alternatively: copy `.env.example` to `.env` and set variables listed there.
 > **Security:** `wave_config.json`, `quickbooks_config.json`, and `.env` are in `.gitignore`. Keep them only on the surveillance machine.
 
 ---
+
+---
+**Return to cookbook:** [← macOS Steps 1–9](#macos-cookbook) · [← Windows Steps 1–9](#windows-cookbook)  
+**Next:** [Step 4 — macOS Ollama](#macos-ollama) or [Step 4 — Windows Ollama](#windows-ollama)
+
 
 ## Dashboard service (required for FRP)
 
@@ -733,6 +880,11 @@ python app-simple.py           # Windows
 ```
 
 Stop with **Ctrl+C** when testing. Production should use auto-start, not a Terminal window the FRP must manage.
+
+
+---
+**Return to cookbook:** [← macOS Steps 1–9](#macos-cookbook) · [← Windows Steps 1–9](#windows-cookbook)  
+**Next:** [Step 7 — macOS LaunchAgent](#macos--auto-start-at-login) or [Step 7 — Windows Task Scheduler](#windows--auto-start-at-login)
 
 ### macOS — auto-start at login
 
@@ -861,6 +1013,10 @@ launchctl load ~/Library/LaunchAgents/com.ngame.dashboard.plist
 
 **Consultant fallback:** double-click `launch_dashboard.command` in the repo root until the plist is fixed — do not leave that as the FRP's daily workflow.
 
+
+---
+**macOS cookbook:** [← Back to Steps 1–9](#macos-cookbook) · **Next:** [Step 8 — Verify](#verify-installation)
+
 ### Windows — auto-start at login
 
 **Goal:** After the FRP signs in to the surveillance PC, the dashboard starts by itself — no PowerShell window the FRP must manage each morning.
@@ -964,6 +1120,10 @@ In the **Properties** window that opens:
 
 ---
 
+---
+**Windows cookbook:** [← Back to Steps 1–9](#windows-cookbook) · **Next:** [Step 8 — Verify](#verify-installation)
+
+
 ## Verify installation
 
 Complete **before** FRP handoff.
@@ -978,6 +1138,11 @@ Complete **before** FRP handoff.
 | 6 | CLI fallback (optional) | `python3 run_training_flow.py` only if dashboard run failed — for debugging |
 
 ---
+
+---
+**Return to cookbook:** [← macOS Steps 1–9](#macos-cookbook) · [← Windows Steps 1–9](#windows-cookbook)  
+**Next:** [Step 9 — Hand off](#hand-off-to-the-frp)
+
 
 ## Hand off to the FRP
 
@@ -996,6 +1161,86 @@ Deliver **only** what the FRP needs:
 
 - **Designated contact** — business/accounting lead for MEDIUM/HIGH warnings  
 - **NGAME technical contact** — you (or your firm) for dashboard, credentials, and errors  
+
+---
+
+---
+**Return to cookbook:** [← macOS Steps 1–9](#macos-cookbook) · [← Windows Steps 1–9](#windows-cookbook) · **Done** — use the [Leave-site checklist](#leave-site-checklist).
+
+
+## Leave-site checklist
+
+Complete after your OS cookbook Step 9. This is a **departure checklist**, not a second install cookbook.
+
+1. [ ] OS cookbook Steps 1–9 done ([macOS](#macos-cookbook) or [Windows](#windows-cookbook))
+2. [ ] Dashboard loads at http://localhost:5001/dashboard
+3. [ ] Auto-start configured (LaunchAgent or Task Scheduler)
+4. [ ] One training day recorded; `NGAME_Training_Matrix.xlsx` present
+5. [ ] FRP guide printed/PDF; contacts filled; bookmark created
+6. [ ] Supervised FRP Run Training Day completed
+7. [ ] FRP has guide + bookmark only (no Terminal / PowerShell daily steps)
+
+---
+
+## Appendix: Developer — publish before remote clone
+
+**Not part of the consultant install cookbook.** Use this on the **development** machine (for example your Mac) when you need GitHub to hold the latest code/docs before a surveillance PC runs `git clone` or `git pull`.
+
+1. Commit changes.
+2. `git push origin main`
+
+The surveillance PC never pushes; it only clones/pulls.
+
+---
+
+## Appendix: Where to run commands
+
+| Location | Use for |
+|----------|---------|
+| **Repository root** (`ngame/` or `NGAME-POC/`) | `git`, `pip install`, `run_training_flow.py`, config files, credentials |
+| **`ngame_ui/`** subfolder | `python3 app-simple.py` / `python app-simple.py` (dashboard server only) |
+
+After `cd` to the repo root, activate the virtual environment **once per Terminal / PowerShell session**:
+
+```bash
+# macOS / Linux
+source .venv/bin/activate
+
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+```
+
+Your prompt shows `(.venv)` when active. Dashboard logs (`GET /api/...`) in Terminal are normal — they mean the browser is refreshing, not an error.
+
+---
+
+## Appendix: Updating NGAME later
+
+**macOS (Terminal, repo root):**
+
+```bash
+cd /path/to/ngame
+git pull origin main
+source .venv/bin/activate
+```
+
+**Windows (PowerShell, repo root):**
+
+```powershell
+cd C:\path\to\ngame
+git pull origin main
+.venv\Scripts\Activate.ps1
+```
+
+Restart the dashboard (sign out/in if auto-start runs it, or start `app-simple.py` from `ngame_ui/` once to test).
+
+**Related docs (installer only)**
+
+| Need | Document |
+|------|----------|
+| Dashboard URLs / UI issues | [ngame_ui/README.md](ngame_ui/README.md), [ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md) |
+| Wave API (optional) | Copy `wave_config.example.json` → `wave_config.json`; token and business ID from [developer.waveapps.com](https://developer.waveapps.com) |
+| FRP daily ops | [FRP_OPERATIONS_GUIDE.html](FRP_OPERATIONS_GUIDE.html) |
 
 ---
 
@@ -1040,6 +1285,9 @@ For **consultant, lab, or unattended** machines — not for dashboard-only FRP o
 | Terminal flooded with `GET /api/...` | Normal — dashboard auto-refresh; stop server with Ctrl+C when testing |
 
 UI details: **[ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md)**.
+
+---
+
 
 ---
 

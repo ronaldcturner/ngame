@@ -220,7 +220,11 @@ def ensure_quickbooks_auth(config_path: str, *, interactive_on_invalid_grant: bo
 
     parsed_redirect = urlparse(redirect_uri)
     callback_path = parsed_redirect.path or "/callback"
-    callback_host = parsed_redirect.hostname or "localhost"
+    redirect_hostname = (parsed_redirect.hostname or "localhost").lower()
+    is_loopback = redirect_hostname in ("localhost", "127.0.0.1", "::1")
+    # Always bind the local listener on loopback. Public https redirect URIs (Track B /
+    # ngrok) are advertised to Intuit as redirect_uri; a tunnel forwards to this port.
+    bind_host = "127.0.0.1"
     callback_port = parsed_redirect.port
 
     access_token = (api.get("access_token") or "").strip()
@@ -272,17 +276,22 @@ def ensure_quickbooks_auth(config_path: str, *, interactive_on_invalid_grant: bo
         )
 
     # 2) Interactive OAuth login (one-time UI)
-    # If redirect_uri has a fixed port, use it; otherwise, pick a free one.
+    # Loopback without a port: pick a free local port and rewrite redirect_uri to match.
+    # Public https URIs (no port): keep redirect_uri exactly as registered; bind local 8000
+    # (or QBO_CALLBACK_BIND_PORT) for the tunnel to forward to.
     if callback_port is None:
-        callback_port = _pick_free_port(callback_host)
-        redirect_uri = f"{parsed_redirect.scheme or 'http'}://{callback_host}:{callback_port}{callback_path}"
-        auth_client.redirect_uri = redirect_uri
+        if is_loopback:
+            callback_port = _pick_free_port(bind_host)
+            redirect_uri = f"{parsed_redirect.scheme or 'http'}://{redirect_hostname}:{callback_port}{callback_path}"
+            auth_client.redirect_uri = redirect_uri
+        else:
+            callback_port = int((os.getenv("QBO_CALLBACK_BIND_PORT") or "8000").strip() or "8000")
 
     auth_url = auth_client.get_authorization_url([Scopes.ACCOUNTING])
     webbrowser.open(auth_url)
 
     captured = _run_local_callback_server(
-        host=callback_host,
+        host=bind_host,
         port=int(callback_port),
         callback_path=callback_path,
         timeout_s=timeout_s,
