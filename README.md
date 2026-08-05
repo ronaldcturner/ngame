@@ -354,16 +354,13 @@ git --version
 
 Run these in **PowerShell** (not Command Prompt).
 
-PowerShell treated `"$env:USERPROFILE\Documents"` as an empty name, so it tried `C:\Documents`. Use this instead:
-
 ```powershell
-$env:USERPROFILE
 cd "$($env:USERPROFILE)\Documents"
 git clone https://github.com/ronaldcturner/ngame.git
 cd ngame
 ```
 
-`$env:USERPROFILE` should print something like `C:\Users\YourName` (not blank). After `cd`, the prompt should end in `\Documents`.
+After `cd`, the prompt should end in `\Documents`.
 
 **If `cd` still fails**, use:
 
@@ -1288,7 +1285,7 @@ For **consultant, lab, or unattended** machines — not for dashboard-only FRP o
 
 | Symptom | Resolution |
 |---------|------------|
-| `cd …` fails with path **`C:\Documents`** does not exist | PowerShell treated `"$env:USERPROFILE\Documents"` as an empty name. Use `$env:USERPROFILE` then `cd "$($env:USERPROFILE)\Documents"` (see [§ 3 — Clone](#3--clone)) |
+| `cd …` fails with path **`C:\Documents`** does not exist | Use `cd "$($env:USERPROFILE)\Documents"` (see [§ 3 — Clone](#3--clone)) — not `"$env:USERPROFILE\Documents"` |
 | `destination path 'ngame' already exists…` | Rename or remove `Documents\ngame`, then `git clone` again (see [§ 3 — Clone](#3--clone)) |
 | `cd $env:USERPROFILE\Documents` — “filename, directory name, or volume label syntax is incorrect” | Use **PowerShell** and: `cd "$($env:USERPROFILE)\Documents"` |
 | `python3` / `python` not found | Reinstall Python; on Windows enable **Add to PATH** |
