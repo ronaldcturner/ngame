@@ -295,10 +295,22 @@
       border-left: 4px solid #d1d5db;
       color: #374151;
     }
+    details {
+      margin: 0.75em 0 1em;
+      padding: 0.5em 0.75em;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+    }
+    details summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
     hr { border: 0; border-top: 1px solid #e5e7eb; margin: 1.5em 0; }
     @media print {
       body { font-size: 11pt; max-width: none; padding: 0; }
       a { color: inherit; text-decoration: none; }
+      details { border: none; background: transparent; }
     }
   </style>
 </head>
@@ -477,6 +489,8 @@ track</a></li>
 Development / sandbox</a></li>
 <li><a href="#quickbooks-online--track-b-customer-go-live">Track B —
 Customer Go-Live</a></li>
+<li><a href="#switch-from-track-a-to-track-b">Switch from Track A to
+Track B</a></li>
 </ul></li>
 <li><a href="#dashboard-service-required-for-frp">Dashboard service</a>
 <ul>
@@ -1193,92 +1207,115 @@ to Steps 1–9</a> · <strong>Next:</strong> <a
 href="#start-manually-testing">Step 6 — Dashboard</a></p>
 <h2 id="credentials-and-configuration">Credentials and
 configuration</h2>
-<p>Configure <strong>one</strong> accounting source (or both if you are
-testing).</p>
+<p>Configure <strong>one</strong> accounting source (Wave and/or
+QuickBooks). For QuickBooks, follow <strong>only</strong> the numbered
+<strong>Do this</strong> steps. Short <strong>Background</strong> notes
+sit under the step they belong to — skip them if you already know
+why.</p>
 <h3 id="wave-simplest">Wave (simplest)</h3>
+<p><strong>Do this</strong></p>
 <div class="sourceCode" id="cb30"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> wave_config.example.json wave_config.json</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Copy-Item</span> wave_config.example.json wave_config.json</span></code></pre></div>
 <p>Edit <code>wave_config.json</code> — set <code>access_token</code>
 and <code>business_id</code> from <a
-href="https://developer.waveapps.com">developer.waveapps.com</a>.
-Optional CLI: <code>python3 run_wave_extraction.py</code> (repo root,
-venv active).</p>
+href="https://developer.waveapps.com">developer.waveapps.com</a>.</p>
+<p>Optional check (repo root, venv active):
+<code>python3 run_wave_extraction.py</code> (Windows:
+<code>python run_wave_extraction.py</code>).</p>
 <h3 id="choose-your-quickbooks-track">Choose your QuickBooks track</h3>
-<p>The <strong>software install</strong> (Python, Git, clone,
-<code>.venv</code>, dashboard, auto-start) is <strong>identical</strong>
-for practice and for customer go-live. Only the <strong>QuickBooks
-Online</strong> connection forks.</p>
 <table>
 <thead>
 <tr>
 <th>Track</th>
-<th>When to use</th>
-<th>QBO company</th>
-<th>Intuit keys</th>
-<th><code>environment</code> in <code>quickbooks_config.json</code></th>
+<th>Use when</th>
+<th>Then open</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>A — Development (practice / lab)</strong></td>
-<td>Cold install; university lab; Safe Landing–style sandbox</td>
-<td>Intuit <strong>sandbox</strong> company</td>
-<td><strong>Development</strong> Client ID / Secret</td>
-<td><code>sandbox</code></td>
+<td><strong>A — Development / sandbox</strong></td>
+<td>Practice, lab, or validate the PC before live books</td>
+<td><a href="#quickbooks-online--track-a-development--sandbox">Track A
+cookbook</a></td>
 </tr>
 <tr>
 <td><strong>B — Customer Go-Live</strong></td>
-<td>Customer’s surveillance PC for the FRP</td>
-<td>Customer’s <strong>live</strong> QBO company</td>
-<td><strong>Production</strong> Client ID / Secret</td>
-<td><code>production</code></td>
+<td>Customer’s live QBO ledger</td>
+<td><a href="#quickbooks-online--track-b-customer-go-live">Track B
+cookbook</a></td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li>Track A: <a
-href="#quickbooks-online--track-a-development--sandbox">QuickBooks
-Online — Track A (Development / sandbox)</a></li>
-<li>Track B: <a
-href="#quickbooks-online--track-b-customer-go-live">QuickBooks Online —
-Track B (Customer Go-Live)</a> — do <strong>not</strong> reuse
-Development keys or a sandbox company on a go-live machine.</li>
-</ul>
+<p>Software install (Python, clone, <code>.venv</code>, dashboard) is
+the same for both. Only Intuit keys, <code>environment</code>, company,
+and redirect URI change.</p>
+<p><strong>Recommended at a customer site:</strong> complete
+<strong>Track A</strong> to prove the PC works, then switch with <a
+href="#switch-from-track-a-to-track-b">Switch from Track A to Track
+B</a> — no re-clone.</p>
+<hr />
 <h3 id="quickbooks-online--track-a-development--sandbox">QuickBooks
 Online — Track A (Development / sandbox)</h3>
-<p><strong>Practice / lab track.</strong> For the customer’s live
-ledger, skip this section and use <strong>Track B</strong> instead.</p>
-<p>The default deployment uses the <strong>dashboard</strong>
-(<code>app-simple.py</code> at
-<strong>http://localhost:5001/dashboard</strong>) to pull <strong>live
-QuickBooks Online data</strong> (sandbox for lab/POC; production when
-deployed). OAuth must succeed before <strong>Run Training Day</strong>,
-<strong>Run Churn Analysis</strong>, or any live QBO API pull will work.
-The dashboard can load without OAuth; live data cannot.</p>
-<p>Create the config file at repository root:</p>
+<p><a id="quickbooks-online--track-a-development--sandbox"></a></p>
+<p><strong>Practice / sandbox only.</strong> For the customer’s live
+ledger use <strong>Track B</strong>.</p>
+<h4 id="track-a--checklist-before-you-start">Track A — checklist before
+you start</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" />Intuit <strong>Developer</strong>
+access to the app (not only a bookkeeper QBO login)</label></li>
+<li><label><input type="checkbox" />A <strong>sandbox</strong> company;
+you can sign in as <strong>Company Admin</strong> or <strong>Master
+Admin</strong></label></li>
+<li><label><input type="checkbox" />Repo root open; <code>.venv</code>
+works</label></li>
+</ul>
+<h4 id="a1--create-quickbooks_configjson">A1 — Create
+<code>quickbooks_config.json</code></h4>
+<p><strong>Do this</strong> (repo root):</p>
 <div class="sourceCode" id="cb31"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> quickbooks_config.example.json quickbooks_config.json   <span class="co"># macOS</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Copy-Item</span> quickbooks_config.example.json quickbooks_config.json   <span class="co"># Windows</span></span></code></pre></div>
-<h4 id="why-oauth-and-the-redirect-uri-matter">Why OAuth and the
-redirect URI matter</h4>
-<p>NGAME does not store the bookkeeper’s QBO password. It uses
-<strong>OAuth 2.0</strong>: a one-time browser authorization on the
-surveillance machine, then <strong>access and refresh tokens</strong> in
-<code>quickbooks_config.json</code>. When tokens expire or are revoked,
-NGAME opens Intuit again and completes the same flow.</p>
-<p>Intuit only redirects the browser back to <strong>URIs you
-register</strong> in the Developer Portal. If the registered URI does
-not <strong>exactly</strong> match what NGAME sends, authorization fails
-(often: <em>“Sorry, but [app name] didn’t connect”</em>).</p>
-<p>This procedure is a <strong>required prerequisite</strong> for
-operating NGAME with real (or sandbox) QBO data—not for merely opening
-the dashboard in a browser.</p>
-<h4 id="two-urls--do-not-confuse-them">Two URLs — do not confuse
-them</h4>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> quickbooks_config.example.json quickbooks_config.json</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Copy-Item</span> quickbooks_config.example.json quickbooks_config.json</span></code></pre></div>
+<details>
+<summary><strong>Background — why this file exists</strong></summary>
+
+<p>NGAME does not store the bookkeeper’s QBO password. It uses OAuth 2.0
+and saves <strong>access</strong> and <strong>refresh</strong> tokens in
+<code>quickbooks_config.json</code> on the surveillance PC. The
+dashboard can open without OAuth; <strong>Run Training Day</strong> /
+live QBO pulls cannot.</p>
+</details>
+
+<h4 id="a2--register-the-development-redirect-uri">A2 — Register the
+Development redirect URI</h4>
+<p><strong>Do this</strong></p>
+<ol type="1">
+<li>Sign in at <a
+href="https://developer.intuit.com">developer.intuit.com</a>.</li>
+<li>Open your app (e.g. Safe Landing).</li>
+<li>Stay in <strong>Development</strong> (not Production).</li>
+<li>Go to <strong>Settings → Redirect URIs → Development</strong> (or
+<strong>Development → Keys &amp; OAuth</strong>).</li>
+<li><strong>Add URI</strong> exactly:
+<code>http://localhost:8000/callback</code></li>
+<li>Click <strong>Save</strong> on that row (often to the
+<strong>right</strong> of the field — scroll/widen if you only see the
+trash icon).</li>
+<li>Refresh the page and confirm the URI is still listed.</li>
+</ol>
+<p>Official reference: <a
+href="https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri">Set
+app redirect URIs</a>.</p>
+<details>
+<summary><strong>Background — two URLs (do not confuse them)</strong></summary>
+
 <table>
 <thead>
 <tr>
@@ -1292,142 +1329,75 @@ them</h4>
 <tr>
 <td><strong>http://localhost:5001/dashboard</strong></td>
 <td>5001</td>
-<td>NGAME web UI (<code>app-simple.py</code>). FRP bookmark.</td>
+<td>NGAME web UI. FRP bookmark.</td>
 <td><strong>No</strong></td>
 </tr>
 <tr>
 <td><strong>http://localhost:8000/callback</strong></td>
 <td>8000</td>
-<td>OAuth callback. Intuit redirects here after
-<strong>Connect</strong>. NGAME’s local listener captures the code.</td>
-<td><strong>Yes</strong> (Development / sandbox)</td>
+<td>OAuth callback after <strong>Connect</strong></td>
+<td><strong>Yes</strong> (Development)</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li>The <strong>dashboard</strong> can start and display without
-OAuth.</li>
-<li><strong>Live QBO pulls</strong> require valid OAuth tokens, which
-require the <strong>callback URI</strong> to be registered and to match
-<code>quickbooks_config.json</code>.</li>
-</ul>
-<p>Default in repo: <code>quickbooks_config.example.json</code> →
-<code>"redirect_uri": "http://localhost:8000/callback"</code>. Older
-notes sometimes mention port <strong>8080</strong>; portal and config
-must agree on <strong>one</strong> value (NGAME standard:
-<strong>8000</strong>).</p>
-<h4 id="before-you-start-quickbooks">Before you start (QuickBooks)</h4>
-<ul class="task-list">
-<li><label><input type="checkbox" />Intuit <strong>Developer</strong>
-account access to the NGAME app, not only a QBO bookkeeper
-login.</label></li>
-<li><label><input type="checkbox" /><code>quickbooks_config.json</code>
-with <strong>Development</strong> Client ID and Client
-Secret.</label></li>
-<li><label><input
-type="checkbox" /><code>"environment": "sandbox"</code> for lab/POC
-(<code>"production"</code> only with production keys and a live
-company).</label></li>
-<li><label><input type="checkbox" />Sandbox company available; authorize
-as <strong>Company Administrator</strong> or <strong>Master
-Administrator</strong> (Standard users cannot complete app
-OAuth).</label></li>
-<li><label><input type="checkbox" />Python venv active at repo root;
-<code>intuit-oauth</code> installed
-(<code>requirements.txt</code>).</label></li>
-</ul>
-<h4 id="register-the-redirect-uri-intuit-developer-portal">Register the
-redirect URI (Intuit Developer Portal)</h4>
-<p>Official reference: <a
-href="https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri">Set
-app redirect URIs</a>.</p>
-<ol type="1">
-<li>Sign in at <a
-href="https://developer.intuit.com">developer.intuit.com</a>.</li>
-<li>Open your app (e.g. Safe Landing).</li>
-<li>Work in <strong>Development</strong> (sandbox), not Production,
-unless you are configuring a live deployment.</li>
-</ol>
+<p>Intuit only returns the browser to URIs you register. Mismatch →
+often <em>“Sorry, but [app] didn’t connect”</em>. Do
+<strong>not</strong> put localhost in the OAuth Playground-only URL
+field. Portal and config must agree on port <strong>8000</strong> (not
+8080 unless you change both).</p>
 <table>
 <thead>
 <tr>
-<th>Screen / field</th>
-<th>Purpose</th>
-<th>Use for NGAME localhost OAuth?</th>
+<th>Portal field</th>
+<th>Use for NGAME?</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Settings → Redirect URIs → Development</strong></td>
-<td>Allowed OAuth callback URLs</td>
-<td><strong>Yes</strong> — add
-<code>http://localhost:8000/callback</code> here</td>
+<td><strong>Redirect URIs → Development</strong></td>
+<td><strong>Yes</strong> —
+<code>http://localhost:8000/callback</code></td>
 </tr>
 <tr>
 <td><strong>Keys &amp; credentials → Development</strong></td>
-<td>Client ID, Client Secret</td>
-<td>Copy into <code>quickbooks_config.json</code>; redirect list may
-also appear under <strong>Keys &amp; OAuth</strong> on some portal
-versions</td>
+<td><strong>Yes</strong> — Client ID / Secret</td>
 </tr>
 <tr>
 <td><strong>Launch URL / Host Domain</strong></td>
-<td>Where users start your product</td>
-<td><strong>No</strong> — not the OAuth callback</td>
+<td><strong>No</strong></td>
 </tr>
 <tr>
-<td><code>https://developer.intuit.com/v2/OAuth2Playground/RedirectUrl</code></td>
-<td>OAuth 2.0 Playground only</td>
-<td><strong>No</strong> — leave unchanged; do not replace with
-localhost</td>
+<td>Playground RedirectUrl</td>
+<td><strong>No</strong> — leave unchanged</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Add and save the URI:</strong></p>
-<ol type="1">
-<li>Go to <strong>Settings</strong> → <strong>Redirect URIs</strong> →
-<strong>Development</strong> (or <strong>Development → Keys &amp;
-OAuth</strong> if <strong>Redirect URIs</strong> appears there).</li>
-<li>Click <strong>Add URI</strong>.</li>
-<li>Enter exactly: <code>http://localhost:8000/callback</code></li>
-<li>Click <strong>Save</strong> for that row.</li>
-</ol>
-<p><strong>Save is easy to miss:</strong> it is often to the
-<strong>right</strong> of the URI field (between the text box and the
-trash icon). Widen the window or scroll horizontally if you only see the
-trash can. Changes do <strong>not</strong> persist if you tab away
-without <strong>Save</strong>. Success may show: <em>“Changes saved here
-and in your settings.”</em></p>
-<ol start="5" type="1">
-<li><strong>Refresh the page</strong> and confirm
-<code>http://localhost:8000/callback</code> is still listed.</li>
-</ol>
-<p>Do <strong>not</strong> paste localhost into the Playground-only URL
-field. Localhost is for Development/sandbox only (per Intuit);
-production callbacks require <strong>https</strong>.</p>
-<h4 id="align-quickbooks_configjson">Align
-<code>quickbooks_config.json</code></h4>
-<p>Under <code>quickbooks_api</code>, confirm:</p>
+</details>
+
+<h4 id="a3--fill-development-keys-in-the-config">A3 — Fill Development
+keys in the config</h4>
+<p><strong>Do this</strong> — edit <code>quickbooks_config.json</code> →
+<code>quickbooks_api</code>:</p>
 <table>
 <thead>
 <tr>
 <th>Field</th>
-<th>Sandbox / lab value</th>
+<th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>client_id</code></td>
-<td>Development Client ID from portal</td>
+<td><strong>Development</strong> Client ID</td>
 </tr>
 <tr>
 <td><code>client_secret</code></td>
-<td>Development Client Secret</td>
+<td><strong>Development</strong> Client Secret</td>
 </tr>
 <tr>
 <td><code>redirect_uri</code></td>
-<td><code>http://localhost:8000/callback</code> (must match portal
-<strong>exactly</strong>)</td>
+<td><code>http://localhost:8000/callback</code> (exact match to
+portal)</td>
 </tr>
 <tr>
 <td><code>environment</code></td>
@@ -1436,81 +1406,33 @@ production callbacks require <strong>https</strong>.</p>
 <tr>
 <td><code>realm_id</code>, <code>access_token</code>,
 <code>refresh_token</code></td>
-<td>Filled by OAuth (may be empty before first run)</td>
+<td>Leave empty until OAuth</td>
 </tr>
 </tbody>
 </table>
-<p>Optional overrides via <code>.env</code>: <code>QBO_CLIENT_ID</code>,
-<code>QBO_CLIENT_SECRET</code>, <code>QBO_REDIRECT_URI</code>,
-<code>QBO_ENVIRONMENT</code> (see <code>.env.example</code>).</p>
-<h4 id="complete-oauth-once-on-the-surveillance-machine">Complete OAuth
-once on the surveillance machine</h4>
-<p>Run from <strong>repository root</strong> with venv active. Either
-method refreshes tokens; use one after portal or config changes.</p>
-<p><strong>Recommended — dedicated OAuth / extraction test:</strong></p>
+<p>Save the file (gitignored — stays on this PC only).</p>
+<h4 id="a4--complete-oauth-once">A4 — Complete OAuth once</h4>
+<p><strong>Do this</strong> (repo root, venv active). Keep the session
+open until the browser shows success (listener on port
+<strong>8000</strong>, ~3 minutes).</p>
 <div class="sourceCode" id="cb32"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/NGAME-POC          <span class="co"># your INSTALL_PATH</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate      <span class="co"># macOS/Linux</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># .venv\Scripts\Activate.ps1   # Windows</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> run_data_extraction.py <span class="co"># Windows: python run_data_extraction.py</span></span></code></pre></div>
-<p>A browser opens to Intuit. Sign in, select the <strong>sandbox
-company</strong> (if <code>environment</code> is <code>sandbox</code>),
-click <strong>Connect</strong> / <strong>Authorize</strong>.</p>
-<p><strong>Success:</strong> browser shows <strong>“NGAME: OAuth
-complete. You can close this tab.”</strong> Terminal shows ✅ lines.
-<code>quickbooks_config.json</code> has updated
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> run_data_extraction.py</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_data_extraction.py</span></code></pre></div>
+<p>In the browser: sign in at the <strong>sandbox</strong> host, select
+the <strong>sandbox</strong> company, <strong>Connect</strong> /
+<strong>Authorize</strong> as Company/Master Admin.</p>
+<p><strong>Success:</strong> page shows <strong>“NGAME: OAuth complete.
+You can close this tab.”</strong> Config now has
 <code>access_token</code>, <code>refresh_token</code>, and
 <code>realm_id</code>.</p>
-<p><strong>Keep the Terminal session open</strong> until the callback
-page appears (NGAME listens on port <strong>8000</strong> for up to ~3
-minutes).</p>
-<p><strong>Alternative — from the dashboard:</strong></p>
-<ol type="1">
-<li><code>cd ngame_ui</code> → <code>python3 app-simple.py</code>
-(Windows: <code>python app-simple.py</code>)</li>
-<li>Open <strong>http://localhost:5001/dashboard</strong></li>
-<li>Click <strong>Run Training Day</strong> (or the primary green
-training button)</li>
-</ol>
-<p>If tokens are invalid, the same OAuth browser flow runs in the
-background. Stopping the dashboard with <strong>Ctrl+C</strong> does not
-invalidate saved tokens; restart the dashboard when finished.</p>
-<h4 id="verify-live-quickbooks-connection-consultant">Verify live
-QuickBooks connection (consultant)</h4>
-<table>
-<thead>
-<tr>
-<th>Step</th>
-<th>Check</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><code>quickbooks_config.json</code> contains non-empty
-<code>access_token</code>, <code>refresh_token</code>,
-<code>realm_id</code></td>
-</tr>
-<tr>
-<td>2</td>
-<td>Dashboard loads at
-<strong>http://localhost:5001/dashboard</strong></td>
-</tr>
-<tr>
-<td>3</td>
-<td><strong>Run Training Day</strong> completes without Intuit “didn’t
-connect” error</td>
-</tr>
-<tr>
-<td>4</td>
-<td><code>NGAME_Training_Matrix.xlsx</code> appears or updates in repo
-root (after at least one successful training run)</td>
-</tr>
-</tbody>
-</table>
-<p>A <strong>UI-only demo</strong> (no live QBO) may show the dashboard
-without OAuth—that is not the default model in this guide.</p>
-<h4 id="sandbox-authorization-rules">Sandbox authorization rules</h4>
+<details>
+<summary><strong>Background — sandbox login rules</strong></summary>
+
 <table>
 <thead>
 <tr>
@@ -1520,214 +1442,172 @@ without OAuth—that is not the default model in this guide.</p>
 </thead>
 <tbody>
 <tr>
-<td>Login target</td>
+<td>Login host</td>
 <td><a href="https://sandbox.qbo.intuit.com">sandbox.qbo.intuit.com</a>
-for sandbox apps—not <a href="https://qbo.intuit.com">qbo.intuit.com</a>
-unless <code>environment</code> is <code>production</code></td>
+— not live qbo.intuit.com</td>
 </tr>
 <tr>
 <td>Role</td>
-<td><strong>Company Admin</strong> or <strong>Master Admin</strong> on
-the company being connected</td>
+<td>Company Admin or Master Admin (Standard users cannot finish app
+OAuth)</td>
 </tr>
 <tr>
-<td>Students / bookkeepers</td>
-<td>May post transactions in QBO UI; they do <strong>not</strong> run
-NGAME OAuth on the surveillance PC</td>
+<td>Bookkeepers / students</td>
+<td>May use QBO UI; they do <strong>not</strong> run NGAME OAuth</td>
 </tr>
 <tr>
-<td>Developer portal login</td>
-<td>For app keys and redirect URIs only—do not give students the
-developer password</td>
+<td>Developer portal password</td>
+<td>Do not give to students / FRP</td>
 </tr>
 </tbody>
 </table>
-<p>For a university lab sandbox, authorize as Company Admin on the
-sandbox company; students may post QBO data but do not run OAuth on the
-surveillance PC.</p>
-<h4 id="quickbooks-oauth-troubleshooting">QuickBooks OAuth
-troubleshooting</h4>
+<p><strong>Alternative:</strong> with the dashboard running, <strong>Run
+Training Day</strong> can trigger the same OAuth flow if tokens are
+missing.</p>
+</details>
+
+<h4 id="a5--verify-track-a">A5 — Verify Track A</h4>
+<p><strong>Do this</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>quickbooks_config.json</code> has non-empty
+<code>access_token</code>, <code>refresh_token</code>,
+<code>realm_id</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>"environment": "sandbox"</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Dashboard at <strong>http://localhost:5001/dashboard</strong> (start
+it in cookbook Step 6 if needed)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Run Training Day</strong> completes without Intuit “didn’t
+connect”</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>NGAME_Training_Matrix.xlsx</code> appears or updates in repo
+root</td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary><strong>Background — Track A troubleshooting</strong></summary>
+
 <table>
 <thead>
 <tr>
 <th>Symptom</th>
-<th>Likely cause</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>“[App] didn’t connect” on Intuit</td>
-<td>Redirect URI mismatch or wrong environment</td>
-<td>Portal <strong>Development</strong> list includes
-<code>http://localhost:8000/callback</code>; matches
-<code>quickbooks_config.json</code>; Save and refresh portal</td>
+<td>“[App] didn’t connect”</td>
+<td>Portal Development URI =
+<code>http://localhost:8000/callback</code>; matches config; Save +
+refresh portal</td>
 </tr>
 <tr>
-<td>“Please enter a unique valid redirect URI”</td>
-<td>Duplicate or invalid paste</td>
-<td>URI already listed—use existing row; or edit <code>8080</code> →
-<code>8000</code>; no trailing spaces</td>
+<td>“unique valid redirect URI”</td>
+<td>URI already listed, or fix <code>8080</code> → <code>8000</code>; no
+trailing spaces</td>
 </tr>
 <tr>
 <td>Only Playground URL visible</td>
-<td>Wrong settings tab</td>
-<td><strong>Settings → Redirect URIs → Development</strong>, not
-Playground-only field</td>
+<td>Wrong tab — use Redirect URIs → Development</td>
 </tr>
 <tr>
-<td>No Save button</td>
-<td>Save off-screen</td>
-<td>Scroll right / widen window; save per row</td>
+<td>Save button missing</td>
+<td>Scroll right / widen window</td>
 </tr>
 <tr>
-<td>URI reverts after refresh</td>
-<td>Did not click Save</td>
-<td>Save explicitly; look for confirmation message</td>
+<td>URI reverts</td>
+<td>You did not click Save</td>
 </tr>
 <tr>
-<td>OAuth completes but training fails</td>
-<td>Wrong company or expired tokens</td>
-<td>Re-run <code>run_data_extraction.py</code>; confirm
-<code>realm_id</code> matches intended sandbox company</td>
+<td>OAuth OK, training fails</td>
+<td>Re-run extraction; confirm <code>realm_id</code> is the intended
+sandbox company</td>
 </tr>
 <tr>
-<td>Port / callback timeout</td>
-<td>8000 blocked or Terminal closed</td>
-<td>Free port 8000; keep Terminal open until callback message</td>
+<td>Callback timeout</td>
+<td>Free port 8000; keep Terminal/PowerShell open</td>
 </tr>
 <tr>
-<td>Dashboard works; QBO fails</td>
-<td>OAuth never completed</td>
-<td>Complete OAuth above; do not rely on simulated QuickBooks page in
-UI</td>
+<td><code>invalid_grant</code></td>
+<td>Re-run A4 OAuth</td>
 </tr>
 </tbody>
 </table>
-<p>Token refresh failures (<code>invalid_grant</code>): re-run OAuth. In
-CI/unattended environments, interactive OAuth is disabled—complete
-authorization once on the surveillance machine.</p>
-<h4 id="how-this-fits-the-dashboard-first-deployment">How this fits the
-dashboard-first deployment</h4>
-<pre><code>FRP browser  →  http://localhost:5001/dashboard  (app-simple.py)
-                      │
-                      ├─ UI only: no Intuit redirect URI required
-                      │
-                      └─ Run Training Day / Run Churn Analysis
-                             │
-                             └─ NGAME pipeline → ensure_quickbooks_auth()
-                                    │
-                                    ├─ refresh token OR
-                                    └─ browser OAuth → Intuit → http://localhost:8000/callback
-                                           │
-                                           └─ tokens saved → live QBO API (sandbox or production)</code></pre>
-<p><strong>Consultant order (QuickBooks):</strong> (1)
-<code>quickbooks_config.json</code> → (2) register redirect URI in
-portal → (3) complete OAuth once → (4) start dashboard and verify → (5)
-<a href="#dashboard-service-required-for-frp">Dashboard service</a>
-auto-start and FRP bookmark → (6) build training baseline via
-<strong>Run Training Day</strong> (30 business days).</p>
-<p><strong>Fast demo without live QBO posting:</strong>
-<code>python3 run_training_flow.py --demo</code> replays from
-<code>NGAME_Training_Matrix_SAVED.xlsx</code>—does not replace OAuth for
-live pulls.</p>
-<p>Implementation details: <code>ngame_quickbooks_oauth.py</code>,
-<code>quickbooks_config.example.json</code>.</p>
+<p>Diagram (dashboard → OAuth → API): see <a
+href="#how-qbo-fits-the-dashboard">How QBO fits the dashboard</a>.</p>
+</details>
+
+<p><strong>Track A done.</strong> Return to your OS cookbook
+(<strong>Next:</strong> Ollama / smoke / dashboard), or later <a
+href="#switch-from-track-a-to-track-b">switch to Track B</a>.</p>
+<hr />
 <h3 id="quickbooks-online--track-b-customer-go-live">QuickBooks Online —
 Track B (Customer Go-Live)</h3>
-<p><strong>Goal:</strong> On the <strong>customer’s surveillance
-PC</strong>, connect NGAME to the customer’s <strong>own live QuickBooks
-Online company</strong> (not a sandbox). The FRP then uses the local
-dashboard against that ledger.</p>
-<p><strong>Do not use Track A values</strong> (Development keys,
-<code>"environment": "sandbox"</code>, Safe Landing / other sandbox
-companies) on a go-live machine.</p>
-<h4 id="b0--what-is-the-same-as-track-a">B.0 — What is the same as Track
-A</h4>
-<table>
-<thead>
-<tr>
-<th>Step</th>
-<th>Same as Track A?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Install Python, Git, clone repo, <code>.venv</code>,
-<code>pip install</code></td>
-<td><strong>Yes</strong></td>
-</tr>
-<tr>
-<td>Start dashboard / auto-start / FRP bookmark</td>
-<td><strong>Yes</strong></td>
-</tr>
-<tr>
-<td>OAuth concept (browser authorize once → tokens in
-<code>quickbooks_config.json</code>)</td>
-<td><strong>Yes</strong></td>
-</tr>
-<tr>
-<td>Intuit Developer Portal <strong>Development</strong> keys and
-sandbox company</td>
-<td><strong>No — use Production</strong></td>
-</tr>
-<tr>
-<td><code>"environment": "sandbox"</code></td>
-<td><strong>No — use <code>production</code></strong></td>
-</tr>
-<tr>
-<td><code>http://localhost:8000/callback</code> as Production redirect
-URI</td>
-<td><strong>No — Intuit rejects localhost / http for
-Production</strong></td>
-</tr>
-</tbody>
-</table>
-<h4 id="b1--before-you-start-go-live-checklist">B.1 — Before you start
-(go-live checklist)</h4>
+<p><a id="quickbooks-online--track-b-customer-go-live"></a></p>
+<p><strong>Live customer ledger.</strong> Do <strong>not</strong> use
+Development keys, <code>"sandbox"</code>, or a sandbox company here.</p>
+<h4 id="track-b--checklist-before-you-start">Track B — checklist before
+you start</h4>
 <ul class="task-list">
-<li><label><input type="checkbox" />Customer has approved NGAME
-read-only API access to their live QBO company.</label></li>
-<li><label><input type="checkbox" />You have Intuit
-<strong>Developer</strong> access to the NGAME app (or the customer’s
-app) — not only a bookkeeper QBO login.</label></li>
-<li><label><input type="checkbox" />You can open <strong>Keys &amp;
-credentials → Production</strong> (Client ID and Client
-Secret).</label></li>
-<li><label><input type="checkbox" />A <strong>Company
-Administrator</strong> or <strong>Master Administrator</strong> of the
-<strong>live</strong> company will complete the one-time
-Connect/Authorize click (Standard users cannot finish app
-OAuth).</label></li>
-<li><label><input type="checkbox" />Surveillance PC has stable internet;
-Python venv already created (OS installation §§ 1–4 done).</label></li>
-<li><label><input type="checkbox" />You understand Production OAuth
-needs a temporary <strong>https</strong> callback (see B.3) — not the
-Track A localhost URI alone.</label></li>
+<li><label><input type="checkbox" />Customer approved read-only API
+access to live QBO</label></li>
+<li><label><input type="checkbox" />Intuit <strong>Developer</strong>
+access; <strong>Production</strong> Client ID / Secret
+available</label></li>
+<li><label><input type="checkbox" /><strong>Company Admin</strong> or
+<strong>Master Admin</strong> of the <strong>live</strong> company will
+click Connect</label></li>
+<li><label><input type="checkbox" />OS install §§ 1–4 done; internet
+OK</label></li>
+<li><label><input type="checkbox" />You will use a temporary
+<strong>https</strong> tunnel for OAuth (B3) — localhost is not allowed
+for Production</label></li>
 </ul>
-<h4 id="b2--create--align-quickbooks_configjson-for-production">B.2 —
-Create / align <code>quickbooks_config.json</code> for Production</h4>
-<p>From repository root:</p>
-<div class="sourceCode" id="cb34"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> quickbooks_config.example.json quickbooks_config.json</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Copy-Item</span> quickbooks_config.example.json quickbooks_config.json</span></code></pre></div>
-<p>Edit <code>quickbooks_config.json</code> and set
-<strong><code>quickbooks_api</code></strong> fields:</p>
+<h4 id="b1--create-or-reset-quickbooks_configjson-for-production">B1 —
+Create or reset <code>quickbooks_config.json</code> for Production</h4>
+<p><strong>Do this</strong> (repo root):</p>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> quickbooks_config.example.json quickbooks_config.json</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Copy-Item</span> quickbooks_config.example.json quickbooks_config.json</span></code></pre></div>
+<p>If switching from Track A, you may edit the existing file instead of
+copying — clear tokens (B1 table) and replace
+keys/<code>environment</code>/<code>redirect_uri</code>.</p>
+<h4 id="b2--fill-production-keys-leave-redirect-for-b3">B2 — Fill
+Production keys (leave redirect for B3)</h4>
+<p><strong>Do this</strong> — set <code>quickbooks_api</code>:</p>
 <table>
 <thead>
 <tr>
 <th>Field</th>
-<th>Customer Go-Live value</th>
+<th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>client_id</code></td>
-<td><strong>Production</strong> Client ID from Intuit Developer
-Portal</td>
+<td><strong>Production</strong> Client ID</td>
 </tr>
 <tr>
 <td><code>client_secret</code></td>
@@ -1739,136 +1619,102 @@ Portal</td>
 </tr>
 <tr>
 <td><code>redirect_uri</code></td>
-<td>Your <strong>https</strong> Production redirect URI from B.3 (exact
-string)</td>
+<td>Set in <strong>B3</strong> (https URI)</td>
 </tr>
 <tr>
 <td><code>realm_id</code>, <code>access_token</code>,
 <code>refresh_token</code></td>
-<td>Leave empty until OAuth succeeds</td>
+<td>Empty until OAuth</td>
 </tr>
 </tbody>
 </table>
-<p>Save the file. Keep it only on the surveillance PC (it is
-gitignored).</p>
-<h4 id="b3--production-redirect-uri-required-by-intuit">B.3 — Production
-redirect URI (required by Intuit)</h4>
-<p>Intuit rules for <strong>Production</strong> (see <a
-href="https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri">Set
-app redirect URIs</a>):</p>
-<ul>
-<li>Redirect URI must start with
-<strong><code>https://</code></strong></li>
-<li><strong><code>localhost</code> is not allowed</strong></li>
-<li>IP addresses are not allowed</li>
-</ul>
-<p>NGAME still needs a <strong>one-time</strong> (or re-auth) browser
-redirect that lands on a listener on the surveillance PC. After tokens
-exist, daily work uses <strong>token refresh</strong> — no redirect —
-until tokens are revoked or expire beyond refresh.</p>
-<p>NGAME binds the OAuth callback listener on
-<strong><code>127.0.0.1:8000</code></strong> while Intuit redirects to
-your public <strong>https</strong> URI. A temporary tunnel bridges
-them.</p>
-<p><strong>Consultant method (temporary HTTPS tunnel for the OAuth
-session only):</strong></p>
+<h4 id="b3--production-https-redirect--tunnel">B3 — Production https
+redirect + tunnel</h4>
+<p><strong>Do this</strong></p>
 <ol type="1">
-<li>On the surveillance PC, start a tunnel that forwards public HTTPS to
-local port <strong>8000</strong> (example: <a
+<li>Start a tunnel to local port <strong>8000</strong> (example: <a
 href="https://ngrok.com/">ngrok</a> —
 <code>ngrok http 8000</code>).</li>
-<li>Copy the tunnel’s <strong>https</strong> base URL (example shape:
+<li>Copy the tunnel <strong>https</strong> base URL (e.g.
 <code>https://&lt;random&gt;.ngrok-free.app</code>).</li>
-<li>In Intuit Developer Portal → your app → <strong>Settings → Redirect
-URIs → Production</strong>:
-<ul>
-<li><strong>Add URI</strong> exactly:
-<code>https://&lt;random&gt;.ngrok-free.app/callback</code></li>
-<li>Click <strong>Save</strong> on that row; refresh and confirm it
-remains listed.</li>
-</ul></li>
-<li>Put the <strong>same</strong> string in
-<code>quickbooks_config.json</code> → <code>redirect_uri</code>.</li>
-<li>Keep the tunnel <strong>running</strong> until OAuth completes
-(B.4). You may stop the tunnel afterward.</li>
+<li>Intuit portal → app → <strong>Settings → Redirect URIs →
+Production</strong> → <strong>Add URI</strong> exactly:
+<code>https://&lt;random&gt;.ngrok-free.app/callback</code> →
+<strong>Save</strong> → refresh and confirm.</li>
+<li>Set the <strong>same</strong> string as <code>redirect_uri</code> in
+<code>quickbooks_config.json</code>.</li>
+<li>Leave the tunnel <strong>running</strong> until B4 finishes.</li>
 </ol>
-<p>Do <strong>not</strong> paste a Production URI into Development-only
-fields, and do <strong>not</strong> use the OAuth Playground URL as
-NGAME’s runtime <code>redirect_uri</code> unless you are following a
-separate manual-token procedure (not the default dashboard flow).</p>
-<h4 id="b4--complete-oauth-once-against-the-live-company">B.4 — Complete
-OAuth once against the live company</h4>
-<ol type="1">
-<li>Leave the HTTPS tunnel running (B.3).</li>
-<li>From repository root with venv active:</li>
-</ol>
-<div class="sourceCode" id="cb35"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> run_data_extraction.py</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_data_extraction.py</span></code></pre></div>
-<ol start="3" type="1">
-<li>Browser opens to Intuit. Sign in to the <strong>live</strong> QBO
-company (<a href="https://qbo.intuit.com">qbo.intuit.com</a> — not
-sandbox).</li>
-<li>Select the <strong>customer’s live company</strong> (not a sandbox
-company).</li>
-<li>Click <strong>Connect</strong> / <strong>Authorize</strong> as
-Company Admin / Master Admin.</li>
-<li><strong>Success:</strong> browser shows <strong>“NGAME: OAuth
-complete. You can close this tab.”</strong> Terminal shows success
-lines. <code>quickbooks_config.json</code> now has non-empty
-<code>access_token</code>, <code>refresh_token</code>, and
-<code>realm_id</code>.</li>
-<li>Stop the tunnel. Daily dashboard use does not need it while refresh
-tokens remain valid.</li>
-</ol>
-<p><strong>Alternative:</strong> With the dashboard already running,
-<strong>Run Training Day</strong> will trigger the same OAuth flow if
-tokens are missing — still requires the tunnel and matching Production
-redirect URI for the interactive step.</p>
-<h4 id="b5--verify-live-customer-ledger-not-sandbox">B.5 — Verify live
-customer ledger (not sandbox)</h4>
+<details>
+<summary><strong>Background — why Production needs a tunnel</strong></summary>
+
+<p>Intuit Production redirect URIs must be
+<strong><code>https://</code></strong>, not localhost, and not a raw IP
+(<a
+href="https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri">docs</a>).
+NGAME listens on <strong><code>127.0.0.1:8000</code></strong>; the
+tunnel forwards public https → that port. After tokens exist, daily use
+is refresh-only — stop the tunnel. Do not paste Production URIs into
+Development-only fields or use the Playground URL as NGAME’s runtime
+<code>redirect_uri</code>.</p>
+</details>
+
+<h4 id="b4--complete-oauth-against-the-live-company">B4 — Complete OAuth
+against the live company</h4>
+<p><strong>Do this</strong> (tunnel still up; repo root; venv
+active):</p>
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> run_data_extraction.py</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_data_extraction.py</span></code></pre></div>
+<p>Browser: sign in at <a
+href="https://qbo.intuit.com">qbo.intuit.com</a>, select the
+<strong>customer’s live company</strong>, <strong>Connect</strong> as
+Company/Master Admin.</p>
+<p><strong>Success:</strong> “NGAME: OAuth complete…” and
+tokens/<code>realm_id</code> filled. Then <strong>stop the
+tunnel</strong>.</p>
+<h4 id="b5--verify-track-b">B5 — Verify Track B</h4>
+<p><strong>Do this</strong></p>
 <table>
 <thead>
 <tr>
-<th>Step</th>
+<th>#</th>
 <th>Check</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1</td>
-<td><code>quickbooks_config.json</code> has
-<code>"environment": "production"</code> and Production client
+<td><code>"environment": "production"</code> and Production client
 id/secret</td>
 </tr>
 <tr>
 <td>2</td>
-<td><code>realm_id</code> matches the customer’s live company (confirm
-in Intuit / QBO company settings if unsure)</td>
+<td><code>realm_id</code> is the live company</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Dashboard at <strong>http://localhost:5001/dashboard</strong></td>
+<td><strong>http://localhost:5001/dashboard</strong></td>
 </tr>
 <tr>
 <td>4</td>
-<td><strong>Run Training Day</strong> completes without “didn’t
-connect”; matrix updates</td>
+<td><strong>Run Training Day</strong> succeeds; matrix updates</td>
 </tr>
 <tr>
 <td>5</td>
-<td>Spot-check extracted entity counts against what the FRP/bookkeeper
-expects for the <strong>live</strong> books</td>
+<td>Spot-check counts vs what the FRP/bookkeeper expects for
+<strong>live</strong> books</td>
 </tr>
 </tbody>
 </table>
-<h4 id="b6--go-live-authorization-rules">B.6 — Go-live authorization
-rules</h4>
+<details>
+<summary><strong>Background — go-live rules & re-auth</strong></summary>
+
 <table>
 <thead>
 <tr>
@@ -1878,57 +1724,80 @@ rules</h4>
 </thead>
 <tbody>
 <tr>
-<td>Login target</td>
-<td>Live QBO (<a href="https://qbo.intuit.com">qbo.intuit.com</a>), not
-sandbox</td>
+<td>Login</td>
+<td>Live QBO, not sandbox</td>
 </tr>
 <tr>
 <td>Role</td>
-<td>Company Admin or Master Admin on the <strong>live</strong>
-company</td>
+<td>Company/Master Admin on the live company</td>
 </tr>
 <tr>
 <td>Bookkeeper</td>
-<td>Continues normal QBO browser use; does <strong>not</strong> run
-NGAME OAuth</td>
+<td>Normal QBO use; no NGAME OAuth</td>
 </tr>
 <tr>
 <td>FRP</td>
-<td>Dashboard only after consultant finishes OAuth and auto-start</td>
+<td>Dashboard only after you finish OAuth + auto-start</td>
 </tr>
 <tr>
 <td>Secrets</td>
-<td>Production Client Secret and tokens stay on the surveillance PC
-only</td>
+<td>Stay on the surveillance PC</td>
 </tr>
 </tbody>
 </table>
-<h4 id="b7--re-authorization-later">B.7 — Re-authorization later</h4>
-<p>If refresh fails (<code>invalid_grant</code>) or the customer revokes
-the app:</p>
+<p>If <code>invalid_grant</code> or the app is revoked: start tunnel
+again → match Production redirect in portal + config → re-run
+<code>run_data_extraction.py</code> → stop tunnel.</p>
+<p>Sandbox training days are <strong>not</strong> the customer baseline
+— plan a fresh matrix for the live company after switching.</p>
+</details>
+
+<p><strong>Track B done.</strong> Continue OS cookbook from <strong>Step
+6</strong> (dashboard) onward.</p>
+<hr />
+<h3 id="switch-from-track-a-to-track-b">Switch from Track A to Track
+B</h3>
+<p>No re-clone or new <code>.venv</code>. After Track A proves the
+PC:</p>
 <ol type="1">
-<li>Start the HTTPS tunnel again (or register a new Production redirect
-URI if the tunnel URL changed).</li>
-<li>Align <code>redirect_uri</code> in portal and
-<code>quickbooks_config.json</code>.</li>
-<li>Re-run <code>run_data_extraction.py</code> (or trigger OAuth from
-the dashboard).</li>
-<li>Stop the tunnel after success.</li>
+<li>Follow <strong>Track B</strong> from <a
+href="#quickbooks-online--track-b-customer-go-live">B1</a> (Production
+keys, https redirect, live OAuth).</li>
+<li>Replace sandbox tokens; confirm
+<code>"environment": "production"</code>.</li>
+<li>Verify with <strong>B5</strong> (live company).</li>
+<li>Do <strong>not</strong> hand off the FRP while still on
+sandbox.</li>
 </ol>
-<h4 id="b8--continue-after-qbo-works">B.8 — Continue after QBO
-works</h4>
-<p>Continue with your OS cookbook from <strong>Step 6</strong>
-(dashboard) onward. Give the FRP only the operations guide and the
-dashboard bookmark — not Developer Portal access.</p>
+<hr />
+<h3 id="how-qbo-fits-the-dashboard">How QBO fits the dashboard</h3>
+<p><a id="how-qbo-fits-the-dashboard"></a></p>
+<pre><code>FRP browser  →  http://localhost:5001/dashboard  (app-simple.py)
+                      │
+                      ├─ UI only: no Intuit redirect URI required
+                      │
+                      └─ Run Training Day / Run Churn Analysis
+                             │
+                             └─ ensure_quickbooks_auth()
+                                    ├─ refresh token OR
+                                    └─ browser OAuth → callback URI
+                                           └─ tokens → QBO API (sandbox or production)</code></pre>
+<p><strong>Fast demo without live QBO:</strong>
+<code>python3 run_training_flow.py --demo</code> (Windows:
+<code>python …</code>) replays saved matrix data — does not replace
+OAuth for live pulls.</p>
+<p>Implementation: <code>ngame_quickbooks_oauth.py</code>,
+<code>quickbooks_config.example.json</code>.</p>
 <h3 id="environment-variables">Environment variables</h3>
-<p>Alternatively: copy <code>.env.example</code> to <code>.env</code>
-and set variables listed there.</p>
+<p>Optional: copy <code>.env.example</code> to <code>.env</code> and set
+variables listed there (<code>QBO_CLIENT_ID</code>,
+<code>QBO_CLIENT_SECRET</code>, <code>QBO_REDIRECT_URI</code>,
+<code>QBO_ENVIRONMENT</code>, etc.).</p>
 <blockquote>
 <p><strong>Security:</strong> <code>wave_config.json</code>,
 <code>quickbooks_config.json</code>, and <code>.env</code> are in
 <code>.gitignore</code>. Keep them only on the surveillance machine.</p>
 </blockquote>
-<hr />
 <hr />
 <p><strong>Return to cookbook:</strong> <a href="#macos-cookbook">←
 macOS Steps 1–9</a> · <a href="#windows-cookbook">← Windows Steps

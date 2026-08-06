@@ -65,6 +65,7 @@ The bookkeeper does not need to change how they use QuickBooks. NGAME does not w
   - [Choose your QuickBooks track](#choose-your-quickbooks-track)
   - [Track A — Development / sandbox](#quickbooks-online--track-a-development--sandbox)
   - [Track B — Customer Go-Live](#quickbooks-online--track-b-customer-go-live)
+  - [Switch from Track A to Track B](#switch-from-track-a-to-track-b)
 - [Dashboard service](#dashboard-service-required-for-frp)
   - [Start manually](#start-manually-testing)
   - [macOS — auto-start at login](#macos--auto-start-at-login)
@@ -534,233 +535,52 @@ python run_training_flow.py
 
 ## Credentials and configuration
 
-Configure **one** accounting source (or both if you are testing).
+Configure **one** accounting source (Wave and/or QuickBooks). For QuickBooks, follow **only** the numbered **Do this** steps. Short **Background** notes sit under the step they belong to — skip them if you already know why.
 
 ### Wave (simplest)
+
+**Do this**
 
 ```bash
 # macOS
 cp wave_config.example.json wave_config.json
 
-# Windows
+# Windows PowerShell
 Copy-Item wave_config.example.json wave_config.json
 ```
 
-Edit `wave_config.json` — set `access_token` and `business_id` from [developer.waveapps.com](https://developer.waveapps.com). Optional CLI: `python3 run_wave_extraction.py` (repo root, venv active).
+Edit `wave_config.json` — set `access_token` and `business_id` from [developer.waveapps.com](https://developer.waveapps.com).
+
+Optional check (repo root, venv active): `python3 run_wave_extraction.py` (Windows: `python run_wave_extraction.py`).
 
 ### Choose your QuickBooks track
 
-The **software install** (Python, Git, clone, `.venv`, dashboard, auto-start) is **identical** for practice and for customer go-live. Only the **QuickBooks Online** connection forks.
+| Track | Use when | Then open |
+|-------|----------|-----------|
+| **A — Development / sandbox** | Practice, lab, or validate the PC before live books | [Track A cookbook](#quickbooks-online--track-a-development--sandbox) |
+| **B — Customer Go-Live** | Customer’s live QBO ledger | [Track B cookbook](#quickbooks-online--track-b-customer-go-live) |
 
-| Track | When to use | QBO company | Intuit keys | `environment` in `quickbooks_config.json` |
-|-------|-------------|-------------|-------------|-------------------------------------------|
-| **A — Development (practice / lab)** | Cold install; university lab; Safe Landing–style sandbox | Intuit **sandbox** company | **Development** Client ID / Secret | `sandbox` |
-| **B — Customer Go-Live** | Customer’s surveillance PC for the FRP | Customer’s **live** QBO company | **Production** Client ID / Secret | `production` |
+Software install (Python, clone, `.venv`, dashboard) is the same for both. Only Intuit keys, `environment`, company, and redirect URI change.
 
-- Track A: [QuickBooks Online — Track A (Development / sandbox)](#quickbooks-online--track-a-development--sandbox)
-- Track B: [QuickBooks Online — Track B (Customer Go-Live)](#quickbooks-online--track-b-customer-go-live) — do **not** reuse Development keys or a sandbox company on a go-live machine.
+**Recommended at a customer site:** complete **Track A** to prove the PC works, then switch with [Switch from Track A to Track B](#switch-from-track-a-to-track-b) — no re-clone.
+
+---
 
 ### QuickBooks Online — Track A (Development / sandbox)
 
-**Practice / lab track.** For the customer’s live ledger, skip this section and use **Track B** instead.
+<a id="quickbooks-online--track-a-development--sandbox"></a>
 
+**Practice / sandbox only.** For the customer’s live ledger use **Track B**.
 
-The default deployment uses the **dashboard** (`app-simple.py` at **http://localhost:5001/dashboard**) to pull **live QuickBooks Online data** (sandbox for lab/POC; production when deployed). OAuth must succeed before **Run Training Day**, **Run Churn Analysis**, or any live QBO API pull will work. The dashboard can load without OAuth; live data cannot.
+#### Track A — checklist before you start
 
-Create the config file at repository root:
+- [ ] Intuit **Developer** access to the app (not only a bookkeeper QBO login)
+- [ ] A **sandbox** company; you can sign in as **Company Admin** or **Master Admin**
+- [ ] Repo root open; `.venv` works
 
-```bash
-cp quickbooks_config.example.json quickbooks_config.json   # macOS
-Copy-Item quickbooks_config.example.json quickbooks_config.json   # Windows
-```
+#### A1 — Create `quickbooks_config.json`
 
-#### Why OAuth and the redirect URI matter
-
-NGAME does not store the bookkeeper’s QBO password. It uses **OAuth 2.0**: a one-time browser authorization on the surveillance machine, then **access and refresh tokens** in `quickbooks_config.json`. When tokens expire or are revoked, NGAME opens Intuit again and completes the same flow.
-
-Intuit only redirects the browser back to **URIs you register** in the Developer Portal. If the registered URI does not **exactly** match what NGAME sends, authorization fails (often: *“Sorry, but [app name] didn’t connect”*).
-
-This procedure is a **required prerequisite** for operating NGAME with real (or sandbox) QBO data—not for merely opening the dashboard in a browser.
-
-#### Two URLs — do not confuse them
-
-| URL | Port | Role | Register in Intuit? |
-|-----|------|------|---------------------|
-| **http://localhost:5001/dashboard** | 5001 | NGAME web UI (`app-simple.py`). FRP bookmark. | **No** |
-| **http://localhost:8000/callback** | 8000 | OAuth callback. Intuit redirects here after **Connect**. NGAME’s local listener captures the code. | **Yes** (Development / sandbox) |
-
-- The **dashboard** can start and display without OAuth.
-- **Live QBO pulls** require valid OAuth tokens, which require the **callback URI** to be registered and to match `quickbooks_config.json`.
-
-Default in repo: `quickbooks_config.example.json` → `"redirect_uri": "http://localhost:8000/callback"`. Older notes sometimes mention port **8080**; portal and config must agree on **one** value (NGAME standard: **8000**).
-
-#### Before you start (QuickBooks)
-
-- [ ] Intuit **Developer** account access to the NGAME app, not only a QBO bookkeeper login.
-- [ ] `quickbooks_config.json` with **Development** Client ID and Client Secret.
-- [ ] `"environment": "sandbox"` for lab/POC (`"production"` only with production keys and a live company).
-- [ ] Sandbox company available; authorize as **Company Administrator** or **Master Administrator** (Standard users cannot complete app OAuth).
-- [ ] Python venv active at repo root; `intuit-oauth` installed (`requirements.txt`).
-
-#### Register the redirect URI (Intuit Developer Portal)
-
-Official reference: [Set app redirect URIs](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri).
-
-1. Sign in at [developer.intuit.com](https://developer.intuit.com).
-2. Open your app (e.g. Safe Landing).
-3. Work in **Development** (sandbox), not Production, unless you are configuring a live deployment.
-
-| Screen / field | Purpose | Use for NGAME localhost OAuth? |
-|----------------|---------|--------------------------------|
-| **Settings → Redirect URIs → Development** | Allowed OAuth callback URLs | **Yes** — add `http://localhost:8000/callback` here |
-| **Keys & credentials → Development** | Client ID, Client Secret | Copy into `quickbooks_config.json`; redirect list may also appear under **Keys & OAuth** on some portal versions |
-| **Launch URL / Host Domain** | Where users start your product | **No** — not the OAuth callback |
-| `https://developer.intuit.com/v2/OAuth2Playground/RedirectUrl` | OAuth 2.0 Playground only | **No** — leave unchanged; do not replace with localhost |
-
-**Add and save the URI:**
-
-1. Go to **Settings** → **Redirect URIs** → **Development** (or **Development → Keys & OAuth** if **Redirect URIs** appears there).
-2. Click **Add URI**.
-3. Enter exactly: `http://localhost:8000/callback`
-4. Click **Save** for that row.
-
-**Save is easy to miss:** it is often to the **right** of the URI field (between the text box and the trash icon). Widen the window or scroll horizontally if you only see the trash can. Changes do **not** persist if you tab away without **Save**. Success may show: *“Changes saved here and in your settings.”*
-
-5. **Refresh the page** and confirm `http://localhost:8000/callback` is still listed.
-
-Do **not** paste localhost into the Playground-only URL field. Localhost is for Development/sandbox only (per Intuit); production callbacks require **https**.
-
-#### Align `quickbooks_config.json`
-
-Under `quickbooks_api`, confirm:
-
-| Field | Sandbox / lab value |
-|-------|---------------------|
-| `client_id` | Development Client ID from portal |
-| `client_secret` | Development Client Secret |
-| `redirect_uri` | `http://localhost:8000/callback` (must match portal **exactly**) |
-| `environment` | `sandbox` |
-| `realm_id`, `access_token`, `refresh_token` | Filled by OAuth (may be empty before first run) |
-
-Optional overrides via `.env`: `QBO_CLIENT_ID`, `QBO_CLIENT_SECRET`, `QBO_REDIRECT_URI`, `QBO_ENVIRONMENT` (see `.env.example`).
-
-#### Complete OAuth once on the surveillance machine
-
-Run from **repository root** with venv active. Either method refreshes tokens; use one after portal or config changes.
-
-**Recommended — dedicated OAuth / extraction test:**
-
-```bash
-cd /path/to/NGAME-POC          # your INSTALL_PATH
-source .venv/bin/activate      # macOS/Linux
-# .venv\Scripts\Activate.ps1   # Windows
-python3 run_data_extraction.py # Windows: python run_data_extraction.py
-```
-
-A browser opens to Intuit. Sign in, select the **sandbox company** (if `environment` is `sandbox`), click **Connect** / **Authorize**.
-
-**Success:** browser shows **“NGAME: OAuth complete. You can close this tab.”** Terminal shows ✅ lines. `quickbooks_config.json` has updated `access_token`, `refresh_token`, and `realm_id`.
-
-**Keep the Terminal session open** until the callback page appears (NGAME listens on port **8000** for up to ~3 minutes).
-
-**Alternative — from the dashboard:**
-
-1. `cd ngame_ui` → `python3 app-simple.py` (Windows: `python app-simple.py`)
-2. Open **http://localhost:5001/dashboard**
-3. Click **Run Training Day** (or the primary green training button)
-
-If tokens are invalid, the same OAuth browser flow runs in the background. Stopping the dashboard with **Ctrl+C** does not invalidate saved tokens; restart the dashboard when finished.
-
-#### Verify live QuickBooks connection (consultant)
-
-| Step | Check |
-|------|--------|
-| 1 | `quickbooks_config.json` contains non-empty `access_token`, `refresh_token`, `realm_id` |
-| 2 | Dashboard loads at **http://localhost:5001/dashboard** |
-| 3 | **Run Training Day** completes without Intuit “didn’t connect” error |
-| 4 | `NGAME_Training_Matrix.xlsx` appears or updates in repo root (after at least one successful training run) |
-
-A **UI-only demo** (no live QBO) may show the dashboard without OAuth—that is not the default model in this guide.
-
-#### Sandbox authorization rules
-
-| Requirement | Detail |
-|-------------|--------|
-| Login target | [sandbox.qbo.intuit.com](https://sandbox.qbo.intuit.com) for sandbox apps—not [qbo.intuit.com](https://qbo.intuit.com) unless `environment` is `production` |
-| Role | **Company Admin** or **Master Admin** on the company being connected |
-| Students / bookkeepers | May post transactions in QBO UI; they do **not** run NGAME OAuth on the surveillance PC |
-| Developer portal login | For app keys and redirect URIs only—do not give students the developer password |
-
-For a university lab sandbox, authorize as Company Admin on the sandbox company; students may post QBO data but do not run OAuth on the surveillance PC.
-
-#### QuickBooks OAuth troubleshooting
-
-| Symptom | Likely cause | Action |
-|---------|----------------|--------|
-| “[App] didn’t connect” on Intuit | Redirect URI mismatch or wrong environment | Portal **Development** list includes `http://localhost:8000/callback`; matches `quickbooks_config.json`; Save and refresh portal |
-| “Please enter a unique valid redirect URI” | Duplicate or invalid paste | URI already listed—use existing row; or edit `8080` → `8000`; no trailing spaces |
-| Only Playground URL visible | Wrong settings tab | **Settings → Redirect URIs → Development**, not Playground-only field |
-| No Save button | Save off-screen | Scroll right / widen window; save per row |
-| URI reverts after refresh | Did not click Save | Save explicitly; look for confirmation message |
-| OAuth completes but training fails | Wrong company or expired tokens | Re-run `run_data_extraction.py`; confirm `realm_id` matches intended sandbox company |
-| Port / callback timeout | 8000 blocked or Terminal closed | Free port 8000; keep Terminal open until callback message |
-| Dashboard works; QBO fails | OAuth never completed | Complete OAuth above; do not rely on simulated QuickBooks page in UI |
-
-Token refresh failures (`invalid_grant`): re-run OAuth. In CI/unattended environments, interactive OAuth is disabled—complete authorization once on the surveillance machine.
-
-#### How this fits the dashboard-first deployment
-
-```
-FRP browser  →  http://localhost:5001/dashboard  (app-simple.py)
-                      │
-                      ├─ UI only: no Intuit redirect URI required
-                      │
-                      └─ Run Training Day / Run Churn Analysis
-                             │
-                             └─ NGAME pipeline → ensure_quickbooks_auth()
-                                    │
-                                    ├─ refresh token OR
-                                    └─ browser OAuth → Intuit → http://localhost:8000/callback
-                                           │
-                                           └─ tokens saved → live QBO API (sandbox or production)
-```
-
-**Consultant order (QuickBooks):** (1) `quickbooks_config.json` → (2) register redirect URI in portal → (3) complete OAuth once → (4) start dashboard and verify → (5) [Dashboard service](#dashboard-service-required-for-frp) auto-start and FRP bookmark → (6) build training baseline via **Run Training Day** (30 business days).
-
-**Fast demo without live QBO posting:** `python3 run_training_flow.py --demo` replays from `NGAME_Training_Matrix_SAVED.xlsx`—does not replace OAuth for live pulls.
-
-Implementation details: `ngame_quickbooks_oauth.py`, `quickbooks_config.example.json`.
-
-
-### QuickBooks Online — Track B (Customer Go-Live)
-
-**Goal:** On the **customer’s surveillance PC**, connect NGAME to the customer’s **own live QuickBooks Online company** (not a sandbox). The FRP then uses the local dashboard against that ledger.
-
-**Do not use Track A values** (Development keys, `"environment": "sandbox"`, Safe Landing / other sandbox companies) on a go-live machine.
-
-#### B.0 — What is the same as Track A
-
-| Step | Same as Track A? |
-|------|------------------|
-| Install Python, Git, clone repo, `.venv`, `pip install` | **Yes** |
-| Start dashboard / auto-start / FRP bookmark | **Yes** |
-| OAuth concept (browser authorize once → tokens in `quickbooks_config.json`) | **Yes** |
-| Intuit Developer Portal **Development** keys and sandbox company | **No — use Production** |
-| `"environment": "sandbox"` | **No — use `production`** |
-| `http://localhost:8000/callback` as Production redirect URI | **No — Intuit rejects localhost / http for Production** |
-
-#### B.1 — Before you start (go-live checklist)
-
-- [ ] Customer has approved NGAME read-only API access to their live QBO company.
-- [ ] You have Intuit **Developer** access to the NGAME app (or the customer’s app) — not only a bookkeeper QBO login.
-- [ ] You can open **Keys & credentials → Production** (Client ID and Client Secret).
-- [ ] A **Company Administrator** or **Master Administrator** of the **live** company will complete the one-time Connect/Authorize click (Standard users cannot finish app OAuth).
-- [ ] Surveillance PC has stable internet; Python venv already created (OS installation §§ 1–4 done).
-- [ ] You understand Production OAuth needs a temporary **https** callback (see B.3) — not the Track A localhost URI alone.
-
-#### B.2 — Create / align `quickbooks_config.json` for Production
-
-From repository root:
+**Do this** (repo root):
 
 ```bash
 # macOS
@@ -770,46 +590,63 @@ cp quickbooks_config.example.json quickbooks_config.json
 Copy-Item quickbooks_config.example.json quickbooks_config.json
 ```
 
-Edit `quickbooks_config.json` and set **`quickbooks_api`** fields:
+<details>
+<summary><strong>Background — why this file exists</strong></summary>
 
-| Field | Customer Go-Live value |
-|-------|------------------------|
-| `client_id` | **Production** Client ID from Intuit Developer Portal |
-| `client_secret` | **Production** Client Secret |
-| `environment` | `production` |
-| `redirect_uri` | Your **https** Production redirect URI from B.3 (exact string) |
-| `realm_id`, `access_token`, `refresh_token` | Leave empty until OAuth succeeds |
+NGAME does not store the bookkeeper’s QBO password. It uses OAuth 2.0 and saves **access** and **refresh** tokens in `quickbooks_config.json` on the surveillance PC. The dashboard can open without OAuth; **Run Training Day** / live QBO pulls cannot.
 
-Save the file. Keep it only on the surveillance PC (it is gitignored).
+</details>
 
-#### B.3 — Production redirect URI (required by Intuit)
+#### A2 — Register the Development redirect URI
 
-Intuit rules for **Production** (see [Set app redirect URIs](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri)):
+**Do this**
 
-- Redirect URI must start with **`https://`**
-- **`localhost` is not allowed**
-- IP addresses are not allowed
+1. Sign in at [developer.intuit.com](https://developer.intuit.com).
+2. Open your app (e.g. Safe Landing).
+3. Stay in **Development** (not Production).
+4. Go to **Settings → Redirect URIs → Development** (or **Development → Keys & OAuth**).
+5. **Add URI** exactly: `http://localhost:8000/callback`
+6. Click **Save** on that row (often to the **right** of the field — scroll/widen if you only see the trash icon).
+7. Refresh the page and confirm the URI is still listed.
 
-NGAME still needs a **one-time** (or re-auth) browser redirect that lands on a listener on the surveillance PC. After tokens exist, daily work uses **token refresh** — no redirect — until tokens are revoked or expire beyond refresh.
+Official reference: [Set app redirect URIs](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri).
 
-NGAME binds the OAuth callback listener on **`127.0.0.1:8000`** while Intuit redirects to your public **https** URI. A temporary tunnel bridges them.
+<details>
+<summary><strong>Background — two URLs (do not confuse them)</strong></summary>
 
-**Consultant method (temporary HTTPS tunnel for the OAuth session only):**
+| URL | Port | Role | Register in Intuit? |
+|-----|------|------|---------------------|
+| **http://localhost:5001/dashboard** | 5001 | NGAME web UI. FRP bookmark. | **No** |
+| **http://localhost:8000/callback** | 8000 | OAuth callback after **Connect** | **Yes** (Development) |
 
-1. On the surveillance PC, start a tunnel that forwards public HTTPS to local port **8000** (example: [ngrok](https://ngrok.com/) — `ngrok http 8000`).
-2. Copy the tunnel’s **https** base URL (example shape: `https://<random>.ngrok-free.app`).
-3. In Intuit Developer Portal → your app → **Settings → Redirect URIs → Production**:
-   - **Add URI** exactly: `https://<random>.ngrok-free.app/callback`
-   - Click **Save** on that row; refresh and confirm it remains listed.
-4. Put the **same** string in `quickbooks_config.json` → `redirect_uri`.
-5. Keep the tunnel **running** until OAuth completes (B.4). You may stop the tunnel afterward.
+Intuit only returns the browser to URIs you register. Mismatch → often *“Sorry, but [app] didn’t connect”*. Do **not** put localhost in the OAuth Playground-only URL field. Portal and config must agree on port **8000** (not 8080 unless you change both).
 
-Do **not** paste a Production URI into Development-only fields, and do **not** use the OAuth Playground URL as NGAME’s runtime `redirect_uri` unless you are following a separate manual-token procedure (not the default dashboard flow).
+| Portal field | Use for NGAME? |
+|--------------|----------------|
+| **Redirect URIs → Development** | **Yes** — `http://localhost:8000/callback` |
+| **Keys & credentials → Development** | **Yes** — Client ID / Secret |
+| **Launch URL / Host Domain** | **No** |
+| Playground RedirectUrl | **No** — leave unchanged |
 
-#### B.4 — Complete OAuth once against the live company
+</details>
 
-1. Leave the HTTPS tunnel running (B.3).
-2. From repository root with venv active:
+#### A3 — Fill Development keys in the config
+
+**Do this** — edit `quickbooks_config.json` → `quickbooks_api`:
+
+| Field | Value |
+|-------|--------|
+| `client_id` | **Development** Client ID |
+| `client_secret` | **Development** Client Secret |
+| `redirect_uri` | `http://localhost:8000/callback` (exact match to portal) |
+| `environment` | `sandbox` |
+| `realm_id`, `access_token`, `refresh_token` | Leave empty until OAuth |
+
+Save the file (gitignored — stays on this PC only).
+
+#### A4 — Complete OAuth once
+
+**Do this** (repo root, venv active). Keep the session open until the browser shows success (listener on port **8000**, ~3 minutes).
 
 ```bash
 # macOS
@@ -821,59 +658,207 @@ python3 run_data_extraction.py
 python run_data_extraction.py
 ```
 
-3. Browser opens to Intuit. Sign in to the **live** QBO company ([qbo.intuit.com](https://qbo.intuit.com) — not sandbox).
-4. Select the **customer’s live company** (not a sandbox company).
-5. Click **Connect** / **Authorize** as Company Admin / Master Admin.
-6. **Success:** browser shows **“NGAME: OAuth complete. You can close this tab.”** Terminal shows success lines. `quickbooks_config.json` now has non-empty `access_token`, `refresh_token`, and `realm_id`.
-7. Stop the tunnel. Daily dashboard use does not need it while refresh tokens remain valid.
+In the browser: sign in at the **sandbox** host, select the **sandbox** company, **Connect** / **Authorize** as Company/Master Admin.
 
-**Alternative:** With the dashboard already running, **Run Training Day** will trigger the same OAuth flow if tokens are missing — still requires the tunnel and matching Production redirect URI for the interactive step.
+**Success:** page shows **“NGAME: OAuth complete. You can close this tab.”** Config now has `access_token`, `refresh_token`, and `realm_id`.
 
-#### B.5 — Verify live customer ledger (not sandbox)
-
-| Step | Check |
-|------|--------|
-| 1 | `quickbooks_config.json` has `"environment": "production"` and Production client id/secret |
-| 2 | `realm_id` matches the customer’s live company (confirm in Intuit / QBO company settings if unsure) |
-| 3 | Dashboard at **http://localhost:5001/dashboard** |
-| 4 | **Run Training Day** completes without “didn’t connect”; matrix updates |
-| 5 | Spot-check extracted entity counts against what the FRP/bookkeeper expects for the **live** books |
-
-#### B.6 — Go-live authorization rules
+<details>
+<summary><strong>Background — sandbox login rules</strong></summary>
 
 | Requirement | Detail |
 |-------------|--------|
-| Login target | Live QBO ([qbo.intuit.com](https://qbo.intuit.com)), not sandbox |
-| Role | Company Admin or Master Admin on the **live** company |
-| Bookkeeper | Continues normal QBO browser use; does **not** run NGAME OAuth |
-| FRP | Dashboard only after consultant finishes OAuth and auto-start |
-| Secrets | Production Client Secret and tokens stay on the surveillance PC only |
+| Login host | [sandbox.qbo.intuit.com](https://sandbox.qbo.intuit.com) — not live qbo.intuit.com |
+| Role | Company Admin or Master Admin (Standard users cannot finish app OAuth) |
+| Bookkeepers / students | May use QBO UI; they do **not** run NGAME OAuth |
+| Developer portal password | Do not give to students / FRP |
 
-#### B.7 — Re-authorization later
+**Alternative:** with the dashboard running, **Run Training Day** can trigger the same OAuth flow if tokens are missing.
 
-If refresh fails (`invalid_grant`) or the customer revokes the app:
+</details>
 
-1. Start the HTTPS tunnel again (or register a new Production redirect URI if the tunnel URL changed).
-2. Align `redirect_uri` in portal and `quickbooks_config.json`.
-3. Re-run `run_data_extraction.py` (or trigger OAuth from the dashboard).
-4. Stop the tunnel after success.
+#### A5 — Verify Track A
 
-#### B.8 — Continue after QBO works
+**Do this**
 
-Continue with your OS cookbook from **Step 6** (dashboard) onward. Give the FRP only the operations guide and the dashboard bookmark — not Developer Portal access.
+| # | Check |
+|---|--------|
+| 1 | `quickbooks_config.json` has non-empty `access_token`, `refresh_token`, `realm_id` |
+| 2 | `"environment": "sandbox"` |
+| 3 | Dashboard at **http://localhost:5001/dashboard** (start it in cookbook Step 6 if needed) |
+| 4 | **Run Training Day** completes without Intuit “didn’t connect” |
+| 5 | `NGAME_Training_Matrix.xlsx` appears or updates in repo root |
+
+<details>
+<summary><strong>Background — Track A troubleshooting</strong></summary>
+
+| Symptom | Action |
+|---------|--------|
+| “[App] didn’t connect” | Portal Development URI = `http://localhost:8000/callback`; matches config; Save + refresh portal |
+| “unique valid redirect URI” | URI already listed, or fix `8080` → `8000`; no trailing spaces |
+| Only Playground URL visible | Wrong tab — use Redirect URIs → Development |
+| Save button missing | Scroll right / widen window |
+| URI reverts | You did not click Save |
+| OAuth OK, training fails | Re-run extraction; confirm `realm_id` is the intended sandbox company |
+| Callback timeout | Free port 8000; keep Terminal/PowerShell open |
+| `invalid_grant` | Re-run A4 OAuth |
+
+Diagram (dashboard → OAuth → API): see [How QBO fits the dashboard](#how-qbo-fits-the-dashboard).
+
+</details>
+
+**Track A done.** Return to your OS cookbook (**Next:** Ollama / smoke / dashboard), or later [switch to Track B](#switch-from-track-a-to-track-b).
+
+---
+
+### QuickBooks Online — Track B (Customer Go-Live)
+
+<a id="quickbooks-online--track-b-customer-go-live"></a>
+
+**Live customer ledger.** Do **not** use Development keys, `"sandbox"`, or a sandbox company here.
+
+#### Track B — checklist before you start
+
+- [ ] Customer approved read-only API access to live QBO
+- [ ] Intuit **Developer** access; **Production** Client ID / Secret available
+- [ ] **Company Admin** or **Master Admin** of the **live** company will click Connect
+- [ ] OS install §§ 1–4 done; internet OK
+- [ ] You will use a temporary **https** tunnel for OAuth (B3) — localhost is not allowed for Production
+
+#### B1 — Create or reset `quickbooks_config.json` for Production
+
+**Do this** (repo root):
+
+```bash
+# macOS
+cp quickbooks_config.example.json quickbooks_config.json
+
+# Windows PowerShell
+Copy-Item quickbooks_config.example.json quickbooks_config.json
+```
+
+If switching from Track A, you may edit the existing file instead of copying — clear tokens (B1 table) and replace keys/`environment`/`redirect_uri`.
+
+#### B2 — Fill Production keys (leave redirect for B3)
+
+**Do this** — set `quickbooks_api`:
+
+| Field | Value |
+|-------|--------|
+| `client_id` | **Production** Client ID |
+| `client_secret` | **Production** Client Secret |
+| `environment` | `production` |
+| `redirect_uri` | Set in **B3** (https URI) |
+| `realm_id`, `access_token`, `refresh_token` | Empty until OAuth |
+
+#### B3 — Production https redirect + tunnel
+
+**Do this**
+
+1. Start a tunnel to local port **8000** (example: [ngrok](https://ngrok.com/) — `ngrok http 8000`).
+2. Copy the tunnel **https** base URL (e.g. `https://<random>.ngrok-free.app`).
+3. Intuit portal → app → **Settings → Redirect URIs → Production** → **Add URI** exactly: `https://<random>.ngrok-free.app/callback` → **Save** → refresh and confirm.
+4. Set the **same** string as `redirect_uri` in `quickbooks_config.json`.
+5. Leave the tunnel **running** until B4 finishes.
+
+<details>
+<summary><strong>Background — why Production needs a tunnel</strong></summary>
+
+Intuit Production redirect URIs must be **`https://`**, not localhost, and not a raw IP ([docs](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri)). NGAME listens on **`127.0.0.1:8000`**; the tunnel forwards public https → that port. After tokens exist, daily use is refresh-only — stop the tunnel. Do not paste Production URIs into Development-only fields or use the Playground URL as NGAME’s runtime `redirect_uri`.
+
+</details>
+
+#### B4 — Complete OAuth against the live company
+
+**Do this** (tunnel still up; repo root; venv active):
+
+```bash
+# macOS
+source .venv/bin/activate
+python3 run_data_extraction.py
+
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+python run_data_extraction.py
+```
+
+Browser: sign in at [qbo.intuit.com](https://qbo.intuit.com), select the **customer’s live company**, **Connect** as Company/Master Admin.
+
+**Success:** “NGAME: OAuth complete…” and tokens/`realm_id` filled. Then **stop the tunnel**.
+
+#### B5 — Verify Track B
+
+**Do this**
+
+| # | Check |
+|---|--------|
+| 1 | `"environment": "production"` and Production client id/secret |
+| 2 | `realm_id` is the live company |
+| 3 | **http://localhost:5001/dashboard** |
+| 4 | **Run Training Day** succeeds; matrix updates |
+| 5 | Spot-check counts vs what the FRP/bookkeeper expects for **live** books |
+
+<details>
+<summary><strong>Background — go-live rules & re-auth</strong></summary>
+
+| Requirement | Detail |
+|-------------|--------|
+| Login | Live QBO, not sandbox |
+| Role | Company/Master Admin on the live company |
+| Bookkeeper | Normal QBO use; no NGAME OAuth |
+| FRP | Dashboard only after you finish OAuth + auto-start |
+| Secrets | Stay on the surveillance PC |
+
+If `invalid_grant` or the app is revoked: start tunnel again → match Production redirect in portal + config → re-run `run_data_extraction.py` → stop tunnel.
+
+Sandbox training days are **not** the customer baseline — plan a fresh matrix for the live company after switching.
+
+</details>
+
+**Track B done.** Continue OS cookbook from **Step 6** (dashboard) onward.
+
+---
+
+### Switch from Track A to Track B
+
+No re-clone or new `.venv`. After Track A proves the PC:
+
+1. Follow **Track B** from [B1](#quickbooks-online--track-b-customer-go-live) (Production keys, https redirect, live OAuth).
+2. Replace sandbox tokens; confirm `"environment": "production"`.
+3. Verify with **B5** (live company).
+4. Do **not** hand off the FRP while still on sandbox.
+
+---
+
+### How QBO fits the dashboard
+
+<a id="how-qbo-fits-the-dashboard"></a>
+
+```
+FRP browser  →  http://localhost:5001/dashboard  (app-simple.py)
+                      │
+                      ├─ UI only: no Intuit redirect URI required
+                      │
+                      └─ Run Training Day / Run Churn Analysis
+                             │
+                             └─ ensure_quickbooks_auth()
+                                    ├─ refresh token OR
+                                    └─ browser OAuth → callback URI
+                                           └─ tokens → QBO API (sandbox or production)
+```
+
+**Fast demo without live QBO:** `python3 run_training_flow.py --demo` (Windows: `python …`) replays saved matrix data — does not replace OAuth for live pulls.
+
+Implementation: `ngame_quickbooks_oauth.py`, `quickbooks_config.example.json`.
 
 ### Environment variables
 
-Alternatively: copy `.env.example` to `.env` and set variables listed there.
+Optional: copy `.env.example` to `.env` and set variables listed there (`QBO_CLIENT_ID`, `QBO_CLIENT_SECRET`, `QBO_REDIRECT_URI`, `QBO_ENVIRONMENT`, etc.).
 
 > **Security:** `wave_config.json`, `quickbooks_config.json`, and `.env` are in `.gitignore`. Keep them only on the surveillance machine.
 
 ---
-
----
 **Return to cookbook:** [← macOS Steps 1–9](#macos-cookbook) · [← Windows Steps 1–9](#windows-cookbook)  
 **Next:** [Step 4 — macOS Ollama](#macos-ollama) or [Step 4 — Windows Ollama](#windows-ollama)
-
 
 ## Dashboard service (required for FRP)
 
