@@ -243,75 +243,30 @@
     html { color: #111; background: #fff; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      line-height: 1.5;
-      color: #111;
-      max-width: 52rem;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 3rem;
+      font-size: 16px; line-height: 1.5; color: #111;
+      max-width: 52rem; margin: 0 auto; padding: 2rem 1.5rem 3rem;
       overflow-wrap: break-word;
     }
     h1, h2, h3, h4, h5, h6 {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      font-weight: 650;
-      line-height: 1.25;
-      margin-top: 1.6em;
-      margin-bottom: 0.5em;
+      font-weight: 650; line-height: 1.25; margin-top: 1.6em; margin-bottom: 0.5em;
     }
-    a { color: #0b57d0; }
-    a:visited { color: #6b4fc8; }
+    a { color: #0b57d0; } a:visited { color: #6b4fc8; }
     code, kbd, samp {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 0.92em;
-      background: #f3f4f6;
-      padding: 0.1em 0.3em;
-      border-radius: 3px;
+      font-size: 0.92em; background: #f3f4f6; padding: 0.1em 0.3em; border-radius: 3px;
     }
     pre {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 0.88em;
-      background: #f3f4f6;
-      padding: 0.9em 1em;
-      overflow-x: auto;
-      border-radius: 6px;
+      font-size: 0.88em; background: #f3f4f6; padding: 0.9em 1em; overflow-x: auto; border-radius: 6px;
     }
     pre code { background: transparent; padding: 0; }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin: 1em 0;
-      font-size: 0.95em;
-    }
-    th, td {
-      border: 1px solid #d1d5db;
-      padding: 0.45em 0.65em;
-      text-align: left;
-      vertical-align: top;
-    }
+    table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.95em; }
+    th, td { border: 1px solid #d1d5db; padding: 0.45em 0.65em; text-align: left; vertical-align: top; }
     th { background: #f3f4f6; font-weight: 600; }
-    blockquote {
-      margin: 1em 0;
-      padding: 0.2em 0 0.2em 1em;
-      border-left: 4px solid #d1d5db;
-      color: #374151;
-    }
-    details {
-      margin: 0.75em 0 1em;
-      padding: 0.5em 0.75em;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      border-radius: 6px;
-    }
-    details summary {
-      cursor: pointer;
-      font-weight: 600;
-    }
+    details { margin: 0.75em 0 1em; padding: 0.5em 0.75em; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; }
+    details summary { cursor: pointer; font-weight: 600; }
     hr { border: 0; border-top: 1px solid #e5e7eb; margin: 1.5em 0; }
-    @media print {
-      body { font-size: 11pt; max-width: none; padding: 0; }
-      a { color: inherit; text-decoration: none; }
-      details { border: none; background: transparent; }
-    }
   </style>
 </head>
 <body>
@@ -1488,13 +1443,13 @@ missing.</p>
 </tr>
 <tr>
 <td>3</td>
-<td>Dashboard at <strong>http://localhost:5001/dashboard</strong> (start
-it in cookbook Step 6 if needed)</td>
+<td>Start the dashboard (below), then open
+<strong>http://localhost:5001/dashboard</strong></td>
 </tr>
 <tr>
 <td>4</td>
-<td><strong>Run Training Day</strong> completes without Intuit “didn’t
-connect”</td>
+<td><strong>Run Today's Training Day</strong> (or <strong>Run Training
+Day</strong>) completes without Intuit “didn’t connect”</td>
 </tr>
 <tr>
 <td>5</td>
@@ -1503,6 +1458,20 @@ root</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Step 3 — start the dashboard</strong> (repo root, venv
+active). Leave this window open:</p>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ngame_ui</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> app-simple.py</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ngame_ui</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> app-simple.py</span></code></pre></div>
+<p>Then in a browser open
+<strong>http://localhost:5001/dashboard</strong>. Stop later with
+<strong>Ctrl+C</strong> in that Terminal/PowerShell window (Task
+Scheduler auto-start is a later cookbook step).</p>
 <details>
 <summary><strong>Background — Track A troubleshooting</strong></summary>
 
@@ -1585,12 +1554,12 @@ for Production</label></li>
 <h4 id="b1--create-or-reset-quickbooks_configjson-for-production">B1 —
 Create or reset <code>quickbooks_config.json</code> for Production</h4>
 <p><strong>Do this</strong> (repo root):</p>
-<div class="sourceCode" id="cb33"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> quickbooks_config.example.json quickbooks_config.json</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Copy-Item</span> quickbooks_config.example.json quickbooks_config.json</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> quickbooks_config.example.json quickbooks_config.json</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Copy-Item</span> quickbooks_config.example.json quickbooks_config.json</span></code></pre></div>
 <p>If switching from Track A, you may edit the existing file instead of
 copying — clear tokens (B1 table) and replace
 keys/<code>environment</code>/<code>redirect_uri</code>.</p>
@@ -1663,14 +1632,14 @@ Development-only fields or use the Playground URL as NGAME’s runtime
 against the live company</h4>
 <p><strong>Do this</strong> (tunnel still up; repo root; venv
 active):</p>
-<div class="sourceCode" id="cb34"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> run_data_extraction.py</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_data_extraction.py</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> run_data_extraction.py</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> run_data_extraction.py</span></code></pre></div>
 <p>Browser: sign in at <a
 href="https://qbo.intuit.com">qbo.intuit.com</a>, select the
 <strong>customer’s live company</strong>, <strong>Connect</strong> as
@@ -1699,11 +1668,14 @@ id/secret</td>
 </tr>
 <tr>
 <td>3</td>
-<td><strong>http://localhost:5001/dashboard</strong></td>
+<td>Start the dashboard (same commands as <a
+href="#a5--verify-track-a">A5 step 3</a>), then open
+<strong>http://localhost:5001/dashboard</strong></td>
 </tr>
 <tr>
 <td>4</td>
-<td><strong>Run Training Day</strong> succeeds; matrix updates</td>
+<td><strong>Run Today's Training Day</strong> succeeds; matrix
+updates</td>
 </tr>
 <tr>
 <td>5</td>
@@ -1822,10 +1794,10 @@ auto-start fails</li>
 </ol>
 <h3 id="start-manually-testing">Start manually (testing)</h3>
 <p>From <strong>repository root</strong>, venv active:</p>
-<div class="sourceCode" id="cb36"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ngame_ui</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> app-simple.py          <span class="co"># macOS</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> app-simple.py           <span class="co"># Windows</span></span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ngame_ui</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> app-simple.py          <span class="co"># macOS</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> app-simple.py           <span class="co"># Windows</span></span></code></pre></div>
 <p>Stop with <strong>Ctrl+C</strong> when testing. Production should use
 auto-start, not a Terminal window the FRP must manage.</p>
 <hr />
@@ -1880,9 +1852,9 @@ root</strong> (folder containing <code>.venv</code>,
 install path</h4>
 <p>In <strong>Terminal</strong>, <code>cd</code> to your NGAME folder
 and print the full path:</p>
-<div class="sourceCode" id="cb37"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/your/clone    <span class="co"># wherever you ran git clone</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/your/clone    <span class="co"># wherever you ran git clone</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span></code></pre></div>
 <p>Example output:
 <code>/Users/you/Developer/Projects/NGAME-POC</code></p>
 <p>Use that string everywhere below as <strong>INSTALL_PATH</strong>.
@@ -1891,12 +1863,12 @@ All paths in the plist must be <strong>absolute</strong> (start with
 <h4 id="step-2--create-the-logs-folder">Step 2 — Create the logs
 folder</h4>
 <p>Replace the example with your <strong>INSTALL_PATH</strong>:</p>
-<div class="sourceCode" id="cb38"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /Users/you/Developer/Projects/NGAME-POC/logs</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /Users/you/Developer/Projects/NGAME-POC/logs</span></code></pre></div>
 <h4 id="step-3--create-the-launchagents-folder">Step 3 — Create the
 LaunchAgents folder</h4>
-<div class="sourceCode" id="cb39"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/Library/LaunchAgents</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/Library/LaunchAgents</span></code></pre></div>
 <p><strong>Finder shortcut:</strong> <strong>Go → Go to Folder…</strong>
 (⇧⌘G), paste <code>~/Library/LaunchAgents</code>, press Return.
 (<code>~/Library</code> is hidden by default — that is normal.)</p>
@@ -1907,8 +1879,8 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href=
 from Step 3. Its entire contents are the XML block below — nothing else
 in the file.</p>
 <p><strong>Terminal (recommended):</strong></p>
-<div class="sourceCode" id="cb40"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> ~/Library/LaunchAgents/com.ngame.dashboard.plist</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> ~/Library/LaunchAgents/com.ngame.dashboard.plist</span></code></pre></div>
 <p>Paste the XML. Replace <strong>every</strong> occurrence of
 <code>/Users/you/Developer/Projects/NGAME-POC</code> with your
 <strong>INSTALL_PATH</strong> from Step 1 (five paths total). Save:
@@ -1925,30 +1897,30 @@ paste <code>~/Library/LaunchAgents</code>.</li>
 </ol>
 <p><strong>File contents</strong> (substitute your
 <strong>INSTALL_PATH</strong> for the example path):</p>
-<div class="sourceCode" id="cb41"><pre
-class="sourceCode xml"><code class="sourceCode xml"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span> <span class="ot">version=</span><span class="st">&quot;1.0&quot;</span> <span class="ot">encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> <span class="dt">plist</span> PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;<span class="dt">&gt;</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">plist</span> <span class="ot">version=</span><span class="st">&quot;1.0&quot;</span>&gt;</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dict</span>&gt;</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;Label&lt;/<span class="kw">key</span>&gt;</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">string</span>&gt;com.ngame.dashboard&lt;/<span class="kw">string</span>&gt;</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;ProgramArguments&lt;/<span class="kw">key</span>&gt;</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">array</span>&gt;</span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">string</span>&gt;/Users/you/Developer/Projects/NGAME-POC/.venv/bin/python3&lt;/<span class="kw">string</span>&gt;</span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">string</span>&gt;/Users/you/Developer/Projects/NGAME-POC/ngame_ui/app-simple.py&lt;/<span class="kw">string</span>&gt;</span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">array</span>&gt;</span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;WorkingDirectory&lt;/<span class="kw">key</span>&gt;</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">string</span>&gt;/Users/you/Developer/Projects/NGAME-POC/ngame_ui&lt;/<span class="kw">string</span>&gt;</span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;RunAtLoad&lt;/<span class="kw">key</span>&gt;</span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">true</span>/&gt;</span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;KeepAlive&lt;/<span class="kw">key</span>&gt;</span>
-<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">true</span>/&gt;</span>
-<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;StandardOutPath&lt;/<span class="kw">key</span>&gt;</span>
-<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">string</span>&gt;/Users/you/Developer/Projects/NGAME-POC/logs/dashboard.log&lt;/<span class="kw">string</span>&gt;</span>
-<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;StandardErrorPath&lt;/<span class="kw">key</span>&gt;</span>
-<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">string</span>&gt;/Users/you/Developer/Projects/NGAME-POC/logs/dashboard.err.log&lt;/<span class="kw">string</span>&gt;</span>
-<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">dict</span>&gt;</span>
-<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">plist</span>&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span> <span class="ot">version=</span><span class="st">&quot;1.0&quot;</span> <span class="ot">encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> <span class="dt">plist</span> PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;<span class="dt">&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">plist</span> <span class="ot">version=</span><span class="st">&quot;1.0&quot;</span>&gt;</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dict</span>&gt;</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;Label&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">string</span>&gt;com.ngame.dashboard&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;ProgramArguments&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">array</span>&gt;</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">string</span>&gt;/Users/you/Developer/Projects/NGAME-POC/.venv/bin/python3&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">string</span>&gt;/Users/you/Developer/Projects/NGAME-POC/ngame_ui/app-simple.py&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">array</span>&gt;</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;WorkingDirectory&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">string</span>&gt;/Users/you/Developer/Projects/NGAME-POC/ngame_ui&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;RunAtLoad&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">true</span>/&gt;</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;KeepAlive&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">true</span>/&gt;</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;StandardOutPath&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">string</span>&gt;/Users/you/Developer/Projects/NGAME-POC/logs/dashboard.log&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">key</span>&gt;StandardErrorPath&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">string</span>&gt;/Users/you/Developer/Projects/NGAME-POC/logs/dashboard.err.log&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">dict</span>&gt;</span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">plist</span>&gt;</span></code></pre></div>
 <table>
 <thead>
 <tr>
@@ -1985,15 +1957,15 @@ start</a>)</td>
 should match the file name (without <code>.plist</code>).</p>
 <h4 id="step-5--register-the-launchagent">Step 5 — Register the
 LaunchAgent</h4>
-<div class="sourceCode" id="cb42"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="ex">launchctl</span> load ~/Library/LaunchAgents/com.ngame.dashboard.plist</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">launchctl</span> load ~/Library/LaunchAgents/com.ngame.dashboard.plist</span></code></pre></div>
 <h4 id="step-6--verify">Step 6 — Verify</h4>
 <ol type="1">
 <li><p>Stop any dashboard you started manually for testing
 (<strong>Ctrl+C</strong> in that Terminal window).</p></li>
 <li><p>Start the service now (optional quick check):</p>
-<div class="sourceCode" id="cb43"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">launchctl</span> start com.ngame.dashboard</span></code></pre></div></li>
+<div class="sourceCode" id="cb44"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="ex">launchctl</span> start com.ngame.dashboard</span></code></pre></div></li>
 <li><p>Open <strong>http://localhost:5001/dashboard</strong> — the page
 should load.</p></li>
 <li><p><strong>Reboot</strong> (or sign out and back in) and confirm the
@@ -2063,27 +2035,27 @@ root</strong> (folder containing <code>.venv</code>,
 install path</h4>
 <p>In <strong>PowerShell</strong>, <code>cd</code> to your NGAME folder
 and print the full path:</p>
-<div class="sourceCode" id="cb44"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> <span class="st">&quot;</span><span class="op">$(</span><span class="va">$env</span><span class="op">:</span><span class="va">USERPROFILE</span><span class="op">)</span><span class="st">\Documents\ngame&quot;</span>    <span class="co"># or wherever you ran git clone</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Get-Location</span></span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> <span class="st">&quot;</span><span class="op">$(</span><span class="va">$env</span><span class="op">:</span><span class="va">USERPROFILE</span><span class="op">)</span><span class="st">\Documents\ngame&quot;</span>    <span class="co"># or wherever you ran git clone</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Get-Location</span></span></code></pre></div>
 <p>Example output: <code>C:\Users\you\Documents\ngame</code></p>
 <p>Use that string as <strong>INSTALL_PATH</strong> when pointing Task
 Scheduler at <code>start-dashboard.bat</code>.</p>
 <h4 id="step-2--confirm-logs-and-the-shipped-batch-file">Step 2 —
 Confirm <code>logs</code> and the shipped batch file</h4>
-<div class="sourceCode" id="cb45"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">New-Item</span> <span class="op">-</span>ItemType Directory <span class="op">-</span>Force <span class="op">-</span>Path <span class="st">&quot;.\logs&quot;</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Get-Item</span> <span class="op">.</span>\start-dashboard<span class="op">.</span><span class="fu">bat</span></span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">New-Item</span> <span class="op">-</span>ItemType Directory <span class="op">-</span>Force <span class="op">-</span>Path <span class="st">&quot;.\logs&quot;</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Get-Item</span> <span class="op">.</span>\start-dashboard<span class="op">.</span><span class="fu">bat</span></span></code></pre></div>
 <p><strong>Shipped file contents</strong> (relative paths — do not
 hard-code a user folder unless you have a special layout):</p>
-<div class="sourceCode" id="cb46"><pre
-class="sourceCode bat"><code class="sourceCode dosbat"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">@</span><span class="bu">echo off</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co">REM NGAME dashboard auto-start — place at repository root </span><span class="er">(</span><span class="co">ships with the repo</span><span class="er">)</span><span class="co">.</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co">REM Double-click to test; Task Scheduler should run this file at logon.</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">/d</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">&quot;</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> <span class="at">exist</span> <span class="st">&quot;logs&quot;</span> <span class="bu">mkdir</span> logs</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">/d</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">ngame_ui&quot;</span></span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">.venv\Scripts\pythonw.exe&quot;</span> app-simple.py <span class="kw">&gt;&gt;</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">logs\dashboard.log&quot;</span> <span class="kw">2&gt;&gt;</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">logs\dashboard.err.log&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre
+class="sourceCode bat"><code class="sourceCode dosbat"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">@</span><span class="bu">echo off</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co">REM NGAME dashboard auto-start — place at repository root </span><span class="er">(</span><span class="co">ships with the repo</span><span class="er">)</span><span class="co">.</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co">REM Double-click to test; Task Scheduler should run this file at logon.</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">/d</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">&quot;</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> <span class="at">exist</span> <span class="st">&quot;logs&quot;</span> <span class="bu">mkdir</span> logs</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">/d</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">ngame_ui&quot;</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">.venv\Scripts\pythonw.exe&quot;</span> app-simple.py <span class="kw">&gt;&gt;</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">logs\dashboard.log&quot;</span> <span class="kw">2&gt;&gt;</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">logs\dashboard.err.log&quot;</span></span></code></pre></div>
 <table>
 <thead>
 <tr>
@@ -2349,12 +2321,12 @@ commands</h2>
 </table>
 <p>After <code>cd</code> to the repo root, activate the virtual
 environment <strong>once per Terminal / PowerShell session</strong>:</p>
-<div class="sourceCode" id="cb47"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS / Linux</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS / Linux</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span></code></pre></div>
 <p>Your prompt shows <code>(.venv)</code> when active. Dashboard logs
 (<code>GET /api/...</code>) in Terminal are normal — they mean the
 browser is refreshing, not an error.</p>
@@ -2362,15 +2334,15 @@ browser is refreshing, not an error.</p>
 <h2 id="appendix-updating-ngame-later">Appendix: Updating NGAME
 later</h2>
 <p><strong>macOS (Terminal, repo root):</strong></p>
-<div class="sourceCode" id="cb48"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/ngame</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code></pre></div>
-<p><strong>Windows (PowerShell, repo root):</strong></p>
 <div class="sourceCode" id="cb49"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\path\to\ngame</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>git pull origin main</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">venv</span>\Scripts\Activate<span class="op">.</span><span class="fu">ps1</span></span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/ngame</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code></pre></div>
+<p><strong>Windows (PowerShell, repo root):</strong></p>
+<div class="sourceCode" id="cb50"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\path\to\ngame</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>git pull origin main</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">venv</span>\Scripts\Activate<span class="op">.</span><span class="fu">ps1</span></span></code></pre></div>
 <p>Restart the dashboard (sign out/in if auto-start runs it, or start
 <code>app-simple.py</code> from <code>ngame_ui/</code> once to
 test).</p>

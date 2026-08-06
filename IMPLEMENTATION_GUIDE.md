@@ -684,9 +684,23 @@ In the browser: sign in at the **sandbox** host, select the **sandbox** company,
 |---|--------|
 | 1 | `quickbooks_config.json` has non-empty `access_token`, `refresh_token`, `realm_id` |
 | 2 | `"environment": "sandbox"` |
-| 3 | Dashboard at **http://localhost:5001/dashboard** (start it in cookbook Step 6 if needed) |
-| 4 | **Run Training Day** completes without Intuit “didn’t connect” |
+| 3 | Start the dashboard (below), then open **http://localhost:5001/dashboard** |
+| 4 | **Run Today's Training Day** (or **Run Training Day**) completes without Intuit “didn’t connect” |
 | 5 | `NGAME_Training_Matrix.xlsx` appears or updates in repo root |
+
+**Step 3 — start the dashboard** (repo root, venv active). Leave this window open:
+
+```bash
+# macOS
+cd ngame_ui
+python3 app-simple.py
+
+# Windows PowerShell
+cd ngame_ui
+python app-simple.py
+```
+
+Then in a browser open **http://localhost:5001/dashboard**. Stop later with **Ctrl+C** in that Terminal/PowerShell window (Task Scheduler auto-start is a later cookbook step).
 
 <details>
 <summary><strong>Background — Track A troubleshooting</strong></summary>
@@ -793,8 +807,8 @@ Browser: sign in at [qbo.intuit.com](https://qbo.intuit.com), select the **custo
 |---|--------|
 | 1 | `"environment": "production"` and Production client id/secret |
 | 2 | `realm_id` is the live company |
-| 3 | **http://localhost:5001/dashboard** |
-| 4 | **Run Training Day** succeeds; matrix updates |
+| 3 | Start the dashboard (same commands as [A5 step 3](#a5--verify-track-a)), then open **http://localhost:5001/dashboard** |
+| 4 | **Run Today's Training Day** succeeds; matrix updates |
 | 5 | Spot-check counts vs what the FRP/bookkeeper expects for **live** books |
 
 <details>
