@@ -702,6 +702,9 @@ def _stream_script(
     ngame_state.operation_log = [f"▶ Starting {script_name} …", ""]
 
     try:
+        child_env = os.environ.copy()
+        child_env["PYTHONIOENCODING"] = "utf-8"
+        child_env["PYTHONUTF8"] = "1"
         proc = subprocess.Popen(
             [_sys.executable, "-u", str(script)],
             stdout=subprocess.PIPE,
@@ -709,6 +712,9 @@ def _stream_script(
             stdin=subprocess.PIPE,
             cwd=str(root),
             text=True,
+            encoding="utf-8",
+            errors="replace",
+            env=child_env,
         )
         # Answer any y/n prompts automatically
         try:

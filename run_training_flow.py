@@ -36,6 +36,12 @@ import sys
 import os
 import subprocess
 
+try:
+    from ngame_env import configure_utf8_stdio
+    configure_utf8_stdio()
+except Exception:
+    pass
+
 MATRIX_FILE = "NGAME_Training_Matrix.xlsx"
 SAVED_MATRIX_FILE = "NGAME_Training_Matrix_SAVED.xlsx"
 

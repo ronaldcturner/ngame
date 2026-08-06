@@ -14,6 +14,12 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 import logging
 
+try:
+    from ngame_env import configure_utf8_stdio
+    configure_utf8_stdio()
+except Exception:
+    pass
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)

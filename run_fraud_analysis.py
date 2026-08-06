@@ -8,6 +8,12 @@ import sys
 import os
 import subprocess
 
+try:
+    from ngame_env import configure_utf8_stdio
+    configure_utf8_stdio()
+except Exception:
+    pass
+
 def check_environment():
     """Check if we're in the correct environment."""
     print("🔍 Checking Python environment...")
