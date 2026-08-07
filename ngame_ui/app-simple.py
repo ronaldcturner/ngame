@@ -20,6 +20,12 @@ _repo_root_path = Path(__file__).resolve().parent.parent
 if str(_repo_root_path) not in _sys.path:
     _sys.path.insert(0, str(_repo_root_path))
 
+try:
+    from ngame_env import configure_utf8_stdio
+    configure_utf8_stdio()
+except Exception:
+    pass
+
 from ngame_dashboard_alerts import (
     build_dollar_alarm_alerts,
     filter_top_anomalies_for_display,
@@ -43,7 +49,7 @@ try:
     NGAME_AVAILABLE = True
 except ImportError:
     NGAME_AVAILABLE = False
-    print("⚠️  NGAME components not available. Running in demo mode.")
+    print("WARNING: Optional NGAME CoA extractor modules not available. Dashboard continues normally.")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ngame-secret-key-2024'
@@ -874,10 +880,10 @@ if __name__ == '__main__':
     if NGAME_AVAILABLE:
         ngame_state.initialize_workflow()
     
-    print("🚀 NGAME UI Starting...")
-    print(f"📋 NGAME Components Available: {NGAME_AVAILABLE}")
-    print(f"👤 FRP mode (hide consultant controls): {FRP_MODE}")
-    print("🌐 Open your browser to: http://localhost:5001/dashboard")
+    print("NGAME UI Starting...")
+    print(f"NGAME Components Available: {NGAME_AVAILABLE}")
+    print(f"FRP mode (hide consultant controls): {FRP_MODE}")
+    print("Open your browser to: http://localhost:5001/dashboard")
     
     # Run the application
     # Disable the auto-reloader to avoid repeated restarts in terminals.
