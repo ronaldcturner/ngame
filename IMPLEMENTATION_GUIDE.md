@@ -720,7 +720,10 @@ Diagram (dashboard → OAuth → API): see [How QBO fits the dashboard](#how-qbo
 
 </details>
 
-**Track A done.** Return to your OS cookbook (**Next:** Ollama / smoke / dashboard), or later [switch to Track B](#switch-from-track-a-to-track-b).
+**Track A done.**  
+**Return to cookbook:** [← macOS Steps 1–9](#macos-cookbook) · [← Windows Steps 1–9](#windows-cookbook)  
+**Next:** [Step 4 — macOS Ollama](#macos-ollama) or [Step 4 — Windows Ollama](#windows-ollama) (or [Step 6 — Dashboard](#start-manually-testing) if Ollama is already done).  
+Later: [Switch from Track A to Track B](#switch-from-track-a-to-track-b).
 
 ---
 
@@ -828,7 +831,9 @@ Sandbox training days are **not** the customer baseline — plan a fresh matrix 
 
 </details>
 
-**Track B done.** Continue OS cookbook from **Step 6** (dashboard) onward.
+**Track B done.**  
+**Return to cookbook:** [← macOS Steps 1–9](#macos-cookbook) · [← Windows Steps 1–9](#windows-cookbook)  
+**Next:** [Step 6 — Dashboard](#start-manually-testing) (or [Step 7 — macOS LaunchAgent](#macos--auto-start-at-login) / [Step 7 — Windows Task Scheduler](#windows--auto-start-at-login) if the dashboard already runs).
 
 ---
 
