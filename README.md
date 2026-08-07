@@ -130,7 +130,7 @@ Follow Steps 1–9 in order. Open each **Detail** link, finish that section, the
 | 4 | Ollama (before Phase II / Day 31) | [Windows installation — § 6](#windows-ollama) |
 | 5 | Optional smoke test | [Windows installation — § 7](#windows-smoke-test) |
 | 6 | Start dashboard; open http://localhost:5001/dashboard | [Start manually](#start-manually-testing) |
-| 7 | Task Scheduler auto-start at logon | [Windows — auto-start at login](#windows--auto-start-at-login) |
+| 7 | Startup folder auto-start at sign-in | [Windows — auto-start at login](#windows--auto-start-at-login) |
 | 8 | One Run Training Day; confirm matrix file | [Verify installation](#verify-installation) |
 | 9 | FRP guide, bookmark, supervised handoff | [Hand off to the FRP](#hand-off-to-the-frp) |
 
@@ -700,7 +700,7 @@ cd ngame_ui
 python app-simple.py
 ```
 
-Then in a browser open **http://localhost:5001/dashboard**. Stop later with **Ctrl+C** in that Terminal/PowerShell window (Task Scheduler auto-start is a later cookbook step).
+Then in a browser open **http://localhost:5001/dashboard**. Stop later with **Ctrl+C** in that Terminal/PowerShell window (Windows Startup-folder auto-start is a later cookbook step).
 
 <details>
 <summary><strong>Background — Track A troubleshooting</strong></summary>
@@ -833,7 +833,7 @@ Sandbox training days are **not** the customer baseline — plan a fresh matrix 
 
 **Track B done.**  
 **Return to cookbook:** [← macOS Steps 1–9](#macos-cookbook) · [← Windows Steps 1–9](#windows-cookbook)  
-**Next:** [Step 6 — Dashboard](#start-manually-testing) (or [Step 7 — macOS LaunchAgent](#macos--auto-start-at-login) / [Step 7 — Windows Task Scheduler](#windows--auto-start-at-login) if the dashboard already runs).
+**Next:** [Step 6 — Dashboard](#start-manually-testing) (or [Step 7 — macOS LaunchAgent](#macos--auto-start-at-login) / [Step 7 — Windows Startup auto-start](#windows--auto-start-at-login) if the dashboard already runs).
 
 ---
 
@@ -886,7 +886,7 @@ The FRP never uses Terminal for daily work. They use a **browser bookmark** to t
 **Your responsibilities:**
 
 1. Run `app-simple.py` and confirm **http://localhost:5001/dashboard**
-2. Auto-start at login (LaunchAgent / Task Scheduler)
+2. Auto-start at login (LaunchAgent / Windows Startup folder)
 3. Create bookmark **NGAME Dashboard** on the FRP's browser
 4. Retain `launch_dashboard.command` (repo root) as **consultant fallback** only — double-click on macOS if auto-start fails
 
@@ -905,7 +905,7 @@ Stop with **Ctrl+C** when testing. Production should use auto-start, not a Termi
 
 ---
 **Return to cookbook:** [← macOS Steps 1–9](#macos-cookbook) · [← Windows Steps 1–9](#windows-cookbook)  
-**Next:** [Step 7 — macOS LaunchAgent](#macos--auto-start-at-login) or [Step 7 — Windows Task Scheduler](#windows--auto-start-at-login)
+**Next:** [Step 7 — macOS LaunchAgent](#macos--auto-start-at-login) or [Step 7 — Windows Startup auto-start](#windows--auto-start-at-login)
 
 ### macOS — auto-start at login
 
@@ -1040,52 +1040,44 @@ launchctl load ~/Library/LaunchAgents/com.ngame.dashboard.plist
 
 ### Windows — auto-start at login
 
-**Goal:** After the FRP signs in to the surveillance PC, the dashboard starts by itself — no PowerShell window the FRP must manage each morning.
+**Goal:** After the FRP signs in to the surveillance PC, the dashboard starts by itself — no PowerShell window for the FRP to manage each morning.
 
-**What you are building:** two pieces:
-
-1. The **`start-dashboard.bat`** file that ships at repository root (relative paths — works after any `git clone` without editing).
-2. A **Task Scheduler** job — a built-in Windows tool that runs that batch file at sign-in.
+**Primary method (use this):** Windows **Startup folder** + shipped launcher files at repository root.
 
 | Item | Value |
 |------|--------|
-| **Batch file name** | `start-dashboard.bat` (included in the repo) |
-| **Example location** | `C:\Users\you\Documents\ngame\start-dashboard.bat` |
-| **Task Scheduler task name** | `NGAME Dashboard` (you choose this in the wizard; use something recognizable) |
+| **Batch file** | `start-dashboard.bat` (repo root) — starts the dashboard |
+| **Silent launcher** | `start-dashboard-silent.vbs` (repo root) — runs the bat **without** a flashing console (recommended for Startup) |
+| **Startup folder** | Press Win+R → type `shell:startup` → Enter |
+| **Example install path** | `C:\Users\you\Documents\ngame\` |
 
-The batch file lives **inside your NGAME install folder** (repository root), next to `.venv` and `ngame_ui`. Task Scheduler is a Windows system app — you do not install anything extra.
+Do **not** use Task Scheduler for a normal NGAME install (easy to confuse with other Soft Landing / Custom Handler tasks; path errors are common). Task Scheduler is optional/advanced only — see the end of this section.
 
-**Before you start:**
+**Before you start**
 
 - [Start manually (testing)](#start-manually-testing) succeeded — **http://localhost:5001/dashboard** loads.
-- You know where you cloned NGAME: the **repository root** (folder containing `.venv`, `ngame_ui`, `start-dashboard.bat`, and `requirements.txt`).
+- You are in the **NGAME clone** on this PC (folder with `.venv`, `ngame_ui`, `start-dashboard.bat`) — not an iCloud/OneDrive **copy** of an old development tree.
 
-#### Step 1 — Write down your install path
+#### Step 1 — Confirm launchers at repo root
 
-In **PowerShell**, `cd` to your NGAME folder and print the full path:
+In **PowerShell**:
 
 ```powershell
-cd "$($env:USERPROFILE)\Documents\ngame"    # or wherever you ran git clone
+cd "$($env:USERPROFILE)\Documents\ngame"    # or your real clone path
 Get-Location
-```
-
-Example output: `C:\Users\you\Documents\ngame`
-
-Use that string as **INSTALL_PATH** when pointing Task Scheduler at `start-dashboard.bat`.
-
-#### Step 2 — Confirm `logs` and the shipped batch file
-
-```powershell
-New-Item -ItemType Directory -Force -Path ".\logs"
 Get-Item .\start-dashboard.bat
+Get-Item .\start-dashboard-silent.vbs
+New-Item -ItemType Directory -Force -Path ".\logs" | Out-Null
 ```
 
-**Shipped file contents** (relative paths — do not hard-code a user folder unless you have a special layout):
+If either file is missing, run `git pull origin main` from this folder, or recreate them from the copies in this guide / the GitHub repo.
+
+**What `start-dashboard.bat` does** (do **not** paste this into PowerShell — it already lives in the file):
 
 ```bat
 @echo off
 REM NGAME dashboard auto-start — place at repository root (ships with the repo).
-REM Double-click to test; Task Scheduler should run this file at logon.
+REM Double-click to test; for login auto-start prefer start-dashboard-silent.vbs in shell:startup.
 cd /d "%~dp0"
 if not exist "logs" mkdir logs
 set PYTHONUTF8=1
@@ -1094,54 +1086,74 @@ cd /d "%~dp0ngame_ui"
 "%~dp0.venv\Scripts\pythonw.exe" app-simple.py >> "%~dp0logs\dashboard.log" 2>> "%~dp0logs\dashboard.err.log"
 ```
 
-| Part of the batch file | Points to |
-|------------------------|-----------|
-| `%~dp0` | Folder containing the `.bat` (repository root) |
-| `…\ngame_ui` | Dashboard working directory (same as [manual start](#start-manually-testing)) |
-| `…\.venv\Scripts\pythonw.exe` | Python from the venv — **`pythonw.exe`** runs without a visible console window |
-| `app-simple.py` | Dashboard script |
-| `…\logs\dashboard.log` / `.err.log` | Output logs |
+**What `start-dashboard-silent.vbs` does:** runs that bat with a **hidden** window so the FRP does not see a console flash at sign-in.
 
-If `start-dashboard.bat` is missing (old clone), create it with the contents above.
+#### Step 2 — Quick test the bat (once)
 
-**Quick test:** Double-click `start-dashboard.bat` in File Explorer once. Wait a few seconds, then open **http://localhost:5001/dashboard**. If it loads, stop the test (close any running dashboard from Task Manager or reboot) before continuing to Step 3.
+1. In File Explorer, open your NGAME folder.
+2. Double-click **`start-dashboard.bat`**.
+3. Wait ~10–15 seconds → open **http://localhost:5001/dashboard**.
+4. If it loads, stop this test dashboard: **Ctrl+Shift+Esc** (Task Manager) → end **pythonw.exe** / **python.exe** if listed (they are processes, not files in a folder).
 
-#### Step 3 — Create the Task Scheduler job
+If the page does not load, read `logs\dashboard.err.log` before continuing.
 
-1. Press the **Windows key**, type **Task Scheduler**, press **Enter**.
-2. In the right **Actions** pane, click **Create Basic Task…**
-3. **Name:** `NGAME Dashboard` → **Next**
-4. **Trigger:** **When I log on** → **Next**
-5. **Action:** **Start a program** → **Next**
-6. **Program/script:** paste the full path to your batch file, for example:
+#### Step 3 — Add the silent launcher to Startup (Do this)
 
-   `C:\Users\you\Documents\ngame\start-dashboard.bat`
+1. Press **Win+R**, type `shell:startup`, press **Enter**.  
+   This opens **your** Startup folder (not Task Scheduler).
+2. Open a second Explorer window to your NGAME repo root (`Documents\ngame`).
+3. **Right-click** `start-dashboard-silent.vbs` → **Show more options** (Windows 11) if needed → **Create shortcut**.
+4. **Move** that shortcut into the Startup folder from step 1.
+5. (Optional) Rename the shortcut to **`NGAME Dashboard`** (right-click → Rename). Do **not** rename the real `.vbs` / `.bat` files in the repo unless you know what you are doing.
 
-   (Use **Browse…** if you prefer to pick the file in a dialog.)
-7. **Start in (optional):** leave blank — the batch file sets its own folder → **Next**
-8. Check **Open the Properties dialog for this task when I click Finish** → **Finish**
+**Alternate (console may flash):** put a shortcut to `start-dashboard.bat` in Startup instead of the `.vbs`. Prefer the `.vbs` for FRP machines.
 
-In the **Properties** window that opens:
+#### Step 4 — Disable any NGAME Task Scheduler task
 
-9. **General** tab: select **Run only when user is logged on** (the FRP uses a browser on this same PC).
-10. **Conditions** tab: if this is a **laptop**, uncheck **Start the task only if the computer is on AC power** so the dashboard still starts on battery.
-11. **Settings** tab: uncheck **Stop the task if it runs longer than** — the dashboard is meant to run all day.
-12. Click **OK**. Enter your Windows password if prompted.
+If you previously created a Task Scheduler task (e.g. **NGAME Dashboard**):
 
-#### Step 4 — Verify
+1. Open **Task Scheduler**.
+2. Select that task → right-click → **Disable**.
 
-1. Stop any dashboard you started manually for testing (**Ctrl+C** in that PowerShell window).
-2. Sign **out** and sign **back in** (or restart the PC).
-3. Wait 10–15 seconds after the desktop appears.
-4. Open **http://localhost:5001/dashboard** — the page should load **without** you opening PowerShell or double-clicking the batch file.
+Leave Soft Landing / other vendors’ tasks alone. NGAME auto-start should be **only** the Startup shortcut.
 
-**If it fails:** read `INSTALL_PATH\logs\dashboard.err.log` first. Common fixes: `.venv` not created at repo root, Task Scheduler task points to the wrong file, or dashboard not yet tested manually.
+#### Step 5 — Verify at sign-in
 
-**Consultant fallback:** double-click `start-dashboard.bat` in the repo root until Task Scheduler is fixed — do not leave that as the FRP's daily workflow.
+1. Do **not** double-click the bat and do **not** click Run in Task Scheduler.
+2. Sign **out** and sign **back in** (or reboot).
+3. Wait **30–45 seconds** after the desktop appears (first sign-in can be slow).
+4. Open **http://localhost:5001/dashboard** — it should load with no PowerShell and no manual start.
 
-> Do **not** schedule `ngame_dual_mode.py` on the same machine if the FRP runs from the dashboard — that can double-run the pipeline.
+**If it fails**
 
----
+| Check | How |
+|--------|-----|
+| Shortcut target | In `shell:startup`, right-click the shortcut → **Properties** → **Target** must be the **local** `…\Documents\ngame\start-dashboard-silent.vbs` (not an iCloud/dev copy) |
+| Bat still works | Double-click `start-dashboard.bat` once |
+| Logs | `Documents\ngame\logs\dashboard.err.log` |
+| Processes | After sign-in, Task Manager may show **pythonw.exe** when the dashboard is up |
+
+**Consultant fallback:** double-click `start-dashboard.bat` until Startup is fixed — do not leave that as the FRP’s daily workflow.
+
+> Do **not** also run `ngame_dual_mode.py` on a schedule on the same machine if the FRP uses the dashboard — that can double-run the pipeline.
+
+#### Optional — Task Scheduler (advanced; not recommended)
+
+Prefer Startup (above). Use Task Scheduler only if site policy blocks Startup folders.
+
+Requirements if you try it anyway:
+
+- Task name: **`NGAME Dashboard`** (easy to find later)
+- Trigger: **At log on** of the FRP’s Windows user (not **Daily**) — in Edit Trigger, field **Begin the task:**
+- Action: **Start a program** only — **not** Custom Handler
+- Program: `C:\Windows\System32\cmd.exe`
+- Arguments: `/c ""C:\Users\you\Documents\ngame\start-dashboard.bat""` (exact real path; Browse to confirm)
+- Start in: `C:\Users\you\Documents\ngame`
+- General: **Run only when user is logged on**
+- Delay 30 seconds on the logon trigger helps
+- Do **not** edit Soft Landing / SoftLandingCreativeManagementTask tasks
+
+`LastTaskResult` **2147942402** (`0x80070002`) means **file not found** — wrong path (often OneDrive/iCloud vs local Documents).
 
 ---
 **Windows cookbook:** [← Back to Steps 1–9](#windows-cookbook) · **Next:** [Step 8 — Verify](#verify-installation)
@@ -1197,7 +1209,7 @@ Complete after your OS cookbook Step 9. This is a **departure checklist**, not a
 
 1. [ ] OS cookbook Steps 1–9 done ([macOS](#macos-cookbook) or [Windows](#windows-cookbook))
 2. [ ] Dashboard loads at http://localhost:5001/dashboard
-3. [ ] Auto-start configured (LaunchAgent or Task Scheduler)
+3. [ ] Auto-start configured (LaunchAgent or Windows Startup folder)
 4. [ ] One training day recorded; `NGAME_Training_Matrix.xlsx` present
 5. [ ] FRP guide printed/PDF; contacts filled; bookmark created
 6. [ ] Supervised FRP Run Training Day completed
@@ -1299,7 +1311,7 @@ For **consultant, lab, or unattended** machines — not for dashboard-only FRP o
 | `pip install` compiler error (Windows) | Install Microsoft C++ Build Tools; retry |
 | PowerShell blocks venv activation | `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` |
 | Dashboard empty | Run one training or churn day from dashboard |
-| FRP cannot connect | Check LaunchAgent / Task Scheduler; read `logs/dashboard.err.log` |
+| FRP cannot connect | Check LaunchAgent / Windows Startup shortcut; read `logs/dashboard.err.log` |
 | `Ollama is not running or not accessible` | Start Ollama (macOS: menu bar app; Windows: tray icon); `ollama list` |
 | `model not found` / LLM error in Phase II | `ollama list` tag must match `self.model_name` in `ngame_llm_analysis_agent.py`; run `ollama pull` for that tag |
 | Ollama very slow or PC freezes | Use a smaller model (`gemma2:2b`); close browsers; see [§ 6 — Ollama](#6--ollama-before-phase-ii--fraud-analysis) |

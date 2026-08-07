@@ -1,6 +1,6 @@
 @echo off
 REM NGAME dashboard auto-start — place at repository root (ships with the repo).
-REM Double-click to test; Task Scheduler should run this file at logon.
+REM Double-click to test; for login auto-start prefer start-dashboard-silent.vbs in shell:startup.
 cd /d "%~dp0"
 if not exist "logs" mkdir logs
 set PYTHONUTF8=1

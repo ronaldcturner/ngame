@@ -618,7 +618,7 @@ href="#quickbooks-online--track-a-development--sandbox">Track A</a> or
 </tr>
 <tr>
 <td>7</td>
-<td>Task Scheduler auto-start at logon</td>
+<td>Startup folder auto-start at sign-in</td>
 <td><a href="#windows--auto-start-at-login">Windows — auto-start at
 login</a></td>
 </tr>
@@ -1470,8 +1470,8 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href=
 <span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> app-simple.py</span></code></pre></div>
 <p>Then in a browser open
 <strong>http://localhost:5001/dashboard</strong>. Stop later with
-<strong>Ctrl+C</strong> in that Terminal/PowerShell window (Task
-Scheduler auto-start is a later cookbook step).</p>
+<strong>Ctrl+C</strong> in that Terminal/PowerShell window (Windows
+Startup-folder auto-start is a later cookbook step).</p>
 <details>
 <summary><strong>Background — Track A troubleshooting</strong></summary>
 
@@ -1738,7 +1738,7 @@ Steps 1–9</a> · <a href="#windows-cookbook">← Windows Steps
 <strong>Next:</strong> <a href="#start-manually-testing">Step 6 —
 Dashboard</a> (or <a href="#macos--auto-start-at-login">Step 7 — macOS
 LaunchAgent</a> / <a href="#windows--auto-start-at-login">Step 7 —
-Windows Task Scheduler</a> if the dashboard already runs).</p>
+Windows Startup auto-start</a> if the dashboard already runs).</p>
 <hr />
 <h3 id="switch-from-track-a-to-track-b">Switch from Track A to Track
 B</h3>
@@ -1798,7 +1798,7 @@ and keep running.</p>
 <ol type="1">
 <li>Run <code>app-simple.py</code> and confirm
 <strong>http://localhost:5001/dashboard</strong></li>
-<li>Auto-start at login (LaunchAgent / Task Scheduler)</li>
+<li>Auto-start at login (LaunchAgent / Windows Startup folder)</li>
 <li>Create bookmark <strong>NGAME Dashboard</strong> on the FRP's
 browser</li>
 <li>Retain <code>launch_dashboard.command</code> (repo root) as
@@ -1819,7 +1819,7 @@ macOS Steps 1–9</a> · <a href="#windows-cookbook">← Windows Steps
 1–9</a><br />
 <strong>Next:</strong> <a href="#macos--auto-start-at-login">Step 7 —
 macOS LaunchAgent</a> or <a href="#windows--auto-start-at-login">Step 7
-— Windows Task Scheduler</a></p>
+— Windows Startup auto-start</a></p>
 <h3 id="macos--auto-start-at-login">macOS — auto-start at login</h3>
 <p><strong>Goal:</strong> After the FRP signs in to the surveillance
 Mac, the dashboard starts by itself — no Terminal window and no daily
@@ -1998,16 +1998,10 @@ Steps 1–9</a> · <strong>Next:</strong> <a
 href="#verify-installation">Step 8 — Verify</a></p>
 <h3 id="windows--auto-start-at-login">Windows — auto-start at login</h3>
 <p><strong>Goal:</strong> After the FRP signs in to the surveillance PC,
-the dashboard starts by itself — no PowerShell window the FRP must
+the dashboard starts by itself — no PowerShell window for the FRP to
 manage each morning.</p>
-<p><strong>What you are building:</strong> two pieces:</p>
-<ol type="1">
-<li>The <strong><code>start-dashboard.bat</code></strong> file that
-ships at repository root (relative paths — works after any
-<code>git clone</code> without editing).</li>
-<li>A <strong>Task Scheduler</strong> job — a built-in Windows tool that
-runs that batch file at sign-in.</li>
-</ol>
+<p><strong>Primary method (use this):</strong> Windows <strong>Startup
+folder</strong> + shipped launcher files at repository root.</p>
 <table>
 <thead>
 <tr>
@@ -2017,157 +2011,191 @@ runs that batch file at sign-in.</li>
 </thead>
 <tbody>
 <tr>
-<td><strong>Batch file name</strong></td>
-<td><code>start-dashboard.bat</code> (included in the repo)</td>
+<td><strong>Batch file</strong></td>
+<td><code>start-dashboard.bat</code> (repo root) — starts the
+dashboard</td>
 </tr>
 <tr>
-<td><strong>Example location</strong></td>
-<td><code>C:\Users\you\Documents\ngame\start-dashboard.bat</code></td>
+<td><strong>Silent launcher</strong></td>
+<td><code>start-dashboard-silent.vbs</code> (repo root) — runs the bat
+<strong>without</strong> a flashing console (recommended for
+Startup)</td>
 </tr>
 <tr>
-<td><strong>Task Scheduler task name</strong></td>
-<td><code>NGAME Dashboard</code> (you choose this in the wizard; use
-something recognizable)</td>
+<td><strong>Startup folder</strong></td>
+<td>Press Win+R → type <code>shell:startup</code> → Enter</td>
+</tr>
+<tr>
+<td><strong>Example install path</strong></td>
+<td><code>C:\Users\you\Documents\ngame\</code></td>
 </tr>
 </tbody>
 </table>
-<p>The batch file lives <strong>inside your NGAME install
-folder</strong> (repository root), next to <code>.venv</code> and
-<code>ngame_ui</code>. Task Scheduler is a Windows system app — you do
-not install anything extra.</p>
-<p><strong>Before you start:</strong></p>
+<p>Do <strong>not</strong> use Task Scheduler for a normal NGAME install
+(easy to confuse with other Soft Landing / Custom Handler tasks; path
+errors are common). Task Scheduler is optional/advanced only — see the
+end of this section.</p>
+<p><strong>Before you start</strong></p>
 <ul>
 <li><a href="#start-manually-testing">Start manually (testing)</a>
 succeeded — <strong>http://localhost:5001/dashboard</strong> loads.</li>
-<li>You know where you cloned NGAME: the <strong>repository
-root</strong> (folder containing <code>.venv</code>,
-<code>ngame_ui</code>, <code>start-dashboard.bat</code>, and
-<code>requirements.txt</code>).</li>
+<li>You are in the <strong>NGAME clone</strong> on this PC (folder with
+<code>.venv</code>, <code>ngame_ui</code>,
+<code>start-dashboard.bat</code>) — not an iCloud/OneDrive
+<strong>copy</strong> of an old development tree.</li>
 </ul>
-<h4 id="step-1--write-down-your-install-path-1">Step 1 — Write down your
-install path</h4>
-<p>In <strong>PowerShell</strong>, <code>cd</code> to your NGAME folder
-and print the full path:</p>
+<h4 id="step-1--confirm-launchers-at-repo-root">Step 1 — Confirm
+launchers at repo root</h4>
+<p>In <strong>PowerShell</strong>:</p>
 <div class="sourceCode" id="cb45"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> <span class="st">&quot;</span><span class="op">$(</span><span class="va">$env</span><span class="op">:</span><span class="va">USERPROFILE</span><span class="op">)</span><span class="st">\Documents\ngame&quot;</span>    <span class="co"># or wherever you ran git clone</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Get-Location</span></span></code></pre></div>
-<p>Example output: <code>C:\Users\you\Documents\ngame</code></p>
-<p>Use that string as <strong>INSTALL_PATH</strong> when pointing Task
-Scheduler at <code>start-dashboard.bat</code>.</p>
-<h4 id="step-2--confirm-logs-and-the-shipped-batch-file">Step 2 —
-Confirm <code>logs</code> and the shipped batch file</h4>
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> <span class="st">&quot;</span><span class="op">$(</span><span class="va">$env</span><span class="op">:</span><span class="va">USERPROFILE</span><span class="op">)</span><span class="st">\Documents\ngame&quot;</span>    <span class="co"># or your real clone path</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Get-Location</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Get-Item</span> <span class="op">.</span>\start-dashboard<span class="op">.</span><span class="fu">bat</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">Get-Item</span> <span class="op">.</span>\start-dashboard-silent<span class="op">.</span><span class="fu">vbs</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">New-Item</span> <span class="op">-</span>ItemType Directory <span class="op">-</span>Force <span class="op">-</span>Path <span class="st">&quot;.\logs&quot;</span> <span class="op">|</span> <span class="fu">Out-Null</span></span></code></pre></div>
+<p>If either file is missing, run <code>git pull origin main</code> from
+this folder, or recreate them from the copies in this guide / the GitHub
+repo.</p>
+<p><strong>What <code>start-dashboard.bat</code> does</strong> (do
+<strong>not</strong> paste this into PowerShell — it already lives in
+the file):</p>
 <div class="sourceCode" id="cb46"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">New-Item</span> <span class="op">-</span>ItemType Directory <span class="op">-</span>Force <span class="op">-</span>Path <span class="st">&quot;.\logs&quot;</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Get-Item</span> <span class="op">.</span>\start-dashboard<span class="op">.</span><span class="fu">bat</span></span></code></pre></div>
-<p><strong>Shipped file contents</strong> (relative paths — do not
-hard-code a user folder unless you have a special layout):</p>
-<div class="sourceCode" id="cb47"><pre
-class="sourceCode bat"><code class="sourceCode dosbat"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">@</span><span class="bu">echo off</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co">REM NGAME dashboard auto-start — place at repository root </span><span class="er">(</span><span class="co">ships with the repo</span><span class="er">)</span><span class="co">.</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co">REM Double-click to test; Task Scheduler should run this file at logon.</span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">/d</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">&quot;</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> <span class="at">exist</span> <span class="st">&quot;logs&quot;</span> <span class="bu">mkdir</span> logs</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">/d</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">ngame_ui&quot;</span></span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">.venv\Scripts\pythonw.exe&quot;</span> app-simple.py <span class="kw">&gt;&gt;</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">logs\dashboard.log&quot;</span> <span class="kw">2&gt;&gt;</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">logs\dashboard.err.log&quot;</span></span></code></pre></div>
+class="sourceCode bat"><code class="sourceCode dosbat"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">@</span><span class="bu">echo off</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co">REM NGAME dashboard auto-start — place at repository root </span><span class="er">(</span><span class="co">ships with the repo</span><span class="er">)</span><span class="co">.</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co">REM Double-click to test; for login auto-start prefer start-dashboard-silent.vbs in shell:startup.</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">/d</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">&quot;</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> <span class="at">exist</span> <span class="st">&quot;logs&quot;</span> <span class="bu">mkdir</span> logs</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="va">PYTHONUTF8</span>=1</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="va">PYTHONIOENCODING</span>=utf-8</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">/d</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">ngame_ui&quot;</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">.venv\Scripts\pythonw.exe&quot;</span> app-simple.py <span class="kw">&gt;&gt;</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">logs\dashboard.log&quot;</span> <span class="kw">2&gt;&gt;</span> <span class="st">&quot;</span><span class="pp">%~dp</span><span class="va">0</span><span class="st">logs\dashboard.err.log&quot;</span></span></code></pre></div>
+<p><strong>What <code>start-dashboard-silent.vbs</code> does:</strong>
+runs that bat with a <strong>hidden</strong> window so the FRP does not
+see a console flash at sign-in.</p>
+<h4 id="step-2--quick-test-the-bat-once">Step 2 — Quick test the bat
+(once)</h4>
+<ol type="1">
+<li>In File Explorer, open your NGAME folder.</li>
+<li>Double-click <strong><code>start-dashboard.bat</code></strong>.</li>
+<li>Wait ~10–15 seconds → open
+<strong>http://localhost:5001/dashboard</strong>.</li>
+<li>If it loads, stop this test dashboard:
+<strong>Ctrl+Shift+Esc</strong> (Task Manager) → end
+<strong>pythonw.exe</strong> / <strong>python.exe</strong> if listed
+(they are processes, not files in a folder).</li>
+</ol>
+<p>If the page does not load, read <code>logs\dashboard.err.log</code>
+before continuing.</p>
+<h4 id="step-3--add-the-silent-launcher-to-startup-do-this">Step 3 — Add
+the silent launcher to Startup (Do this)</h4>
+<ol type="1">
+<li>Press <strong>Win+R</strong>, type <code>shell:startup</code>, press
+<strong>Enter</strong>.<br />
+This opens <strong>your</strong> Startup folder (not Task
+Scheduler).</li>
+<li>Open a second Explorer window to your NGAME repo root
+(<code>Documents\ngame</code>).</li>
+<li><strong>Right-click</strong> <code>start-dashboard-silent.vbs</code>
+→ <strong>Show more options</strong> (Windows 11) if needed →
+<strong>Create shortcut</strong>.</li>
+<li><strong>Move</strong> that shortcut into the Startup folder from
+step 1.</li>
+<li>(Optional) Rename the shortcut to
+<strong><code>NGAME Dashboard</code></strong> (right-click → Rename). Do
+<strong>not</strong> rename the real <code>.vbs</code> /
+<code>.bat</code> files in the repo unless you know what you are
+doing.</li>
+</ol>
+<p><strong>Alternate (console may flash):</strong> put a shortcut to
+<code>start-dashboard.bat</code> in Startup instead of the
+<code>.vbs</code>. Prefer the <code>.vbs</code> for FRP machines.</p>
+<h4 id="step-4--disable-any-ngame-task-scheduler-task">Step 4 — Disable
+any NGAME Task Scheduler task</h4>
+<p>If you previously created a Task Scheduler task (e.g. <strong>NGAME
+Dashboard</strong>):</p>
+<ol type="1">
+<li>Open <strong>Task Scheduler</strong>.</li>
+<li>Select that task → right-click → <strong>Disable</strong>.</li>
+</ol>
+<p>Leave Soft Landing / other vendors’ tasks alone. NGAME auto-start
+should be <strong>only</strong> the Startup shortcut.</p>
+<h4 id="step-5--verify-at-sign-in">Step 5 — Verify at sign-in</h4>
+<ol type="1">
+<li>Do <strong>not</strong> double-click the bat and do
+<strong>not</strong> click Run in Task Scheduler.</li>
+<li>Sign <strong>out</strong> and sign <strong>back in</strong> (or
+reboot).</li>
+<li>Wait <strong>30–45 seconds</strong> after the desktop appears (first
+sign-in can be slow).</li>
+<li>Open <strong>http://localhost:5001/dashboard</strong> — it should
+load with no PowerShell and no manual start.</li>
+</ol>
+<p><strong>If it fails</strong></p>
 <table>
 <thead>
 <tr>
-<th>Part of the batch file</th>
-<th>Points to</th>
+<th>Check</th>
+<th>How</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>%~dp0</code></td>
-<td>Folder containing the <code>.bat</code> (repository root)</td>
+<td>Shortcut target</td>
+<td>In <code>shell:startup</code>, right-click the shortcut →
+<strong>Properties</strong> → <strong>Target</strong> must be the
+<strong>local</strong>
+<code>…\Documents\ngame\start-dashboard-silent.vbs</code> (not an
+iCloud/dev copy)</td>
 </tr>
 <tr>
-<td><code>…\ngame_ui</code></td>
-<td>Dashboard working directory (same as <a
-href="#start-manually-testing">manual start</a>)</td>
+<td>Bat still works</td>
+<td>Double-click <code>start-dashboard.bat</code> once</td>
 </tr>
 <tr>
-<td><code>…\.venv\Scripts\pythonw.exe</code></td>
-<td>Python from the venv — <strong><code>pythonw.exe</code></strong>
-runs without a visible console window</td>
+<td>Logs</td>
+<td><code>Documents\ngame\logs\dashboard.err.log</code></td>
 </tr>
 <tr>
-<td><code>app-simple.py</code></td>
-<td>Dashboard script</td>
-</tr>
-<tr>
-<td><code>…\logs\dashboard.log</code> / <code>.err.log</code></td>
-<td>Output logs</td>
+<td>Processes</td>
+<td>After sign-in, Task Manager may show <strong>pythonw.exe</strong>
+when the dashboard is up</td>
 </tr>
 </tbody>
 </table>
-<p>If <code>start-dashboard.bat</code> is missing (old clone), create it
-with the contents above.</p>
-<p><strong>Quick test:</strong> Double-click
-<code>start-dashboard.bat</code> in File Explorer once. Wait a few
-seconds, then open <strong>http://localhost:5001/dashboard</strong>. If
-it loads, stop the test (close any running dashboard from Task Manager
-or reboot) before continuing to Step 3.</p>
-<h4 id="step-3--create-the-task-scheduler-job">Step 3 — Create the Task
-Scheduler job</h4>
-<ol type="1">
-<li><p>Press the <strong>Windows key</strong>, type <strong>Task
-Scheduler</strong>, press <strong>Enter</strong>.</p></li>
-<li><p>In the right <strong>Actions</strong> pane, click <strong>Create
-Basic Task…</strong></p></li>
-<li><p><strong>Name:</strong> <code>NGAME Dashboard</code> →
-<strong>Next</strong></p></li>
-<li><p><strong>Trigger:</strong> <strong>When I log on</strong> →
-<strong>Next</strong></p></li>
-<li><p><strong>Action:</strong> <strong>Start a program</strong> →
-<strong>Next</strong></p></li>
-<li><p><strong>Program/script:</strong> paste the full path to your
-batch file, for example:</p>
-<p><code>C:\Users\you\Documents\ngame\start-dashboard.bat</code></p>
-<p>(Use <strong>Browse…</strong> if you prefer to pick the file in a
-dialog.)</p></li>
-<li><p><strong>Start in (optional):</strong> leave blank — the batch
-file sets its own folder → <strong>Next</strong></p></li>
-<li><p>Check <strong>Open the Properties dialog for this task when I
-click Finish</strong> → <strong>Finish</strong></p></li>
-</ol>
-<p>In the <strong>Properties</strong> window that opens:</p>
-<ol start="9" type="1">
-<li><strong>General</strong> tab: select <strong>Run only when user is
-logged on</strong> (the FRP uses a browser on this same PC).</li>
-<li><strong>Conditions</strong> tab: if this is a
-<strong>laptop</strong>, uncheck <strong>Start the task only if the
-computer is on AC power</strong> so the dashboard still starts on
-battery.</li>
-<li><strong>Settings</strong> tab: uncheck <strong>Stop the task if it
-runs longer than</strong> — the dashboard is meant to run all day.</li>
-<li>Click <strong>OK</strong>. Enter your Windows password if
-prompted.</li>
-</ol>
-<h4 id="step-4--verify">Step 4 — Verify</h4>
-<ol type="1">
-<li>Stop any dashboard you started manually for testing
-(<strong>Ctrl+C</strong> in that PowerShell window).</li>
-<li>Sign <strong>out</strong> and sign <strong>back in</strong> (or
-restart the PC).</li>
-<li>Wait 10–15 seconds after the desktop appears.</li>
-<li>Open <strong>http://localhost:5001/dashboard</strong> — the page
-should load <strong>without</strong> you opening PowerShell or
-double-clicking the batch file.</li>
-</ol>
-<p><strong>If it fails:</strong> read
-<code>INSTALL_PATH\logs\dashboard.err.log</code> first. Common fixes:
-<code>.venv</code> not created at repo root, Task Scheduler task points
-to the wrong file, or dashboard not yet tested manually.</p>
 <p><strong>Consultant fallback:</strong> double-click
-<code>start-dashboard.bat</code> in the repo root until Task Scheduler
-is fixed — do not leave that as the FRP's daily workflow.</p>
+<code>start-dashboard.bat</code> until Startup is fixed — do not leave
+that as the FRP’s daily workflow.</p>
 <blockquote>
-<p>Do <strong>not</strong> schedule <code>ngame_dual_mode.py</code> on
-the same machine if the FRP runs from the dashboard — that can
+<p>Do <strong>not</strong> also run <code>ngame_dual_mode.py</code> on a
+schedule on the same machine if the FRP uses the dashboard — that can
 double-run the pipeline.</p>
 </blockquote>
-<hr />
+<h4 id="optional--task-scheduler-advanced-not-recommended">Optional —
+Task Scheduler (advanced; not recommended)</h4>
+<p>Prefer Startup (above). Use Task Scheduler only if site policy blocks
+Startup folders.</p>
+<p>Requirements if you try it anyway:</p>
+<ul>
+<li>Task name: <strong><code>NGAME Dashboard</code></strong> (easy to
+find later)</li>
+<li>Trigger: <strong>At log on</strong> of the FRP’s Windows user (not
+<strong>Daily</strong>) — in Edit Trigger, field <strong>Begin the
+task:</strong></li>
+<li>Action: <strong>Start a program</strong> only — <strong>not</strong>
+Custom Handler</li>
+<li>Program: <code>C:\Windows\System32\cmd.exe</code></li>
+<li>Arguments:
+<code>/c ""C:\Users\you\Documents\ngame\start-dashboard.bat""</code>
+(exact real path; Browse to confirm)</li>
+<li>Start in: <code>C:\Users\you\Documents\ngame</code></li>
+<li>General: <strong>Run only when user is logged on</strong></li>
+<li>Delay 30 seconds on the logon trigger helps</li>
+<li>Do <strong>not</strong> edit Soft Landing /
+SoftLandingCreativeManagementTask tasks</li>
+</ul>
+<p><code>LastTaskResult</code> <strong>2147942402</strong>
+(<code>0x80070002</code>) means <strong>file not found</strong> — wrong
+path (often OneDrive/iCloud vs local Documents).</p>
 <hr />
 <p><strong>Windows cookbook:</strong> <a href="#windows-cookbook">← Back
 to Steps 1–9</a> · <strong>Next:</strong> <a
@@ -2288,7 +2316,8 @@ checklist</strong>, not a second install cookbook.</p>
 <li>[ ] OS cookbook Steps 1–9 done (<a href="#macos-cookbook">macOS</a>
 or <a href="#windows-cookbook">Windows</a>)</li>
 <li>[ ] Dashboard loads at http://localhost:5001/dashboard</li>
-<li>[ ] Auto-start configured (LaunchAgent or Task Scheduler)</li>
+<li>[ ] Auto-start configured (LaunchAgent or Windows Startup
+folder)</li>
 <li>[ ] One training day recorded;
 <code>NGAME_Training_Matrix.xlsx</code> present</li>
 <li>[ ] FRP guide printed/PDF; contacts filled; bookmark created</li>
@@ -2334,12 +2363,12 @@ commands</h2>
 </table>
 <p>After <code>cd</code> to the repo root, activate the virtual
 environment <strong>once per Terminal / PowerShell session</strong>:</p>
-<div class="sourceCode" id="cb48"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS / Linux</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS / Linux</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows PowerShell</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\Activate.ps1</span></span></code></pre></div>
 <p>Your prompt shows <code>(.venv)</code> when active. Dashboard logs
 (<code>GET /api/...</code>) in Terminal are normal — they mean the
 browser is refreshing, not an error.</p>
@@ -2347,15 +2376,15 @@ browser is refreshing, not an error.</p>
 <h2 id="appendix-updating-ngame-later">Appendix: Updating NGAME
 later</h2>
 <p><strong>macOS (Terminal, repo root):</strong></p>
-<div class="sourceCode" id="cb49"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/ngame</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/ngame</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code></pre></div>
 <p><strong>Windows (PowerShell, repo root):</strong></p>
-<div class="sourceCode" id="cb50"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\path\to\ngame</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>git pull origin main</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">venv</span>\Scripts\Activate<span class="op">.</span><span class="fu">ps1</span></span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cd</span> C<span class="op">:</span>\path\to\ngame</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>git pull origin main</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">venv</span>\Scripts\Activate<span class="op">.</span><span class="fu">ps1</span></span></code></pre></div>
 <p>Restart the dashboard (sign out/in if auto-start runs it, or start
 <code>app-simple.py</code> from <code>ngame_ui/</code> once to
 test).</p>
@@ -2472,7 +2501,7 @@ href="#4--virtual-environment">§ 4 — Virtual environment</a></td>
 </tr>
 <tr>
 <td>FRP cannot connect</td>
-<td>Check LaunchAgent / Task Scheduler; read
+<td>Check LaunchAgent / Windows Startup shortcut; read
 <code>logs/dashboard.err.log</code></td>
 </tr>
 <tr>
