@@ -1226,8 +1226,15 @@ access to the app (not only a bookkeeper QBO login)</label></li>
 <li><label><input type="checkbox" />A <strong>sandbox</strong> company;
 you can sign in as <strong>Company Admin</strong> or <strong>Master
 Admin</strong></label></li>
-<li><label><input type="checkbox" />Repo root open; <code>.venv</code>
-works</label></li>
+<li><label><input type="checkbox" />Current directory is the NGAME clone
+(path ends in <code>\ngame</code> or <code>/ngame</code>;
+<code>quickbooks_config.example.json</code> is present — check with
+<code>Get-Location</code> / <code>pwd</code> and <code>Get-Item</code> /
+<code>ls</code>)</label></li>
+<li><label><input type="checkbox" />You can activate the venv when you
+reach <strong>A4</strong> (<code>.venv\Scripts\Activate.ps1</code> or
+<code>source .venv/bin/activate</code>) — not required until
+then</label></li>
 </ul>
 <h4 id="a1--create-quickbooks_configjson">A1 — Create
 <code>quickbooks_config.json</code></h4>
@@ -1331,8 +1338,16 @@ field. Portal and config must agree on port <strong>8000</strong> (not
 
 <h4 id="a3--fill-development-keys-in-the-config">A3 — Fill Development
 keys in the config</h4>
-<p><strong>Do this</strong> — edit <code>quickbooks_config.json</code> →
-<code>quickbooks_api</code>:</p>
+<p><strong>Do this</strong></p>
+<ol type="1">
+<li>Open the file <strong><code>quickbooks_config.json</code></strong>
+in the repo root (Notepad, Cursor, etc.).<br />
+There is <strong>no</strong> separate file named
+<code>quickbooks_api</code>.</li>
+<li>Inside that JSON file, find the block that starts with
+<code>"quickbooks_api": { ... }</code>.</li>
+<li>Set these fields <strong>inside</strong> that block:</li>
+</ol>
 <table>
 <thead>
 <tr>
@@ -1365,7 +1380,9 @@ portal)</td>
 </tr>
 </tbody>
 </table>
-<p>Save the file (gitignored — stays on this PC only).</p>
+<ol start="4" type="1">
+<li>Save the file (gitignored — stays on this PC only).</li>
+</ol>
 <h4 id="a4--complete-oauth-once">A4 — Complete OAuth once</h4>
 <p><strong>Do this</strong> (repo root, venv active). Keep the session
 open until the browser shows success (listener on port
@@ -1552,6 +1569,8 @@ available</label></li>
 <li><label><input type="checkbox" /><strong>Company Admin</strong> or
 <strong>Master Admin</strong> of the <strong>live</strong> company will
 click Connect</label></li>
+<li><label><input type="checkbox" />Current directory is the NGAME clone
+(same checks as Track A checklist)</label></li>
 <li><label><input type="checkbox" />OS install §§ 1–4 done; internet
 OK</label></li>
 <li><label><input type="checkbox" />You will use a temporary
@@ -1572,7 +1591,16 @@ copying — clear tokens (B1 table) and replace
 keys/<code>environment</code>/<code>redirect_uri</code>.</p>
 <h4 id="b2--fill-production-keys-leave-redirect-for-b3">B2 — Fill
 Production keys (leave redirect for B3)</h4>
-<p><strong>Do this</strong> — set <code>quickbooks_api</code>:</p>
+<p><strong>Do this</strong></p>
+<ol type="1">
+<li>Open <strong><code>quickbooks_config.json</code></strong> in the
+repo root.<br />
+There is <strong>no</strong> separate file named
+<code>quickbooks_api</code>.</li>
+<li>Find the <code>"quickbooks_api": { ... }</code> block inside that
+file.</li>
+<li>Set these fields <strong>inside</strong> that block:</li>
+</ol>
 <table>
 <thead>
 <tr>
@@ -1604,6 +1632,9 @@ Production keys (leave redirect for B3)</h4>
 </tr>
 </tbody>
 </table>
+<ol start="4" type="1">
+<li>Save the file.</li>
+</ol>
 <h4 id="b3--production-https-redirect--tunnel">B3 — Production https
 redirect + tunnel</h4>
 <p><strong>Do this</strong></p>
@@ -1617,8 +1648,9 @@ href="https://ngrok.com/">ngrok</a> —
 Production</strong> → <strong>Add URI</strong> exactly:
 <code>https://&lt;random&gt;.ngrok-free.app/callback</code> →
 <strong>Save</strong> → refresh and confirm.</li>
-<li>Set the <strong>same</strong> string as <code>redirect_uri</code> in
-<code>quickbooks_config.json</code>.</li>
+<li>Open <code>quickbooks_config.json</code> → inside
+<code>"quickbooks_api"</code> set <code>redirect_uri</code> to that
+<strong>same</strong> https <code>…/callback</code> string.</li>
 <li>Leave the tunnel <strong>running</strong> until B4 finishes.</li>
 </ol>
 <details>

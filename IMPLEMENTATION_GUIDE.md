@@ -576,7 +576,8 @@ Software install (Python, clone, `.venv`, dashboard) is the same for both. Only 
 
 - [ ] Intuit **Developer** access to the app (not only a bookkeeper QBO login)
 - [ ] A **sandbox** company; you can sign in as **Company Admin** or **Master Admin**
-- [ ] Repo root open; `.venv` works
+- [ ] Current directory is the NGAME clone (path ends in `\ngame` or `/ngame`; `quickbooks_config.example.json` is present — check with `Get-Location` / `pwd` and `Get-Item` / `ls`)
+- [ ] You can activate the venv when you reach **A4** (`.venv\Scripts\Activate.ps1` or `source .venv/bin/activate`) — not required until then
 
 #### A1 — Create `quickbooks_config.json`
 
@@ -632,7 +633,12 @@ Intuit only returns the browser to URIs you register. Mismatch → often *“Sor
 
 #### A3 — Fill Development keys in the config
 
-**Do this** — edit `quickbooks_config.json` → `quickbooks_api`:
+**Do this**
+
+1. Open the file **`quickbooks_config.json`** in the repo root (Notepad, Cursor, etc.).  
+   There is **no** separate file named `quickbooks_api`.
+2. Inside that JSON file, find the block that starts with `"quickbooks_api": { ... }`.
+3. Set these fields **inside** that block:
 
 | Field | Value |
 |-------|--------|
@@ -642,7 +648,7 @@ Intuit only returns the browser to URIs you register. Mismatch → often *“Sor
 | `environment` | `sandbox` |
 | `realm_id`, `access_token`, `refresh_token` | Leave empty until OAuth |
 
-Save the file (gitignored — stays on this PC only).
+4. Save the file (gitignored — stays on this PC only).
 
 #### A4 — Complete OAuth once
 
@@ -738,6 +744,7 @@ Later: [Switch from Track A to Track B](#switch-from-track-a-to-track-b).
 - [ ] Customer approved read-only API access to live QBO
 - [ ] Intuit **Developer** access; **Production** Client ID / Secret available
 - [ ] **Company Admin** or **Master Admin** of the **live** company will click Connect
+- [ ] Current directory is the NGAME clone (same checks as Track A checklist)
 - [ ] OS install §§ 1–4 done; internet OK
 - [ ] You will use a temporary **https** tunnel for OAuth (B3) — localhost is not allowed for Production
 
@@ -757,7 +764,12 @@ If switching from Track A, you may edit the existing file instead of copying —
 
 #### B2 — Fill Production keys (leave redirect for B3)
 
-**Do this** — set `quickbooks_api`:
+**Do this**
+
+1. Open **`quickbooks_config.json`** in the repo root.  
+   There is **no** separate file named `quickbooks_api`.
+2. Find the `"quickbooks_api": { ... }` block inside that file.
+3. Set these fields **inside** that block:
 
 | Field | Value |
 |-------|--------|
@@ -767,6 +779,8 @@ If switching from Track A, you may edit the existing file instead of copying —
 | `redirect_uri` | Set in **B3** (https URI) |
 | `realm_id`, `access_token`, `refresh_token` | Empty until OAuth |
 
+4. Save the file.
+
 #### B3 — Production https redirect + tunnel
 
 **Do this**
@@ -774,7 +788,7 @@ If switching from Track A, you may edit the existing file instead of copying —
 1. Start a tunnel to local port **8000** (example: [ngrok](https://ngrok.com/) — `ngrok http 8000`).
 2. Copy the tunnel **https** base URL (e.g. `https://<random>.ngrok-free.app`).
 3. Intuit portal → app → **Settings → Redirect URIs → Production** → **Add URI** exactly: `https://<random>.ngrok-free.app/callback` → **Save** → refresh and confirm.
-4. Set the **same** string as `redirect_uri` in `quickbooks_config.json`.
+4. Open `quickbooks_config.json` → inside `"quickbooks_api"` set `redirect_uri` to that **same** https `…/callback` string.
 5. Leave the tunnel **running** until B4 finishes.
 
 <details>
