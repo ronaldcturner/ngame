@@ -11,6 +11,7 @@
 | Document | Who reads it | What it covers |
 |----------|--------------|----------------|
 | **This file (`README.md` / `IMPLEMENTATION_GUIDE.md`)** | Technical consultant | Clone, Python env, credentials, Ollama, dashboard service, verification, FRP handoff — **same content in both filenames** |
+| **[NGROK_COOKBOOK.md](NGROK_COOKBOOK.md)** | Technical consultant | Track B https tunnel: install ngrok, authtoken, `ngrok http 8000`, `/callback` string |
 | **[FRP_OPERATIONS_GUIDE.md](FRP_OPERATIONS_GUIDE.md)** / **[.html](FRP_OPERATIONS_GUIDE.html)** | FRP | Bookmark, daily training/fraud checks, warnings, QuickBooks Audit Log |
 | **[ngame_ui/README.md](ngame_ui/README.md)** | Consultants | Dashboard URLs, API endpoints, UI troubleshooting |
 | **[ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md)** | Consultants | Dashboard failures and common fixes |
@@ -66,6 +67,7 @@ The bookkeeper does not need to change how they use QuickBooks. NGAME does not w
   - [Track A — Development / sandbox](#quickbooks-online--track-a-development--sandbox)
   - [Track B — Customer Go-Live](#quickbooks-online--track-b-customer-go-live)
   - [Switch from Track A to Track B](#switch-from-track-a-to-track-b)
+- [ngrok cookbook](NGROK_COOKBOOK.md) (separate file — Production https tunnel)
 - [Dashboard service](#dashboard-service-required-for-frp)
   - [Start manually](#start-manually-testing)
   - [macOS — auto-start at login](#macos--auto-start-at-login)
@@ -560,7 +562,7 @@ Optional check (repo root, venv active): `python3 run_wave_extraction.py` (Windo
 | **A — Development / sandbox** | Practice, lab, or validate the PC before live books | [Track A cookbook](#quickbooks-online--track-a-development--sandbox) |
 | **B — Customer Go-Live** | Customer’s live QBO ledger | [Track B cookbook](#quickbooks-online--track-b-customer-go-live) |
 
-Software install (Python, clone, `.venv`, dashboard) is the same for both. Only Intuit keys, `environment`, company, and redirect URI change.
+Software install (Python, clone, `.venv`, dashboard) is the same for both. Only Intuit keys, `environment`, company, and redirect URI change. Track B: use the Audithentic **install pack** plus [NGROK_COOKBOOK.md](NGROK_COOKBOOK.md) — the installer does not use developer.intuit.com.
 
 **Recommended at a customer site:** complete **Track A** to prove the PC works, then switch with [Switch from Track A to Track B](#switch-from-track-a-to-track-b) — no re-clone.
 
@@ -694,7 +696,7 @@ In the browser: sign in at the **sandbox** host, select the **sandbox** company,
 | 4 | **Run Today's Training Day** (or **Run Training Day**) completes without Intuit “didn’t connect” |
 | 5 | `NGAME_Training_Matrix.xlsx` appears or updates in repo root |
 
-**Step 3 — start the dashboard** (repo root, venv active). Leave this window open:
+**Step 3 — start the dashboard** (repo root, **venv active** — prompt shows `(.venv)`). If you skip the venv, Windows reports `No module named 'flask'`. Leave this window open:
 
 ```bash
 # macOS
@@ -737,16 +739,19 @@ Later: [Switch from Track A to Track B](#switch-from-track-a-to-track-b).
 
 <a id="quickbooks-online--track-b-customer-go-live"></a>
 
-**Live customer ledger.** Do **not** use Development keys, `"sandbox"`, or a sandbox company here.
+**Live customer ledger.** Do **not** use Development keys, `"sandbox"`, or a sandbox company here. Tunnel steps: **[NGROK_COOKBOOK.md](NGROK_COOKBOOK.md)**.
 
 #### Track B — checklist before you start
 
+The installer does **not** use developer.intuit.com. Production Client ID, Secret, and a **registered** `https://…/callback` URI come in an **install pack** from Audithentic (out of band).
+
 - [ ] Customer approved read-only API access to live QBO
-- [ ] Intuit **Developer** access; **Production** Client ID / Secret available
+- [ ] **Install pack** in hand: Production Client ID / Secret, and the Production `redirect_uri` already registered on the NGAME app
 - [ ] **Company Admin** or **Master Admin** of the **live** company will click Connect
 - [ ] Current directory is the NGAME clone (same checks as Track A checklist)
 - [ ] OS install §§ 1–4 done; internet OK
-- [ ] You will use a temporary **https** tunnel for OAuth (B3) — localhost is not allowed for Production
+- [ ] ngrok ready on this surveillance PC — [NGROK_COOKBOOK.md](NGROK_COOKBOOK.md) (**N1–N2** if not yet installed/authenticated). Not required on the bookkeeper PC
+- [ ] If this PC already ran **Track A**, sandbox matrix/TTL files will be renamed in **B5** before the first live Training Day
 
 #### B1 — Create or reset `quickbooks_config.json` for Production
 
@@ -760,7 +765,7 @@ cp quickbooks_config.example.json quickbooks_config.json
 Copy-Item quickbooks_config.example.json quickbooks_config.json
 ```
 
-If switching from Track A, you may edit the existing file instead of copying — clear tokens (B1 table) and replace keys/`environment`/`redirect_uri`.
+If switching from Track A, you may edit the existing file instead of copying — clear tokens and replace keys/`environment`/`redirect_uri`. Do not leave Development Client ID/Secret in the file.
 
 #### B2 — Fill Production keys (leave redirect for B3)
 
@@ -769,38 +774,64 @@ If switching from Track A, you may edit the existing file instead of copying —
 1. Open **`quickbooks_config.json`** in the repo root.  
    There is **no** separate file named `quickbooks_api`.
 2. Find the `"quickbooks_api": { ... }` block inside that file.
-3. Set these fields **inside** that block:
+3. Set these fields **inside** that block from the **install pack** (Production pair only):
 
 | Field | Value |
 |-------|--------|
 | `client_id` | **Production** Client ID |
 | `client_secret` | **Production** Client Secret |
 | `environment` | `production` |
-| `redirect_uri` | Set in **B3** (https URI) |
-| `realm_id`, `access_token`, `refresh_token` | Empty until OAuth |
+| `redirect_uri` | Set in **B3** (must match the pack / live ngrok `https://…/callback`) |
+| `realm_id`, `access_token`, `refresh_token` | Empty until OAuth (`""`) |
 
 4. Save the file.
 
+**Do not** paste Development keys. Intuit then checks the Development URI list (`localhost` only) and a ngrok URI is **invalid** even if Production Redirect URIs look correct.
+
 #### B3 — Production https redirect + tunnel
 
-**Do this**
+<a id="b3--production-https-redirect--tunnel"></a>
 
-1. Start a tunnel to local port **8000** (example: [ngrok](https://ngrok.com/) — `ngrok http 8000`).
-2. Copy the tunnel **https** base URL (e.g. `https://<random>.ngrok-free.app`).
-3. Intuit portal → app → **Settings → Redirect URIs → Production** → **Add URI** exactly: `https://<random>.ngrok-free.app/callback` → **Save** → refresh and confirm.
-4. Open `quickbooks_config.json` → inside `"quickbooks_api"` set `redirect_uri` to that **same** https `…/callback` string.
-5. Leave the tunnel **running** until B4 finishes.
+Do this **on the surveillance PC only**. Follow **[NGROK_COOKBOOK.md](NGROK_COOKBOOK.md)** for install, new PowerShell/Terminal after install, authtoken, and `ngrok http 8000`.
+
+| Cookbook | What it is | Done when |
+|----------|------------|-----------|
+| N1–N2 | Install ngrok; **new** window; authtoken | `ngrok version` works; Authtoken saved |
+| N3 / B3.3 below | Tunnel running; JSON `redirect_uri` set | ngrok panel visible (not a `PS …>` prompt); JSON is `https://(Forwarding host)/callback` |
+
+The installer does **not** add Redirect URIs in the Intuit portal. That string must already be registered (install pack). If live Forwarding **differs** from the pack URI, **stop** and contact Audithentic.
+
+##### B3.3 — Start the tunnel and set `redirect_uri`
+
+**Do this** (ngrok window; leave it **open** until B4 finishes):
+
+```powershell
+ngrok http 8000
+```
+
+1. Confirm the tunnel is **live** (Forwarding shown; prompt has not returned).
+2. Copy the **https** Forwarding host. Do **not** type that URL as a PowerShell command. Placeholders like `<random>` are not typed.
+3. In `quickbooks_config.json`, inside `"quickbooks_api"`, set `redirect_uri` to that host **plus** `/callback` (https, no trailing slash). Example shape: `https://abcd1234.ngrok-free.app/callback`.
+4. That value must match the install pack (or the URI Audithentic just registered). If the host is the same as yesterday, keep it — do not force a new URL.
+5. Leave the tunnel **running**. B4 uses a **second** window.
 
 <details>
 <summary><strong>Background — why Production needs a tunnel</strong></summary>
 
-Intuit Production redirect URIs must be **`https://`**, not localhost, and not a raw IP ([docs](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri)). NGAME listens on **`127.0.0.1:8000`**; the tunnel forwards public https → that port. After tokens exist, daily use is refresh-only — stop the tunnel. Do not paste Production URIs into Development-only fields or use the Playground URL as NGAME’s runtime `redirect_uri`.
+Intuit Production redirect URIs must be **`https://`**, not localhost, and not a raw IP ([docs](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/set-redirect-uri)). NGAME listens on **`127.0.0.1:8000`**; the tunnel forwards public https → that port. After tokens exist, daily use is refresh-only — stop the tunnel.
+
+| Symptom | Action |
+|---------|--------|
+| `ngrok` is not recognized / auth failed | [NGROK_COOKBOOK.md](NGROK_COOKBOOK.md) N1–N2 |
+| `https://…` is not a cmdlet | Not a command — copy Forwarding from the ngrok panel |
+| `redirect_uri` query parameter is invalid | Production keys in JSON; URI matches what is registered for **that** Client ID |
+| 502 / connection refused | Python listener timed out (~3 min) — see B4 |
 
 </details>
 
 #### B4 — Complete OAuth against the live company
 
-**Do this** (tunnel still up; repo root; venv active):
+**Do this** (ngrok **still up**; **second** PowerShell/Terminal; repo root; venv active):
 
 ```bash
 # macOS
@@ -812,21 +843,29 @@ python3 run_data_extraction.py
 python run_data_extraction.py
 ```
 
-Browser: sign in at [qbo.intuit.com](https://qbo.intuit.com), select the **customer’s live company**, **Connect** as Company/Master Admin.
+The callback on port **8000** lasts about **three minutes**. Finish the browser flow in that window.
 
-**Success:** “NGAME: OAuth complete…” and tokens/`realm_id` filled. Then **stop the tunnel**.
+1. Sign in at [qbo.intuit.com](https://qbo.intuit.com) if needed. Choose the **customer’s live company** (e.g. Audithentic.ai) — not sandbox, Safe Landing, or expired experiment companies.
+2. **Connect** as Company/Master Admin. Do **not** start an Intuit paid trial or $140/month plan from this flow; that is not NGAME OAuth and can affect billing. Use **No thanks** / back if a store checkout appears; sign into the existing Essentials (or customer) company and re-run the `.py`.
+3. ngrok **You are about to visit …** → **Visit Site** (expected on the free tier).
+4. **Success:** **NGAME: OAuth complete. You can close this tab.** ngrok may show **200** then **502** — the 502 is a second hit after NGAME closed port 8000. Stop ngrok (**Ctrl+C**).
+5. Confirm `access_token`, `refresh_token`, and `realm_id` are non-empty; `"environment": "production"`.
+
+If PowerShell is already back at `PS …>` before Connect, the listener is dead. Re-run the `.py` with ngrok still up and Connect immediately.
 
 #### B5 — Verify Track B
 
 **Do this**
 
+If this PC previously ran **Track A**, **rename** (do not delete yet) in the repo root before the first live Training Day: `NGAME_Training_Matrix.xlsx`, `quickbooks_ontology_Yesterday.ttl`, `quickbooks_ontology_Today.ttl` (e.g. add `_sandbox`). Sandbox days are **not** the live baseline. A leftover Day 2 matrix plus live extraction often fails as **Day 3** / **Failed to analyze ontology files**. The first live run should be **Day 1**.
+
 | # | Check |
 |---|--------|
 | 1 | `"environment": "production"` and Production client id/secret |
 | 2 | `realm_id` is the live company |
-| 3 | Start the dashboard (same commands as [A5 step 3](#a5--verify-track-a)), then open **http://localhost:5001/dashboard** |
-| 4 | **Run Today's Training Day** succeeds; matrix updates |
-| 5 | Spot-check counts vs what the FRP/bookkeeper expects for **live** books |
+| 3 | Start the dashboard with **venv active** (same commands as [A5 step 3](#a5--verify-track-a); `(.venv)` in the prompt or `flask` is missing), then open **http://localhost:5001/dashboard** |
+| 4 | **Run Today's Training Day** succeeds as **Day 1** (or the next live day); matrix updates |
+| 5 | Spot-check counts vs the live books (not sandbox) |
 
 <details>
 <summary><strong>Background — go-live rules & re-auth</strong></summary>
@@ -838,10 +877,9 @@ Browser: sign in at [qbo.intuit.com](https://qbo.intuit.com), select the **custo
 | Bookkeeper | Normal QBO use; no NGAME OAuth |
 | FRP | Dashboard only after you finish OAuth + auto-start |
 | Secrets | Stay on the surveillance PC |
+| Installer vs owner | Installer never opens developer.intuit.com |
 
-If `invalid_grant` or the app is revoked: start tunnel again → match Production redirect in portal + config → re-run `run_data_extraction.py` → stop tunnel.
-
-Sandbox training days are **not** the customer baseline — plan a fresh matrix for the live company after switching.
+If `invalid_grant` or the app is revoked: start the tunnel again ([NGROK_COOKBOOK.md](NGROK_COOKBOOK.md)); JSON `redirect_uri` must match the registered Production URI; re-run `run_data_extraction.py`; stop the tunnel.
 
 </details>
 
@@ -855,9 +893,9 @@ Sandbox training days are **not** the customer baseline — plan a fresh matrix 
 
 No re-clone or new `.venv`. After Track A proves the PC:
 
-1. Follow **Track B** from [B1](#quickbooks-online--track-b-customer-go-live) (Production keys, https redirect, live OAuth).
+1. Follow **Track B** from [B1](#quickbooks-online--track-b-customer-go-live) (Production keys from the install pack, https tunnel, live OAuth).
 2. Replace sandbox tokens; confirm `"environment": "production"`.
-3. Verify with **B5** (live company).
+3. **B5:** rename sandbox matrix/TTL files, then verify against the live company (first live Training Day is Day 1).
 4. Do **not** hand off the FRP while still on sandbox.
 
 ---
@@ -1288,6 +1326,7 @@ Restart the dashboard (sign out/in if auto-start runs it, or start `app-simple.p
 | Need | Document |
 |------|----------|
 | Dashboard URLs / UI issues | [ngame_ui/README.md](ngame_ui/README.md), [ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md) |
+| Track B https tunnel | [NGROK_COOKBOOK.md](NGROK_COOKBOOK.md) |
 | Wave API (optional) | Copy `wave_config.example.json` → `wave_config.json`; token and business ID from [developer.waveapps.com](https://developer.waveapps.com) |
 | FRP daily ops | [FRP_OPERATIONS_GUIDE.html](FRP_OPERATIONS_GUIDE.html) |
 
@@ -1331,8 +1370,10 @@ For **consultant, lab, or unattended** machines — not for dashboard-only FRP o
 | Ollama very slow or PC freezes | Use a smaller model (`gemma2:2b`); close browsers; see [§ 6 — Ollama](#6--ollama-before-phase-ii--fraud-analysis) |
 | Fraud blocked: training incomplete | Need **30** day columns in `NGAME_Training_Matrix.xlsx` |
 | `No module named 'quickbooks'` (Windows) | `python -m pip install python-quickbooks intuit-oauth` or re-run `python -m pip install -r requirements.txt` |
-| QBO “didn’t connect” / auth error | [QuickBooks Online OAuth](#quickbooks-online): redirect URI `http://localhost:8000/callback`, sandbox admin login, re-run `run_data_extraction.py` |
-| QBO / Wave token refresh (`invalid_grant`) | Re-run OAuth on surveillance PC ([Complete OAuth once](#complete-oauth-once-on-the-surveillance-machine)); refresh tokens in config JSON or `.env` |
+| `No module named 'flask'` (dashboard) | Activate `.venv` first (`(.venv)` in the prompt), then `cd ngame_ui` and `python app-simple.py` |
+| QBO “didn’t connect” / `redirect_uri` invalid | Track B: Production keys in JSON; URI is `https://…/callback` registered for that Client ID; [NGROK_COOKBOOK.md](NGROK_COOKBOOK.md). Track A: Development URI `http://localhost:8000/callback` |
+| QBO / Wave token refresh (`invalid_grant`) | Re-run OAuth on the surveillance PC (Track A **A4** or Track B **B4**); tunnel must be up for Production |
+| Training Day 3 / ontology files failed after Track A | Rename sandbox matrix and `quickbooks_ontology_*.ttl`; first live day is Day 1 (B5) |
 | Terminal flooded with `GET /api/...` | Normal — dashboard auto-refresh; stop server with Ctrl+C when testing |
 
 UI details: **[ngame_ui/TROUBLESHOOTING.md](ngame_ui/TROUBLESHOOTING.md)**.
