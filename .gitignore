@@ -1,5 +1,7 @@
 # ── Secrets (NEVER commit these) ──────────────────────────────────────
 quickbooks_config.json
+quickbooks_config-*.json
+*copy.json
 wave_config.json
 .env
 .env.local
