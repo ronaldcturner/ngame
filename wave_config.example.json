@@ -1,0 +1,7 @@
+{
+  "wave_graphql": {
+    "endpoint": "https://gql.waveapps.com/graphql/public",
+    "access_token": "",
+    "business_id": ""
+  }
+}

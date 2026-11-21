@@ -1,0 +1,129 @@
+# ── Secrets (NEVER commit these) ──────────────────────────────────────
+quickbooks_config.json
+quickbooks_config-*.json
+*copy.json
+wave_config.json
+.env
+.env.local
+.env.*.local
+*credentials*
+*Credentials*
+
+# ── Python ─────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ── Virtual environments ────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── macOS ───────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ── Windows ─────────────────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ── IDE / editor ────────────────────────────────────────────────────────
+.cursor/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Generated runtime outputs ────────────────────────────────────────────
+NGAME_Fraud_Analysis*.json
+management_dashboard.json
+phase1_extraction_summary.json
+churn_comparison_results.json
+Today_Churn*.json
+agent_driven_*.json
+anomaly_injection_*.json
+anomaly_injection_management_report.json
+baseline_churn_matrix.json
+phi_*.json
+ngame_misappropriation_risk_ranking.json
+quickbooks_ontology_*.ttl
+wave_ontology_*.ttl
+NGAME_Training_Matrix*.xlsx
+Today_Churn_Analysis.xlsx
+Training_Agent_Matrix*.xlsx
+NGAME_CPI_Rolling_Buffer.json
+ngame_dashboard_activity.json
+anomaly_identification_results.json
+cc_watch_results.json
+logs/
+output/
+uploads/
+ngame_ui/logs/
+ngame_ui/output/
+ngame_ui/uploads/
+
+# ── Internal dev artefacts (not for public / customer clone) ───────────
+SCRAP/
+Recovered SCRAP/
+NGAME_FREEZE_*/
+*.tar.gz
+ESSENTIAL_FILES/
+GENERATED_FILES/
+ESSENTIAL_FILES_LIST.txt
+GENERATED_FILES_LIST.txt
+ESSENTIAL_FILES.md
+GENERATED_FILES.md
+canvases/
+docs/
+Training, Marketing, and Documentation/
+Day_N_Data.zip
+
+# ── Cursor canvas build status ────────────────────────────────────────────
+*.canvas.status.json
+
+# ── Internal HTML / print exports (FRP_OPERATIONS_GUIDE.html + IMPLEMENTATION_GUIDE.html tracked) ─
+NGAME_GitHub_Release_Guide.html
+Canvas_Workflow_Guide.html
+markdown.html
+README.html
+README (Print).html
+NGAME_Launcher.html
+NGAME_DSRM_Paper_Outline.html
+COMPONENT_MAP_PRINT.md
+COMPONENT_MAP_PRINT.md.pdf
+Survey of NGAME Agents.html
+NGAME_DSRM_Evaluation_Draft.html
+NGAME_V1_1_Backlog.html
+NGAME_Training_Matrix_Build_Guide.html
+NGAME_PREMIUM_MultiDay_Window_Dashboard_UI_Outline.md
+NGAME_Churn_Z_Score_Derivation.md
+PROJECT_COMPLETION_REPORT.txt
+Matrix Fill Checksheet.pdf
+NGAME Deployment Plan.pdf
+NGAME — Credit Card Misuse Detection.pdf
+cursor_ngame_agent_functions_and_testin.md
+
+# ── Exported Cursor chat logs and internal working notes ────────────────────
+cursor_*.md
+cursor_*.html
+cursor_*.pdf
+cursor_*.docx
+MISAPPROPRIATION_BEHAVIOR_ANALYSIS_CHAT.md
+
+# ── Local reference materials (not for the public repo) ─────────────────────
+IJAIS+DSRM+PAPER--Guido_2011.pdf
+How to capture and place an MD graphic.odt
+*.odt
+
+# ── Internal research, draft, and working documents ─────────────────────────
+ANOMALY_INJECTION_EXECUTIVE_SUMMARY.md
+ANOMALY_INJECTION_INTEGRATION.md
+GENERATIVE_AI_POSITIONING.md
+NGAME Deployment Plan.md
+NGAME_WAVE_GRAPHQL_README.md
+OPERATOR_HANDBOOK.md
+Presenter Notes.md

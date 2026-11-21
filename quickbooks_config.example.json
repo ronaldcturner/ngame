@@ -1,0 +1,11 @@
+{
+  "quickbooks_api": {
+    "client_id": "YOUR_INTUIT_CLIENT_ID",
+    "client_secret": "YOUR_INTUIT_CLIENT_SECRET",
+    "access_token": "",
+    "refresh_token": "",
+    "realm_id": "",
+    "environment": "sandbox",
+    "redirect_uri": "http://localhost:8000/callback"
+  }
+}

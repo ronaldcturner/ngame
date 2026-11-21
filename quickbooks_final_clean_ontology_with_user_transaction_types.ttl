@@ -1,0 +1,2879 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix qb: <http://www.semanticweb.org/quickbooks/ontology#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# Class Definitions
+qb:UserTransactionType a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "User Transaction Type" ;
+    rdfs:comment "Base class for all QuickBooks transaction types" .
+
+qb:BankTransactions a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Bank_Transactions" ;
+    rdfs:comment "A bank_transactions transaction in QuickBooks" .
+
+qb:Receipts a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Receipts" ;
+    rdfs:comment "Inventory receipts and deliveries" .
+
+qb:RecurringTransactions a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Recurring_Transactions" ;
+    rdfs:comment "A recurring_transactions transaction in QuickBooks" .
+
+qb:ChartOfAccounts a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Chart of Accounts" ;
+    rdfs:comment "Account structure and management" .
+
+qb:BillPayments a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Bill_Payments" ;
+    rdfs:comment "A bill_payments transaction in QuickBooks" .
+
+qb:Bills a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Bills" ;
+    rdfs:comment "A bills transaction in QuickBooks" .
+
+qb:Contractors a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Contractors" ;
+    rdfs:comment "Independent contractor management" .
+
+qb:Expenses a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Expenses" ;
+    rdfs:comment "A expenses transaction in QuickBooks" .
+
+qb:Mileage a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Mileage" ;
+    rdfs:comment "A mileage transaction in QuickBooks" .
+
+qb:Vendors a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Vendors" ;
+    rdfs:comment "A vendors transaction in QuickBooks" .
+
+qb:ExpenseTransaction a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Expense Transaction" ;
+    rdfs:comment "Individual business expense transactions" .
+
+qb:Customers a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Customers" ;
+    rdfs:comment "Customer management and information" .
+
+qb:Invoices a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Invoices" ;
+    rdfs:comment "Customer invoices and billing" .
+
+qb:ProductsandServices a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Products_and_Services" ;
+    rdfs:comment "A products_and_services transaction in QuickBooks" .
+
+qb:Salestransactions a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Sales_transactions" ;
+    rdfs:comment "A sales_transactions transaction in QuickBooks" .
+
+qb:CreditCardTransactions a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Credit Card Transactions" ;
+    rdfs:comment "Credit card purchases and payments" .
+
+qb:ExpensesandBills a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Expenses_and_Bills" ;
+    rdfs:comment "A expenses_and_bills transaction in QuickBooks" .
+
+qb:SalesandCustomers a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Sales_and_Customers" ;
+    rdfs:comment "A sales_and_customers transaction in QuickBooks" .
+
+qb:Accounting a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Accounting" ;
+    rdfs:comment "Transaction types related to general accounting" .
+
+qb:Banking a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Banking" ;
+    rdfs:comment "General banking transactions" .
+
+qb:Inventory a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Inventory" ;
+    rdfs:comment "Transaction types related to inventory management" .
+
+qb:Payroll a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Payroll" ;
+    rdfs:comment "Transaction types related to employee payroll" .
+
+qb:SalesAndCustomers a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Sales and Customers" ;
+    rdfs:comment "Transaction types related to sales and customer management" .
+
+qb:BankDeposits a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Bank Deposits" ;
+    rdfs:comment "Bank deposit transactions" .
+
+qb:BankReconciliation a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Bank Reconciliation" ;
+    rdfs:comment "Bank statement reconciliation" .
+
+qb:BankTransfers a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Bank Transfers" ;
+    rdfs:comment "Transfers between bank accounts" .
+
+qb:CustomerPayments a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Customer Payments" ;
+    rdfs:comment "Payments received from customers" .
+
+qb:Estimates a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Estimates" ;
+    rdfs:comment "Customer estimates and quotes" .
+
+qb:Refunds a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Refunds" ;
+    rdfs:comment "Customer refunds and returns" .
+
+qb:SalesReceipts a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Sales Receipts" ;
+    rdfs:comment "Point-of-sale sales receipts" .
+
+qb:EmployeeBenefits a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Employee Benefits" ;
+    rdfs:comment "Employee benefits and deductions" .
+
+qb:EmployeePayroll a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Employee Payroll" ;
+    rdfs:comment "Employee salary and wage payments" .
+
+qb:PayrollTaxes a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Payroll Taxes" ;
+    rdfs:comment "Payroll tax calculations and payments" .
+
+qb:InventoryAdjustments a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Inventory Adjustments" ;
+    rdfs:comment "Inventory quantity and value adjustments" .
+
+qb:Products a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Products" ;
+    rdfs:comment "Product and service management" .
+
+qb:PurchaseOrders a owl:Class ;
+    rdfs:subClassOf qb:UserTransactionType ;
+    rdfs:label "Purchase Orders" ;
+    rdfs:comment "Purchase orders for inventory" .
+
+# Property Definitions
+qb:hasName a owl:DatatypeProperty ;
+    rdfs:label "Name" ;
+    rdfs:comment "Name of the entity" .
+
+qb:hasCompanyName a owl:DatatypeProperty ;
+    rdfs:label "CompanyName" ;
+    rdfs:comment "Company name" .
+
+qb:hasEmail a owl:DatatypeProperty ;
+    rdfs:label "Email" ;
+    rdfs:comment "Email address" .
+
+qb:hasPhone a owl:DatatypeProperty ;
+    rdfs:label "Phone" ;
+    rdfs:comment "Phone number" .
+
+qb:isActive a owl:DatatypeProperty ;
+    rdfs:label "Active" ;
+    rdfs:comment "Active status" .
+
+qb:hasDocNumber a owl:DatatypeProperty ;
+    rdfs:label "DocNumber" ;
+    rdfs:comment "Document number" .
+
+qb:hasTotalAmount a owl:DatatypeProperty ;
+    rdfs:label "TotalAmount" ;
+    rdfs:comment "Total amount" .
+
+qb:hasBalance a owl:DatatypeProperty ;
+    rdfs:label "Balance" ;
+    rdfs:comment "Balance amount" .
+
+qb:hasTransactionDate a owl:DatatypeProperty ;
+    rdfs:label "TransactionDate" ;
+    rdfs:comment "Transaction date" .
+
+qb:hasVendorType a owl:DatatypeProperty ;
+    rdfs:label "VendorType" ;
+    rdfs:comment "Type of vendor" .
+
+qb:hasGivenName a owl:DatatypeProperty ;
+    rdfs:label "GivenName" ;
+    rdfs:comment "First name" .
+
+qb:hasFamilyName a owl:DatatypeProperty ;
+    rdfs:label "FamilyName" ;
+    rdfs:comment "Last name" .
+
+qb:hasPaymentMethod a owl:DatatypeProperty ;
+    rdfs:label "PaymentMethod" ;
+    rdfs:comment "Payment method" .
+
+qb:hasUnappliedAmount a owl:DatatypeProperty ;
+    rdfs:label "UnappliedAmount" ;
+    rdfs:comment "Unapplied amount" .
+
+qb:hasHours a owl:DatatypeProperty ;
+    rdfs:label "Hours" ;
+    rdfs:comment "Hours worked" .
+
+qb:hasMinutes a owl:DatatypeProperty ;
+    rdfs:label "Minutes" ;
+    rdfs:comment "Minutes worked" .
+
+qb:hasHourlyRate a owl:DatatypeProperty ;
+    rdfs:label "HourlyRate" ;
+    rdfs:comment "Hourly rate" .
+
+qb:hasBillableStatus a owl:DatatypeProperty ;
+    rdfs:label "BillableStatus" ;
+    rdfs:comment "Billable status" .
+
+qb:hasDescription a owl:DatatypeProperty ;
+    rdfs:label "Description" ;
+    rdfs:comment "Activity description" .
+
+qb:riskLevel a owl:DatatypeProperty ;
+    rdfs:label "RiskLevel" ;
+    rdfs:comment "Risk level for fraud detection" .
+
+qb:transactionFrequency a owl:DatatypeProperty ;
+    rdfs:label "TransactionFrequency" ;
+    rdfs:comment "Typical frequency of this transaction type" .
+
+# Bank_Transactions Individuals
+<http://www.semanticweb.org/quickbooks/bank_transactions/121> a qb:BankTransactions ;
+    qb:hasTotalAmount 868.15 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bank_transactions/102> a qb:BankTransactions ;
+    qb:hasTotalAmount 408.0 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bank_transactions/4> a qb:BankTransactions ;
+    qb:hasTotalAmount 5000.0 ;
+    qb:hasTransactionDate "2024-11-11"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bank_transactions/62> a qb:BankTransactions ;
+    qb:hasTotalAmount 218.75 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bank_transactions/5> a qb:BankTransactions ;
+    qb:hasTotalAmount 600.0 ;
+    qb:hasTransactionDate "2025-03-23"^^xsd:date .
+
+# Recurring_Transactions Individuals
+<http://www.semanticweb.org/quickbooks/recurring_transactions/unknown_0> a qb:RecurringTransactions .
+
+<http://www.semanticweb.org/quickbooks/recurring_transactions/unknown_1> a qb:RecurringTransactions .
+
+<http://www.semanticweb.org/quickbooks/recurring_transactions/unknown_2> a qb:RecurringTransactions .
+
+# ChartOfAccounts Individuals
+<http://www.semanticweb.org/quickbooks/chartofaccounts/69> a qb:ChartOfAccounts ;
+    qb:hasName "Accounting" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/33> a qb:ChartOfAccounts ;
+    qb:hasName "Accounts Payable (A/P)" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/84> a qb:ChartOfAccounts ;
+    qb:hasName "Accounts Receivable (A/R)" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/7> a qb:ChartOfAccounts ;
+    qb:hasName "Advertising" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/89> a qb:ChartOfAccounts ;
+    qb:hasName "Arizona Dept. of Revenue Payable" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/55> a qb:ChartOfAccounts ;
+    qb:hasName "Automobile" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/8> a qb:ChartOfAccounts ;
+    qb:hasName "Bank Charges" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/85> a qb:ChartOfAccounts ;
+    qb:hasName "Billable Expense Income" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/90> a qb:ChartOfAccounts ;
+    qb:hasName "Board of Equalization Payable" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/70> a qb:ChartOfAccounts ;
+    qb:hasName "Bookkeeper" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/73> a qb:ChartOfAccounts ;
+    qb:hasName "Building Repairs" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/35> a qb:ChartOfAccounts ;
+    qb:hasName "Checking" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/9> a qb:ChartOfAccounts ;
+    qb:hasName "Commissions & fees" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/74> a qb:ChartOfAccounts ;
+    qb:hasName "Computer Repairs" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/80> a qb:ChartOfAccounts ;
+    qb:hasName "Cost of Goods Sold" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/59> a qb:ChartOfAccounts ;
+    qb:hasName "Cost of Labor" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/64> a qb:ChartOfAccounts ;
+    qb:hasName "Decks and Patios" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/47> a qb:ChartOfAccounts ;
+    qb:hasName "Decks and Patios" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/40> a qb:ChartOfAccounts ;
+    qb:hasName "Depreciation" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/39> a qb:ChartOfAccounts ;
+    qb:hasName "Depreciation" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/82> a qb:ChartOfAccounts ;
+    qb:hasName "Design income" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/86> a qb:ChartOfAccounts ;
+    qb:hasName "Discounts given" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/28> a qb:ChartOfAccounts ;
+    qb:hasName "Disposal Fees" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/10> a qb:ChartOfAccounts ;
+    qb:hasName "Dues & Subscriptions" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/62> a qb:ChartOfAccounts ;
+    qb:hasName "Equipment Rental" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/29> a qb:ChartOfAccounts ;
+    qb:hasName "Equipment Rental" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/75> a qb:ChartOfAccounts ;
+    qb:hasName "Equipment Repairs" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/5> a qb:ChartOfAccounts ;
+    qb:hasName "Fees Billed" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/65> a qb:ChartOfAccounts ;
+    qb:hasName "Fountain and Garden Lighting" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/48> a qb:ChartOfAccounts ;
+    qb:hasName "Fountains and Garden Lighting" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/56> a qb:ChartOfAccounts ;
+    qb:hasName "Fuel" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/76> a qb:ChartOfAccounts ;
+    qb:hasName "Gas and Electric" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/52> a qb:ChartOfAccounts ;
+    qb:hasName "Installation" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/60> a qb:ChartOfAccounts ;
+    qb:hasName "Installation" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/11> a qb:ChartOfAccounts ;
+    qb:hasName "Insurance" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/25> a qb:ChartOfAccounts ;
+    qb:hasName "Interest Earned" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/81> a qb:ChartOfAccounts ;
+    qb:hasName "Inventory Asset" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/58> a qb:ChartOfAccounts ;
+    qb:hasName "Job Expenses" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/46> a qb:ChartOfAccounts ;
+    qb:hasName "Job Materials" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/63> a qb:ChartOfAccounts ;
+    qb:hasName "Job Materials" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/51> a qb:ChartOfAccounts ;
+    qb:hasName "Labor" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/45> a qb:ChartOfAccounts ;
+    qb:hasName "Landscaping Services" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/71> a qb:ChartOfAccounts ;
+    qb:hasName "Lawyer" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/12> a qb:ChartOfAccounts ;
+    qb:hasName "Legal & Professional Fees" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/43> a qb:ChartOfAccounts ;
+    qb:hasName "Loan Payable" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/53> a qb:ChartOfAccounts ;
+    qb:hasName "Maintenance and Repair" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/72> a qb:ChartOfAccounts ;
+    qb:hasName "Maintenance and Repair" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/61> a qb:ChartOfAccounts ;
+    qb:hasName "Maintenance and Repairs" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/41> a qb:ChartOfAccounts ;
+    qb:hasName "Mastercard" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/13> a qb:ChartOfAccounts ;
+    qb:hasName "Meals and Entertainment" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/14> a qb:ChartOfAccounts ;
+    qb:hasName "Miscellaneous" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/44> a qb:ChartOfAccounts ;
+    qb:hasName "Notes Payable" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/15> a qb:ChartOfAccounts ;
+    qb:hasName "Office Expenses" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/34> a qb:ChartOfAccounts ;
+    qb:hasName "Opening Balance Equity" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/38> a qb:ChartOfAccounts ;
+    qb:hasName "Original Cost" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/83> a qb:ChartOfAccounts ;
+    qb:hasName "Other Income" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/26> a qb:ChartOfAccounts ;
+    qb:hasName "Other Portfolio Income" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/27> a qb:ChartOfAccounts ;
+    qb:hasName "Penalties & Settlements" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/68> a qb:ChartOfAccounts ;
+    qb:hasName "Permits" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/54> a qb:ChartOfAccounts ;
+    qb:hasName "Pest Control Services" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/66> a qb:ChartOfAccounts ;
+    qb:hasName "Plants and Soil" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/49> a qb:ChartOfAccounts ;
+    qb:hasName "Plants and Soil" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/3> a qb:ChartOfAccounts ;
+    qb:hasName "Prepaid Expenses" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/16> a qb:ChartOfAccounts ;
+    qb:hasName "Promotional" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/78> a qb:ChartOfAccounts ;
+    qb:hasName "Purchases" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/6> a qb:ChartOfAccounts ;
+    qb:hasName "Refunds-Allowances" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/17> a qb:ChartOfAccounts ;
+    qb:hasName "Rent or Lease" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/2> a qb:ChartOfAccounts ;
+    qb:hasName "Retained Earnings" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/79> a qb:ChartOfAccounts ;
+    qb:hasName "Sales of Product Income" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/36> a qb:ChartOfAccounts ;
+    qb:hasName "Savings" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/1> a qb:ChartOfAccounts ;
+    qb:hasName "Services" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/50> a qb:ChartOfAccounts ;
+    qb:hasName "Sprinklers and Drip Systems" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/67> a qb:ChartOfAccounts ;
+    qb:hasName "Sprinklers and Drip Systems" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/19> a qb:ChartOfAccounts ;
+    qb:hasName "Stationery & Printing" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/1150040000> a qb:ChartOfAccounts ;
+    qb:hasName "Supplies" ;
+    qb:isActive true ;
+    qb:hasDescription "Routine purchases (Staples, Amazon)" .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/20> a qb:ChartOfAccounts ;
+    qb:hasName "Supplies" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/21> a qb:ChartOfAccounts ;
+    qb:hasName "Taxes & Licenses" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/77> a qb:ChartOfAccounts ;
+    qb:hasName "Telephone" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/22> a qb:ChartOfAccounts ;
+    qb:hasName "Travel" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/23> a qb:ChartOfAccounts ;
+    qb:hasName "Travel Meals" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/37> a qb:ChartOfAccounts ;
+    qb:hasName "Truck" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/88> a qb:ChartOfAccounts ;
+    qb:hasName "Unapplied Cash Bill Payment Expense" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/87> a qb:ChartOfAccounts ;
+    qb:hasName "Unapplied Cash Payment Income" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/32> a qb:ChartOfAccounts ;
+    qb:hasName "Uncategorized Asset" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/31> a qb:ChartOfAccounts ;
+    qb:hasName "Uncategorized Expense" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/30> a qb:ChartOfAccounts ;
+    qb:hasName "Uncategorized Income" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/4> a qb:ChartOfAccounts ;
+    qb:hasName "Undeposited Funds" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/24> a qb:ChartOfAccounts ;
+    qb:hasName "Utilities" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/42> a qb:ChartOfAccounts ;
+    qb:hasName "Visa" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/chartofaccounts/57> a qb:ChartOfAccounts ;
+    qb:hasName "Workers Compensation" ;
+    qb:isActive true .
+
+# Bill_Payments Individuals
+<http://www.semanticweb.org/quickbooks/bill_payments/151> a qb:BillPayments ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 205.0 ;
+    qb:hasTransactionDate "2025-08-14"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/149> a qb:BillPayments ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 5.0 ;
+    qb:hasTransactionDate "2025-05-28"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/146> a qb:BillPayments ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 86.44 ;
+    qb:hasTransactionDate "2025-05-28"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/118> a qb:BillPayments ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 103.55 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/117> a qb:BillPayments ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 56.5 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/104> a qb:BillPayments ;
+    qb:hasDocNumber "11" ;
+    qb:hasTotalAmount 900.0 ;
+    qb:hasTransactionDate "2025-03-20"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/91> a qb:BillPayments ;
+    qb:hasDocNumber "10" ;
+    qb:hasTotalAmount 300.0 ;
+    qb:hasTransactionDate "2024-12-23"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/82> a qb:BillPayments ;
+    qb:hasDocNumber "45" ;
+    qb:hasTotalAmount 666.0 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/79> a qb:BillPayments ;
+    qb:hasDocNumber "7" ;
+    qb:hasTotalAmount 250.0 ;
+    qb:hasTransactionDate "2025-03-06"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/77> a qb:BillPayments ;
+    qb:hasDocNumber "6" ;
+    qb:hasTotalAmount 114.09 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/50> a qb:BillPayments ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 74.36 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/37> a qb:BillPayments ;
+    qb:hasDocNumber "3" ;
+    qb:hasTotalAmount 75.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bill_payments/22> a qb:BillPayments ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 2000.0 ;
+    qb:hasTransactionDate "2025-03-24"^^xsd:date .
+
+# Bills Individuals
+<http://www.semanticweb.org/quickbooks/bills/161> a qb:Bills ;
+    qb:hasTotalAmount 250.0 ;
+    qb:hasBalance 250.0 ;
+    qb:hasTransactionDate "2025-10-09"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/156> a qb:Bills ;
+    qb:hasDocNumber "101" ;
+    qb:hasTotalAmount 525.0 ;
+    qb:hasBalance 525.0 ;
+    qb:hasTransactionDate "2025-09-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/108> a qb:Bills ;
+    qb:hasTotalAmount 315.0 ;
+    qb:hasBalance 315.0 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/126> a qb:Bills ;
+    qb:hasTotalAmount 205.0 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/147> a qb:Bills ;
+    qb:hasTotalAmount 273.88 ;
+    qb:hasBalance 273.88 ;
+    qb:hasTransactionDate "2025-05-28"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/78> a qb:Bills ;
+    qb:hasTotalAmount 86.44 ;
+    qb:hasTransactionDate "2025-02-10"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/25> a qb:Bills ;
+    qb:hasTotalAmount 103.55 ;
+    qb:hasTransactionDate "2025-03-24"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/105> a qb:Bills ;
+    qb:hasTotalAmount 56.5 ;
+    qb:hasTransactionDate "2025-02-09"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/24> a qb:Bills ;
+    qb:hasTotalAmount 900.0 ;
+    qb:hasTransactionDate "2025-03-11"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/90> a qb:Bills ;
+    qb:hasTotalAmount 300.0 ;
+    qb:hasTransactionDate "2024-11-23"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/3> a qb:Bills ;
+    qb:hasTotalAmount 666.0 ;
+    qb:hasTransactionDate "2025-03-12"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/2> a qb:Bills ;
+    qb:hasTotalAmount 250.0 ;
+    qb:hasTransactionDate "2025-02-18"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/35> a qb:Bills ;
+    qb:hasTotalAmount 114.09 ;
+    qb:hasTransactionDate "2025-03-11"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/21> a qb:Bills ;
+    qb:hasTotalAmount 74.36 ;
+    qb:hasTransactionDate "2025-03-11"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/44> a qb:Bills ;
+    qb:hasTotalAmount 755.0 ;
+    qb:hasBalance 755.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/18> a qb:Bills ;
+    qb:hasTotalAmount 75.0 ;
+    qb:hasTransactionDate "2025-03-13"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/1> a qb:Bills ;
+    qb:hasTotalAmount 2000.0 ;
+    qb:hasTransactionDate "2025-03-20"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bills/19> a qb:Bills ;
+    qb:hasTotalAmount 241.23 ;
+    qb:hasBalance 241.23 ;
+    qb:hasTransactionDate "2025-03-20"^^xsd:date .
+
+# Contractors Individuals
+<http://www.semanticweb.org/quickbooks/contractors/56> a qb:Contractors ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/30> a qb:Contractors ;
+    qb:hasCompanyName "Books by Bessie" ;
+    qb:hasEmail "{'Address': 'Books@Intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-7745'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Bessie" ;
+    qb:hasFamilyName "Williams" .
+
+<http://www.semanticweb.org/quickbooks/contractors/31> a qb:Contractors ;
+    qb:hasCompanyName "Brosnahan Insurance Agency" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-9912'}" ;
+    qb:isActive true ;
+    qb:hasBalance 510.11 ;
+    qb:hasGivenName "Nick" ;
+    qb:hasFamilyName "Brosnahan" .
+
+<http://www.semanticweb.org/quickbooks/contractors/32> a qb:Contractors ;
+    qb:hasCompanyName "Cal Telephone" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-1616'}" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/72> a qb:Contractors ;
+    qb:hasCompanyName "Cheezy Products Ltd." ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/33> a qb:Contractors ;
+    qb:hasCompanyName "Chin's Gas and Oil" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/34> a qb:Contractors ;
+    qb:hasCompanyName "Cigna Health Care" ;
+    qb:hasPhone "{'FreeFormNumber': '(520) 555-9874'}" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/35> a qb:Contractors ;
+    qb:hasCompanyName "Computers by Jenni" ;
+    qb:hasEmail "{'Address': 'Msfixit@Intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-8721'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Jenni" ;
+    qb:hasFamilyName "Winslow" .
+
+<http://www.semanticweb.org/quickbooks/contractors/73> a qb:Contractors ;
+    qb:hasCompanyName "Dewey Cheetham and Howe" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/36> a qb:Contractors ;
+    qb:hasCompanyName "Diego's Road Warrior Bodyshop" ;
+    qb:isActive true ;
+    qb:hasBalance 755.0 .
+
+<http://www.semanticweb.org/quickbooks/contractors/37> a qb:Contractors ;
+    qb:hasCompanyName "EDD" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/38> a qb:Contractors ;
+    qb:hasCompanyName "Ellis Equipment Rental" ;
+    qb:hasEmail "{'Address': 'Rental@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-3333'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Julie" ;
+    qb:hasFamilyName "Ellis" .
+
+<http://www.semanticweb.org/quickbooks/contractors/39> a qb:Contractors ;
+    qb:hasCompanyName "Fidelity" ;
+    qb:hasEmail "{'Address': 'rick.schwartz@fidelity.net'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Rick" ;
+    qb:hasFamilyName "Schwartz" .
+
+<http://www.semanticweb.org/quickbooks/contractors/75> a qb:Contractors ;
+    qb:hasCompanyName "Flyby Knight Professonal Aviator" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/74> a qb:Contractors ;
+    qb:hasCompanyName "Gypum Fleeceum and Scat" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/40> a qb:Contractors ;
+    qb:hasCompanyName "Hall Properties" ;
+    qb:hasPhone "{'FreeFormNumber': '(973) 555-3827'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Melanie" ;
+    qb:hasFamilyName "Hall" .
+
+<http://www.semanticweb.org/quickbooks/contractors/41> a qb:Contractors ;
+    qb:hasCompanyName "Hicks Hardware" ;
+    qb:hasEmail "{'Address': 'hickshardware@gmail.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '5098691189'}" ;
+    qb:isActive true ;
+    qb:hasBalance 250.0 ;
+    qb:hasGivenName "Ron" ;
+    qb:hasFamilyName "Hicks" .
+
+<http://www.semanticweb.org/quickbooks/contractors/76> a qb:Contractors ;
+    qb:hasCompanyName "Sneaky Snacks" ;
+    qb:hasPhone "{'FreeFormNumber': '(212) 456-1492'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Julia" ;
+    qb:hasFamilyName "Child" .
+
+<http://www.semanticweb.org/quickbooks/contractors/68> a qb:Contractors ;
+    qb:hasCompanyName "Lather-N-Slather Cosmetics" ;
+    qb:isActive true ;
+    qb:hasBalance 525.0 .
+
+<http://www.semanticweb.org/quickbooks/contractors/42> a qb:Contractors ;
+    qb:hasCompanyName "Lee Advertising" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 554-4622'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Laurel" ;
+    qb:hasFamilyName "Lee" .
+
+<http://www.semanticweb.org/quickbooks/contractors/69> a qb:Contractors ;
+    qb:hasCompanyName "Lettuce Landscape 4U" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/67> a qb:Contractors ;
+    qb:hasCompanyName "Luck-Shury Beachfronts" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/43> a qb:Contractors ;
+    qb:hasCompanyName "Mahoney Mugs" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/44> a qb:Contractors ;
+    qb:hasCompanyName "Met Life Dental" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/60> a qb:Contractors ;
+    qb:hasCompanyName "My Mortgage Payments" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/45> a qb:Contractors ;
+    qb:hasCompanyName "National Eye Care" ;
+    qb:hasEmail "{'Address': 'Nateyecare@intuit.com, pauliejones15@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(800) 555-5555'}" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/46> a qb:Contractors ;
+    qb:hasCompanyName "Norton Lumber and Building Materials" ;
+    qb:hasEmail "{'Address': 'Materials@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 363-6578'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Julie" ;
+    qb:hasFamilyName "Norton" .
+
+<http://www.semanticweb.org/quickbooks/contractors/48> a qb:Contractors ;
+    qb:hasCompanyName "PG&E" ;
+    qb:hasEmail "{'Address': 'utilities@noemail.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(888) 555-9465'}" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/47> a qb:Contractors ;
+    qb:hasCompanyName "Pam Seitz, CPA" ;
+    qb:hasEmail "{'Address': 'SeitzCPA@noemail.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 557-8855'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Pam" ;
+    qb:hasFamilyName "Seitz" .
+
+<http://www.semanticweb.org/quickbooks/contractors/62> a qb:Contractors ;
+    qb:hasCompanyName "Pay My Rent" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/65> a qb:Contractors ;
+    qb:hasCompanyName "Piggy Bank" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/49> a qb:Contractors ;
+    qb:hasCompanyName "Robertson & Associates" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 557-1111'}" ;
+    qb:isActive true ;
+    qb:hasBalance 315.0 ;
+    qb:hasGivenName "Jenny" ;
+    qb:hasFamilyName "Robertson" .
+
+<http://www.semanticweb.org/quickbooks/contractors/66> a qb:Contractors ;
+    qb:hasCompanyName "Sleazy Loans" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/57> a qb:Contractors ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/contractors/50> a qb:Contractors ;
+    qb:hasCompanyName "Tania's Nursery" ;
+    qb:hasEmail "{'Address': 'plantqueen@taniasnursery.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(886) 554-2265'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Tania" ;
+    qb:hasFamilyName "Kronberg" .
+
+<http://www.semanticweb.org/quickbooks/contractors/51> a qb:Contractors ;
+    qb:hasCompanyName "Tim Philip Masonry" ;
+    qb:hasEmail "{'Address': 'tim.philip@timphilipmasonry.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(800) 556-1254'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Tim" ;
+    qb:hasFamilyName "Philip" .
+
+<http://www.semanticweb.org/quickbooks/contractors/52> a qb:Contractors ;
+    qb:hasEmail "{'Address': 'tonyrjr@intuit.com'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Tony" ;
+    qb:hasFamilyName "Rodonuwu" .
+
+<http://www.semanticweb.org/quickbooks/contractors/53> a qb:Contractors ;
+    qb:hasEmail "{'Address': 'taxesaregreat@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(888) 555-6454'}" ;
+    qb:isActive true .
+
+# Expenses Individuals
+<http://www.semanticweb.org/quickbooks/expenses/155> a qb:Expenses ;
+    qb:hasTotalAmount 525.25 ;
+    qb:hasTransactionDate "2025-09-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/153> a qb:Expenses ;
+    qb:hasDocNumber "71" ;
+    qb:hasTotalAmount 525.25 ;
+    qb:hasTransactionDate "2025-09-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/144> a qb:Expenses ;
+    qb:hasTotalAmount 34.0 ;
+    qb:hasTransactionDate "2025-04-21"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/143> a qb:Expenses ;
+    qb:hasTotalAmount 42.4 ;
+    qb:hasTransactionDate "2025-04-02"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/142> a qb:Expenses ;
+    qb:hasTotalAmount 19.99 ;
+    qb:hasTransactionDate "2025-04-08"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/141> a qb:Expenses ;
+    qb:hasTotalAmount 19.99 ;
+    qb:hasTransactionDate "2025-04-01"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/140> a qb:Expenses ;
+    qb:hasTotalAmount 18.97 ;
+    qb:hasTransactionDate "2025-04-01"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/139> a qb:Expenses ;
+    qb:hasTotalAmount 900.0 ;
+    qb:hasTransactionDate "2025-04-10"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/138> a qb:Expenses ;
+    qb:hasDocNumber "Debit" ;
+    qb:hasTotalAmount 19.99 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/137> a qb:Expenses ;
+    qb:hasTotalAmount 3.86 ;
+    qb:hasTransactionDate "2025-03-23"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/136> a qb:Expenses ;
+    qb:hasTotalAmount 19.99 ;
+    qb:hasTransactionDate "2025-03-18"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/135> a qb:Expenses ;
+    qb:hasTotalAmount 5.66 ;
+    qb:hasTransactionDate "2025-03-18"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/134> a qb:Expenses ;
+    qb:hasTotalAmount 23.5 ;
+    qb:hasTransactionDate "2025-03-30"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/133> a qb:Expenses ;
+    qb:hasDocNumber "70" ;
+    qb:hasTotalAmount 185.0 ;
+    qb:hasTransactionDate "2025-03-19"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/132> a qb:Expenses ;
+    qb:hasTotalAmount 52.14 ;
+    qb:hasTransactionDate "2025-03-19"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/131> a qb:Expenses ;
+    qb:hasTotalAmount 63.15 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/127> a qb:Expenses ;
+    qb:hasDocNumber "76" ;
+    qb:hasTotalAmount 75.0 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/122> a qb:Expenses ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 52.56 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/115> a qb:Expenses ;
+    qb:hasDocNumber "75" ;
+    qb:hasTotalAmount 228.75 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/109> a qb:Expenses ;
+    qb:hasDocNumber "12" ;
+    qb:hasTotalAmount 55.0 ;
+    qb:hasTransactionDate "2025-02-14"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/107> a qb:Expenses ;
+    qb:hasDocNumber "12" ;
+    qb:hasTotalAmount 250.0 ;
+    qb:hasTransactionDate "2025-01-14"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/88> a qb:Expenses ;
+    qb:hasDocNumber "22" ;
+    qb:hasTotalAmount 54.92 ;
+    qb:hasTransactionDate "2025-03-17"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/87> a qb:Expenses ;
+    qb:hasDocNumber "15" ;
+    qb:hasTotalAmount 108.09 ;
+    qb:hasTransactionDate "2025-02-21"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/89> a qb:Expenses ;
+    qb:hasDocNumber "108" ;
+    qb:hasTotalAmount 46.98 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/86> a qb:Expenses ;
+    qb:hasDocNumber "9" ;
+    qb:hasTotalAmount 89.09 ;
+    qb:hasTransactionDate "2025-02-14"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/85> a qb:Expenses ;
+    qb:hasDocNumber "3" ;
+    qb:hasTotalAmount 158.08 ;
+    qb:hasTransactionDate "2025-01-21"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/56> a qb:Expenses ;
+    qb:hasDocNumber "50" ;
+    qb:hasTotalAmount 82.45 ;
+    qb:hasTransactionDate "2025-03-21"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/84> a qb:Expenses ;
+    qb:hasTotalAmount 100.0 ;
+    qb:hasTransactionDate "2025-03-18"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/83> a qb:Expenses ;
+    qb:hasDocNumber "13" ;
+    qb:hasTotalAmount 215.66 ;
+    qb:hasTransactionDate "2025-03-21"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/81> a qb:Expenses ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 88.09 ;
+    qb:hasTransactionDate "2025-03-15"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/80> a qb:Expenses ;
+    qb:hasDocNumber "8" ;
+    qb:hasTotalAmount 24.36 ;
+    qb:hasTransactionDate "2025-03-09"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/59> a qb:Expenses ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 65.0 ;
+    qb:hasTransactionDate "2025-03-12"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/58> a qb:Expenses ;
+    qb:hasDocNumber "5" ;
+    qb:hasTotalAmount 62.01 ;
+    qb:hasTransactionDate "2025-02-20"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/57> a qb:Expenses ;
+    qb:hasDocNumber "4" ;
+    qb:hasTotalAmount 54.55 ;
+    qb:hasTransactionDate "2025-02-05"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/55> a qb:Expenses ;
+    qb:hasTotalAmount 74.86 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/51> a qb:Expenses ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 112.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/expenses/36> a qb:Expenses ;
+    qb:hasDocNumber "2" ;
+    qb:hasTotalAmount 18.08 ;
+    qb:hasTransactionDate "2025-03-21"^^xsd:date .
+
+# Vendors Individuals
+<http://www.semanticweb.org/quickbooks/vendors/56> a qb:Vendors ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/30> a qb:Vendors ;
+    qb:hasCompanyName "Books by Bessie" ;
+    qb:hasEmail "{'Address': 'Books@Intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-7745'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Bessie" ;
+    qb:hasFamilyName "Williams" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/31> a qb:Vendors ;
+    qb:hasCompanyName "Brosnahan Insurance Agency" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-9912'}" ;
+    qb:isActive true ;
+    qb:hasBalance 510.11 ;
+    qb:hasGivenName "Nick" ;
+    qb:hasFamilyName "Brosnahan" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/32> a qb:Vendors ;
+    qb:hasCompanyName "Cal Telephone" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-1616'}" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/72> a qb:Vendors ;
+    qb:hasCompanyName "Cheezy Products Ltd." ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/33> a qb:Vendors ;
+    qb:hasCompanyName "Chin's Gas and Oil" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/34> a qb:Vendors ;
+    qb:hasCompanyName "Cigna Health Care" ;
+    qb:hasPhone "{'FreeFormNumber': '(520) 555-9874'}" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/35> a qb:Vendors ;
+    qb:hasCompanyName "Computers by Jenni" ;
+    qb:hasEmail "{'Address': 'Msfixit@Intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-8721'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Jenni" ;
+    qb:hasFamilyName "Winslow" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/73> a qb:Vendors ;
+    qb:hasCompanyName "Dewey Cheetham and Howe" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/36> a qb:Vendors ;
+    qb:hasCompanyName "Diego's Road Warrior Bodyshop" ;
+    qb:isActive true ;
+    qb:hasBalance 755.0 ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/37> a qb:Vendors ;
+    qb:hasCompanyName "EDD" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/38> a qb:Vendors ;
+    qb:hasCompanyName "Ellis Equipment Rental" ;
+    qb:hasEmail "{'Address': 'Rental@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-3333'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Julie" ;
+    qb:hasFamilyName "Ellis" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/39> a qb:Vendors ;
+    qb:hasCompanyName "Fidelity" ;
+    qb:hasEmail "{'Address': 'rick.schwartz@fidelity.net'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Rick" ;
+    qb:hasFamilyName "Schwartz" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/75> a qb:Vendors ;
+    qb:hasCompanyName "Flyby Knight Professonal Aviator" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/74> a qb:Vendors ;
+    qb:hasCompanyName "Gypum Fleeceum and Scat" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/40> a qb:Vendors ;
+    qb:hasCompanyName "Hall Properties" ;
+    qb:hasPhone "{'FreeFormNumber': '(973) 555-3827'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Melanie" ;
+    qb:hasFamilyName "Hall" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/41> a qb:Vendors ;
+    qb:hasCompanyName "Hicks Hardware" ;
+    qb:hasEmail "{'Address': 'hickshardware@gmail.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '5098691189'}" ;
+    qb:isActive true ;
+    qb:hasBalance 250.0 ;
+    qb:hasGivenName "Ron" ;
+    qb:hasFamilyName "Hicks" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/76> a qb:Vendors ;
+    qb:hasCompanyName "Sneaky Snacks" ;
+    qb:hasPhone "{'FreeFormNumber': '(212) 456-1492'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Julia" ;
+    qb:hasFamilyName "Child" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/68> a qb:Vendors ;
+    qb:hasCompanyName "Lather-N-Slather Cosmetics" ;
+    qb:isActive true ;
+    qb:hasBalance 525.0 ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/42> a qb:Vendors ;
+    qb:hasCompanyName "Lee Advertising" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 554-4622'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Laurel" ;
+    qb:hasFamilyName "Lee" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/69> a qb:Vendors ;
+    qb:hasCompanyName "Lettuce Landscape 4U" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/67> a qb:Vendors ;
+    qb:hasCompanyName "Luck-Shury Beachfronts" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/43> a qb:Vendors ;
+    qb:hasCompanyName "Mahoney Mugs" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/44> a qb:Vendors ;
+    qb:hasCompanyName "Met Life Dental" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/60> a qb:Vendors ;
+    qb:hasCompanyName "My Mortgage Payments" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/45> a qb:Vendors ;
+    qb:hasCompanyName "National Eye Care" ;
+    qb:hasEmail "{'Address': 'Nateyecare@intuit.com, pauliejones15@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(800) 555-5555'}" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/46> a qb:Vendors ;
+    qb:hasCompanyName "Norton Lumber and Building Materials" ;
+    qb:hasEmail "{'Address': 'Materials@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 363-6578'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Julie" ;
+    qb:hasFamilyName "Norton" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/48> a qb:Vendors ;
+    qb:hasCompanyName "PG&E" ;
+    qb:hasEmail "{'Address': 'utilities@noemail.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(888) 555-9465'}" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/47> a qb:Vendors ;
+    qb:hasCompanyName "Pam Seitz, CPA" ;
+    qb:hasEmail "{'Address': 'SeitzCPA@noemail.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 557-8855'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Pam" ;
+    qb:hasFamilyName "Seitz" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/62> a qb:Vendors ;
+    qb:hasCompanyName "Pay My Rent" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/65> a qb:Vendors ;
+    qb:hasCompanyName "Piggy Bank" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/49> a qb:Vendors ;
+    qb:hasCompanyName "Robertson & Associates" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 557-1111'}" ;
+    qb:isActive true ;
+    qb:hasBalance 315.0 ;
+    qb:hasGivenName "Jenny" ;
+    qb:hasFamilyName "Robertson" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/66> a qb:Vendors ;
+    qb:hasCompanyName "Sleazy Loans" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/57> a qb:Vendors ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/50> a qb:Vendors ;
+    qb:hasCompanyName "Tania's Nursery" ;
+    qb:hasEmail "{'Address': 'plantqueen@taniasnursery.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(886) 554-2265'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Tania" ;
+    qb:hasFamilyName "Kronberg" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/51> a qb:Vendors ;
+    qb:hasCompanyName "Tim Philip Masonry" ;
+    qb:hasEmail "{'Address': 'tim.philip@timphilipmasonry.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(800) 556-1254'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Tim" ;
+    qb:hasFamilyName "Philip" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/52> a qb:Vendors ;
+    qb:hasEmail "{'Address': 'tonyrjr@intuit.com'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Tony" ;
+    qb:hasFamilyName "Rodonuwu" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+<http://www.semanticweb.org/quickbooks/vendors/53> a qb:Vendors ;
+    qb:hasEmail "{'Address': 'taxesaregreat@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(888) 555-6454'}" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 50 .
+
+# ExpenseTransaction Individuals
+<http://www.semanticweb.org/quickbooks/expensetransaction/155> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 525.25 ;
+    qb:hasTransactionDate "2025-09-25"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/153> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "71" ;
+    qb:hasTotalAmount 525.25 ;
+    qb:hasTransactionDate "2025-09-25"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/144> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 34.0 ;
+    qb:hasTransactionDate "2025-04-21"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/143> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 42.4 ;
+    qb:hasTransactionDate "2025-04-02"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/142> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 19.99 ;
+    qb:hasTransactionDate "2025-04-08"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/141> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 19.99 ;
+    qb:hasTransactionDate "2025-04-01"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/140> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 18.97 ;
+    qb:hasTransactionDate "2025-04-01"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/139> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 900.0 ;
+    qb:hasTransactionDate "2025-04-10"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/138> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "Debit" ;
+    qb:hasTotalAmount 19.99 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/137> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 3.86 ;
+    qb:hasTransactionDate "2025-03-23"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/136> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 19.99 ;
+    qb:hasTransactionDate "2025-03-18"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/135> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 5.66 ;
+    qb:hasTransactionDate "2025-03-18"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/134> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 23.5 ;
+    qb:hasTransactionDate "2025-03-30"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/133> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "70" ;
+    qb:hasTotalAmount 185.0 ;
+    qb:hasTransactionDate "2025-03-19"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/132> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 52.14 ;
+    qb:hasTransactionDate "2025-03-19"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/131> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 63.15 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/127> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "76" ;
+    qb:hasTotalAmount 75.0 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/122> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 52.56 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/115> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "75" ;
+    qb:hasTotalAmount 228.75 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/109> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "12" ;
+    qb:hasTotalAmount 55.0 ;
+    qb:hasTransactionDate "2025-02-14"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/107> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "12" ;
+    qb:hasTotalAmount 250.0 ;
+    qb:hasTransactionDate "2025-01-14"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/88> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "22" ;
+    qb:hasTotalAmount 54.92 ;
+    qb:hasTransactionDate "2025-03-17"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/87> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "15" ;
+    qb:hasTotalAmount 108.09 ;
+    qb:hasTransactionDate "2025-02-21"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/89> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "108" ;
+    qb:hasTotalAmount 46.98 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/86> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "9" ;
+    qb:hasTotalAmount 89.09 ;
+    qb:hasTransactionDate "2025-02-14"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/85> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "3" ;
+    qb:hasTotalAmount 158.08 ;
+    qb:hasTransactionDate "2025-01-21"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/56> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "50" ;
+    qb:hasTotalAmount 82.45 ;
+    qb:hasTransactionDate "2025-03-21"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/84> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 100.0 ;
+    qb:hasTransactionDate "2025-03-18"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/83> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "13" ;
+    qb:hasTotalAmount 215.66 ;
+    qb:hasTransactionDate "2025-03-21"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/81> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 88.09 ;
+    qb:hasTransactionDate "2025-03-15"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/80> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "8" ;
+    qb:hasTotalAmount 24.36 ;
+    qb:hasTransactionDate "2025-03-09"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/59> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 65.0 ;
+    qb:hasTransactionDate "2025-03-12"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/58> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "5" ;
+    qb:hasTotalAmount 62.01 ;
+    qb:hasTransactionDate "2025-02-20"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/57> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "4" ;
+    qb:hasTotalAmount 54.55 ;
+    qb:hasTransactionDate "2025-02-05"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/55> a qb:ExpenseTransaction ;
+    qb:hasTotalAmount 74.86 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/51> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "1" ;
+    qb:hasTotalAmount 112.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+<http://www.semanticweb.org/quickbooks/expensetransaction/36> a qb:ExpenseTransaction ;
+    qb:hasDocNumber "2" ;
+    qb:hasTotalAmount 18.08 ;
+    qb:hasTransactionDate "2025-03-21"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 100 .
+
+# Customers Individuals
+<http://www.semanticweb.org/quickbooks/customers/1> a qb:Customers ;
+    qb:hasCompanyName "Amy's Bird Sanctuary" ;
+    qb:hasEmail "{'Address': 'Birds@Intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-3311'}" ;
+    qb:isActive true ;
+    qb:hasBalance 239.0 ;
+    qb:hasGivenName "Amy" ;
+    qb:hasFamilyName "Lauterbach" .
+
+<http://www.semanticweb.org/quickbooks/customers/2> a qb:Customers ;
+    qb:hasCompanyName "Bill's Windsurf Shop" ;
+    qb:hasEmail "{'Address': 'Surf@Intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(415) 444-6538'}" ;
+    qb:isActive true ;
+    qb:hasBalance 85.0 ;
+    qb:hasGivenName "Bill" ;
+    qb:hasFamilyName "Lucchini" .
+
+<http://www.semanticweb.org/quickbooks/customers/3> a qb:Customers ;
+    qb:hasCompanyName "Cool Cars" ;
+    qb:hasEmail "{'Address': 'Cool_Cars@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(415) 555-9933'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Grace" ;
+    qb:hasFamilyName "Pariente" .
+
+<http://www.semanticweb.org/quickbooks/customers/4> a qb:Customers ;
+    qb:hasEmail "{'Address': 'Diego@Rodriguez.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-4477'}" ;
+    qb:isActive true ;
+    qb:hasBalance 50.0 ;
+    qb:hasGivenName "Diego" ;
+    qb:hasFamilyName "Rodriguez" .
+
+<http://www.semanticweb.org/quickbooks/customers/5> a qb:Customers ;
+    qb:hasCompanyName "Dukes Basketball Camp" ;
+    qb:hasEmail "{'Address': 'Dukes_bball@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(306) 420-5638'}" ;
+    qb:isActive true ;
+    qb:hasPaymentMethod "{'value': '5', 'name': '', 'type': ''}" ;
+    qb:hasGivenName "Peter" ;
+    qb:hasFamilyName "Dukes" .
+
+<http://www.semanticweb.org/quickbooks/customers/6> a qb:Customers ;
+    qb:isActive true ;
+    qb:hasGivenName "Dylan" ;
+    qb:hasFamilyName "Sollfrank" .
+
+<http://www.semanticweb.org/quickbooks/customers/58> a qb:Customers ;
+    qb:hasCompanyName "Flynn's Groceries" ;
+    qb:hasEmail "{'Address': 'jdrew@myemail.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(509) 969-1189'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Bernie" ;
+    qb:hasFamilyName "Flynn" .
+
+<http://www.semanticweb.org/quickbooks/customers/7> a qb:Customers ;
+    qb:hasCompanyName "Freeman Sporting Goods" ;
+    qb:hasEmail "{'Address': 'Sporting_goods@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-0987'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Kirby" ;
+    qb:hasFamilyName "Freeman" .
+
+<http://www.semanticweb.org/quickbooks/customers/8> a qb:Customers ;
+    qb:hasCompanyName "Freeman Sporting Goods" ;
+    qb:hasEmail "{'Address': 'Sporting_goods@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(415) 555-9933'}" ;
+    qb:isActive true ;
+    qb:hasBalance 477.5 ;
+    qb:hasGivenName "Sasha" ;
+    qb:hasFamilyName "Tillou" .
+
+<http://www.semanticweb.org/quickbooks/customers/9> a qb:Customers ;
+    qb:hasCompanyName "Freeman Sporting Goods" ;
+    qb:hasEmail "{'Address': 'Sporting_goods@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-0987'}" ;
+    qb:isActive true ;
+    qb:hasBalance 85.0 ;
+    qb:hasGivenName "Amelia" .
+
+<http://www.semanticweb.org/quickbooks/customers/10> a qb:Customers ;
+    qb:hasEmail "{'Address': 'Geeta@Kalapatapu.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-0022'}" ;
+    qb:isActive true ;
+    qb:hasBalance 629.1 ;
+    qb:hasGivenName "Geeta" ;
+    qb:hasFamilyName "Kalapatapu" .
+
+<http://www.semanticweb.org/quickbooks/customers/11> a qb:Customers ;
+    qb:hasCompanyName "Gevelber Photography" ;
+    qb:hasEmail "{'Address': 'Photography@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(415) 222-4345'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Lisa" ;
+    qb:hasFamilyName "Gevelber" .
+
+<http://www.semanticweb.org/quickbooks/customers/12> a qb:Customers ;
+    qb:hasCompanyName "Jeff's Jalopies" ;
+    qb:hasEmail "{'Address': 'Jalopies@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-8989'}" ;
+    qb:isActive true ;
+    qb:hasBalance 81.0 ;
+    qb:hasGivenName "Jeff" ;
+    qb:hasFamilyName "Chin" .
+
+<http://www.semanticweb.org/quickbooks/customers/13> a qb:Customers ;
+    qb:hasEmail "{'Address': 'John@Melton.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-5879'}" ;
+    qb:isActive true ;
+    qb:hasBalance 450.0 ;
+    qb:hasGivenName "John" ;
+    qb:hasFamilyName "Melton" .
+
+<http://www.semanticweb.org/quickbooks/customers/14> a qb:Customers ;
+    qb:hasEmail "{'Address': 'Kate@Whelan.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 554-8822'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Kate" ;
+    qb:hasFamilyName "Whelan" .
+
+<http://www.semanticweb.org/quickbooks/customers/16> a qb:Customers ;
+    qb:hasCompanyName "Kookies by Kathy" ;
+    qb:hasEmail "{'Address': 'qbwebsamplecompany@yahoo.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-7896'}" ;
+    qb:isActive true ;
+    qb:hasBalance 75.0 ;
+    qb:hasGivenName "Kathy" ;
+    qb:hasFamilyName "Kuplis" .
+
+<http://www.semanticweb.org/quickbooks/customers/17> a qb:Customers ;
+    qb:hasEmail "{'Address': 'Mark@Cho.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 554-1479'}" ;
+    qb:isActive true ;
+    qb:hasBalance 314.28 ;
+    qb:hasGivenName "Mark" ;
+    qb:hasFamilyName "Cho" .
+
+<http://www.semanticweb.org/quickbooks/customers/71> a qb:Customers ;
+    qb:hasCompanyName "Moonlight Consulting" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/customers/18> a qb:Customers ;
+    qb:hasCompanyName "Paulsen Medical Supplies" ;
+    qb:hasEmail "{'Address': 'Medical@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 557-4569'}" ;
+    qb:isActive true ;
+    qb:hasBalance 954.75 ;
+    qb:hasGivenName "Kathy" ;
+    qb:hasFamilyName "Paulsen" .
+
+<http://www.semanticweb.org/quickbooks/customers/15> a qb:Customers ;
+    qb:hasCompanyName "Pye's Cakes" ;
+    qb:hasEmail "{'Address': 'pyescakes@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(973) 555-4652'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Karen" ;
+    qb:hasFamilyName "Pye" .
+
+<http://www.semanticweb.org/quickbooks/customers/19> a qb:Customers ;
+    qb:hasCompanyName "Rago Travel Agency" ;
+    qb:hasEmail "{'Address': 'Rago_Travel@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-1596'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Jeff" ;
+    qb:hasFamilyName "Rago" .
+
+<http://www.semanticweb.org/quickbooks/customers/20> a qb:Customers ;
+    qb:hasCompanyName "Red Rock Diner" ;
+    qb:hasEmail "{'Address': 'qbwebsamplecompany@yahoo.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-4973'}" ;
+    qb:isActive true ;
+    qb:hasBalance 226.0 ;
+    qb:hasGivenName "Stephanie" ;
+    qb:hasFamilyName "Martini" .
+
+<http://www.semanticweb.org/quickbooks/customers/21> a qb:Customers ;
+    qb:hasEmail "{'Address': 'Tony@Rondonuwu.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-2645'}" ;
+    qb:isActive true ;
+    qb:hasBalance 78.6 ;
+    qb:hasGivenName "Rondonuwu" ;
+    qb:hasFamilyName "and Vegi" .
+
+<http://www.semanticweb.org/quickbooks/customers/22> a qb:Customers ;
+    qb:hasEmail "{'Address': 'Shara@Barnett.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-4563'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Shara" ;
+    qb:hasFamilyName "Barnett" .
+
+<http://www.semanticweb.org/quickbooks/customers/23> a qb:Customers ;
+    qb:hasCompanyName "Barnett Design" ;
+    qb:hasEmail "{'Address': 'Design@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 557-1289'}" ;
+    qb:isActive true ;
+    qb:hasBalance 274.5 ;
+    qb:hasGivenName "Shara" ;
+    qb:hasFamilyName "Barnett" .
+
+<http://www.semanticweb.org/quickbooks/customers/24> a qb:Customers ;
+    qb:hasCompanyName "Sonnenschein Family Store" ;
+    qb:hasEmail "{'Address': 'Familiystore@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 557-8463'}" ;
+    qb:isActive true ;
+    qb:hasBalance 362.07 ;
+    qb:hasGivenName "Russ" ;
+    qb:hasFamilyName "Sonnenschein" .
+
+<http://www.semanticweb.org/quickbooks/customers/25> a qb:Customers ;
+    qb:hasCompanyName "Sushi by Katsuyuki" ;
+    qb:hasEmail "{'Address': 'Sushi@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(505) 570-0147'}" ;
+    qb:isActive true ;
+    qb:hasBalance 160.0 ;
+    qb:hasGivenName "Katsuyuki" ;
+    qb:hasFamilyName "Yanagawa" .
+
+<http://www.semanticweb.org/quickbooks/customers/26> a qb:Customers ;
+    qb:hasEmail "{'Address': 'Travis@Waldron.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 557-9977'}" ;
+    qb:isActive true ;
+    qb:hasBalance 414.72 ;
+    qb:hasGivenName "Travis" ;
+    qb:hasFamilyName "Waldron" .
+
+<http://www.semanticweb.org/quickbooks/customers/70> a qb:Customers ;
+    qb:hasCompanyName "Uncle Vinny's Family Loans" ;
+    qb:isActive true ;
+    qb:hasBalance 108.0 .
+
+<http://www.semanticweb.org/quickbooks/customers/27> a qb:Customers ;
+    qb:hasCompanyName "Video Games by Dan" ;
+    qb:hasEmail "{'Address': 'Videogames@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-3456'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Dan" ;
+    qb:hasFamilyName "Wilks" .
+
+<http://www.semanticweb.org/quickbooks/customers/28> a qb:Customers ;
+    qb:hasCompanyName "Wedding Planning by Whitney" ;
+    qb:hasEmail "{'Address': 'Dream_Wedding@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 557-2473'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "Whitney" ;
+    qb:hasFamilyName "Brewer" .
+
+<http://www.semanticweb.org/quickbooks/customers/29> a qb:Customers ;
+    qb:hasCompanyName "Weiskopf Consulting" ;
+    qb:hasEmail "{'Address': 'Consulting@intuit.com'}" ;
+    qb:hasPhone "{'FreeFormNumber': '(650) 555-1423'}" ;
+    qb:isActive true ;
+    qb:hasBalance 375.0 ;
+    qb:hasGivenName "Nicola" ;
+    qb:hasFamilyName "Weiskopf" .
+
+# Invoices Individuals
+<http://www.semanticweb.org/quickbooks/invoices/152> a qb:Invoices ;
+    qb:hasDocNumber "1039" ;
+    qb:hasTotalAmount 108.0 ;
+    qb:hasBalance 108.0 ;
+    qb:hasTransactionDate "2025-08-14"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/145> a qb:Invoices ;
+    qb:hasDocNumber "1038" ;
+    qb:hasTotalAmount 50.0 ;
+    qb:hasBalance 50.0 ;
+    qb:hasTransactionDate "2025-05-23"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/130> a qb:Invoices ;
+    qb:hasDocNumber "1037" ;
+    qb:hasTotalAmount 362.07 ;
+    qb:hasBalance 362.07 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/129> a qb:Invoices ;
+    qb:hasDocNumber "1036" ;
+    qb:hasTotalAmount 477.5 ;
+    qb:hasBalance 477.5 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/96> a qb:Invoices ;
+    qb:hasDocNumber "1031" ;
+    qb:hasTotalAmount 387.0 ;
+    qb:hasTransactionDate "2025-01-10"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/12> a qb:Invoices ;
+    qb:hasDocNumber "1004" ;
+    qb:hasTotalAmount 2369.52 ;
+    qb:hasTransactionDate "2025-03-15"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/119> a qb:Invoices ;
+    qb:hasDocNumber "1035" ;
+    qb:hasTotalAmount 314.28 ;
+    qb:hasBalance 314.28 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/63> a qb:Invoices ;
+    qb:hasDocNumber "1017" ;
+    qb:hasTotalAmount 80.0 ;
+    qb:hasTransactionDate "2025-03-11"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/106> a qb:Invoices ;
+    qb:hasDocNumber "1034" ;
+    qb:hasTotalAmount 78.6 ;
+    qb:hasBalance 78.6 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/103> a qb:Invoices ;
+    qb:hasDocNumber "1033" ;
+    qb:hasTotalAmount 629.1 ;
+    qb:hasBalance 629.1 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/67> a qb:Invoices ;
+    qb:hasDocNumber "1021" ;
+    qb:hasTotalAmount 459.0 ;
+    qb:hasBalance 239.0 ;
+    qb:hasTransactionDate "2025-03-05"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/99> a qb:Invoices ;
+    qb:hasDocNumber "1032" ;
+    qb:hasTotalAmount 414.72 ;
+    qb:hasBalance 414.72 ;
+    qb:hasTransactionDate "2025-03-24"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/42> a qb:Invoices ;
+    qb:hasDocNumber "1013" ;
+    qb:hasTotalAmount 81.0 ;
+    qb:hasTransactionDate "2025-03-15"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/95> a qb:Invoices ;
+    qb:hasDocNumber "1030" ;
+    qb:hasTotalAmount 226.75 ;
+    qb:hasTransactionDate "2024-12-10"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/93> a qb:Invoices ;
+    qb:hasDocNumber "1029" ;
+    qb:hasTotalAmount 460.4 ;
+    qb:hasTransactionDate "2025-02-07"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/68> a qb:Invoices ;
+    qb:hasDocNumber "1022" ;
+    qb:hasTotalAmount 81.0 ;
+    qb:hasBalance 81.0 ;
+    qb:hasTransactionDate "2025-03-05"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/9> a qb:Invoices ;
+    qb:hasDocNumber "1001" ;
+    qb:hasTotalAmount 108.0 ;
+    qb:hasTransactionDate "2025-03-24"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/13> a qb:Invoices ;
+    qb:hasDocNumber "1005" ;
+    qb:hasTotalAmount 54.0 ;
+    qb:hasBalance 4.0 ;
+    qb:hasTransactionDate "2025-03-18"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/14> a qb:Invoices ;
+    qb:hasDocNumber "1006" ;
+    qb:hasTotalAmount 86.4 ;
+    qb:hasTransactionDate "2025-02-16"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/92> a qb:Invoices ;
+    qb:hasDocNumber "1028" ;
+    qb:hasTotalAmount 81.0 ;
+    qb:hasBalance 81.0 ;
+    qb:hasTransactionDate "2025-02-07"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/10> a qb:Invoices ;
+    qb:hasDocNumber "1002" ;
+    qb:hasTotalAmount 175.0 ;
+    qb:hasTransactionDate "2024-12-10"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/75> a qb:Invoices ;
+    qb:hasDocNumber "1027" ;
+    qb:hasTotalAmount 85.0 ;
+    qb:hasBalance 85.0 ;
+    qb:hasTransactionDate "2025-02-07"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/71> a qb:Invoices ;
+    qb:hasDocNumber "1025" ;
+    qb:hasTotalAmount 205.0 ;
+    qb:hasTransactionDate "2025-02-07"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/70> a qb:Invoices ;
+    qb:hasDocNumber "1024" ;
+    qb:hasTotalAmount 156.0 ;
+    qb:hasBalance 156.0 ;
+    qb:hasTransactionDate "2025-01-17"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/69> a qb:Invoices ;
+    qb:hasDocNumber "1023" ;
+    qb:hasTotalAmount 70.0 ;
+    qb:hasBalance 70.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/65> a qb:Invoices ;
+    qb:hasDocNumber "1019" ;
+    qb:hasTotalAmount 80.0 ;
+    qb:hasBalance 80.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/64> a qb:Invoices ;
+    qb:hasDocNumber "1018" ;
+    qb:hasTotalAmount 80.0 ;
+    qb:hasBalance 80.0 ;
+    qb:hasTransactionDate "2025-03-18"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/60> a qb:Invoices ;
+    qb:hasDocNumber "1016" ;
+    qb:hasTotalAmount 75.0 ;
+    qb:hasBalance 75.0 ;
+    qb:hasTransactionDate "2025-02-06"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/49> a qb:Invoices ;
+    qb:hasDocNumber "1015" ;
+    qb:hasTotalAmount 954.75 ;
+    qb:hasBalance 954.75 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/27> a qb:Invoices ;
+    qb:hasDocNumber "1009" ;
+    qb:hasTotalAmount 103.55 ;
+    qb:hasTransactionDate "2025-03-24"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/39> a qb:Invoices ;
+    qb:hasDocNumber "1012" ;
+    qb:hasTotalAmount 274.5 ;
+    qb:hasBalance 274.5 ;
+    qb:hasTransactionDate "2025-03-13"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/34> a qb:Invoices ;
+    qb:hasDocNumber "1010" ;
+    qb:hasTotalAmount 375.0 ;
+    qb:hasBalance 375.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/invoices/16> a qb:Invoices ;
+    qb:hasDocNumber "1007" ;
+    qb:hasTotalAmount 750.0 ;
+    qb:hasBalance 450.0 ;
+    qb:hasTransactionDate "2025-03-02"^^xsd:date .
+
+# Products_and_Services Individuals
+<http://www.semanticweb.org/quickbooks/products_and_services/3> a qb:ProductsandServices ;
+    qb:hasName "Concrete" ;
+    qb:isActive true ;
+    qb:hasDescription "Concrete for fountain installation" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/4> a qb:ProductsandServices ;
+    qb:hasName "Design" ;
+    qb:isActive true ;
+    qb:hasDescription "Custom Design" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/6> a qb:ProductsandServices ;
+    qb:hasName "Gardening" ;
+    qb:isActive true ;
+    qb:hasDescription "Weekly Gardening Service" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/2> a qb:ProductsandServices ;
+    qb:hasName "Hours" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/7> a qb:ProductsandServices ;
+    qb:hasName "Installation" ;
+    qb:isActive true ;
+    qb:hasDescription "Installation of landscape design" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/8> a qb:ProductsandServices ;
+    qb:hasName "Lighting" ;
+    qb:isActive true ;
+    qb:hasDescription "Garden Lighting" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/9> a qb:ProductsandServices ;
+    qb:hasName "Maintenance & Repair" ;
+    qb:isActive true ;
+    qb:hasDescription "Maintenance & Repair" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/10> a qb:ProductsandServices ;
+    qb:hasName "Pest Control" ;
+    qb:isActive true ;
+    qb:hasDescription "Pest Control Services" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/11> a qb:ProductsandServices ;
+    qb:hasName "Pump" ;
+    qb:isActive true ;
+    qb:hasDescription "Fountain Pump" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/12> a qb:ProductsandServices ;
+    qb:hasName "Refunds & Allowances" ;
+    qb:isActive true ;
+    qb:hasDescription "Income due to refunds or allowances" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/5> a qb:ProductsandServices ;
+    qb:hasName "Rock Fountain" ;
+    qb:isActive true ;
+    qb:hasDescription "Rock Fountain" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/13> a qb:ProductsandServices ;
+    qb:hasName "Rocks" ;
+    qb:isActive true ;
+    qb:hasDescription "Garden Rocks" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/1> a qb:ProductsandServices ;
+    qb:hasName "Services" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/14> a qb:ProductsandServices ;
+    qb:hasName "Sod" ;
+    qb:isActive true ;
+    qb:hasDescription "Sod" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/15> a qb:ProductsandServices ;
+    qb:hasName "Soil" ;
+    qb:isActive true ;
+    qb:hasDescription "2 cubic ft. bag" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/16> a qb:ProductsandServices ;
+    qb:hasName "Sprinkler Heads" ;
+    qb:isActive true ;
+    qb:hasDescription "Sprinkler Heads" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/17> a qb:ProductsandServices ;
+    qb:hasName "Sprinkler Pipes" ;
+    qb:isActive true ;
+    qb:hasDescription "Sprinkler Pipes" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/18> a qb:ProductsandServices ;
+    qb:hasName "Trimming" ;
+    qb:isActive true ;
+    qb:hasDescription "Tree and Shrub Trimming" .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/19> a qb:ProductsandServices ;
+    qb:hasName "Vehicle Road Repair" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/products_and_services/20> a qb:ProductsandServices ;
+    qb:hasName "Road Service" ;
+    qb:isActive true .
+
+# Sales_transactions Individuals
+<http://www.semanticweb.org/quickbooks/sales_transactions/47> a qb:Salestransactions ;
+    qb:hasDocNumber "1014" ;
+    qb:hasTotalAmount 140.0 ;
+    qb:hasTransactionDate "2025-03-23"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/sales_transactions/38> a qb:Salestransactions ;
+    qb:hasDocNumber "1011" ;
+    qb:hasTotalAmount 78.75 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '1', 'name': 'Cash', 'type': ''}" .
+
+<http://www.semanticweb.org/quickbooks/sales_transactions/17> a qb:Salestransactions ;
+    qb:hasDocNumber "1008" ;
+    qb:hasTotalAmount 225.0 ;
+    qb:hasTransactionDate "2025-03-02"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/sales_transactions/11> a qb:Salestransactions ;
+    qb:hasDocNumber "1003" ;
+    qb:hasTotalAmount 337.5 ;
+    qb:hasTransactionDate "2025-03-22"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': 'Check', 'type': ''}" .
+
+# Inventory Individuals
+<http://www.semanticweb.org/quickbooks/inventory/3> a qb:Inventory ;
+    qb:hasName "Concrete" ;
+    qb:isActive true ;
+    qb:hasDescription "Concrete for fountain installation" .
+
+<http://www.semanticweb.org/quickbooks/inventory/4> a qb:Inventory ;
+    qb:hasName "Design" ;
+    qb:isActive true ;
+    qb:hasDescription "Custom Design" .
+
+<http://www.semanticweb.org/quickbooks/inventory/6> a qb:Inventory ;
+    qb:hasName "Gardening" ;
+    qb:isActive true ;
+    qb:hasDescription "Weekly Gardening Service" .
+
+<http://www.semanticweb.org/quickbooks/inventory/2> a qb:Inventory ;
+    qb:hasName "Hours" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/inventory/7> a qb:Inventory ;
+    qb:hasName "Installation" ;
+    qb:isActive true ;
+    qb:hasDescription "Installation of landscape design" .
+
+<http://www.semanticweb.org/quickbooks/inventory/8> a qb:Inventory ;
+    qb:hasName "Lighting" ;
+    qb:isActive true ;
+    qb:hasDescription "Garden Lighting" .
+
+<http://www.semanticweb.org/quickbooks/inventory/9> a qb:Inventory ;
+    qb:hasName "Maintenance & Repair" ;
+    qb:isActive true ;
+    qb:hasDescription "Maintenance & Repair" .
+
+<http://www.semanticweb.org/quickbooks/inventory/10> a qb:Inventory ;
+    qb:hasName "Pest Control" ;
+    qb:isActive true ;
+    qb:hasDescription "Pest Control Services" .
+
+<http://www.semanticweb.org/quickbooks/inventory/11> a qb:Inventory ;
+    qb:hasName "Pump" ;
+    qb:isActive true ;
+    qb:hasDescription "Fountain Pump" .
+
+<http://www.semanticweb.org/quickbooks/inventory/12> a qb:Inventory ;
+    qb:hasName "Refunds & Allowances" ;
+    qb:isActive true ;
+    qb:hasDescription "Income due to refunds or allowances" .
+
+<http://www.semanticweb.org/quickbooks/inventory/5> a qb:Inventory ;
+    qb:hasName "Rock Fountain" ;
+    qb:isActive true ;
+    qb:hasDescription "Rock Fountain" .
+
+<http://www.semanticweb.org/quickbooks/inventory/13> a qb:Inventory ;
+    qb:hasName "Rocks" ;
+    qb:isActive true ;
+    qb:hasDescription "Garden Rocks" .
+
+<http://www.semanticweb.org/quickbooks/inventory/1> a qb:Inventory ;
+    qb:hasName "Services" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/inventory/14> a qb:Inventory ;
+    qb:hasName "Sod" ;
+    qb:isActive true ;
+    qb:hasDescription "Sod" .
+
+<http://www.semanticweb.org/quickbooks/inventory/15> a qb:Inventory ;
+    qb:hasName "Soil" ;
+    qb:isActive true ;
+    qb:hasDescription "2 cubic ft. bag" .
+
+<http://www.semanticweb.org/quickbooks/inventory/16> a qb:Inventory ;
+    qb:hasName "Sprinkler Heads" ;
+    qb:isActive true ;
+    qb:hasDescription "Sprinkler Heads" .
+
+<http://www.semanticweb.org/quickbooks/inventory/17> a qb:Inventory ;
+    qb:hasName "Sprinkler Pipes" ;
+    qb:isActive true ;
+    qb:hasDescription "Sprinkler Pipes" .
+
+<http://www.semanticweb.org/quickbooks/inventory/18> a qb:Inventory ;
+    qb:hasName "Trimming" ;
+    qb:isActive true ;
+    qb:hasDescription "Tree and Shrub Trimming" .
+
+<http://www.semanticweb.org/quickbooks/inventory/19> a qb:Inventory ;
+    qb:hasName "Vehicle Road Repair" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/inventory/20> a qb:Inventory ;
+    qb:hasName "Road Service" ;
+    qb:isActive true .
+
+# Payroll Individuals
+<http://www.semanticweb.org/quickbooks/payroll/55> a qb:Payroll ;
+    qb:isActive true ;
+    qb:hasGivenName "Emily" ;
+    qb:hasFamilyName "Platt" .
+
+<http://www.semanticweb.org/quickbooks/payroll/54> a qb:Payroll ;
+    qb:hasPhone "{'FreeFormNumber': '(540) 555-9645'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "John" ;
+    qb:hasFamilyName "Johnson" .
+
+# BankDeposits Individuals
+<http://www.semanticweb.org/quickbooks/bankdeposits/121> a qb:BankDeposits ;
+    qb:hasTotalAmount 868.15 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bankdeposits/102> a qb:BankDeposits ;
+    qb:hasTotalAmount 408.0 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bankdeposits/4> a qb:BankDeposits ;
+    qb:hasTotalAmount 5000.0 ;
+    qb:hasTransactionDate "2024-11-11"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bankdeposits/62> a qb:BankDeposits ;
+    qb:hasTotalAmount 218.75 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/bankdeposits/5> a qb:BankDeposits ;
+    qb:hasTotalAmount 600.0 ;
+    qb:hasTransactionDate "2025-03-23"^^xsd:date .
+
+# CustomerPayments Individuals
+<http://www.semanticweb.org/quickbooks/customerpayments/128> a qb:CustomerPayments ;
+    qb:hasTotalAmount 387.0 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/120> a qb:CustomerPayments ;
+    qb:hasTotalAmount 1675.52 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/116> a qb:CustomerPayments ;
+    qb:hasTotalAmount 80.0 ;
+    qb:hasTransactionDate "2025-03-23"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/101> a qb:CustomerPayments ;
+    qb:hasTotalAmount 220.0 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': '', 'type': ''}" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/98> a qb:CustomerPayments ;
+    qb:hasTotalAmount 81.0 ;
+    qb:hasTransactionDate "2025-03-26"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/97> a qb:CustomerPayments ;
+    qb:hasTotalAmount 226.75 ;
+    qb:hasTransactionDate "2024-12-31"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/94> a qb:CustomerPayments ;
+    qb:hasTotalAmount 460.4 ;
+    qb:hasTransactionDate "2025-02-28"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/31> a qb:CustomerPayments ;
+    qb:hasTotalAmount 108.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': '', 'type': ''}" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/33> a qb:CustomerPayments ;
+    qb:hasTotalAmount 50.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': '', 'type': ''}" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/15> a qb:CustomerPayments ;
+    qb:hasTotalAmount 86.4 ;
+    qb:hasTransactionDate "2025-03-02"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': '', 'type': ''}" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/76> a qb:CustomerPayments ;
+    qb:hasTotalAmount 175.0 ;
+    qb:hasTransactionDate "2024-12-31"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': '', 'type': ''}" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/74> a qb:CustomerPayments ;
+    qb:hasTransactionDate "2025-03-10"^^xsd:date ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/72> a qb:CustomerPayments ;
+    qb:hasTotalAmount 105.0 ;
+    qb:hasTransactionDate "2025-03-04"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': '', 'type': ''}" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/61> a qb:CustomerPayments ;
+    qb:hasTotalAmount 694.0 ;
+    qb:hasTransactionDate "2025-03-20"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': '', 'type': ''}" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/40> a qb:CustomerPayments ;
+    qb:hasTotalAmount 103.55 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': '', 'type': ''}" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+<http://www.semanticweb.org/quickbooks/customerpayments/32> a qb:CustomerPayments ;
+    qb:hasTotalAmount 300.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': '', 'type': ''}" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 75 .
+
+# Estimates Individuals
+<http://www.semanticweb.org/quickbooks/estimates/100> a qb:Estimates ;
+    qb:hasDocNumber "1001" ;
+    qb:hasTotalAmount 362.07 ;
+    qb:hasTransactionDate "2025-03-24"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/estimates/41> a qb:Estimates ;
+    qb:hasDocNumber "1001" ;
+    qb:hasTotalAmount 582.5 ;
+    qb:hasTransactionDate "2025-03-15"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/estimates/46> a qb:Estimates ;
+    qb:hasDocNumber "1001" ;
+    qb:hasTotalAmount 70.0 ;
+    qb:hasTransactionDate "2025-03-23"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/estimates/48> a qb:Estimates ;
+    qb:hasDocNumber "1001" ;
+    qb:hasTotalAmount 1005.0 ;
+    qb:hasTransactionDate "2025-03-23"^^xsd:date .
+
+# Refunds Individuals
+<http://www.semanticweb.org/quickbooks/refunds/73> a qb:Refunds ;
+    qb:hasDocNumber "1026" ;
+    qb:hasTotalAmount 100.0 ;
+    qb:hasTransactionDate "2025-03-10"^^xsd:date .
+
+# SalesReceipts Individuals
+<http://www.semanticweb.org/quickbooks/salesreceipts/47> a qb:SalesReceipts ;
+    qb:hasDocNumber "1014" ;
+    qb:hasTotalAmount 140.0 ;
+    qb:hasTransactionDate "2025-03-23"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/salesreceipts/38> a qb:SalesReceipts ;
+    qb:hasDocNumber "1011" ;
+    qb:hasTotalAmount 78.75 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '1', 'name': 'Cash', 'type': ''}" .
+
+<http://www.semanticweb.org/quickbooks/salesreceipts/17> a qb:SalesReceipts ;
+    qb:hasDocNumber "1008" ;
+    qb:hasTotalAmount 225.0 ;
+    qb:hasTransactionDate "2025-03-02"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/salesreceipts/11> a qb:SalesReceipts ;
+    qb:hasDocNumber "1003" ;
+    qb:hasTotalAmount 337.5 ;
+    qb:hasTransactionDate "2025-03-22"^^xsd:date ;
+    qb:hasPaymentMethod "{'value': '2', 'name': 'Check', 'type': ''}" .
+
+# EmployeeBenefits Individuals
+<http://www.semanticweb.org/quickbooks/employeebenefits/55> a qb:EmployeeBenefits ;
+    qb:isActive true ;
+    qb:hasGivenName "Emily" ;
+    qb:hasFamilyName "Platt" .
+
+<http://www.semanticweb.org/quickbooks/employeebenefits/54> a qb:EmployeeBenefits ;
+    qb:hasPhone "{'FreeFormNumber': '(540) 555-9645'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "John" ;
+    qb:hasFamilyName "Johnson" .
+
+# EmployeePayroll Individuals
+<http://www.semanticweb.org/quickbooks/employeepayroll/55> a qb:EmployeePayroll ;
+    qb:isActive true ;
+    qb:hasGivenName "Emily" ;
+    qb:hasFamilyName "Platt" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 25 .
+
+<http://www.semanticweb.org/quickbooks/employeepayroll/54> a qb:EmployeePayroll ;
+    qb:hasPhone "{'FreeFormNumber': '(540) 555-9645'}" ;
+    qb:isActive true ;
+    qb:hasGivenName "John" ;
+    qb:hasFamilyName "Johnson" ;
+    qb:riskLevel "Medium" ;
+    qb:transactionFrequency 25 .
+
+# PayrollTaxes Individuals
+<http://www.semanticweb.org/quickbooks/payrolltaxes/1> a qb:PayrollTaxes ;
+    qb:hasName "AZ State tax" ;
+    qb:isActive true ;
+    qb:hasDescription "Sales Tax" .
+
+<http://www.semanticweb.org/quickbooks/payrolltaxes/3> a qb:PayrollTaxes ;
+    qb:hasName "California" ;
+    qb:isActive true ;
+    qb:hasDescription "Sales Tax" .
+
+<http://www.semanticweb.org/quickbooks/payrolltaxes/2> a qb:PayrollTaxes ;
+    qb:hasName "Tucson City" ;
+    qb:isActive true ;
+    qb:hasDescription "Sales Tax" .
+
+# InventoryAdjustments Individuals
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/3> a qb:InventoryAdjustments ;
+    qb:hasName "Concrete" ;
+    qb:isActive true ;
+    qb:hasDescription "Concrete for fountain installation" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/4> a qb:InventoryAdjustments ;
+    qb:hasName "Design" ;
+    qb:isActive true ;
+    qb:hasDescription "Custom Design" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/6> a qb:InventoryAdjustments ;
+    qb:hasName "Gardening" ;
+    qb:isActive true ;
+    qb:hasDescription "Weekly Gardening Service" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/2> a qb:InventoryAdjustments ;
+    qb:hasName "Hours" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/7> a qb:InventoryAdjustments ;
+    qb:hasName "Installation" ;
+    qb:isActive true ;
+    qb:hasDescription "Installation of landscape design" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/8> a qb:InventoryAdjustments ;
+    qb:hasName "Lighting" ;
+    qb:isActive true ;
+    qb:hasDescription "Garden Lighting" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/9> a qb:InventoryAdjustments ;
+    qb:hasName "Maintenance & Repair" ;
+    qb:isActive true ;
+    qb:hasDescription "Maintenance & Repair" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/10> a qb:InventoryAdjustments ;
+    qb:hasName "Pest Control" ;
+    qb:isActive true ;
+    qb:hasDescription "Pest Control Services" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/11> a qb:InventoryAdjustments ;
+    qb:hasName "Pump" ;
+    qb:isActive true ;
+    qb:hasDescription "Fountain Pump" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/12> a qb:InventoryAdjustments ;
+    qb:hasName "Refunds & Allowances" ;
+    qb:isActive true ;
+    qb:hasDescription "Income due to refunds or allowances" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/5> a qb:InventoryAdjustments ;
+    qb:hasName "Rock Fountain" ;
+    qb:isActive true ;
+    qb:hasDescription "Rock Fountain" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/13> a qb:InventoryAdjustments ;
+    qb:hasName "Rocks" ;
+    qb:isActive true ;
+    qb:hasDescription "Garden Rocks" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/1> a qb:InventoryAdjustments ;
+    qb:hasName "Services" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/14> a qb:InventoryAdjustments ;
+    qb:hasName "Sod" ;
+    qb:isActive true ;
+    qb:hasDescription "Sod" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/15> a qb:InventoryAdjustments ;
+    qb:hasName "Soil" ;
+    qb:isActive true ;
+    qb:hasDescription "2 cubic ft. bag" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/16> a qb:InventoryAdjustments ;
+    qb:hasName "Sprinkler Heads" ;
+    qb:isActive true ;
+    qb:hasDescription "Sprinkler Heads" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/17> a qb:InventoryAdjustments ;
+    qb:hasName "Sprinkler Pipes" ;
+    qb:isActive true ;
+    qb:hasDescription "Sprinkler Pipes" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/18> a qb:InventoryAdjustments ;
+    qb:hasName "Trimming" ;
+    qb:isActive true ;
+    qb:hasDescription "Tree and Shrub Trimming" ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/19> a qb:InventoryAdjustments ;
+    qb:hasName "Vehicle Road Repair" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+<http://www.semanticweb.org/quickbooks/inventoryadjustments/20> a qb:InventoryAdjustments ;
+    qb:hasName "Road Service" ;
+    qb:isActive true ;
+    qb:riskLevel "High" ;
+    qb:transactionFrequency 15 .
+
+# Products Individuals
+<http://www.semanticweb.org/quickbooks/products/3> a qb:Products ;
+    qb:hasName "Concrete" ;
+    qb:isActive true ;
+    qb:hasDescription "Concrete for fountain installation" .
+
+<http://www.semanticweb.org/quickbooks/products/4> a qb:Products ;
+    qb:hasName "Design" ;
+    qb:isActive true ;
+    qb:hasDescription "Custom Design" .
+
+<http://www.semanticweb.org/quickbooks/products/6> a qb:Products ;
+    qb:hasName "Gardening" ;
+    qb:isActive true ;
+    qb:hasDescription "Weekly Gardening Service" .
+
+<http://www.semanticweb.org/quickbooks/products/2> a qb:Products ;
+    qb:hasName "Hours" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/products/7> a qb:Products ;
+    qb:hasName "Installation" ;
+    qb:isActive true ;
+    qb:hasDescription "Installation of landscape design" .
+
+<http://www.semanticweb.org/quickbooks/products/8> a qb:Products ;
+    qb:hasName "Lighting" ;
+    qb:isActive true ;
+    qb:hasDescription "Garden Lighting" .
+
+<http://www.semanticweb.org/quickbooks/products/9> a qb:Products ;
+    qb:hasName "Maintenance & Repair" ;
+    qb:isActive true ;
+    qb:hasDescription "Maintenance & Repair" .
+
+<http://www.semanticweb.org/quickbooks/products/10> a qb:Products ;
+    qb:hasName "Pest Control" ;
+    qb:isActive true ;
+    qb:hasDescription "Pest Control Services" .
+
+<http://www.semanticweb.org/quickbooks/products/11> a qb:Products ;
+    qb:hasName "Pump" ;
+    qb:isActive true ;
+    qb:hasDescription "Fountain Pump" .
+
+<http://www.semanticweb.org/quickbooks/products/12> a qb:Products ;
+    qb:hasName "Refunds & Allowances" ;
+    qb:isActive true ;
+    qb:hasDescription "Income due to refunds or allowances" .
+
+<http://www.semanticweb.org/quickbooks/products/5> a qb:Products ;
+    qb:hasName "Rock Fountain" ;
+    qb:isActive true ;
+    qb:hasDescription "Rock Fountain" .
+
+<http://www.semanticweb.org/quickbooks/products/13> a qb:Products ;
+    qb:hasName "Rocks" ;
+    qb:isActive true ;
+    qb:hasDescription "Garden Rocks" .
+
+<http://www.semanticweb.org/quickbooks/products/1> a qb:Products ;
+    qb:hasName "Services" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/products/14> a qb:Products ;
+    qb:hasName "Sod" ;
+    qb:isActive true ;
+    qb:hasDescription "Sod" .
+
+<http://www.semanticweb.org/quickbooks/products/15> a qb:Products ;
+    qb:hasName "Soil" ;
+    qb:isActive true ;
+    qb:hasDescription "2 cubic ft. bag" .
+
+<http://www.semanticweb.org/quickbooks/products/16> a qb:Products ;
+    qb:hasName "Sprinkler Heads" ;
+    qb:isActive true ;
+    qb:hasDescription "Sprinkler Heads" .
+
+<http://www.semanticweb.org/quickbooks/products/17> a qb:Products ;
+    qb:hasName "Sprinkler Pipes" ;
+    qb:isActive true ;
+    qb:hasDescription "Sprinkler Pipes" .
+
+<http://www.semanticweb.org/quickbooks/products/18> a qb:Products ;
+    qb:hasName "Trimming" ;
+    qb:isActive true ;
+    qb:hasDescription "Tree and Shrub Trimming" .
+
+<http://www.semanticweb.org/quickbooks/products/19> a qb:Products ;
+    qb:hasName "Vehicle Road Repair" ;
+    qb:isActive true .
+
+<http://www.semanticweb.org/quickbooks/products/20> a qb:Products ;
+    qb:hasName "Road Service" ;
+    qb:isActive true .
+
+# PurchaseOrders Individuals
+<http://www.semanticweb.org/quickbooks/purchaseorders/125> a qb:PurchaseOrders ;
+    qb:hasDocNumber "1004" ;
+    qb:hasTotalAmount 205.0 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/purchaseorders/114> a qb:PurchaseOrders ;
+    qb:hasDocNumber "1003" ;
+    qb:hasTotalAmount 228.75 ;
+    qb:hasTransactionDate "2025-03-27"^^xsd:date .
+
+<http://www.semanticweb.org/quickbooks/purchaseorders/45> a qb:PurchaseOrders ;
+    qb:hasDocNumber "1002" ;
+    qb:hasTotalAmount 125.0 ;
+    qb:hasTransactionDate "2025-03-25"^^xsd:date .
+

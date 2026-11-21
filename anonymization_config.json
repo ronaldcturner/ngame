@@ -1,0 +1,113 @@
+{
+  "anonymization": {
+    "default_level": "anonymization",
+    "preserve_data_quality": true,
+    "maintain_relationships": true,
+    "risk_threshold": 0.3,
+    "data_types": {
+      "personal_identifier": {
+        "method": "hash_with_salt",
+        "preserve_format": true,
+        "maintain_relationships": false
+      },
+      "financial_amount": {
+        "method": "additive_noise",
+        "noise_range": 0.05,
+        "preserve_precision": true,
+        "maintain_relationships": true
+      },
+      "date_time": {
+        "method": "date_shift",
+        "shift_range_days": [-30, 30],
+        "preserve_weekday": true,
+        "maintain_relationships": true
+      },
+      "email_address": {
+        "method": "email_masking",
+        "preserve_domain": false,
+        "mask_char": "*",
+        "maintain_relationships": false
+      },
+      "phone_number": {
+        "method": "phone_masking",
+        "preserve_country_code": true,
+        "mask_char": "*",
+        "maintain_relationships": false
+      },
+      "name": {
+        "method": "name_replacement",
+        "use_synthetic_names": true,
+        "preserve_length": true,
+        "maintain_relationships": false
+      },
+      "address": {
+        "method": "address_replacement",
+        "preserve_city_state": false,
+        "maintain_relationships": false
+      }
+    }
+  },
+  "encryption": {
+    "enabled": true,
+    "key_rotation_days": 90,
+    "algorithm": "AES-256",
+    "key_storage": "secure"
+  },
+  "pseudonymization": {
+    "salt_length": 32,
+    "hash_algorithm": "sha256",
+    "key_storage": "secure",
+    "mapping_table_retention": 365
+  },
+  "synthetic_data": {
+    "enabled": true,
+    "preserve_distributions": true,
+    "maintain_correlations": true,
+    "seed": 42,
+    "generation_methods": {
+      "names": "synthetic_name_generator",
+      "addresses": "synthetic_address_generator",
+      "emails": "synthetic_email_generator",
+      "phones": "synthetic_phone_generator"
+    }
+  },
+  "compliance": {
+    "gdpr_compliant": true,
+    "hipaa_compliant": false,
+    "sox_compliant": true,
+    "audit_trail": true,
+    "data_retention": {
+      "original_data": 0,
+      "anonymized_data": 2555,
+      "mapping_tables": 365
+    }
+  },
+  "risk_assessment": {
+    "re_identification_threshold": 0.3,
+    "linkage_risk_threshold": 0.5,
+    "uniqueness_threshold": 0.8,
+    "assessment_methods": [
+      "k_anonymity",
+      "l_diversity",
+      "t_closeness"
+    ]
+  },
+  "quality_assurance": {
+    "statistical_preservation": true,
+    "relationship_preservation": true,
+    "format_preservation": true,
+    "validation_checks": [
+      "record_count_validation",
+      "statistical_property_validation",
+      "relationship_integrity_validation",
+      "format_validation"
+    ]
+  },
+  "reporting": {
+    "generate_detailed_reports": true,
+    "include_risk_assessment": true,
+    "include_quality_metrics": true,
+    "include_compliance_status": true,
+    "export_formats": ["json", "csv", "pdf"]
+  }
+} 

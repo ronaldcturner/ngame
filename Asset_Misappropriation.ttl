@@ -1,0 +1,255 @@
+@prefix : <http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/> .
+
+<http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/accounting_artifact
+:accounting_artifact rdf:type owl:ObjectProperty ,
+                              owl:TransitiveProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Accounting_Artifact
+:Accounting_Artifact rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf owl:topDataProperty ;
+                     rdfs:domain :Vendor_Records ;
+                     rdfs:comment "An accounting record type that may be exploited for asset misappropriation" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Asset_Requisitions_&_Transfers
+<http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Asset_Requisitions_&_Transfers> rdf:type owl:Class ;
+                                                                                                            rdfs:subClassOf :Larceny .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Check_&_Payment_Tampering
+<http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Check_&_Payment_Tampering> rdf:type owl:Class ;
+                                                                                                       rdfs:subClassOf :Fraudulent_Disbursements .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#False_Sales_&_Shipping
+<http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#False_Sales_&_Shipping> rdf:type owl:Class ;
+                                                                                                    rdfs:subClassOf :Larceny .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Inventory_&_All_Other_Assets
+<http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Inventory_&_All_Other_Assets> rdf:type owl:Class ;
+                                                                                                          rdfs:subClassOf :Asset_Misappropriation_Taxonomy .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Purchasing_&_Receiving
+<http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Purchasing_&_Receiving> rdf:type owl:Class ;
+                                                                                                    rdfs:subClassOf :Larceny .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Refunds_&_Other
+<http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Refunds_&_Other> rdf:type owl:Class ;
+                                                                                             rdfs:subClassOf :Skimming .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Altered_Payee
+:Altered_Payee rdf:type owl:Class ;
+               rdfs:subClassOf <http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Check_&_Payment_Tampering> .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Asset_Misappropriation_Taxonomy
+:Asset_Misappropriation_Taxonomy rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Authorized_Maker
+:Authorized_Maker rdf:type owl:Class ;
+                  rdfs:subClassOf <http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Check_&_Payment_Tampering> .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Billing_Schemes
+:Billing_Schemes rdf:type owl:Class ;
+                 rdfs:subClassOf :Fraudulent_Disbursements .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Cash
+:Cash rdf:type owl:Class ;
+      rdfs:subClassOf :Asset_Misappropriation_Taxonomy .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Cash_Larceny
+:Cash_Larceny rdf:type owl:Class ;
+              rdfs:subClassOf :Theft_of_Cash_Receipts .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Commission_Schemes
+:Commission_Schemes rdf:type owl:Class ;
+                    rdfs:subClassOf :Payroll_Schemes .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Expense_Reimbursement_Schemes
+:Expense_Reimbursement_Schemes rdf:type owl:Class ;
+                               rdfs:subClassOf :Fraudulent_Disbursements .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/False_Refunds
+:False_Refunds rdf:type owl:Class ;
+               rdfs:subClassOf :Register_Disbursements .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/False_Voids
+:False_Voids rdf:type owl:Class ;
+             rdfs:subClassOf :Register_Disbursements .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Falsified_Wages
+:Falsified_Wages rdf:type owl:Class ;
+                 rdfs:subClassOf :Payroll_Schemes .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Fictitious_Expenses
+:Fictitious_Expenses rdf:type owl:Class ;
+                     rdfs:subClassOf :Expense_Reimbursement_Schemes .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Forged_Endorsement
+:Forged_Endorsement rdf:type owl:Class ;
+                    rdfs:subClassOf <http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Check_&_Payment_Tampering> .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Forged_Maker
+:Forged_Maker rdf:type owl:Class ;
+              rdfs:subClassOf <http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Check_&_Payment_Tampering> .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Fraudulent_Disbursements
+:Fraudulent_Disbursements rdf:type owl:Class ;
+                          rdfs:subClassOf :Cash .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Ghost_Employee
+:Ghost_Employee rdf:type owl:Class ;
+                rdfs:subClassOf :Payroll_Schemes .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Lapping
+:Lapping rdf:type owl:Class ;
+         rdfs:subClassOf :Receivables .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Larceny
+:Larceny rdf:type owl:Class ;
+         rdfs:subClassOf <http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Inventory_&_All_Other_Assets> .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Mischaracterized_Expenses
+:Mischaracterized_Expenses rdf:type owl:Class ;
+                           rdfs:subClassOf :Expense_Reimbursement_Schemes .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Misuse
+:Misuse rdf:type owl:Class ;
+        rdfs:subClassOf <http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Inventory_&_All_Other_Assets> .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Multiple_Reimbursements
+:Multiple_Reimbursements rdf:type owl:Class ;
+                         rdfs:subClassOf :Expense_Reimbursement_Schemes .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Non-Accomplice_Vendor
+:Non-Accomplice_Vendor rdf:type owl:Class ;
+                       rdfs:subClassOf :Billing_Schemes .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Overstated_Expenses
+:Overstated_Expenses rdf:type owl:Class ;
+                     rdfs:subClassOf :Expense_Reimbursement_Schemes .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Payroll_Schemes
+:Payroll_Schemes rdf:type owl:Class ;
+                 rdfs:subClassOf :Register_Disbursements .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Personal_Purchases
+:Personal_Purchases rdf:type owl:Class ;
+                    rdfs:subClassOf :Billing_Schemes .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Receivables
+:Receivables rdf:type owl:Class ;
+             rdfs:subClassOf :Skimming .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Register_Disbursements
+:Register_Disbursements rdf:type owl:Class ;
+                        rdfs:subClassOf :Fraudulent_Disbursements .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Sales
+:Sales rdf:type owl:Class ;
+       rdfs:subClassOf :Skimming .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Shell_Company
+:Shell_Company rdf:type owl:Class ;
+               rdfs:subClassOf :Billing_Schemes .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Skimming
+:Skimming rdf:type owl:Class ;
+          rdfs:subClassOf :Theft_of_Cash_Receipts .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Theft_of_Cash_Receipts
+:Theft_of_Cash_Receipts rdf:type owl:Class ;
+                        rdfs:subClassOf :Cash .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Theft_of_Cash_on_Hand
+:Theft_of_Cash_on_Hand rdf:type owl:Class ;
+                       rdfs:subClassOf :Cash .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Unconcealed
+:Unconcealed rdf:type owl:Class ;
+             rdfs:subClassOf :Receivables .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Unconcealed_Larceny
+:Unconcealed_Larceny rdf:type owl:Class ;
+                     rdfs:subClassOf :Larceny .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Understated
+:Understated rdf:type owl:Class ;
+             rdfs:subClassOf <http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Refunds_&_Other> .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Unrecorded
+:Unrecorded rdf:type owl:Class ;
+            rdfs:subClassOf <http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6#Refunds_&_Other> .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Vendor_Records
+:Vendor_Records rdf:type owl:Class ;
+                rdfs:subClassOf :Non-Accomplice_Vendor ;
+                rdfs:comment "is accounting artifact of" .
+
+
+###  http://www.semanticweb.org/ronturner/ontologies/2025/6/untitled-ontology-6/Write-off_Schemes
+:Write-off_Schemes rdf:type owl:Class ;
+                   rdfs:subClassOf :Receivables .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

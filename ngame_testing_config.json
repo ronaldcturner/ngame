@@ -1,0 +1,130 @@
+{
+  "testing": {
+    "snapshot_directory": "test_snapshots",
+    "backup_directory": "test_backups", 
+    "results_directory": "test_results",
+    "max_test_transactions": 50,
+    "severity_thresholds": {
+      "notable": 0.3,
+      "remarkable": 0.6,
+      "actionable": 0.8
+    },
+    "test_scenarios": {
+      "fraud_detection": {
+        "enabled": true,
+        "transaction_count": 20,
+        "anomaly_types": ["fraud_patterns"]
+      },
+      "statistical_analysis": {
+        "enabled": true,
+        "transaction_count": 15,
+        "anomaly_types": ["statistical_anomalies"]
+      },
+      "behavioral_analysis": {
+        "enabled": true,
+        "transaction_count": 10,
+        "anomaly_types": ["behavioral_anomalies"]
+      },
+      "data_quality": {
+        "enabled": true,
+        "transaction_count": 10,
+        "anomaly_types": ["data_quality_issues"]
+      },
+      "relationship_analysis": {
+        "enabled": true,
+        "transaction_count": 10,
+        "anomaly_types": ["relationship_anomalies"]
+      }
+    }
+  },
+  "anomaly_injection": {
+    "fraud_patterns": {
+      "enabled": true,
+      "suspicious_vendor_names": [
+        "QuickCash Loans",
+        "Instant Money Services", 
+        "Cash Express",
+        "Loan Depot",
+        "Money Now",
+        "Fast Cash Solutions",
+        "Payday Express",
+        "Cash Advance Pro"
+      ],
+      "high_value_thresholds": {
+        "new_vendor": 10000,
+        "suspicious_vendor": 5000
+      },
+      "rapid_addition_thresholds": {
+        "vendors_per_day": 5,
+        "vendors_per_hour": 2
+      }
+    },
+    "statistical_anomalies": {
+      "enabled": true,
+      "outlier_multipliers": [3.0, 5.0, 10.0],
+      "frequency_anomalies": {
+        "high_frequency": 10,
+        "unusual_patterns": 5
+      }
+    },
+    "behavioral_anomalies": {
+      "enabled": true,
+      "after_hours": {
+        "start_hour": 22,
+        "end_hour": 6
+      },
+      "bulk_operations": {
+        "min_operations": 20,
+        "time_window_minutes": 5
+      }
+    },
+    "data_quality_issues": {
+      "enabled": true,
+      "missing_fields": ["email", "phone", "address", "tax_id"],
+      "duplicate_thresholds": {
+        "name_similarity": 0.9,
+        "address_similarity": 0.8
+      }
+    },
+    "relationship_anomalies": {
+      "enabled": true,
+      "circular_payments": {
+        "min_cycle_length": 3,
+        "max_cycle_length": 5
+      },
+      "vendor_customer_overlap": {
+        "overlap_threshold": 0.8
+      }
+    }
+  },
+  "validation": {
+    "severity_accuracy_threshold": 0.8,
+    "false_positive_threshold": 0.1,
+    "false_negative_threshold": 0.1,
+    "performance_threshold": 30.0,
+    "validation_methods": {
+      "precision_recall": true,
+      "f1_score": true,
+      "confusion_matrix": true,
+      "roc_analysis": false
+    }
+  },
+  "reporting": {
+    "generate_detailed_reports": true,
+    "include_performance_metrics": true,
+    "include_validation_results": true,
+    "export_formats": ["json", "csv", "html"],
+    "report_templates": {
+      "executive_summary": true,
+      "technical_details": true,
+      "recommendations": true
+    }
+  },
+  "ngame_integration": {
+    "workflow_config": "ngame_ontology_config.json",
+    "enable_cpi_analysis": true,
+    "enable_change_tracking": true,
+    "enable_fraud_detection": true,
+    "ontology_reasoning": true
+  }
+}

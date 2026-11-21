@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>NGAME - Ontology-Based Anomaly Detection</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Socket.IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2CA01C;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-color: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #2CA01C 0%, #0f6f14 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-color) !important;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .main-container {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 0.75rem 0.5rem;
+        }
+
+        .stat-icon {
+            font-size: 1.35rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .stat-number {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+
+        /* Captions use Bootstrap .small .text-muted — same as warning message body */
+        .stat-label {
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .status-online {
+            background-color: var(--success-color);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        }
+
+        .status-offline {
+            background-color: var(--danger-color);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .alert-card {
+            border-left: 4px solid var(--warning-color);
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+        }
+
+        .success-card {
+            border-left: 4px solid var(--success-color);
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        }
+
+        .analysis-progress {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            height: 4px;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .recent-activity {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(99, 102, 241, 0.1);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-brain me-2"></i>NGAME
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/dashboard">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    {% if not frp_mode %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analysis">
+                            <i class="fas fa-search me-1"></i>Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ontology">
+                            <i class="fas fa-project-diagram me-1"></i>Ontology
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/quickbooks">
+                            <i class="fas fa-chart-line me-1"></i>QuickBooks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/alerts">
+                            <i class="fas fa-bell me-1"></i>Alerts
+                            <span class="notification-badge" id="alertCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reports">
+                            <i class="fas fa-chart-bar me-1"></i>Reports
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+                {% if not frp_mode %}
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings">
+                            <i class="fas fa-cog me-1"></i>Settings
+                        </a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h1 class="text-white mb-2">{% if frp_mode %}NGAME Daily Monitoring{% else %}Dashboard{% endif %}</h1>
+                    <p class="text-white-50">{% if frp_mode %}Run today's check, then review anomalies and risk level below.{% else %}Ontology-based anomaly detection system overview{% endif %}</p>
+                </div>
+            </div>
+
+            <!-- Training progress -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card" style="border-left:4px solid #2CA01C;">
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-calendar-check me-2 text-success"></i>
+                                    <span id="phaseTitle">Training Progress</span>
+                                </h5>
+                                <span class="badge bg-secondary" id="phaseBadge">Phase I</span>
+                            </div>
+                            <div class="progress mb-2" style="height: 1.25rem;">
+                                <div class="progress-bar bg-success" id="trainingProgressBar" role="progressbar" style="width: 0%">0%</div>
+                            </div>
+                            <p class="text-muted small mb-0" id="trainingProgressText">Loading training status…</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if not frp_mode %}
+            <!-- System Status (consultant / lab) -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h5 class="card-title mb-3">
+                                        <i class="fas fa-server me-2"></i>System Status
+                                    </h5>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="status-indicator status-online" id="systemStatus"></span>
+                                        <span class="fw-semibold">NGAME System</span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="status-indicator" id="ontologyStatus"></span>
+                                        <span class="fw-semibold">Ontology Loaded</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span class="status-indicator" id="quickbooksStatus"></span>
+                                        <span class="fw-semibold">QuickBooks Connected</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <button class="btn btn-primary" onclick="initializeSystem()">
+                                        <i class="fas fa-play me-2"></i>Initialize System
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- NGAME Operations -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card" style="border-left:4px solid var(--primary-color);">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">
+                                <i class="fas fa-play-circle me-2 text-success"></i>NGAME Operations
+                                <span id="opRunningBadge" class="badge bg-warning ms-2 d-none">
+                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>Running…
+                                </span>
+                            </h5>
+                            <p class="text-muted small mb-3">{% if frp_mode %}Click the button for your current phase (shown above), then review results on this page.{% else %}Launch pipeline operations directly from the dashboard.{% endif %}</p>
+
+                            {% if frp_mode %}
+                            <div class="mb-3">
+                                <button id="btnDaily" class="btn btn-lg w-100 text-white" style="background:#2CA01C;"
+                                        onclick="launchOperation('daily')">
+                                    <i class="fas fa-play me-2"></i><span id="btnDailyLabel">Run Today's NGAME Check</span>
+                                </button>
+                            </div>
+                            {% endif %}
+
+                            <div class="row g-2 mb-3" id="opsButtonRow">
+                                <!-- Training -->
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded-3" style="background:#f0fdf4;border:1px solid #bbf7d0;">
+                                        <div class="fw-semibold mb-1">
+                                            <i class="fas fa-graduation-cap text-success me-2"></i>Training Mode
+                                        </div>
+                                        <div class="text-muted small mb-2">
+                                            Appends one day of CPI data to the training matrix.
+                                            Run daily until 30 days are recorded.
+                                        </div>
+                                        <button id="btnTrain" class="btn btn-success w-100"
+                                                onclick="launchOperation('training')">
+                                            <i class="fas fa-play me-1"></i>Run Training Day
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Fraud / Churn -->
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded-3" style="background:#eff6ff;border:1px solid #bfdbfe;">
+                                        <div class="fw-semibold mb-1">
+                                            <i class="fas fa-shield-alt text-primary me-2"></i>Daily Churn Analysis
+                                        </div>
+                                        <div class="text-muted small mb-2">
+                                            Compares today's CPI-array against the baseline, flags
+                                            anomalies, and generates management warnings.
+                                        </div>
+                                        <button id="btnFraud" class="btn btn-primary w-100"
+                                                onclick="launchOperation('fraud')">
+                                            <i class="fas fa-search me-1"></i>Run Churn Analysis
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if not frp_mode %}
+                            <!-- Demo scenario row -->
+                            <div class="row g-2 mb-3">
+                                <div class="col-12">
+                                    <div class="p-3 rounded-3" style="background:#fdf4ff;border:1px solid #e9d5ff;">
+                                        <div class="fw-semibold mb-1">
+                                            <i class="fas fa-flask text-purple me-2" style="color:#7c3aed;"></i>Demo Scenario
+                                            <span class="badge ms-2" style="background:#7c3aed;font-size:0.7rem;">DEMO</span>
+                                        </div>
+                                        <div class="text-muted small mb-2">
+                                            Injects controlled HIGH anomalies into
+                                            <strong>φ18&nbsp;Vendors</strong> (z&nbsp;≈&nbsp;5.0σ),
+                                            <strong>φ3&nbsp;Invoices</strong> (z&nbsp;≈&nbsp;4.0σ), and
+                                            <strong>φ4&nbsp;Payments</strong> (z&nbsp;≈&nbsp;3.5σ),
+                                            then runs the full pipeline — no live data required.
+                                            Refresh the Dashboard after it completes to see results.
+                                        </div>
+                                        <button id="btnDemo" class="btn w-100 text-white"
+                                                style="background:#7c3aed;"
+                                                onclick="launchOperation('demo')">
+                                            <i class="fas fa-flask me-1"></i>Run Demo Scenario
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Live log -->
+                            <div id="opLogWrap" class="d-none">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="text-muted small fw-semibold" id="opLogTitle">Output</span>
+                                    <button class="btn btn-outline-secondary btn-sm py-0 px-2"
+                                            onclick="clearOpLog()">Clear</button>
+                                </div>
+                                <textarea id="opLog" readonly rows="10"
+                                    style="width:100%;font-family:monospace;font-size:0.78rem;
+                                           background:#1e2330;color:#a6e22e;border-radius:8px;
+                                           border:none;padding:0.75rem;resize:vertical;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-3 g-2">
+                {% set visible_stat_count = 2
+                    + (1 if show_total_analyses | default(true) else 0)
+                    + (1 if show_active_alerts | default(true) else 0) %}
+                {% if visible_stat_count == 4 %}
+                    {% set stat_col = 'col-md-3' %}
+                {% elif visible_stat_count == 3 %}
+                    {% set stat_col = 'col-md-4' %}
+                {% else %}
+                    {% set stat_col = 'col-md-6' %}
+                {% endif %}
+                {% if show_total_analyses | default(true) %}
+                <div class="{{ stat_col }} mb-2">
+                    <div class="card stat-card">
+                        <div class="stat-icon text-primary">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-number text-primary" id="totalAnalyses">0</div>
+                        <div class="stat-label text-muted small">Total Analyses</div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if show_active_alerts | default(true) %}
+                <div class="{{ stat_col }} mb-2">
+                    <div class="card stat-card">
+                        <div class="stat-icon text-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-number text-warning" id="activeAlerts">0</div>
+                        <div class="stat-label text-muted small">Active Alerts</div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="{{ stat_col }} mb-2">
+                    <div class="card stat-card">
+                        <div class="stat-icon text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-number text-success" id="overallRisk">UNKNOWN</div>
+                        <div class="stat-label text-muted small">Overall Risk</div>
+                    </div>
+                </div>
+                <div class="{{ stat_col }} mb-2">
+                    <div class="card stat-card">
+                        <div class="stat-icon text-info">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-number text-info" id="lastUpdated">—</div>
+                        <div class="stat-label text-muted small">Last Updated</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-day pattern (sequence / slow-burn) -->
+            <div class="row mb-4">
+                <div class="col-lg-6 mb-4">
+                    <div class="card" style="border-left:4px solid #f59e0b;">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">
+                                <i class="fas fa-chart-line me-2 text-warning"></i>Multi-Day Pattern Alert
+                                <span class="badge bg-secondary ms-2" id="sequenceBadge">—</span>
+                            </h5>
+                            <p class="text-muted small mb-2" id="sequenceSummary">Detects sustained unusual activity over several business days (not just today).</p>
+                            <div id="sequenceAlerts">
+                                <div class="text-muted small">Available after Phase II runs with enough history in the rolling window.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card" style="border-left:4px solid #ef4444;">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">
+                                <i class="fas fa-credit-card me-2 text-danger"></i>Credit Card Watch
+                                <span class="badge bg-secondary ms-2" id="ccWatchBadge">—</span>
+                            </h5>
+                            <p class="text-muted small mb-2" id="ccWatchSummary">Independent scan of today's credit card transactions for misuse patterns.</p>
+                            <div id="ccWatchAlerts">
+                                <div class="text-muted small">Runs automatically with each daily fraud check.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consolidated NGAME Insights -->
+            <div class="row mb-4">
+                {% if show_management_warnings | default(true) %}
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-shield-alt me-2"></i>Management Warnings
+                                <span class="badge bg-secondary ms-2" id="warningsCountBadge">0</span>
+                            </h5>
+                            <div id="managementWarnings">
+                                <div class="text-muted">No data loaded yet.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="{% if show_management_warnings | default(true) %}col-lg-6{% else %}col-lg-12{% endif %} mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-bolt me-2"></i>Top Anomalies
+                                <span class="badge bg-secondary ms-2" id="anomaliesCountBadge">0</span>
+                            </h5>
+                            <p class="text-muted small mb-2">Elevated count or dollar signals only (HIGH/MEDIUM). Quiet days may show none.</p>
+                            <div id="topAnomalies">
+                                <div class="text-muted">No data loaded yet.</div>
+                            </div>
+                            <hr class="my-3">
+                            <h6 class="mb-2">
+                                <i class="fas fa-exchange-alt me-2 text-info"></i>Category Activity (Today vs Yesterday)
+                                <span class="badge bg-secondary ms-2" id="categoryActivityCountBadge">0</span>
+                            </h6>
+                            <p class="text-muted small mb-2">Record IDs added or removed overnight by transaction type (from QBO snapshots).</p>
+                            <div id="categoryDayActivity">
+                                <div class="text-muted small">No data loaded yet.</div>
+                            </div>
+                            <hr class="my-3">
+                            <h6 class="mb-2">
+                                <i class="fas fa-dollar-sign me-2 text-warning"></i>Dollar-Weighted Alerts
+                                <span class="badge bg-secondary ms-2" id="dollarAlertsCountBadge">0</span>
+                            </h6>
+                            <p class="text-muted small mb-2">Large amounts out of proportion with record-count churn.</p>
+                            <div id="dollarAlarmAlerts">
+                                <div class="text-muted small">No data loaded yet.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Activity -->
+            <div class="row">
+                <!-- Analysis Chart -->
+                <div class="col-lg-8 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">
+                                <i class="fas fa-chart-area me-2"></i>Analysis Trends
+                            </h5>
+                            <p class="text-muted small mb-2" id="analysisTrendsCaption">Daily churn index from training matrix and Phase II buffer.</p>
+                            <div style="position:relative;height:220px;">
+                                <canvas id="analysisChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-history me-2"></i>Recent Activity
+                            </h5>
+                            <div class="recent-activity" id="recentActivity">
+                                <div class="text-muted small">Loading recent activity…</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if not frp_mode %}
+            <!-- Quick Actions (consultant / lab) -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-bolt me-2"></i>Quick Actions
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-primary w-100" onclick="runQuickAnalysis()">
+                                        <i class="fas fa-search me-2"></i>Quick Analysis
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-success w-100" onclick="extractChartOfAccounts()">
+                                        <i class="fas fa-download me-2"></i>Extract Chart
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-warning w-100" onclick="viewAlerts()">
+                                        <i class="fas fa-bell me-2"></i>View Alerts
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-info w-100" onclick="generateReport()">
+                                        <i class="fas fa-file-alt me-2"></i>Generate Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if not frp_mode %}
+    <!-- Floating Action Button -->
+    <div class="floating-action">
+        <button class="btn btn-primary btn-lg rounded-circle" onclick="runAnalysis()" title="Run Analysis">
+            <i class="fas fa-play"></i>
+        </button>
+    </div>
+    {% endif %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const DASHBOARD_BUILD = {{ dashboard_build | default('dev') | tojson }};
+
+        const FRP_MODE = {{ frp_mode | tojson }};
+        const SHOW_MANAGEMENT_WARNINGS = {{ show_management_warnings | default(true) | tojson }};
+        const SHOW_TOTAL_ANALYSES = {{ show_total_analyses | default(true) | tojson }};
+        const SHOW_ACTIVE_ALERTS = {{ show_active_alerts | default(true) | tojson }};
+
+        function apiUrl(path) {
+            const sep = path.includes('?') ? '&' : '?';
+            return `${path}${sep}_=${encodeURIComponent(DASHBOARD_BUILD)}&t=${Date.now()}`;
+        }
+
+        // Initialize Socket.IO only when server supports it.
+        // app-simple.py does not implement /socket.io, so connecting would spam 404s.
+        let socket = null;
+        async function initSocketIfEnabled() {
+            try {
+                const resp = await fetch('/api/socketio-enabled');
+                const data = await resp.json();
+                if (data && data.enabled && typeof io === 'function') {
+                    socket = io();
+                    setupSocketListeners();
+                }
+            } catch (e) {
+                // Ignore socket init failures (server may not support it).
+            }
+        }
+        
+        // Global variables
+        let analysisChart;
+        let isAnalysisRunning = false;
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            initSocketIfEnabled();
+            loadDashboardStats();
+            loadTrainingStatus();
+            if (FRP_MODE) {
+                const row = document.getElementById('opsButtonRow');
+                if (row) row.classList.add('d-none');
+            }
+        });
+        
+        function initializeDashboard() {
+            // Initialize chart
+            const ctx = document.getElementById('analysisChart').getContext('2d');
+            analysisChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Peak churn',
+                        data: [],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.12)',
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: true },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    const peak = ctx.parsed.y;
+                                    const mean = (window._ngameMeanChurn && window._ngameMeanChurn[ctx.dataIndex]);
+                                    const meanTxt = (typeof mean === 'number')
+                                        ? ` • mean churn ${mean.toFixed(3)}`
+                                        : '';
+                                    return `Peak churn: ${peak.toFixed(3)}${meanTxt}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 1,
+                            title: { display: true, text: 'Churn index' }
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 18
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateAnalysisTrends(trends) {
+            if (!analysisChart) return;
+            const caption = document.getElementById('analysisTrendsCaption');
+            if (!trends || !trends.labels || trends.labels.length === 0) {
+                analysisChart.data.labels = [];
+                analysisChart.data.datasets[0].data = [];
+                analysisChart.options.scales.y.max = 1;
+                analysisChart.update();
+                if (caption) {
+                    caption.textContent = 'No trend data yet — run training days or a fraud check.';
+                }
+                return;
+            }
+            analysisChart.data.labels = trends.labels;
+            analysisChart.data.datasets[0].data = trends.churn_index || [];
+            window._ngameMeanChurn = trends.mean_churn_index || [];
+            const values = trends.churn_index || [];
+            const peak = values.length ? Math.max(...values) : 0;
+            const yMax = peak > 0 ? Math.min(1, Math.max(peak * 1.2, 0.05)) : 0.1;
+            analysisChart.options.scales.y.max = yMax;
+            analysisChart.options.scales.y.ticks = { maxTicksLimit: 6 };
+            analysisChart.update();
+            if (caption && trends.description) {
+                const cols = trends.matrix_columns || trends.training_days || 0;
+                const withData = trends.days_with_data || trends.training_days || 0;
+                const empty = trends.empty_columns || 0;
+                const buf = trends.buffer_days ? `, ${trends.buffer_days} fraud-check point(s)` : '';
+                let extra = ` (${cols} matrix column(s), ${withData} with data${buf})`;
+                if (empty) {
+                    extra += ` — ${empty} empty column(s) (e.g. Day 1) plot as 0`;
+                }
+                caption.textContent = trends.description + extra;
+            }
+        }
+        
+        function setupSocketListeners() {
+            if (!socket) return;
+            socket.on('connected', function(data) {
+                console.log('Connected to NGAME system:', data.message);
+                updateSystemStatus(true);
+            });
+            
+            socket.on('analysis_complete', function(data) {
+                if (data.success) {
+                    showNotification('Analysis completed successfully!', 'success');
+                    updateDashboardStats();
+                    addActivityItem('Analysis completed', 'success');
+                } else {
+                    showNotification('Analysis failed: ' + data.message, 'error');
+                    addActivityItem('Analysis failed', 'error');
+                }
+                isAnalysisRunning = false;
+            });
+            
+            socket.on('analysis_status', function(data) {
+                if (data.status === 'started') {
+                    isAnalysisRunning = true;
+                    showNotification('Analysis started...', 'info');
+                    addActivityItem('Analysis started', 'info');
+                } else if (data.status === 'stopped') {
+                    isAnalysisRunning = false;
+                    showNotification('Analysis stopped', 'warning');
+                }
+            });
+        }
+        
+        function loadDashboardStats() {
+            fetch(apiUrl('/api/consolidated-dashboard'))
+                .then(response => response.json())
+                .then(data => {
+                    updateConsolidatedDashboard(data);
+                    if (data.summary) {
+                        const alertsEl = document.getElementById('activeAlerts');
+                        if (alertsEl) {
+                            alertsEl.textContent =
+                                (data.summary.dollar_alarm_high_count || 0) +
+                                (data.summary.sequence_high_count || 0);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading consolidated dashboard:', error);
+                });
+
+            fetch('/api/dashboard-stats')
+                .then(response => response.json())
+                .then(data => {
+                    updateDashboardStats(data);
+                })
+                .catch(error => {
+                    console.error('Error loading dashboard stats:', error);
+                });
+        }
+        
+        function updateDashboardStats(data) {
+            const totalEl = document.getElementById('totalAnalyses');
+            if (totalEl) totalEl.textContent = data.total_analyses || 0;
+            const alertsEl = document.getElementById('activeAlerts');
+            if (alertsEl) alertsEl.textContent = data.active_alerts || 0;
+            
+            // Update status indicators
+            // "NGAME System" here means "UI backend reachable", not pipeline health.
+            updateSystemStatus(true);
+            updateOntologyStatus(!!data.ontology_loaded);
+            updateQuickBooksStatus(data.quickbooks_connected);
+            
+            // Legacy stats only — do not clear activity feed (consolidated API owns it)
+            if (data.recent_analyses && data.recent_analyses.length) {
+                updateRecentActivity(data.recent_analyses);
+            }
+        }
+
+        function updateConsolidatedDashboard(data) {
+            const summary = (data && data.summary) ? data.summary : {};
+            const sources = (data && data.sources) ? data.sources : {};
+
+            const risk = (summary.overall_risk_level || 'UNKNOWN').toString().toUpperCase();
+            const lastUpdated = summary.last_updated || summary.execution_time || '—';
+
+            const riskEl = document.getElementById('overallRisk');
+            const lastEl = document.getElementById('lastUpdated');
+            if (riskEl) riskEl.textContent = risk;
+            if (lastEl) lastEl.textContent = formatTimestamp(lastUpdated);
+
+            // Risk styling
+            if (riskEl) {
+            riskEl.classList.remove('text-success', 'text-warning', 'text-danger', 'text-info');
+            if (risk === 'HIGH') riskEl.classList.add('text-danger');
+            else if (risk === 'MEDIUM') riskEl.classList.add('text-warning');
+            else if (risk === 'LOW') riskEl.classList.add('text-success');
+            else riskEl.classList.add('text-info');
+            }
+
+            // Management Warnings (shown for FRP by default)
+            if (SHOW_MANAGEMENT_WARNINGS) {
+                const warnings = (data.management_dashboard && data.management_dashboard.warnings) ? data.management_dashboard.warnings : [];
+                const badge = document.getElementById('warningsCountBadge');
+                if (badge) badge.textContent = warnings.length;
+                renderWarnings(warnings);
+            }
+
+            // Anomalies
+            const anomalies = (data.fraud_analysis && data.fraud_analysis.anomaly_result && data.fraud_analysis.anomaly_result.top_anomalies)
+                ? data.fraud_analysis.anomaly_result.top_anomalies
+                : [];
+            const anomaliesBadge = document.getElementById('anomaliesCountBadge');
+            if (anomaliesBadge) anomaliesBadge.textContent = anomalies.length;
+            renderAnomalies(anomalies);
+
+            const dollarAlerts = (data.fraud_analysis && data.fraud_analysis.dollar_alarm_alerts)
+                ? data.fraud_analysis.dollar_alarm_alerts
+                : [];
+            const dollarBadge = document.getElementById('dollarAlertsCountBadge');
+            if (dollarBadge) {
+                dollarBadge.textContent = dollarAlerts.length;
+            }
+            renderDollarAlerts(dollarAlerts);
+
+            const categoryActivity = (data.fraud_analysis && data.fraud_analysis.category_day_activity)
+                ? data.fraud_analysis.category_day_activity
+                : (data.category_day_activity || []);
+            const catBadge = document.getElementById('categoryActivityCountBadge');
+            if (catBadge) {
+                catBadge.textContent = categoryActivity.length;
+            }
+            renderCategoryDayActivity(categoryActivity);
+
+            if (data.analysis_trends) {
+                updateAnalysisTrends(data.analysis_trends);
+            }
+            if (data.recent_activity) {
+                updateRecentActivity(data.recent_activity);
+            }
+
+            // In consolidated mode, consider "Ontology Loaded" as "fraud/pipeline artifacts present".
+            const hasArtifacts = !!(sources.management_dashboard || sources.fraud_analysis);
+            updateOntologyStatus(hasArtifacts);
+
+            if (data.training_status) {
+                updateTrainingStatusUI(data.training_status);
+            }
+
+            renderSequencePanel(data);
+            renderCcWatchPanel(data);
+        }
+
+        function loadTrainingStatus() {
+            fetch(apiUrl('/api/training-status'))
+                .then(r => r.json())
+                .then(updateTrainingStatusUI)
+                .catch(() => {});
+        }
+
+        function updateTrainingStatusUI(status) {
+            if (!status) return;
+            const days = status.days_recorded || 0;
+            const target = status.target_days || 30;
+            const pct = Math.min(100, Math.round((days / target) * 100));
+            const bar = document.getElementById('trainingProgressBar');
+            const text = document.getElementById('trainingProgressText');
+            const badge = document.getElementById('phaseBadge');
+            const title = document.getElementById('phaseTitle');
+            const btnDailyLabel = document.getElementById('btnDailyLabel');
+
+            if (bar) {
+                bar.style.width = pct + '%';
+                bar.textContent = pct + '%';
+            }
+            if (text) {
+                if (status.training_complete) {
+                    text.textContent = `Training complete (${days} of ${target} business days). Use Daily Fraud Check each business day.`;
+                } else if (!status.matrix_exists) {
+                    text.textContent = `No training days recorded yet. Run your first training day (${target} required).`;
+                } else {
+                    text.textContent = `Day ${days} of ${target} recorded — ${status.days_remaining} business day(s) remaining in Phase I.`;
+                }
+            }
+            if (badge && title) {
+                if (status.training_complete) {
+                    badge.textContent = 'Phase II';
+                    badge.className = 'badge bg-primary';
+                    title.textContent = 'Daily Fraud Monitoring';
+                } else {
+                    badge.textContent = 'Phase I';
+                    badge.className = 'badge bg-success';
+                    title.textContent = 'Training Progress';
+                }
+            }
+            if (btnDailyLabel) {
+                btnDailyLabel.textContent = status.training_complete
+                    ? "Run Today's Fraud Check"
+                    : "Run Today's Training Day";
+            }
+            const btnTrain = document.getElementById('btnTrain');
+            const btnFraud = document.getElementById('btnFraud');
+            if (btnTrain && btnFraud && !FRP_MODE) {
+                btnTrain.disabled = !!status.training_complete;
+                btnFraud.disabled = !status.training_complete;
+            }
+        }
+
+        function renderSequencePanel(data) {
+            const container = document.getElementById('sequenceAlerts');
+            const badge = document.getElementById('sequenceBadge');
+            const summary = document.getElementById('sequenceSummary');
+            if (!container) return;
+
+            const s = (data && data.summary) ? data.summary : {};
+            const seqTop = (data.fraud_analysis && data.fraud_analysis.sequence_top) ? data.fraud_analysis.sequence_top : [];
+            const active = !!s.sequence_active;
+            const win = s.sequence_window || 5;
+            const hi = s.sequence_high_count || 0;
+            const med = s.sequence_medium_count || 0;
+
+            if (badge) {
+                if (!active) {
+                    badge.textContent = 'Building';
+                    badge.className = 'badge bg-secondary';
+                } else if (hi > 0) {
+                    badge.textContent = 'HIGH';
+                    badge.className = 'badge bg-danger';
+                } else if (med > 0) {
+                    badge.textContent = 'MEDIUM';
+                    badge.className = 'badge bg-warning text-dark';
+                } else {
+                    badge.textContent = 'Clear';
+                    badge.className = 'badge bg-success';
+                }
+            }
+            if (summary) {
+                summary.textContent = active
+                    ? `Sustained-pattern scan over the last ${win} business days (slow-burn detection). HIGH=${hi}, MEDIUM=${med}.`
+                    : 'Sustained-pattern scan needs several days of history in Phase II before it can run.';
+            }
+            if (!active || (hi === 0 && med === 0 && seqTop.length === 0)) {
+                container.innerHTML = '<div class="text-muted small">' + (active ? 'No multi-day pattern alerts in the latest run.' : 'Not active yet — continue daily runs.') + '</div>';
+                return;
+            }
+            const items = seqTop.map(a => {
+                const level = (a.deviation_level || a.severity || 'UNKNOWN').toString().toUpperCase();
+                const b = level === 'HIGH' ? 'danger' : (level === 'MEDIUM' ? 'warning' : 'secondary');
+                const tx = escapeHtml(a.transaction_type || a.label || 'Category');
+                const z = (typeof a.z_score === 'number') ? a.z_score.toFixed(2) : (a.z_seq != null ? Number(a.z_seq).toFixed(2) : '');
+                return `<div class="activity-item mb-2"><span class="badge bg-${b} me-2">${level}</span><span class="fw-semibold">${tx}</span>${z ? `<span class="text-muted small"> z≈${z} (${win}-day)</span>` : ''}</div>`;
+            }).join('');
+            container.innerHTML = items || '<div class="text-muted small">Pattern scan active; no multi-day pattern alerts yet.</div>';
+        }
+
+        function renderCcWatchPanel(data) {
+            const container = document.getElementById('ccWatchAlerts');
+            const badge = document.getElementById('ccWatchBadge');
+            if (!container) return;
+
+            const s = (data && data.summary) ? data.summary : {};
+            const fraudSummary = (data.fraud_analysis && data.fraud_analysis.summary) ? data.fraud_analysis.summary : {};
+            const flagged = (data.fraud_analysis && data.fraud_analysis.cc_flagged) ? data.fraud_analysis.cc_flagged : [];
+            const scanned = s.cc_watch_transactions || fraudSummary.cc_watch_transactions || 0;
+            const risk = (s.cc_watch_highest_risk || fraudSummary.cc_watch_highest_risk || 'CLEAR').toString().toUpperCase();
+            const count = s.cc_watch_flagged || fraudSummary.cc_watch_flagged || 0;
+            const summaryEl = document.getElementById('ccWatchSummary');
+            if (summaryEl) {
+                summaryEl.textContent = scanned > 0
+                    ? `Latest run scanned ${scanned} credit card transaction(s); ${count} flagged.`
+                    : 'No credit card transactions found in the latest snapshot.';
+            }
+
+            if (badge) {
+                badge.textContent = risk === 'CLEAR' && count === 0 ? (scanned > 0 ? 'Clear' : '—') : risk;
+                badge.className = 'badge ' + (risk === 'CRITICAL' || risk === 'HIGH' ? 'bg-danger' : (risk === 'MEDIUM' ? 'bg-warning text-dark' : 'bg-success'));
+            }
+            if (count === 0 && flagged.length === 0) {
+                container.innerHTML = scanned > 0
+                    ? `<div class="text-muted small">Scanned ${scanned} credit card transaction(s); none flagged.</div>`
+                    : '<div class="text-muted small">No credit card transactions found in the latest snapshot.</div>';
+                return;
+            }
+            const items = flagged.slice(0, 8).map(t => {
+                const level = (t.risk_level || t.overall_risk || t.severity || 'FLAGGED').toString().toUpperCase();
+                const b = level === 'CRITICAL' || level === 'HIGH' ? 'danger' : (level === 'MEDIUM' ? 'warning' : 'secondary');
+                const desc = escapeHtml(t.description || t.pattern || t.vendor_name || 'Credit card item');
+                return `<div class="activity-item mb-2"><span class="badge bg-${b} me-2">${level}</span>${desc}</div>`;
+            }).join('');
+            container.innerHTML = items + (count > flagged.length ? `<div class="text-muted small mt-1">+ ${count - flagged.length} more</div>` : '');
+        }
+
+        function formatTimestamp(value) {
+            if (!value || value === '—') return '—';
+            const d = new Date(value);
+            if (isNaN(d.getTime())) return value;
+            return d.toLocaleString();
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function renderWarnings(warnings) {
+            const container = document.getElementById('managementWarnings');
+            if (!warnings || warnings.length === 0) {
+                container.innerHTML = '<div class="text-muted">No management warnings.</div>';
+                return;
+            }
+
+            const items = warnings.slice(0, 10).map(w => {
+                const risk = (w.risk_level || 'UNKNOWN').toString().toUpperCase();
+                const badge = risk === 'HIGH' ? 'danger' : (risk === 'MEDIUM' ? 'warning' : (risk === 'LOW' ? 'success' : 'secondary'));
+                const title = escapeHtml(w.title || w.warning_type || 'Warning');
+                const msg = escapeHtml(w.message || '');
+                const account = escapeHtml(w.account_name || '');
+                return `
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="me-3">
+                                <div class="fw-semibold">${title}</div>
+                                ${account ? `<div class="text-muted small">${account}</div>` : ''}
+                                ${msg ? `<div class="text-muted small mt-1">${msg}</div>` : ''}
+                            </div>
+                            <span class="badge bg-${badge}">${risk}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = items;
+        }
+
+        function levelBadgeClass(level) {
+            const l = (level || 'UNKNOWN').toString().toUpperCase();
+            if (l === 'HIGH') return 'danger';
+            if (l === 'MEDIUM') return 'warning';
+            if (l === 'LOW') return 'success';
+            return 'secondary';
+        }
+
+        function renderAnomalies(anomalies) {
+            const container = document.getElementById('topAnomalies');
+            if (!anomalies || anomalies.length === 0) {
+                container.innerHTML = '<div class="text-muted">No elevated anomalies — all categories within baseline.</div>';
+                return;
+            }
+
+            const items = anomalies.slice(0, 10).map(a => {
+                const countLevel = (a.deviation_level || 'UNKNOWN').toString().toUpperCase();
+                const dollarLevel = (a.dollar_alarm_level || 'LOW').toString().toUpperCase();
+                const countBadge = levelBadgeClass(countLevel);
+                const tx = escapeHtml(a.transaction_type || 'Unknown');
+                const phi = escapeHtml(a.phi_index || a.cpi_index || (a.index ? `φ${a.index}` : ''));
+                const diff = (typeof a.absolute_difference === 'number') ? a.absolute_difference.toFixed(6) : escapeHtml(a.absolute_difference || '');
+                const pct = (typeof a.percent_deviation === 'number') ? a.percent_deviation.toFixed(2) : escapeHtml(a.percent_deviation || '');
+                const z = (typeof a.z_score === 'number') ? `z≈${a.z_score.toFixed(2)}` : '';
+                const dollarBadge = a.dollar_alarm
+                    ? `<span class="badge bg-${levelBadgeClass(dollarLevel)} ms-1">$ ${dollarLevel}</span>`
+                    : '';
+                return `
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="me-3">
+                                <div class="fw-semibold">${tx} ${phi ? `<span class="text-muted">(${phi})</span>` : ''}</div>
+                                <div class="text-muted small">Δ ${diff} • ${pct}%${z ? ` • ${z}` : ''}</div>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-${countBadge}">Count ${countLevel}</span>
+                                ${dollarBadge}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = items;
+        }
+
+        function renderCategoryDayActivity(rows) {
+            const container = document.getElementById('categoryDayActivity');
+            if (!container) return;
+            if (!rows || rows.length === 0) {
+                container.innerHTML = '<div class="text-muted small">No category-level adds or removes vs yesterday.</div>';
+                return;
+            }
+            const items = rows.slice(0, 12).map(r => {
+                const tx = escapeHtml(r.transaction_type || 'Unknown');
+                const phi = escapeHtml(r.phi_index || (r.index ? `φ${r.index}` : ''));
+                const added = Number(r.added) || 0;
+                const removed = Number(r.removed) || 0;
+                const cpi = (typeof r.cpi === 'number') ? r.cpi.toFixed(4) : escapeHtml(r.cpi || '');
+                const parts = [];
+                if (added) parts.push(`+${added} new`);
+                if (removed) parts.push(`−${removed} removed`);
+                const detail = parts.length ? parts.join(', ') : 'URI churn (same count)';
+                return `
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="me-3">
+                                <div class="fw-semibold">${tx} ${phi ? `<span class="text-muted">(${phi})</span>` : ''}</div>
+                                <div class="text-muted small">${detail}${cpi ? ` • CPI ${cpi}` : ''}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            container.innerHTML = items;
+        }
+
+        function renderDollarAlerts(alerts) {
+            const container = document.getElementById('dollarAlarmAlerts');
+            if (!container) return;
+            if (!alerts || alerts.length === 0) {
+                container.innerHTML = '<div class="text-muted small">No dollar-weighted alerts.</div>';
+                return;
+            }
+
+            const items = alerts.slice(0, 10).map(a => {
+                const dollarLevel = (a.dollar_alarm_level || 'UNKNOWN').toString().toUpperCase();
+                const countLevel = (a.deviation_level || 'LOW').toString().toUpperCase();
+                const tx = escapeHtml(a.transaction_type || 'Unknown');
+                const phi = escapeHtml(a.phi_index || a.cpi_index || (a.index ? `φ${a.index}` : ''));
+                const dz = (typeof a.dollar_z_score === 'number') ? a.dollar_z_score.toFixed(2) : '';
+                const wcpi = (typeof a.weighted_cpi === 'number') ? a.weighted_cpi.toFixed(4) : '';
+                return `
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="me-3">
+                                <div class="fw-semibold">${tx} ${phi ? `<span class="text-muted">(${phi})</span>` : ''}</div>
+                                <div class="text-muted small">${dz ? `dz≈${dz}` : ''}${wcpi ? ` • wCPI ${wcpi}` : ''}${countLevel !== 'LOW' ? ` • count ${countLevel}` : ''}</div>
+                            </div>
+                            <span class="badge bg-${levelBadgeClass(dollarLevel)}">${dollarLevel}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = items;
+        }
+        
+        function updateSystemStatus(online) {
+            const statusElement = document.getElementById('systemStatus');
+            if (!statusElement) return;
+            if (online) {
+                statusElement.className = 'status-indicator status-online';
+            } else {
+                statusElement.className = 'status-indicator status-offline';
+            }
+        }
+
+        function updateOntologyStatus(loaded) {
+            const statusElement = document.getElementById('ontologyStatus');
+            if (!statusElement) return;
+            if (loaded) {
+                statusElement.className = 'status-indicator status-online';
+            } else {
+                statusElement.className = 'status-indicator status-offline';
+            }
+        }
+        
+        function updateQuickBooksStatus(connected) {
+            const statusElement = document.getElementById('quickbooksStatus');
+            if (!statusElement) return;
+            if (connected) {
+                statusElement.className = 'status-indicator status-online';
+            } else {
+                statusElement.className = 'status-indicator status-offline';
+            }
+        }
+        
+        function updateRecentActivity(activities) {
+            const container = document.getElementById('recentActivity');
+            if (!container) return;
+            if (!activities || activities.length === 0) {
+                container.innerHTML = '<div class="text-muted small">No recent pipeline activity.</div>';
+                return;
+            }
+
+            const items = activities.map(a => {
+                const status = (a.status || 'info').toString().toLowerCase();
+                const iconClass = status === 'success' ? 'fas fa-check-circle text-success' :
+                    status === 'error' ? 'fas fa-times-circle text-danger' :
+                    status === 'warning' ? 'fas fa-exclamation-triangle text-warning' :
+                    'fas fa-info-circle text-info';
+                const type = escapeHtml(a.type || 'Activity');
+                const msg = escapeHtml(a.message || '');
+                const ts = a.timestamp ? formatTimestamp(a.timestamp) : '—';
+                return `
+                    <div class="activity-item d-flex align-items-start mb-3">
+                        <div class="activity-icon bg-light me-2">
+                            <i class="${iconClass}"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold">${type}</div>
+                            ${msg ? `<div class="text-muted small">${msg}</div>` : ''}
+                            <div class="text-muted small">${ts}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            container.innerHTML = items;
+        }
+        
+        function addActivityItem(type, status, timestamp) {
+            const container = document.getElementById('recentActivity');
+            const item = document.createElement('div');
+            item.className = 'activity-item d-flex align-items-center';
+            
+            const iconClass = status === 'success' ? 'fas fa-check-circle text-success' :
+                            status === 'error' ? 'fas fa-times-circle text-danger' :
+                            'fas fa-info-circle text-info';
+            
+            item.innerHTML = `
+                <div class="activity-icon bg-light">
+                    <i class="${iconClass}"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="fw-semibold">${type}</div>
+                    <div class="text-muted small">${timestamp || new Date().toLocaleTimeString()}</div>
+                </div>
+            `;
+            
+            container.insertBefore(item, container.firstChild);
+            
+            // Keep only last 10 items
+            if (container.children.length > 10) {
+                container.removeChild(container.lastChild);
+            }
+        }
+        
+        function initializeSystem() {
+            fetch('/api/initialize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('System initialized successfully!', 'success');
+                    updateSystemStatus(true);
+                } else {
+                    showNotification('Failed to initialize system: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error initializing system: ' + error.message, 'error');
+            });
+        }
+        
+        function runAnalysis() {
+            if (isAnalysisRunning) {
+                showNotification('Analysis already running', 'warning');
+                return;
+            }
+            
+            socket.emit('start_analysis', { type: 'comprehensive' });
+        }
+        
+        function runQuickAnalysis() {
+            fetch('/api/run-analysis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ type: 'quick' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Quick analysis started', 'info');
+                } else {
+                    showNotification('Failed to start analysis: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error starting analysis: ' + error.message, 'error');
+            });
+        }
+        
+        function extractChartOfAccounts() {
+            showNotification('Extracting chart of accounts...', 'info');
+            // Implementation would go here
+        }
+        
+        function viewAlerts() {
+            window.location.href = '/alerts';
+        }
+        
+        function generateReport() {
+            showNotification('Generating report...', 'info');
+            // Implementation would go here
+        }
+        
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+        
+        // Auto-refresh dashboard stats every 30 seconds
+        setInterval(loadDashboardStats, 30000);
+
+        // ── NGAME Operations ──────────────────────────────────────────
+        let opPollTimer = null;
+
+        function launchOperation(type) {
+            const url   = type === 'training' ? '/api/run-training'
+                        : type === 'demo'     ? '/api/run-demo-scenario'
+                        : type === 'daily'    ? '/api/run-daily'
+                        :                       '/api/run-fraud-analysis';
+            const label = type === 'training' ? 'Training Day'
+                        : type === 'demo'     ? 'Demo Scenario'
+                        : type === 'daily'    ? "Today's NGAME Check"
+                        :                       'Churn Analysis';
+
+            fetch(url, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.success) {
+                        showNotification(data.message, 'warning');
+                        return;
+                    }
+                    document.getElementById('opLogWrap').classList.remove('d-none');
+                    document.getElementById('opLogTitle').textContent = label + ' — live output';
+                    document.getElementById('opLog').value = '';
+                    setOpButtons(true);
+                    startOpPolling();
+                })
+                .catch(e => showNotification('Failed to start: ' + e.message, 'error'));
+        }
+
+        function startOpPolling() {
+            if (opPollTimer) clearInterval(opPollTimer);
+            opPollTimer = setInterval(pollOpStatus, 1500);
+        }
+
+        function pollOpStatus() {
+            fetch('/api/operation-status')
+                .then(r => r.json())
+                .then(data => {
+                    const logEl = document.getElementById('opLog');
+                    if (data.log_tail && data.log_tail.length) {
+                        logEl.value = data.log_tail.join('\n');
+                        logEl.scrollTop = logEl.scrollHeight;
+                    }
+                    document.getElementById('opLogTitle').textContent =
+                        (data.name || 'Operation') + (data.running ? ' — running…' : ' — finished');
+                    if (!data.running) {
+                        setOpButtons(false);
+                        clearInterval(opPollTimer);
+                        opPollTimer = null;
+                        // Refresh dashboard data after operation finishes
+                        loadDashboardStats();
+                        loadTrainingStatus();
+                    }
+                })
+                .catch(() => {});
+        }
+
+        function setOpButtons(running) {
+            const btnTrain = document.getElementById('btnTrain');
+            const btnFraud = document.getElementById('btnFraud');
+            const btnDemo = document.getElementById('btnDemo');
+            const btnDaily = document.getElementById('btnDaily');
+            if (btnTrain) btnTrain.disabled = running;
+            if (btnFraud) btnFraud.disabled = running;
+            if (btnDemo) btnDemo.disabled = running;
+            if (btnDaily) btnDaily.disabled = running;
+            const badge = document.getElementById('opRunningBadge');
+            running ? badge.classList.remove('d-none') : badge.classList.add('d-none');
+        }
+
+        function clearOpLog() {
+            document.getElementById('opLog').value = '';
+            document.getElementById('opLogWrap').classList.add('d-none');
+        }
+
+        // Resume polling if a run was already in progress when page loaded
+        fetch('/api/operation-status')
+            .then(r => r.json())
+            .then(data => {
+                if (data.running) {
+                    document.getElementById('opLogWrap').classList.remove('d-none');
+                    setOpButtons(true);
+                    startOpPolling();
+                }
+            })
+            .catch(() => {});
+    </script>
+</body>
+</html> 

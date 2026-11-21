@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Debug - NGAME</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f8fafc; }
+    pre {
+      background: #0b1020;
+      color: #e5e7eb;
+      padding: 1rem;
+      border-radius: 12px;
+      overflow: auto;
+      max-height: 70vh;
+      font-size: 0.85rem;
+    }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/dashboard">NGAME</a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-primary btn-sm" href="/dashboard">Dashboard</a>
+        <a class="btn btn-outline-secondary btn-sm" href="/dashboard-debug">Debug</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <div>
+        <h1 class="h4 mb-1">Dashboard Debug</h1>
+        <div class="text-muted">Raw payload from <span class="mono">/api/consolidated-dashboard</span></div>
+        <div class="text-muted small mt-1">
+          Open this via <span class="mono">/dashboard-debug</span> (not as a local file), so the API fetch works.
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary btn-sm" onclick="refresh()">Refresh</button>
+        <button class="btn btn-outline-primary btn-sm" onclick="copyJson()">Copy JSON</button>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="fw-semibold mb-2">Artifact sources</div>
+            <div id="sources" class="mono small text-muted">Loading…</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="fw-semibold mb-2">Errors (loader)</div>
+            <div id="errors" class="mono small text-muted">Loading…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="fw-semibold mb-2">Consolidated payload</div>
+        <pre id="json">(loading)</pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let lastPayload = null;
+
+    function esc(s) {
+      return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+    }
+
+    async function refresh() {
+      const pre = document.getElementById('json');
+      const sourcesEl = document.getElementById('sources');
+      const errorsEl = document.getElementById('errors');
+
+      pre.textContent = '(loading)';
+      sourcesEl.textContent = 'Loading…';
+      errorsEl.textContent = 'Loading…';
+
+      try {
+        const resp = await fetch('/api/consolidated-dashboard', { cache: 'no-store' });
+        if (!resp.ok) {
+          throw new Error(`HTTP ${resp.status} from /api/consolidated-dashboard`);
+        }
+        const data = await resp.json();
+        lastPayload = data;
+
+        const sources = data.sources || {};
+        const errors = data.errors || [];
+
+        const srcLines = Object.keys(sources).length
+          ? Object.entries(sources).map(([k,v]) => `${k}: ${v}`).join('\n')
+          : '(none)';
+
+        const errLines = errors.length ? errors.join('\n') : '(none)';
+
+        sourcesEl.innerHTML = `<pre class="mb-0">${esc(srcLines)}</pre>`;
+        errorsEl.innerHTML = `<pre class="mb-0">${esc(errLines)}</pre>`;
+        pre.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        lastPayload = null;
+        const msg = (e && e.message) ? e.message : String(e);
+        sourcesEl.innerHTML = `<pre class="mb-0">${esc('(none)')}</pre>`;
+        errorsEl.innerHTML = `<pre class="mb-0">${esc(msg)}</pre>`;
+        pre.textContent = `Failed to load /api/consolidated-dashboard.\n\n${msg}\n\nTip: make sure you're viewing this page at http://localhost:5001/dashboard-debug`;
+      }
+    }
+
+    async function copyJson() {
+      if (!lastPayload) return;
+      await navigator.clipboard.writeText(JSON.stringify(lastPayload, null, 2));
+    }
+
+    document.addEventListener('DOMContentLoaded', refresh);
+  </script>
+</body>
+</html>
+

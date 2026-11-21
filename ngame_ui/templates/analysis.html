@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis - NGAME</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Socket.IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2CA01C;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-color: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #2CA01C 0%, #0f6f14 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-color) !important;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .main-container {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .analysis-type-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .analysis-type-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-4px);
+        }
+
+        .analysis-type-card.selected {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .alert-item {
+            border-left: 4px solid var(--warning-color);
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .alert-item.high {
+            border-left-color: var(--danger-color);
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+        }
+
+        .alert-item.medium {
+            border-left-color: var(--warning-color);
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+        }
+
+        .alert-item.low {
+            border-left-color: var(--success-color);
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(99, 102, 241, 0.1);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .metric-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-brain me-2"></i>NGAME
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/analysis">
+                            <i class="fas fa-search me-1"></i>Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ontology">
+                            <i class="fas fa-project-diagram me-1"></i>Ontology
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/quickbooks">
+                            <i class="fas fa-chart-line me-1"></i>QuickBooks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/alerts">
+                            <i class="fas fa-bell me-1"></i>Alerts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reports">
+                            <i class="fas fa-chart-bar me-1"></i>Reports
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h1 class="text-white mb-2">Anomaly Detection Analysis</h1>
+                    <p class="text-white-50">Run comprehensive ontology-based anomaly detection</p>
+                </div>
+            </div>
+
+            <!-- Analysis Configuration -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">
+                                <i class="fas fa-cog me-2"></i>Analysis Configuration
+                            </h5>
+                            
+                            <!-- Analysis Type Selection -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Analysis Type</label>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card analysis-type-card" onclick="selectAnalysisType('comprehensive')">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-search-plus fa-2x text-primary mb-3"></i>
+                                                    <h6>Comprehensive</h6>
+                                                    <p class="text-muted small">Full ontology analysis with all anomaly types</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card analysis-type-card" onclick="selectAnalysisType('quick')">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-bolt fa-2x text-warning mb-3"></i>
+                                                    <h6>Quick Scan</h6>
+                                                    <p class="text-muted small">Fast analysis focusing on critical anomalies</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card analysis-type-card" onclick="selectAnalysisType('custom')">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-sliders-h fa-2x text-info mb-3"></i>
+                                                    <h6>Custom</h6>
+                                                    <p class="text-muted small">Configure specific anomaly detection rules</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Custom Configuration -->
+                            <div class="row mb-4" id="customConfig" style="display: none;">
+                                <div class="col-12">
+                                    <h6 class="mb-3">Custom Analysis Settings</h6>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Anomaly Types</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="fraudDetection" checked>
+                                                <label class="form-check-label" for="fraudDetection">
+                                                    Fraud Detection
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="statisticalAnomaly" checked>
+                                                <label class="form-check-label" for="statisticalAnomaly">
+                                                    Statistical Anomaly
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="behavioralAnomaly" checked>
+                                                <label class="form-check-label" for="behavioralAnomaly">
+                                                    Behavioral Anomaly
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="dataQuality" checked>
+                                                <label class="form-check-label" for="dataQuality">
+                                                    Data Quality
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Analysis Parameters</label>
+                                            <div class="mb-3">
+                                                <label class="form-label">Confidence Threshold</label>
+                                                <input type="range" class="form-range" id="confidenceThreshold" min="0" max="100" value="80">
+                                                <div class="text-end"><span id="confidenceValue">80%</span></div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Time Range (days)</label>
+                                                <select class="form-select" id="timeRange">
+                                                    <option value="7">Last 7 days</option>
+                                                    <option value="30" selected>Last 30 days</option>
+                                                    <option value="90">Last 90 days</option>
+                                                    <option value="365">Last year</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-primary btn-lg me-3" onclick="startAnalysis()" id="startBtn">
+                                        <i class="fas fa-play me-2"></i>Start Analysis
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-lg" onclick="stopAnalysis()" id="stopBtn" style="display: none;">
+                                        <i class="fas fa-stop me-2"></i>Stop Analysis
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="row mb-4" id="progressSection" style="display: none;">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-tasks me-2"></i>Analysis Progress
+                            </h5>
+                            <div class="progress mb-3" style="height: 8px;">
+                                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span id="progressText">Initializing...</span>
+                                <span id="progressPercent">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="row" id="resultsSection" style="display: none;">
+                <!-- Summary Metrics -->
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-chart-pie me-2"></i>Analysis Summary
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <div class="card metric-card">
+                                        <div class="metric-value text-primary" id="totalAnomalies">0</div>
+                                        <div class="metric-label">Total Anomalies</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card metric-card">
+                                        <div class="metric-value text-danger" id="highSeverity">0</div>
+                                        <div class="metric-label">High Severity</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card metric-card">
+                                        <div class="metric-value text-warning" id="mediumSeverity">0</div>
+                                        <div class="metric-label">Medium Severity</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card metric-card">
+                                        <div class="metric-value text-success" id="lowSeverity">0</div>
+                                        <div class="metric-label">Low Severity</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anomaly Details -->
+                <div class="col-lg-8 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Detected Anomalies
+                            </h5>
+                            <div id="anomalyList">
+                                <!-- Anomaly items will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Details -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-info-circle me-2"></i>Analysis Details
+                            </h5>
+                            <div id="analysisDetails">
+                                <!-- Analysis details will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Initialize Socket.IO only when server supports it.
+        let socket = null;
+        async function initSocketIfEnabled() {
+            try {
+                const resp = await fetch('/api/socketio-enabled');
+                const data = await resp.json();
+                if (data && data.enabled && typeof io === 'function') {
+                    socket = io();
+                    setupSocketListeners();
+                }
+            } catch (e) {
+                // Ignore socket init failures.
+            }
+        }
+        
+        // Global variables
+        let selectedAnalysisType = 'comprehensive';
+        let isAnalysisRunning = false;
+        let progressInterval;
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            initSocketIfEnabled();
+        });
+        
+        function setupEventListeners() {
+            // Confidence threshold slider
+            document.getElementById('confidenceThreshold').addEventListener('input', function() {
+                document.getElementById('confidenceValue').textContent = this.value + '%';
+            });
+        }
+        
+        function setupSocketListeners() {
+            if (!socket) return;
+            socket.on('analysis_complete', function(data) {
+                if (data.success) {
+                    showResults(data.results);
+                    showNotification('Analysis completed successfully!', 'success');
+                } else {
+                    showNotification('Analysis failed: ' + data.message, 'error');
+                }
+                stopProgress();
+            });
+            
+            socket.on('analysis_status', function(data) {
+                if (data.status === 'started') {
+                    startProgress();
+                } else if (data.status === 'stopped') {
+                    stopProgress();
+                }
+            });
+        }
+        
+        function selectAnalysisType(type) {
+            selectedAnalysisType = type;
+            
+            // Update card selections
+            document.querySelectorAll('.analysis-type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Show/hide custom configuration
+            const customConfig = document.getElementById('customConfig');
+            if (type === 'custom') {
+                customConfig.style.display = 'block';
+            } else {
+                customConfig.style.display = 'none';
+            }
+        }
+        
+        function startAnalysis() {
+            if (isAnalysisRunning) {
+                showNotification('Analysis already running', 'warning');
+                return;
+            }
+            
+            const config = {
+                type: selectedAnalysisType,
+                confidence_threshold: document.getElementById('confidenceThreshold').value,
+                time_range: document.getElementById('timeRange').value
+            };
+            
+            if (selectedAnalysisType === 'custom') {
+                config.anomaly_types = {
+                    fraud_detection: document.getElementById('fraudDetection').checked,
+                    statistical_anomaly: document.getElementById('statisticalAnomaly').checked,
+                    behavioral_anomaly: document.getElementById('behavioralAnomaly').checked,
+                    data_quality: document.getElementById('dataQuality').checked
+                };
+            }
+            
+            fetch('/api/run-analysis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(config)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    isAnalysisRunning = true;
+                    showNotification('Analysis started', 'info');
+                    updateButtonState(true);
+                } else {
+                    showNotification('Failed to start analysis: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error starting analysis: ' + error.message, 'error');
+            });
+        }
+        
+        function stopAnalysis() {
+            socket.emit('stop_analysis');
+            stopProgress();
+            showNotification('Analysis stopped', 'warning');
+        }
+        
+        function startProgress() {
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+            
+            let progress = 0;
+            progressInterval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress > 90) progress = 90;
+                
+                updateProgress(progress);
+            }, 1000);
+        }
+        
+        function stopProgress() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+            
+            updateProgress(100);
+            isAnalysisRunning = false;
+            updateButtonState(false);
+            
+            setTimeout(() => {
+                document.getElementById('progressSection').style.display = 'none';
+            }, 2000);
+        }
+        
+        function updateProgress(percent) {
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = Math.round(percent) + '%';
+            
+            if (percent < 25) {
+                document.getElementById('progressText').textContent = 'Loading ontology...';
+            } else if (percent < 50) {
+                document.getElementById('progressText').textContent = 'Running SWRL rules...';
+            } else if (percent < 75) {
+                document.getElementById('progressText').textContent = 'Analyzing anomalies...';
+            } else if (percent < 100) {
+                document.getElementById('progressText').textContent = 'Generating report...';
+            } else {
+                document.getElementById('progressText').textContent = 'Analysis complete!';
+            }
+        }
+        
+        function updateButtonState(running) {
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            
+            if (running) {
+                startBtn.style.display = 'none';
+                stopBtn.style.display = 'inline-block';
+            } else {
+                startBtn.style.display = 'inline-block';
+                stopBtn.style.display = 'none';
+            }
+        }
+        
+        function showResults(results) {
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Update summary metrics
+            const anomalies = results.anomalies || [];
+            const highSeverity = anomalies.filter(a => a.severity === 'high').length;
+            const mediumSeverity = anomalies.filter(a => a.severity === 'medium').length;
+            const lowSeverity = anomalies.filter(a => a.severity === 'low').length;
+            
+            document.getElementById('totalAnomalies').textContent = anomalies.length;
+            document.getElementById('highSeverity').textContent = highSeverity;
+            document.getElementById('mediumSeverity').textContent = mediumSeverity;
+            document.getElementById('lowSeverity').textContent = lowSeverity;
+            
+            // Populate anomaly list
+            const anomalyList = document.getElementById('anomalyList');
+            anomalyList.innerHTML = '';
+            
+            anomalies.forEach(anomaly => {
+                const anomalyItem = document.createElement('div');
+                anomalyItem.className = `alert-item ${anomaly.severity}`;
+                anomalyItem.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">${anomaly.title}</h6>
+                            <p class="mb-2">${anomaly.description}</p>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>${anomaly.timestamp}
+                                <i class="fas fa-tag ms-3 me-1"></i>${anomaly.type}
+                            </small>
+                        </div>
+                        <span class="badge bg-${anomaly.severity === 'high' ? 'danger' : anomaly.severity === 'medium' ? 'warning' : 'success'}">
+                            ${anomaly.severity.toUpperCase()}
+                        </span>
+                    </div>
+                `;
+                anomalyList.appendChild(anomalyItem);
+            });
+            
+            // Populate analysis details
+            const analysisDetails = document.getElementById('analysisDetails');
+            analysisDetails.innerHTML = `
+                <div class="mb-3">
+                    <strong>Analysis Type:</strong><br>
+                    <span class="text-muted">${results.analysis_type || 'Comprehensive'}</span>
+                </div>
+                <div class="mb-3">
+                    <strong>Duration:</strong><br>
+                    <span class="text-muted">${results.duration || '2.3 seconds'}</span>
+                </div>
+                <div class="mb-3">
+                    <strong>Entities Analyzed:</strong><br>
+                    <span class="text-muted">${results.entities_analyzed || '150'}</span>
+                </div>
+                <div class="mb-3">
+                    <strong>SWRL Rules Applied:</strong><br>
+                    <span class="text-muted">${results.swrl_rules_applied || '12'}</span>
+                </div>
+                <div class="mb-3">
+                    <strong>Confidence Score:</strong><br>
+                    <span class="text-muted">${results.confidence_score || '95%'}</span>
+                </div>
+            `;
+        }
+        
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html> 

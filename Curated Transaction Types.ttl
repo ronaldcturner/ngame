@@ -1,0 +1,384 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix qbo: <http://www.semanticweb.org/quickbooks/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.w3.org/2002/07/owl#> .
+
+[ rdf:type owl:Ontology
+ ] .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/quickbooks/ontology#belongsToCluster
+qbo:belongsToCluster rdf:type owl:ObjectProperty ;
+                     rdfs:domain qbo:UserTransactionType ;
+                     rdfs:range qbo:UserTransactionType ;
+                     rdfs:comment "Indicates which cluster a transaction type belongs to" ;
+                     rdfs:label "belongs to cluster" .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/quickbooks/ontology#riskLevel
+qbo:riskLevel rdf:type owl:DatatypeProperty ;
+              rdfs:domain qbo:UserTransactionType ;
+              rdfs:range xsd:string ;
+              rdfs:comment "Risk level for fraud detection (Low, Medium, High, Critical)" ;
+              rdfs:label "risk level" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#transactionFrequency
+qbo:transactionFrequency rdf:type owl:DatatypeProperty ;
+                         rdfs:domain qbo:UserTransactionType ;
+                         rdfs:range xsd:integer ;
+                         rdfs:comment "Typical frequency of this transaction type" ;
+                         rdfs:label "transaction frequency" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.co-ode.org/ontologies/ont.owl#Bank_Transactions
+<http://www.co-ode.org/ontologies/ont.owl#Bank_Transactions> rdf:type owl:Class ;
+                                                             rdfs:subClassOf qbo:Accounting .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Bill_Payments
+<http://www.co-ode.org/ontologies/ont.owl#Bill_Payments> rdf:type owl:Class ;
+                                                         rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Expenses_and_Bills> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Bills
+<http://www.co-ode.org/ontologies/ont.owl#Bills> rdf:type owl:Class ;
+                                                 rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Expenses_and_Bills> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Contractors
+<http://www.co-ode.org/ontologies/ont.owl#Contractors> rdf:type owl:Class ;
+                                                       rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Expenses_and_Bills> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Customers
+<http://www.co-ode.org/ontologies/ont.owl#Customers> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Sales_and_Customers> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Expenses
+<http://www.co-ode.org/ontologies/ont.owl#Expenses> rdf:type owl:Class ;
+                                                    rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Expenses_and_Bills> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Expenses_and_Bills
+<http://www.co-ode.org/ontologies/ont.owl#Expenses_and_Bills> rdf:type owl:Class ;
+                                                              rdfs:subClassOf qbo:UserTransactionType .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Invoices
+<http://www.co-ode.org/ontologies/ont.owl#Invoices> rdf:type owl:Class ;
+                                                    rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Sales_and_Customers> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Mileage
+<http://www.co-ode.org/ontologies/ont.owl#Mileage> rdf:type owl:Class ;
+                                                   rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Expenses_and_Bills> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Products_and_Services
+<http://www.co-ode.org/ontologies/ont.owl#Products_and_Services> rdf:type owl:Class ;
+                                                                 rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Sales_and_Customers> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Receipts
+<http://www.co-ode.org/ontologies/ont.owl#Receipts> rdf:type owl:Class ;
+                                                    rdfs:subClassOf qbo:Accounting .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Recurring_Transactions
+<http://www.co-ode.org/ontologies/ont.owl#Recurring_Transactions> rdf:type owl:Class ;
+                                                                  rdfs:subClassOf qbo:Accounting .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Sales_and_Customers
+<http://www.co-ode.org/ontologies/ont.owl#Sales_and_Customers> rdf:type owl:Class ;
+                                                               rdfs:subClassOf qbo:UserTransactionType .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Sales_transactions
+<http://www.co-ode.org/ontologies/ont.owl#Sales_transactions> rdf:type owl:Class ;
+                                                              rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Sales_and_Customers> .
+
+
+###  http://www.co-ode.org/ontologies/ont.owl#Vendors
+<http://www.co-ode.org/ontologies/ont.owl#Vendors> rdf:type owl:Class ;
+                                                   rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Expenses_and_Bills> .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Accounting
+qbo:Accounting rdf:type owl:Class ;
+               rdfs:subClassOf qbo:UserTransactionType ;
+               rdfs:comment "Transaction types related to general accounting" ;
+               rdfs:label "Accounting" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#BankDeposits
+qbo:BankDeposits rdf:type owl:Class ;
+                 rdfs:subClassOf qbo:Banking ;
+                 rdfs:comment "Bank deposit transactions" ;
+                 rdfs:label "Bank Deposits" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#BankReconciliation
+qbo:BankReconciliation rdf:type owl:Class ;
+                       rdfs:subClassOf qbo:Banking .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#BankTransfers
+qbo:BankTransfers rdf:type owl:Class ;
+                  rdfs:subClassOf qbo:Banking .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Banking
+qbo:Banking rdf:type owl:Class ;
+            rdfs:subClassOf qbo:UserTransactionType ;
+            rdfs:comment "General banking transactions" ;
+            rdfs:label "Banking" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#ChartOfAccounts
+qbo:ChartOfAccounts rdf:type owl:Class ;
+                    rdfs:subClassOf qbo:Accounting ;
+                    rdfs:comment "Account structure and management" ;
+                    rdfs:label "Chart of Accounts" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Contractors
+qbo:Contractors rdf:type owl:Class ;
+                rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Expenses_and_Bills> ;
+                rdfs:comment "Independent contractor management" ;
+                rdfs:label "Contractors" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#CreditCardTransactions
+qbo:CreditCardTransactions rdf:type owl:Class ;
+                           rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Sales_and_Customers> ;
+                           rdfs:comment "Credit card purchases and payments" ;
+                           rdfs:label "Credit Card Transactions" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#CustomerPayments
+qbo:CustomerPayments rdf:type owl:Class ;
+                     rdfs:subClassOf qbo:SalesAndCustomers .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Customers
+qbo:Customers rdf:type owl:Class ;
+              rdfs:subClassOf qbo:SalesAndCustomers ;
+              rdfs:comment "Customer management and information" ;
+              rdfs:label "Customers" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#EmployeeBenefits
+qbo:EmployeeBenefits rdf:type owl:Class ;
+                     rdfs:subClassOf qbo:Payroll ;
+                     rdfs:comment "Employee benefits and deductions" ;
+                     rdfs:label "Employee Benefits" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#EmployeePayroll
+qbo:EmployeePayroll rdf:type owl:Class ;
+                    rdfs:subClassOf qbo:Payroll .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Estimates
+qbo:Estimates rdf:type owl:Class ;
+              rdfs:subClassOf qbo:SalesAndCustomers ;
+              rdfs:comment "Customer estimates and quotes" ;
+              rdfs:label "Estimates" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#ExpenseTransaction
+qbo:ExpenseTransaction rdf:type owl:Class ;
+                       rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Expenses_and_Bills> .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Inventory
+qbo:Inventory rdf:type owl:Class ;
+              rdfs:subClassOf qbo:UserTransactionType ;
+              rdfs:comment "Transaction types related to inventory management" ;
+              rdfs:label "Inventory" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#InventoryAdjustments
+qbo:InventoryAdjustments rdf:type owl:Class ;
+                         rdfs:subClassOf qbo:Inventory .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Invoices
+qbo:Invoices rdf:type owl:Class ;
+             rdfs:subClassOf qbo:SalesAndCustomers ;
+             rdfs:comment "Customer invoices and billing" ;
+             rdfs:label "Invoices" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Payroll
+qbo:Payroll rdf:type owl:Class ;
+            rdfs:subClassOf qbo:UserTransactionType ;
+            rdfs:comment "Transaction types related to employee payroll" ;
+            rdfs:label "Payroll" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#PayrollTaxes
+qbo:PayrollTaxes rdf:type owl:Class ;
+                 rdfs:subClassOf qbo:Payroll ;
+                 rdfs:comment "Payroll tax calculations and payments" ;
+                 rdfs:label "Payroll Taxes" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Products
+qbo:Products rdf:type owl:Class ;
+             rdfs:subClassOf qbo:Inventory ;
+             rdfs:comment "Product and service management" ;
+             rdfs:label "Products" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#PurchaseOrders
+qbo:PurchaseOrders rdf:type owl:Class ;
+                   rdfs:subClassOf qbo:Inventory ;
+                   rdfs:comment "Purchase orders for inventory" ;
+                   rdfs:label "Purchase Orders" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Receipts
+qbo:Receipts rdf:type owl:Class ;
+             rdfs:subClassOf qbo:Inventory ;
+             rdfs:comment "Inventory receipts and deliveries" ;
+             rdfs:label "Receipts" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Refunds
+qbo:Refunds rdf:type owl:Class ;
+            rdfs:subClassOf qbo:SalesAndCustomers ;
+            rdfs:comment "Customer refunds and returns" ;
+            rdfs:label "Refunds" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#SalesAndCustomers
+qbo:SalesAndCustomers rdf:type owl:Class ;
+                      rdfs:subClassOf qbo:UserTransactionType ;
+                      rdfs:comment "Transaction types related to sales and customer management" ;
+                      rdfs:label "Sales and Customers" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#SalesReceipts
+qbo:SalesReceipts rdf:type owl:Class ;
+                  rdfs:subClassOf qbo:SalesAndCustomers ;
+                  rdfs:comment "Point-of-sale sales receipts" ;
+                  rdfs:label "Sales Receipts" .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#UserTransactionType
+qbo:UserTransactionType rdf:type owl:Class ;
+                        rdfs:comment "A transaction type as seen by QuickBooks Online users" ;
+                        rdfs:label "User Transaction Type" .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/quickbooks/ontology#BankReconciliation
+qbo:BankReconciliation rdf:type owl:NamedIndividual ;
+                       qbo:riskLevel "Medium" ;
+                       qbo:transactionFrequency 12 .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#BankTransfers
+qbo:BankTransfers rdf:type owl:NamedIndividual ;
+                  qbo:riskLevel "High" ;
+                  qbo:transactionFrequency 20 .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#BillPayments
+qbo:BillPayments rdf:type owl:NamedIndividual ;
+                 qbo:riskLevel "High" ;
+                 qbo:transactionFrequency 30 .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#CustomerPayments
+qbo:CustomerPayments rdf:type owl:NamedIndividual ;
+                     qbo:riskLevel "Medium" ;
+                     qbo:transactionFrequency 75 .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#EmployeePayroll
+qbo:EmployeePayroll rdf:type owl:NamedIndividual ;
+                    qbo:riskLevel "Medium" ;
+                    qbo:transactionFrequency 25 .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#ExpenseTransaction
+qbo:ExpenseTransaction rdf:type owl:NamedIndividual ;
+                       qbo:riskLevel "Medium" ;
+                       qbo:transactionFrequency 100 .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#InventoryAdjustments
+qbo:InventoryAdjustments rdf:type owl:NamedIndividual ;
+                         qbo:riskLevel "High" ;
+                         qbo:transactionFrequency 15 .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#JournalEntries
+qbo:JournalEntries rdf:type owl:NamedIndividual ;
+                   qbo:riskLevel "Critical" ;
+                   qbo:transactionFrequency 10 .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#TimeTracking
+qbo:TimeTracking rdf:type owl:NamedIndividual ;
+                 qbo:riskLevel "Low" ;
+                 qbo:transactionFrequency 200 .
+
+
+###  http://www.semanticweb.org/quickbooks/ontology#Vendors
+qbo:Vendors rdf:type owl:NamedIndividual ;
+            qbo:riskLevel "High" ;
+            qbo:transactionFrequency 50 .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+qbo:BankReconciliation rdfs:comment "Bank statement reconciliation" ;
+                       rdfs:label "Bank Reconciliation" .
+
+
+qbo:BankTransfers rdfs:comment "Transfers between bank accounts" ;
+                  rdfs:label "Bank Transfers" .
+
+
+qbo:CustomerPayments rdfs:comment "Payments received from customers" ;
+                     rdfs:label "Customer Payments" .
+
+
+qbo:EmployeePayroll rdfs:comment "Employee salary and wage payments" ;
+                    rdfs:label "Employee Payroll" .
+
+
+qbo:ExpenseTransaction rdfs:comment "Individual business expense transactions" ;
+                       rdfs:label "Expense Transaction" .
+
+
+qbo:InventoryAdjustments rdfs:comment "Inventory quantity and value adjustments" ;
+                         rdfs:label "Inventory Adjustments" .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
